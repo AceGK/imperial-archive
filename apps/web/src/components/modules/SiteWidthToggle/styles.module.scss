@@ -1,0 +1,7 @@
+@use "@/styles/breakpoints" as *;
+
+.interface button {
+  @include max(xl, 50px) {
+    display: none;
+  }
+}

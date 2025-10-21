@@ -1,0 +1,56 @@
+/* /components/modules/styles.module.scss */
+
+.card {
+  --hover-bg: var(--faction-primary);
+  --hover-fg: var(--faction-secondary);
+  height:100%;
+  display: grid;
+  gap: 0.5rem;
+  align-content: center;
+  justify-items: center;
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--subtle); 
+  border: 1px solid var(--border, #2a2a2a);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+//     background: radial-gradient(
+//   circle at center,
+//   var(--hover-bg) 0%,
+//   color-mix(in srgb, var(--hover-bg) 60%, var(--bg)) 100%
+// );
+    background: var(--hover-bg);
+    color: var(--hover-fg);
+    // border-color: var(--hover-bg);
+    outline: none;
+  }
+}
+
+.image {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+
+  svg {
+    width: 60px;
+    height: 60px;
+    color: currentColor;
+    fill: currentColor;
+  }
+}
+
+.title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  line-height: 1.2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+}

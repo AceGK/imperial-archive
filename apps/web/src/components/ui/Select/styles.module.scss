@@ -1,0 +1,129 @@
+@import "@/styles/variables";
+
+.root {
+  position: relative;
+  display: inline-block;
+}
+
+.triggerWrap {
+  display: inline-block;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 180px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--secondary);
+  color: var(--on-secondary, var(--text));
+
+  &:hover,
+  &:focus-visible {
+    background: color-mix(in oklab, var(--accent) 85%, var(--secondary));
+  }
+}
+
+.triggerInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.value {
+  color: var(--text);
+}
+
+.chevron {
+  margin-left: auto;
+  color: var(--subtle);
+  opacity: 0.8;
+}
+
+.content {
+  position: absolute;
+  top: 100%;
+  min-width: 220px;
+  max-height: 280px;
+  overflow: auto;
+  padding: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--secondary);
+  color: var(--on-secondary, var(--text));
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  animation: fadeIn 0.12s ease-out;
+}
+
+.alignEnd { right: 0; }
+.alignStart { left: 0; }
+
+.label {
+  padding: 0.5rem 0.5rem 0.25rem;
+  font-size: 12px;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.separator {
+  height: 1px;
+  margin: 0.25rem 0.25rem;
+  background: var(--border);
+}
+
+.group {
+  padding: 0.25rem 0;
+}
+
+.item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.5rem;
+  border-radius: 8px;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+  color: var(--text);
+
+  &:hover,
+  &:focus {
+    background: var(--accent);
+  }
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.active {
+  /* subtle primary-tinted background for selected row */
+  background: color-mix(in oklab, var(--primary) 15%, var(--secondary));
+}
+
+.itemLabel {
+  flex: 1 1 auto;
+}
+
+.check {
+  color: var(--primary);
+  opacity: 0.9;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}

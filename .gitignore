@@ -1,0 +1,66 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+coverage/
+
+# next.js (applies in /apps/*)
+.next/
+out/
+
+# production
+build/
+dist/
+
+# sanity
+.sanity/
+
+# misc
+.DS_Store
+*.pem
+
+# debug / logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# env files (can opt-in for committing if needed)
+.env*
+!.env.example
+
+# vercel
+.vercel/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# editor
+.vscode/
+.idea/
+
+# Node/JS
+**/node_modules/
+**/.DS_Store
+**/.vercel/
+**/.turbo/
+**/coverage/
+
+# Build outputs
+**/.next/
+**/dist/
+**/build/
+
+# Sanity Studio v3 generated files
+apps/studio/.sanity/

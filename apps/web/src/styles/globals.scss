@@ -1,0 +1,56 @@
+@use "../styles/variables" as *;
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+
+:root {
+  @include theme-vars($light);
+  --site-width: 1200px;
+}
+
+[data-theme="dark"] {
+  @include theme-vars($dark);
+}
+
+:root[data-layout="boxed"] {
+  --site-width: 1200px;
+}
+
+:root[data-layout="full"] {
+  --site-width: 100%;
+}
+
+body {
+  font-family: var(--font-geist-sans);
+  background: var(--bg);
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-geist-mono)
+}
+
+.container {
+  width: 100%;
+  max-width: var(--site-width);
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+section {
+  padding-block: 6rem;
+}
+
+.visually-hidden {
+  visibility: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}

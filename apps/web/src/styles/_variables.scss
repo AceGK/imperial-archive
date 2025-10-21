@@ -1,0 +1,241 @@
+/* Design tokens (SCSS) */
+$light: (
+  bg: #FAFAFA,
+  text: #111111,
+  subtle: #666666,
+  border: #e0e0e0,
+
+  primary: orange,
+  on-primary: #0b0b0c,
+
+  secondary: #fff,
+  on-secondary: #111111,
+
+  destructive: #dc2626,
+  on-destructive: #ffffff,
+
+  accent: #f1f1f1,
+  on-accent: #111111,
+
+  foreground: #111111
+);
+
+$dark: (
+  bg: #0b0b0c,
+  text: #f5f5f5,
+  subtle: #b0b0b0,
+  border: #2a2a2a,
+
+  primary: orange,
+  on-primary: #0b0b0c,
+
+  secondary: #1a1a1a,
+  on-secondary: #f5f5f5,
+
+  destructive: #ef4444,
+  on-destructive: #ffffff,
+
+  accent: #2a2a2a,
+  on-accent: #f5f5f5,
+
+  foreground: #f5f5f5
+);
+
+
+/* Helper to spit out CSS custom properties from a map */
+@function var-name($k) {
+  @return "--#{'' + $k}";
+}
+
+@mixin theme-vars($map) {
+  @each $k, $v in $map {
+    #{var-name($k)}: #{$v};
+  }
+}
+
+:root {
+  /* ===== SPACE MARINES ===== */
+  --black-templars-primary: #1B1B1B;
+  --black-templars-secondary: #E5E5E5;
+
+  --blood-angels-primary: #A41E1E;
+  --blood-angels-secondary: #151515;
+
+  --dark-angels-primary: #204A2C;
+  --dark-angels-secondary: #C6B89C;
+
+  --deathwatch-primary: #0A0A0A;
+  --deathwatch-secondary: #ecc135;
+
+  --grey-knights-primary: #C1C7C9;
+  --grey-knights-secondary: #0e0f0f;
+
+  --space-wolves-primary: #607391;
+  --space-wolves-secondary: #080b11;
+
+  --ultramarines-primary: #2C3E94;
+  --ultramarines-secondary: #E5E5E5;
+
+  --white-scars-primary: #D9D9D2;
+  --white-scars-secondary: #A11615;
+
+  --salamanders-primary: #20603A;
+  --salamanders-secondary: #0c0e0c;
+
+  --raven-guard-primary: #121212;
+  --raven-guard-secondary: #c0c0c0;
+
+  --iron-hands-primary: #343637;
+  --iron-hands-secondary: #c6c6c6;
+
+  --imperial-fists-primary: #E4C33A;
+  --imperial-fists-secondary: #1E1E1E;
+
+  --crimson-fists-primary: #1c2e5e;
+  --crimson-fists-secondary: #981c1c;
+
+  --carcharodons-primary: #2d3032;
+  --carcharodons-secondary: #ccd1d7;
+
+  --scythes-of-the-emperor-primary: #1b1b1b;
+  --scythes-of-the-emperor-secondary: #d4af37;
+
+  --soul-drinkers-primary: #512B85;
+  --soul-drinkers-secondary: #CE9E33;
+
+  --flesh-tearers-primary: #7a1212;
+  --flesh-tearers-secondary: #dbdada;
+
+  --blood-ravens-primary: #981c1c;
+  --blood-ravens-secondary: #1b1b1b;
+
+  /* ===== IMPERIUM OF MAN ===== */
+  --adeptus-astartes-primary: #222222;
+  --adeptus-astartes-secondary: #ecc135;
+
+  --adepta-sororitas-primary: #6a1d1d;
+  --adepta-sororitas-secondary: #eac935;
+
+  --sisters-of-silence-primary: #1D1D1D;
+  --sisters-of-silence-secondary: #eac935;
+
+  --adeptus-custodes-primary: #6a1d1d;
+  --adeptus-custodes-secondary: #eac935;
+
+  --adeptus-mechanicus-primary: #6a1d1d;
+  --adeptus-mechanicus-secondary: #bdbdbd;
+  
+  --skitarii-primary: #6a1d1d;
+  --skitarii-secondary: #bdbdbd;
+
+  --adeptus-arbites-primary: #8a8787;
+  --adeptus-arbites-secondary: #F2F2F2;
+
+  --astra-militarum-primary: #4A5A3C;
+  --astra-militarum-secondary: #D3CCA4;
+
+  --death-korps-of-krieg-primary: #393e35;
+  --death-korps-of-krieg-secondary: #b2b2b9;
+
+  --catachan-jungle-fighters-primary: #2F4B23;
+  --catachan-jungle-fighters-secondary: #C8CB9E;
+
+  --adeptus-titanicus-primary: #5A5A5A;
+  --adeptus-titanicus-secondary: #C0A160;
+
+  --imperial-knights-primary: #3a4964;
+  --imperial-knights-secondary: #C0A160;
+
+  --inquisition-primary: #6a1d1d;
+  --inquisition-secondary: #deb845;
+
+  --officio-assassinorum-primary: #1D1D1D;
+  --officio-assassinorum-secondary: #BFBFBF;
+
+  --rogue-traders-primary: #412E2E;
+  --rogue-traders-secondary: #E0C9B0;
+
+  /* ===== TRAITOR LEGIONS ===== */
+  --chaos-space-marines-primary: #1E1E1E;
+  --chaos-space-marines-secondary: #B9A25E;
+
+  --death-guard-primary: #5C6A55;
+  --death-guard-secondary: #B4BFAA;
+
+  --thousand-sons-primary: #153577;
+  --thousand-sons-secondary: #e1c75e;
+
+  --world-eaters-primary: #561414;
+  --world-eaters-secondary: #cda24a;
+
+  --night-lords-primary: #000C30;
+  --night-lords-secondary: #7e2324 ;
+
+  --black-legion-primary: #0D0D0D;
+  --black-legion-secondary: #B7A46F;
+
+  --emperors-children-primary: #632e72;
+  --emperors-children-secondary: #dbbd46;
+
+  --iron-warriors-primary: #353539;
+  --iron-warriors-secondary: #BABAAB;
+
+  --word-bearers-primary: #700B1B;
+  --word-bearers-secondary: #0a0403;
+
+  --alpha-legion-primary: #143d3f;
+  --alpha-legion-secondary: #69ab27;
+
+  --sons-of-horus-primary: #889D8A;
+  --sons-of-horus-secondary: #1C2E22;
+
+  /* ===== FORCES OF CHAOS ===== */
+  --chaos-daemons-primary: #5C0F0F;
+  --chaos-daemons-secondary: #F4E1C1;
+
+  --titanicus-traitoris-primary: #383030;
+  --titanicus-traitoris-secondary: #D5C6A4;
+
+  --dark-mechanicum-primary: #590A0A;
+  --dark-mechanicum-secondary: #B0A79B;
+
+  --chaos-knights-primary: #383030;
+  --chaos-knights-secondary: #D5C6A4;
+
+  --khorne-primary: #601918;
+  --khorne-secondary: #cda24a;
+
+  --nurgle-primary: #566644;
+  --nurgle-secondary: #C5C8B2;
+
+  --tzeentch-primary: #3E2A63;
+  --tzeentch-secondary: #C1A9C9;
+
+  --slaanesh-primary: #6D3065;
+  --slaanesh-secondary: #EAD3EB;
+
+  /* ===== XENOS ===== */
+  --aeldari-primary: #5E7DA3;
+  --aeldari-secondary: #E1E7ED;
+
+  --drukhari-primary: #4F2F4C;
+  --drukhari-secondary: #D9BFD6;
+
+  --tyranids-primary: #304321;
+  --tyranids-secondary: #A4B28D;
+
+  --genestealer-cults-primary: #5B2C2C;
+  --genestealer-cults-secondary: #CEB8B0;
+
+  --leagues-of-votann-primary: #3F3A38;
+  --leagues-of-votann-secondary: #D2CEC9;
+
+  --necrons-primary: #2F302F;
+  --necrons-secondary: #A8C0C0;
+
+  --orks-primary: #364d1c;
+  --orks-secondary: #9a2a2a;
+
+  --tau-empire-primary: #2C628C;
+  --tau-empire-secondary: #C0DDE9;
+}

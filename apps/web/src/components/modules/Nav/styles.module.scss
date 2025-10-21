@@ -1,0 +1,52 @@
+.navWrapper {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height:60px;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.25rem;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.links {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.active {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.primary {
+  display:flex;
+  align-items: center;
+  gap:2rem;
+}
+
+.secondary {
+  display:flex;
+  gap:0.5rem;
+}
+
+.logo {
+  color:var(--primary);
+  line-height: normal;
+  text-wrap: nowrap;
+  font-weight:600;
+}

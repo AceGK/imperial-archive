@@ -1,0 +1,45 @@
+@import "@/styles/variables"; // exposes CSS vars via your theme mixin
+
+.badge {
+  --pad-x: 10px;
+  --pad-y: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--pad-y) var(--pad-x);
+  border-radius: 999px; /* pill */
+  font-size: 12px;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* sizes */
+.sm { --pad-x: 8px; font-size: 11px; }
+.md { --pad-x: 10px; font-size: 12px; }
+
+/* variants (using your color variables) */
+.default {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: color-mix(in oklab, var(--accent) 70%, var(--border));
+}
+
+.secondary {
+  background: var(--secondary);
+  color: var(--on-secondary);
+  border-color: var(--border);
+}
+
+.outline {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.destructive {
+  background: var(--destructive);
+  color: var(--on-destructive);
+  border-color: color-mix(in oklab, var(--destructive) 70%, var(--border));
+}

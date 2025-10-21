@@ -1,0 +1,17 @@
+{
+  "name": "@ac/studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev --host",
+    "build": "sanity build",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.7.4",
+    "@sanity/vision": "^4.10.3",
+    "sanity": "^4.10.3",
+    "sanity-plugin-media": "^4.0.0",
+    "styled-components": "^6.1.19"
+  }
+}

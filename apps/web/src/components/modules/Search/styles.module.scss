@@ -1,0 +1,89 @@
+.searchBox {
+  position: relative;
+  width: min(720px, 100%);
+  margin-top: 1rem;
+}
+
+.input {
+  width: 100%;
+  appearance: none;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg), black 4%);
+  color: var(--foreground);
+  border-radius: 12px;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease;
+
+  &::placeholder { color: var(--subtle); }
+  &:focus { box-shadow: 0 0 0 3px color-mix(in oklab, orange, transparent 70%); border-color: orange; }
+}
+
+.list {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(100% + 6px);
+  background: var(--bg);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: auto;
+  max-height: 360px;
+  padding: 6px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+  z-index: 5;
+}
+
+.item {
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+
+  &:hover { background: color-mix(in oklab, var(--accent), transparent 60%); }
+}
+
+.active {
+  background: color-mix(in oklab, var(--accent), transparent 50%);
+}
+
+.rowTitle {
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: baseline;
+  // gap: .5rem;
+  font-weight: 600;
+
+  mark {
+    background: color-mix(in oklab, orange, transparent 70%);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+  .kind {
+    font-size: .75rem;
+    opacity: .7;
+    padding: 2px 6px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+}
+
+.rowMeta {
+  font-size: 0.9rem;
+  color: var(--subtle);
+  display: flex;
+  gap: .5ch;
+  align-items: baseline;
+
+  .dot { opacity: .6; }
+
+  mark {
+    background: color-mix(in oklab, orange, transparent 70%);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+}

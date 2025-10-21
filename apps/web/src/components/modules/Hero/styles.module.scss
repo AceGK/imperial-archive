@@ -1,0 +1,73 @@
+/* Uses your theme variables: color pulls from var(--foreground) */
+.hero {
+  position: relative;
+  color: white;
+  // overflow: clip;
+
+  &.height-sm { min-height: 40vh; }
+  &.height-md { min-height: 55vh; }
+  &.height-lg { min-height: 72vh; }
+  &.height-xl { min-height: 90vh; }
+
+  &.align-left  .inner { align-items: flex-start; text-align: left; }
+  &.align-center .inner { align-items: center; text-align: center; }
+  &.align-right .inner { align-items: flex-end; text-align: right; }
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  .image {
+    object-fit: cover;
+    transform: translateZ(0);
+  }
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0.40) 50%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+.inner {
+  position: relative;
+  z-index: 2;
+  min-height: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+  padding-block: clamp(3rem, 8vw, 6rem);
+  margin-inline: auto;
+  max-width: 1200px;
+}
+
+.title {
+  margin: 0;
+  font-weight: 800;
+  line-height: 1.05;
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+.subtitle {
+  margin: 0;
+  line-height: 1.5;
+  color: color-mix(in oklab, white, transparent 20%);
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  max-width: 70ch;
+}
+
+/* Respect prefers-reduced-motion if you later add video etc. */
+@media (prefers-reduced-motion: reduce) {
+  /* No special handling needed now */
+}

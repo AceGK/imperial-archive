@@ -1,0 +1,156 @@
+@import "@/styles/variables";
+
+/* Sizes */
+$size-sm: 16px;
+$size-md: 18px;
+$size-lg: 20px;
+
+$radius: 6px;
+$ring-w: 2px;
+
+/* Icon sizes */
+$icon-sm: 10px;
+$icon-md: 12px;
+$icon-lg: 14px;
+
+.root {
+  --cb-size: #{$size-md};
+  --cb-icon: #{$icon-md};
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    // opacity: 0.6;
+  }
+}
+
+.sm {
+  --cb-size: #{$size-sm};
+  --cb-icon: #{$icon-sm};
+}
+.md {
+  --cb-size: #{$size-md};
+  --cb-icon: #{$icon-md};
+}
+.lg {
+  --cb-size: #{$size-lg};
+  --cb-icon: #{$icon-lg};
+}
+
+.input {
+  /* Visually hidden but accessible */
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+
+  /* Focus ring on the visual box */
+  &:focus-visible + .box {
+    outline: #0000 solid 0; /* reset Safari outline */
+    box-shadow:
+      0 0 0 #0000,
+      0 0 0 #0000,
+      0 0 0 #0000,
+      0 0 0 var(--cb-ring, #0000),
+      0 0 0 calc(#{$ring-w} + 1px)
+        color-mix(in oklab, var(--primary) 25%, transparent);
+    border-color: var(--primary);
+  }
+}
+
+.box {
+  width: var(--cb-size);
+  height: var(--cb-size);
+  border-radius: $radius;
+  border: 1px solid var(--border);
+  background: var(--secondary);
+  display: inline-grid;
+  place-items: center;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    transform 80ms ease;
+
+  /* hover */
+  .root:not([data-disabled]) .box[data-state="unchecked"]:hover,
+  .root:not([data-disabled]):hover .box[data-state="unchecked"],
+  .root:not([data-disabled]) .box[data-state="unchecked"]:focus-visible {
+    background: color-mix(in oklab, var(--accent) 80%, var(--secondary));
+    border-color: var(--border);
+  }
+  
+  /* ✅ Keep strong primary fill when CHECKED / INDETERMINATE on hover */
+  .root:not([data-disabled]) .box[data-state="checked"]:hover,
+  .root:not([data-disabled]):hover .box[data-state="checked"],
+  .root:not([data-disabled]) .box[data-state="indeterminate"]:hover,
+  .root:not([data-disabled]):hover .box[data-state="indeterminate"] {
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+  
+  /* (optional) slightly boost the glyph contrast on hover/focus */
+  .box[data-state="checked"]::after,
+  .box[data-state="indeterminate"]::after {
+    /* keeps the icon crisp over primary in light/dark themes */
+    filter: drop-shadow(0 0 0.25px rgba(0,0,0,0.25));
+  }
+
+  /* icon layer */
+  &::after {
+    content: "";
+    width: var(--cb-icon);
+    height: var(--cb-icon);
+    background: var(--on-primary, var(--bg));
+    display: block;
+    transform: scale(0);
+    transition: transform 120ms ease;
+    /* Default to check icon mask; we'll override for indeterminate via attr */
+    mask: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='black'>\
+<path d='M7.8 13.6 4.7 10.5 3.3 11.9 7.8 16.4 17 7.2 15.6 5.8z'/>\
+</svg>")
+      center / contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='black'>\
+<path d='M7.8 13.6 4.7 10.5 3.3 11.9 7.8 16.4 17 7.2 15.6 5.8z'/>\
+</svg>")
+      center / contain no-repeat;
+  }
+
+  /* states */
+  &[data-state="checked"],
+  &[data-state="indeterminate"] {
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+
+  &[data-state="checked"]::after {
+    transform: scale(1);
+  }
+
+  &[data-state="indeterminate"]::after {
+    transform: scale(1);
+    /* minus icon */
+    mask: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='black'>\
+<rect x='4' y='9' width='12' height='2' rx='1'/>\
+</svg>")
+      center / contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='black'>\
+<rect x='4' y='9' width='12' height='2' rx='1'/>\
+</svg>")
+      center / contain no-repeat;
+  }
+}
+
+.text {
+  color: var(--text);
+  font: inherit;
+  line-height: 1.2;
+}
