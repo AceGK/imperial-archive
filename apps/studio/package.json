@@ -13,5 +13,9 @@
     "sanity": "^4.10.3",
     "sanity-plugin-media": "^4.0.0",
     "styled-components": "^6.1.19"
+  },
+  "optionalDependencies": {
+    "@esbuild/linux-x64": "0.21.x",
+    "@rollup/rollup-linux-x64-gnu": "4.x"
   }
 }
