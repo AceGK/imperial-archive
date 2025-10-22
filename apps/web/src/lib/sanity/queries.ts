@@ -1,5 +1,17 @@
 import {groq} from 'next-sanity'
 
+export const testPostsQuery = groq`
+  *[_type == "post" && !(_id match "drafts.*")] 
+    | order(publishedAt desc)[0...20]{
+      _id,
+      title,
+      slug,
+      publishedAt,
+      mainImage{asset->{url}},
+      "authorName": author->name,
+      categories[]->{title}
+    }
+`;
 export const postsQuery = groq`
   *[_type == "post"] | order(publishedAt desc)[0...20]{
     _id, title, slug, mainImage, publishedAt,
@@ -26,3 +38,13 @@ export const single40kAuthorQuery = groq`
     links[]{type, url}
   }
 `
+
+export const authors40kForCardsQuery = groq`
+  *[_type == "author40k" && !(_id match "drafts.*")]{
+    name,
+    "slug": slug.current,
+    "imageUrl": image.asset->url
+  }
+`;
+
+
