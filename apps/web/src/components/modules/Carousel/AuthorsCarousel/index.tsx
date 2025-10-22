@@ -36,7 +36,7 @@ export default function AuthorCarousel({
 }: Props) {
   const items = authors.map((a) => {
     const count = a.count ?? a.booksCount ?? 0; // map -> AuthorCard's `count`
-    return <AuthorCard key={a.id} name={a.name} slug={a.slug} count={count} />;
+    return <AuthorCard key={a.id} name={a.name} slug={a.slug} count={count} imageUrl={a.imageUrl} />;
   });
 
   return (

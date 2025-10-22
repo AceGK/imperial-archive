@@ -47,4 +47,19 @@ export const authors40kForCardsQuery = groq`
   }
 `;
 
+// Pass the list of names in $names
+export const featuredAuthors40kQuery = groq`
+*[
+  _type == "author40k" 
+  && !(_id match "drafts.*") 
+  && name in $names
+]{
+  _id,
+  name,
+  "slug": slug.current,
+  "imageUrl": image.asset->url,
+  "count": count(*[_type == "book40k" && references(^._id)])
+}
+`;
+
 

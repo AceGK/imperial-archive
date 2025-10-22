@@ -1,13 +1,21 @@
+// /app/page.tsx
 import Hero from "@/components/modules/Hero";
 import AuthorsCarousel from "@/components/modules/Carousel/AuthorsCarousel";
 import BooksCarousel from "@/components/modules/Carousel/BooksCarousel";
 import FactionCarousel from "@/components/modules/Carousel/FactionCarousel";
 import EraCarousel from "@/components/modules/Carousel/EraCarousel";
 
-import { getAuthorsByNames } from "@/lib/40k-authors";
-import { getBooksByAuthor, getAllBooks } from "@/lib/40k-books";
+import { client } from "@/lib/sanity/sanity.client";
+import { featuredAuthors40kQuery } from "@/lib/sanity/queries";
 
-export default function Home() {
+// replace when books are migrated to Sanity
+import { getAllBooks } from "@/lib/40k-books";
+import { getBooksByAuthor } from "@/lib/40k-books";
+
+
+export const revalidate = 60;
+
+export default async function Home() {
   // === Featured authors ===
   const featuredNames = [
     "Dan Abnett",
@@ -25,15 +33,25 @@ export default function Home() {
     "Andy Clark",
   ];
 
-  const authors = getAuthorsByNames(featuredNames)
-    .map((a) => ({
-      ...a,
-      count: getBooksByAuthor(a.name)?.length ?? 0,
-    }))
+  // Fetch directly from Sanity
+  const authors = await client.fetch(
+    featuredAuthors40kQuery,
+    { names: featuredNames },
+    { cache: "force-cache", next: { revalidate } }
+  );
+
+  // Keep the original order defined in featuredNames + add book counts (todo - move to Sanity)
+  const featuredAuthors = authors
+   .map((a: any) => ({
+    ...a,
+    count: getBooksByAuthor(a.name)?.length ?? 0,
+  }))
     .sort(
-      (a, b) => featuredNames.indexOf(a.name) - featuredNames.indexOf(b.name)
+      (a: any, b: any) =>
+        featuredNames.indexOf(a.name) - featuredNames.indexOf(b.name)
     );
 
+  // Books (keep your existing JSON flow for now)
   const allBooks = getAllBooks();
   const featuredBooks = allBooks.slice(0, 9);
 
@@ -61,7 +79,7 @@ export default function Home() {
         <AuthorsCarousel
           title="Featured Authors"
           subtitle="Browse the authors of the Black Library"
-          authors={authors}
+          authors={featuredAuthors}
         />
       </section>
 
@@ -69,8 +87,8 @@ export default function Home() {
         <FactionCarousel
           title="Browse by Faction"
           subtitle="Find books on specific armies, legions, chapters, and factions"
-          initialGroupKey="space-marines" // optional
-          basePath="/factions" // routes to /factions/[group]/[slug]
+          initialGroupKey="space-marines"
+          basePath="/factions"
         />
       </section>
 
@@ -78,7 +96,6 @@ export default function Home() {
         <EraCarousel
           title="Browse by Era"
           subtitle="Find books from specific eras"
-          // eras={featuredBooks}
           viewAllLink="/eras"
         />
       </section>

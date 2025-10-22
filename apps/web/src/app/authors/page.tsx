@@ -1,5 +1,9 @@
+// /app/authors/page.tsx
 import { client } from "@/lib/sanity/sanity.client";
-import { authors40kForCardsQuery } from "@/lib/sanity/queries";
+import { all40kAuthorsQuery } from "@/lib/sanity/queries";
+import { urlFor } from "@/lib/sanity/sanity.image";
+import type { Author40k } from "@/types/sanity";
+
 import { getAllBooks } from "@/lib/40k-books";
 import AuthorCard from "@/components/modules/AuthorCard";
 
@@ -12,52 +16,30 @@ type Book = {
   author: string[];
 };
 
-function authorSlug(name: string) {
-  return name
-    .trim()
-    .replace(/\./g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
 export default async function AuthorsPage() {
-  // 1) Build counts from your JSON source
+  // Fetch authors from Sanity (typed)
+  const authors = await client.fetch<Author40k[]>(all40kAuthorsQuery);
+
+  // Build counts from your JSON books (todo replace with sanity)
   const books: Book[] = await getAllBooks();
-  const bySlug: Record<string, { slug: string; name: string; count: number }> = {};
+  const countsByAuthor = new Map<string, number>();
 
   for (const b of books) {
-    for (const rawName of b.author || []) {
-      if (!rawName) continue;
-      const name = rawName.trim();
-      const slug = authorSlug(name);
-      if (!bySlug[slug]) bySlug[slug] = { slug, name, count: 0 };
-      bySlug[slug].count += 1;
+    for (const raw of b.author || []) {
+      const name = (raw || "").trim();
+      if (!name) continue;
+      countsByAuthor.set(name, (countsByAuthor.get(name) ?? 0) + 1);
     }
   }
 
-  const authorsFromJson = Object.values(bySlug).sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
-
-  // 2) Fetch published author docs from Sanity
-  const authorsFromSanity: Array<{ name: string; slug: string; imageUrl?: string }> =
-    await client.fetch(authors40kForCardsQuery);
-
-  // 3) Build a lookup by slug for quick merge
-  const sanityBySlug = new Map(
-    authorsFromSanity
-      .filter((a) => a.slug)
-      .map((a) => [a.slug, { name: a.name, imageUrl: a.imageUrl }])
-  );
-
-  // 4) Merge the Sanity data into your JSON list
-  const merged = authorsFromJson.map((a) => {
-    const hit = sanityBySlug.get(a.slug);
-    return {
-      ...a,
-      imageUrl: hit?.imageUrl, // may be undefined (fallback to initials)
-    };
+  // Shape data for AuthorCard: slug string, imageUrl, count
+  const items = authors.map((a) => {
+    const slug = a.slug?.current ?? "";
+    const imageUrl = a.image
+      ? urlFor(a.image).width(400).height(400).fit("crop").url()
+      : undefined;
+    const count = countsByAuthor.get(a.name) ?? 0;
+    return { name: a.name, slug, imageUrl, count };
   });
 
   return (
@@ -66,7 +48,7 @@ export default async function AuthorsPage() {
         <h1 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           Authors{" "}
           <span style={{ fontSize: "0.9rem", borderRadius: 999 }}>
-            ({merged.length})
+            ({items.length})
           </span>
         </h1>
 
@@ -78,9 +60,9 @@ export default async function AuthorsPage() {
             marginTop: "1rem",
           }}
         >
-          {merged.map(({ slug, name, count, imageUrl }) => (
+          {items.map(({ slug, name, count, imageUrl }) => (
             <AuthorCard
-              key={slug}
+              key={slug || name}
               name={name}
               slug={slug}
               count={count}

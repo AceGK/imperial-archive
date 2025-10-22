@@ -10,7 +10,7 @@ type AuthorCardProps = {
 };
 
 function getInitials(fullName: string) {
-  if (!fullName) return "?";
+  if (!fullName) return null;
   const parts = fullName
     .replace(/\./g, " ")
     .replace(/[\u2019']/g, "")
@@ -18,7 +18,7 @@ function getInitials(fullName: string) {
     .split(/[\s-]+/)
     .filter(Boolean);
   const initials = parts.map((p) => (p.match(/\p{L}/u)?.[0] || "")).join("");
-  return initials ? initials.toUpperCase() : "?";
+  return initials ? initials.toUpperCase() : null;
 }
 
 export default function AuthorCard({ name, slug, count, imageUrl }: AuthorCardProps) {
@@ -34,6 +34,7 @@ export default function AuthorCard({ name, slug, count, imageUrl }: AuthorCardPr
             width={240}
             height={240}
             style={{ objectFit: "cover" }}
+            sizes="(max-width: 768px) 33vw, 240px"
           />
         ) : (
           initials
