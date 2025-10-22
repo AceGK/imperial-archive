@@ -27,21 +27,18 @@ export async function generateStaticParams(): Promise<SlugParam[]> {
 export default async function AuthorPage({
   params,
 }: {
-  params: SlugParam; 
+  params: Promise<SlugParam>; // <-- Next 15: params is async
 }) {
-  const { slug } = params;
+  const { slug } = await params; // <-- must await before using
 
-  // Fetch author profile (published only)
   const profile: Author40k | null = await client.fetch(
     single40kAuthorQuery,
     { slug },
     { perspective: "published" }
   );
 
-  // Still using JSON for books
   const books: Book[] = await getAllBooks();
 
-  // Slugify like your earlier helper: trim, drop dots, kebab-case alnum
   const authorSlug = (name: string) =>
     name
       .trim()
@@ -58,7 +55,6 @@ export default async function AuthorPage({
     notFound();
   }
 
-  // Normalize book href to avoid double slashes if b.slug already starts with '/'
   const toBookHref = (s: string) =>
     s.startsWith("/") ? `/books${s}` : `/books/${s}`;
 
