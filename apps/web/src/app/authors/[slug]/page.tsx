@@ -27,9 +27,9 @@ export async function generateStaticParams(): Promise<SlugParam[]> {
 export default async function AuthorPage({
   params,
 }: {
-  params: Promise<SlugParam>; // <-- Next 15: params is async
+  params: Promise<SlugParam>; 
 }) {
-  const { slug } = await params; // <-- must await before using
+  const { slug } = await params; 
 
   const profile: Author40k | null = await client.fetch(
     single40kAuthorQuery,
