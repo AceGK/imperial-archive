@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -77,11 +77,22 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
           <div className={styles.imageWrapper}>
             <Image
               className={styles.image}
-              src={urlFor(profile.image).width(200).height(200).fit("crop").url()}
+              src={urlFor(profile.image)
+                .width(200)
+                .height(200)
+                .fit("crop")
+                .url()}
               alt={profile.name}
               width={200}
               height={200}
               priority
+              placeholder="blur"
+              blurDataURL={urlFor(profile?.image)
+                .width(200)
+                .height(200)
+                .blur(50)
+                .quality(20)
+                .url()}
             />
           </div>
         )}
