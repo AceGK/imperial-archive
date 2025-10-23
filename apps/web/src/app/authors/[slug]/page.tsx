@@ -1,53 +1,44 @@
 // /app/authors/[slug]/page.tsx
-import { notFound } from "next/navigation";
-import { client } from "@/lib/sanity/sanity.client";
-import { single40kAuthorQuery } from "@/lib/sanity/queries";
-import { getAllBooks, type Book } from "@/lib/40k-books"; 
-import type { Author40k } from "@/types/sanity";
-import AuthorProfile from "@/components/modules/AuthorProfile";
-import Breadcrumb from "@/components/ui/Breadcrumb";
+import {notFound} from 'next/navigation'
+import {client} from '@/lib/sanity/sanity.client'
+import {single40kAuthorQuery} from '@/lib/sanity/queries'
+import {getAllBooks, type Book} from '@/lib/40k-books'
+import type {Author40k} from '@/types/sanity'
+import AuthorProfile from '@/components/modules/AuthorProfile'
+import Breadcrumb from '@/components/ui/Breadcrumb'
 
-export const revalidate = 60;
+export const revalidate = 60
 
-type SlugParam = { slug: string };
+type Params = { slug: string }
 
-// Pre-generate all author slugs (authors list is small and we are revalidating frequently)
-export async function generateStaticParams(): Promise<SlugParam[]> {
-  const authors = await client.fetch<{ slug: string }[]>(
+export async function generateStaticParams(): Promise<Params[]> {
+  const authors = await client.fetch<{slug: string}[]>(
     `*[_type == "author40k" && defined(slug.current)]{ "slug": slug.current }`
-  );
-  return authors.map((a) => ({ slug: a.slug }));
+  )
+  return authors.map(a => ({slug: a.slug}))
 }
 
-export default async function AuthorPage({ params }: { params: { slug: string } }) {
-  const { slug } = await params;
+export default async function AuthorPage(
+  { params }: { params: Promise<Params> } 
+) {
+  const { slug } = await params
 
   const profile = await client.fetch<Author40k | null>(
     single40kAuthorQuery,
     { slug },
-    { perspective: "published" }
-  );
-  if (!profile) notFound();
+    { perspective: 'published' }
+  )
+  if (!profile) notFound()
 
-  // Already typed as Book[]
-  const books = await getAllBooks();
-
+  const books = getAllBooks()
   const authored: Book[] = books
-    .filter((b) => (b.author ?? []).some((n) => n.trim() === profile.name))
-    .sort((a, b) => a.title.localeCompare(b.title));
-
-  // Optional if you want to override links
-  const toBookHref = (s: string) => (s.startsWith("/") ? `/books${s}` : `/books/${s}`);
+    .filter(b => (b.author ?? []).some(n => n.trim() === profile.name))
+    .sort((a, b) => a.title.localeCompare(b.title))
 
   return (
     <main className="container">
-      <Breadcrumb />
-      <AuthorProfile
-        slug={slug}
-        profile={profile}
-        authored={authored}
-        // makeHref={toBookHref} 
-      />
+      <Breadcrumb /> 
+      <AuthorProfile slug={slug} profile={profile} authored={authored} />
     </main>
-  );
+  )
 }
