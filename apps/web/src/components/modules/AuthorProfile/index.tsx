@@ -53,7 +53,7 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
   const [showToggle, setShowToggle] = useState(false);
   const bioRef = useRef<HTMLDivElement | null>(null);
 
-  // ✅ Count lines and hide button/gradient if ≤ 5 lines
+  // Count bio lines and hide button/gradient if ≤ 5 lines
   useEffect(() => {
     const el = bioRef.current;
     if (!el) return;
@@ -99,7 +99,7 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
           </div>
         )}
 
-        {/* ✅ Only render button if bio is long */}
+        {/* Only render button if bio is long */}
         {profile?.bio && showToggle && (
           <Button
             variant="link"
