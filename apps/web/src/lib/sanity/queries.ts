@@ -1,4 +1,4 @@
-import {groq} from 'next-sanity'
+import { groq } from "next-sanity";
 
 export const testPostsQuery = groq`
   *[_type == "post" && !(_id match "drafts.*")] 
@@ -18,15 +18,18 @@ export const postsQuery = groq`
     "authorName": author->name,
     categories[]-> {title}
   }
-`
+`;
 
 export const all40kAuthorsQuery = groq`
   *[_type == "author40k"] | order(name asc) {
-    _id, name, slug, image,
+    _id, 
+    name, 
+    "slug": slug.current,
+    image,
     bio,
     links[]{type, url}
   }
-`
+`;
 
 export const single40kAuthorQuery = groq`
   *[_type == "author40k" && slug.current == $slug][0]{
@@ -37,7 +40,7 @@ export const single40kAuthorQuery = groq`
     bio,
     links[]{type, url}
   }
-`
+`;
 
 export const authors40kForCardsQuery = groq`
   *[_type == "author40k" && !(_id match "drafts.*")]{
@@ -61,5 +64,3 @@ export const featuredAuthors40kQuery = groq`
   "count": count(*[_type == "book40k" && references(^._id)])
 }
 `;
-
-

@@ -1,12 +1,11 @@
 // styles/_breakpoints.scss
 
-// Common breakpoint values
 $breakpoints: (
-  sm: 576px,   // small devices
-  md: 768px,   // tablets
-  lg: 992px,   // desktops
-  xl: 1200px,  // large desktops
-  xxl: 1440px  // very large screens
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1440px
 );
 
 // Helper: get value from map
@@ -14,27 +13,25 @@ $breakpoints: (
   @return map-get($breakpoints, $size);
 }
 
-// Mixin: min-width with optional offset
-@mixin min($size, $offset: 0) {
-  $value: calc(bp($size) + #{$offset});
-  @media (min-width: $value) {
+// Ensure offsets have units (default 0px)
+@mixin min($size, $offset: 0px) {
+  $value: bp($size) + $offset; // e.g. 576px + 0px => 576px
+  @media (min-width: #{$value}) {
     @content;
   }
 }
 
-// Mixin: max-width with optional offset
-@mixin max($size, $offset: 0) {
-  $value: calc(bp($size) + #{$offset});
-  @media (max-width: $value) {
+@mixin max($size, $offset: 0px) {
+  $value: bp($size) + $offset;
+  @media (max-width: #{$value}) {
     @content;
   }
 }
 
-// Mixin: between with optional offsets
-@mixin between($lower, $upper, $offset-lower: 0, $offset-upper: 0) {
-  $min: calc(bp($lower) + #{$offset-lower});
-  $max: calc(bp($upper) + #{$offset-upper});
-  @media (min-width: $min) and (max-width: $max) {
+@mixin between($lower, $upper, $offset-lower: 0px, $offset-upper: 0px) {
+  $min: bp($lower) + $offset-lower;
+  $max: bp($upper) + $offset-upper;
+  @media (min-width: #{$min}) and (max-width: #{$max}) {
     @content;
   }
 }

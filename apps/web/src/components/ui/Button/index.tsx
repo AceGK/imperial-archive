@@ -14,6 +14,8 @@ type ButtonProps = {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   title?: string;
+  target?: string;
+  rel?: string;
 };
 
 /**
@@ -31,6 +33,8 @@ export default function Button({
   type = "button",
   disabled = false,
   title,
+  target,
+  rel,
 }: ButtonProps) {
   const classes = `
     ${styles.button}
@@ -42,7 +46,7 @@ export default function Button({
 
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} target={target} rel={rel} title={title}>
         {children}
       </Link>
     );

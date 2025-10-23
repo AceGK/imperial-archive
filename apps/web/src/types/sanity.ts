@@ -3,7 +3,7 @@
 export type Author40k = {
   _id: string
   name: string
-  slug?: {current: string}
+  slug: string
   image?: any
   bio?: any[]
   links?: {type: string; url: string}[]

@@ -32,23 +32,13 @@ export default async function AuthorsPage() {
     }
   }
 
-  // Shape data for AuthorCard: slug string, imageUrl, count
-  const items = authors.map((a) => {
-    const slug = a.slug?.current ?? "";
-    const imageUrl = a.image
-      ? urlFor(a.image).width(400).height(400).fit("crop").url()
-      : undefined;
-    const count = countsByAuthor.get(a.name) ?? 0;
-    return { name: a.name, slug, imageUrl, count };
-  });
-
   return (
     <main className="container">
       <section>
         <h1 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           Authors{" "}
           <span style={{ fontSize: "0.9rem", borderRadius: 999 }}>
-            ({items.length})
+            ({authors.length})
           </span>
         </h1>
 
@@ -60,13 +50,16 @@ export default async function AuthorsPage() {
             marginTop: "1rem",
           }}
         >
-          {items.map(({ slug, name, count, imageUrl }) => (
+          {authors.map((a) => (
             <AuthorCard
-              key={slug || name}
-              name={name}
-              slug={slug}
-              count={count}
-              imageUrl={imageUrl}
+              key={a._id}
+              name={a.name}
+              slug={a.slug}
+              count={countsByAuthor.get(a.name) ?? 0}
+              imageUrl={a.image ? 
+                urlFor(a.image).width(80).height(80).fit("crop").url()
+                : undefined
+              }
             />
           ))}
         </div>
