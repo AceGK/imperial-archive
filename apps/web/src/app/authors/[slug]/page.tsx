@@ -2,7 +2,7 @@
 import { notFound } from "next/navigation";
 import { client } from "@/lib/sanity/sanity.client";
 import { single40kAuthorQuery } from "@/lib/sanity/queries";
-import { getAllBooks, type Book } from "@/lib/40k-books"; // ✅ import the canonical Book type
+import { getAllBooks, type Book } from "@/lib/40k-books"; 
 import type { Author40k } from "@/types/sanity";
 import AuthorProfile from "@/components/modules/AuthorProfile";
 import Breadcrumb from "@/components/ui/Breadcrumb";
@@ -20,7 +20,7 @@ export async function generateStaticParams(): Promise<SlugParam[]> {
 }
 
 export default async function AuthorPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const profile = await client.fetch<Author40k | null>(
     single40kAuthorQuery,
@@ -29,10 +29,9 @@ export default async function AuthorPage({ params }: { params: { slug: string } 
   );
   if (!profile) notFound();
 
-  // ✅ Already typed as Book[]
+  // Already typed as Book[]
   const books = await getAllBooks();
 
-  // ✅ Keep full Book objects; don't re-shape to a narrower type
   const authored: Book[] = books
     .filter((b) => (b.author ?? []).some((n) => n.trim() === profile.name))
     .sort((a, b) => a.title.localeCompare(b.title));
@@ -46,8 +45,8 @@ export default async function AuthorPage({ params }: { params: { slug: string } 
       <AuthorProfile
         slug={slug}
         profile={profile}
-        authored={authored}          // ✅ exact type match
-        // makeHref={toBookHref}     // optional, if you want to normalize hrefs
+        authored={authored}
+        // makeHref={toBookHref} 
       />
     </main>
   );
