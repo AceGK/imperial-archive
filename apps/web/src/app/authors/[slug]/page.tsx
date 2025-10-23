@@ -9,17 +9,15 @@ import Breadcrumb from '@/components/ui/Breadcrumb'
 
 export const revalidate = 60
 
-type Params = { slug: string }
-
-export async function generateStaticParams(): Promise<Params[]> {
+export async function generateStaticParams() {
   const authors = await client.fetch<{slug: string}[]>(
     `*[_type == "author40k" && defined(slug.current)]{ "slug": slug.current }`
   )
-  return authors.map(a => ({slug: a.slug}))
+  return authors // shape: {slug: string}[]
 }
 
 export default async function AuthorPage(
-  { params }: { params: Promise<Params> } 
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params
 
@@ -30,14 +28,14 @@ export default async function AuthorPage(
   )
   if (!profile) notFound()
 
-  const books = getAllBooks()
+  const books = await getAllBooks() // keep this awaited
   const authored: Book[] = books
     .filter(b => (b.author ?? []).some(n => n.trim() === profile.name))
     .sort((a, b) => a.title.localeCompare(b.title))
 
   return (
     <main className="container">
-      <Breadcrumb /> 
+      <Breadcrumb />
       <AuthorProfile slug={slug} profile={profile} authored={authored} />
     </main>
   )
