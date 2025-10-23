@@ -5,7 +5,12 @@
       "iconId": "space-marines",
       "slug": "space-marines",
       "description": "The Space Marines are the Emperor's Angels of Death — genetically enhanced warriors serving as humanity's ultimate defenders.",
-      "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Space_Marines"
+      "links": [
+        {
+          "type": "Lexicanum",
+          "url": "https://wh40k.lexicanum.com/wiki/Space_Marines"
+        }
+      ]
     },
     "items": [
       {
@@ -13,126 +18,216 @@
         "slug": "black-templars",
         "iconId": "black-templars",
         "description": "A zealous crusading Chapter, the Black Templars wage endless wars of faith, purging heretics and xenos in the Emperor’s name.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Black_Templars"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Black_Templars"
+          }
+        ]
       },
       {
         "title": "Blood Angels",
         "slug": "blood-angels",
         "iconId": "blood-angels",
         "description": "Noble and artistic warriors cursed by the Red Thirst, the Blood Angels balance beauty and brutality in their eternal struggle.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Blood_Angels"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Blood_Angels"
+          }
+        ]
       },
       {
         "title": "Dark Angels",
         "slug": "dark-angels",
         "iconId": "dark-angels",
         "description": "Secretive and relentless hunters of their own fallen brethren, the Dark Angels seek redemption through unending penance and war.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Dark_Angels"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Dark_Angels"
+          }
+        ]
       },
       {
         "title": "Deathwatch",
         "slug": "deathwatch",
         "iconId": "deathwatch",
         "description": "An elite brotherhood drawn from every Chapter, the Deathwatch specializes in exterminating alien threats with surgical precision.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Deathwatch"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Deathwatch"
+          }
+        ]
       },
       {
         "title": "Grey Knights",
         "slug": "grey-knights",
         "iconId": "grey-knights",
         "description": "Psyker Space Marines created to battle daemons, the Grey Knights are incorruptible paragons of purity and psychic might.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Grey_Knights"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Grey_Knights"
+          }
+        ]
       },
       {
         "title": "Space Wolves",
         "slug": "space-wolves",
         "iconId": "space-wolves",
         "description": "Feral sons of Fenris, the Space Wolves fight with savage honor and unshakable loyalty to the Emperor.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Space_Wolves"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Space_Wolves"
+          }
+        ]
       },
       {
         "title": "Ultramarines",
         "slug": "ultramarines",
         "iconId": "ultramarines",
         "description": "The epitome of the Codex Astartes, the Ultramarines are disciplined and strategic warriors, leading by example across the stars.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Ultramarines"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Ultramarines"
+          }
+        ]
       },
       {
         "title": "White Scars",
         "slug": "white-scars",
         "iconId": "white-scars",
         "description": "Masters of lightning-fast assaults, the White Scars embody the spirit of the hunt, striking swiftly and disappearing before the enemy can react.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/White_Scars"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/White_Scars"
+          }
+        ]
       },
       {
         "title": "Salamanders",
         "slug": "salamanders",
         "iconId": "salamanders",
         "description": "Forged in the fires of Nocturne, the Salamanders are resilient warriors known for their craftsmanship and compassion towards humanity.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Salamanders"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Salamanders"
+          }
+        ]
       },
       {
         "title": "Raven Guard",
         "slug": "raven-guard",
         "iconId": "raven-guard",
         "description": "Stealthy and elusive, the Raven Guard excel in guerrilla warfare, striking from the shadows to dismantle their foes.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Raven_Guard"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Raven_Guard"
+          }
+        ]
       },
       {
         "title": "Iron Hands",
         "slug": "iron-hands",
         "iconId": "iron-hands",
         "description": "Believing in the supremacy of machine over flesh, the Iron Hands augment their bodies with cybernetics to achieve perfection.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Iron_Hands"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Iron_Hands"
+          }
+        ]
       },
       {
         "title": "Imperial Fists",
         "slug": "imperial-fists",
         "iconId": "imperial-fists",
         "description": "Unyielding defenders of the Imperium, the Imperial Fists are masters of siege warfare and fortification.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Imperial_Fists"
-      }, 
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Imperial_Fists"
+          }
+        ]
+      },
       {
         "title": "Crimson Fists",
         "slug": "crimson-fists",
         "iconId": "crimson-fists",
         "description": "A proud successor Chapter of the Imperial Fists, the Crimson Fists are known for their resilience and indomitable spirit.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Crimson_Fists"
-      }, 
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Crimson_Fists"
+          }
+        ]
+      },
       {
         "title": "Carcharodons",
         "slug": "carcharodons",
         "iconId": "carcharodons",
         "description": "Also known as the Space Sharks, the Carcharodons are fierce and relentless hunters, feared for their brutal tactics and savage nature.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Carcharodons"
-      }, 
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Carcharodons"
+          }
+        ]
+      },
       {
         "title": "Scythes of the Emperor",
         "slug": "scythes-of-the-emperor",
         "iconId": "scythes-of-the-emperor",
         "description": "A mysterious Chapter known for their swift and deadly strikes, the Scythes of the Emperor are relentless in their pursuit of the Emperor's enemies.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Scythes_of_the_Emperor"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Scythes_of_the_Emperor"
+          }
+        ]
       },
       {
         "title": "Soul Drinkers",
         "slug": "soul-drinkers",
         "iconId": "soul-drinkers",
         "description": "Once loyal servants of the Imperium, the Soul Drinkers now walk a fine line between redemption and damnation in their fight against Chaos.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Soul_Drinkers"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Soul_Drinkers"
+          }
+        ]
       },
       {
         "title": "Flesh Tearers",
         "slug": "flesh-tearers",
         "iconId": "flesh-tearers",
         "description": "A brutal and bloodthirsty Chapter, the Flesh Tearers are known for their savage combat style and unrelenting fury in battle.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Flesh_Tearers"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Flesh_Tearers"
+          }
+        ]
       },
       {
         "title": "Blood Ravens",
         "slug": "blood-ravens",
         "iconId": "blood-ravens",
         "description": "Renowned for their mysterious origins and exceptional prowess in battle, the Blood Ravens are relentless seekers of knowledge and relics.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Blood_Ravens"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Blood_Ravens"
+          }
+        ]
       }
     ]
   },
@@ -142,7 +237,12 @@
       "iconId": "aquila",
       "slug": "imperium",
       "description": "The Imperium of Man spans the galaxy — a vast, theocratic empire united in worship of the God-Emperor and ruled by His immortal will.",
-      "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Imperium_of_Man"
+      "links": [
+        {
+          "type": "Lexicanum",
+          "url": "https://wh40k.lexicanum.com/wiki/Imperium_of_Man"
+        }
+      ]
     },
     "items": [
       {
@@ -150,108 +250,183 @@
         "slug": "astra-militarum",
         "iconId": "astra-militarum",
         "description": "The Imperial Guard are billions strong — ordinary humans standing against unimaginable horrors through courage and faith.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Astra_Militarum"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Astra_Militarum"
+          }
+        ]
       },
       {
         "title": "Inquisition",
         "slug": "inquisition",
         "iconId": "inquisition",
         "description": "The Inquisition roots out heresy, witchcraft, and xenos corruption — wielding absolute authority in service to the Emperor.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Inquisition"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Inquisition"
+          }
+        ]
       },
       {
         "title": "Officio Assassinorum",
         "slug": "officio-assassinorum",
         "iconId": "officio-assassinorum",
         "description": "The Emperor’s covert assassins, the Officio Assassinorum deploys deadly operatives to eliminate high-value targets with ruthless efficiency.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Officio_Assassinorum"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Officio_Assassinorum"
+          }
+        ]
       },
       {
         "title": "Adepta Sororitas",
         "slug": "adepta-sororitas",
         "iconId": "adepta-sororitas",
         "description": "The Sisters of Battle are militant nuns of the Ecclesiarchy, wielding holy fire and faith to purge heresy from the Imperium.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Adepta_Sororitas"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Adepta_Sororitas"
+          }
+        ]
       },
       {
         "title": "Sisters of Silence",
         "slug": "sisters-of-silence",
         "iconId": "sisters-of-silence",
         "description": "The Sisters of Silence are elite psyker-hunters, gifted with the power to nullify psychic abilities and enforce the Emperor's will.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Sisters_of_Silence"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Sisters_of_Silence"
+          }
+        ]
       },
       {
         "title": "Adeptus Custodes",
         "slug": "adeptus-custodes",
         "iconId": "adeptus-custodes",
         "description": "The Emperor’s golden guardians, the Adeptus Custodes are near-immortal warriors who defend Terra itself.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Adeptus_Custodes"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Adeptus_Custodes"
+          }
+        ]
       },
       {
         "title": "Adeptus Mechanicus",
         "slug": "adeptus-mechanicus",
         "iconId": "adeptus-mechanicus",
         "description": "Priests of the Machine God, the Tech-Priests of Mars fuse flesh and machine in their endless quest for technological knowledge.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Adeptus_Mechanicus"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Adeptus_Mechanicus"
+          }
+        ]
       },
       {
         "title": "Skitarii",
         "slug": "skitarii",
         "iconId": "skitarii",
         "description": "The Skitarii are the cybernetic soldiers of the Adeptus Mechanicus, combining advanced technology with relentless discipline.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Skitarii"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Skitarii"
+          }
+        ]
       },
       {
         "title": "Adeptus Titanicus",
         "slug": "adeptus-titanicus",
         "iconId": "adeptus-titanicus",
         "description": "Colossal war machines piloted by the Adeptus Mechanicus, Titans bring overwhelming firepower and devastation to the battlefield.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Adeptus_Titanicus"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Adeptus_Titanicus"
+          }
+        ]
       },
       {
         "title": "Imperial Knights",
         "slug": "imperial-knights",
         "iconId": "imperial-knights",
         "description": "Noble pilots clad in towering war machines, the Imperial Knights bring ancient honor and devastating firepower to the battlefield.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Imperial_Knights"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Imperial_Knights"
+          }
+        ]
       },
       {
         "title": "Adeptus Arbites",
         "slug": "adeptus-arbites",
         "iconId": "adeptus-arbites",
         "description": "The Adeptus Arbites are the Imperium's enforcers of law and order, ensuring that the Emperor's justice is upheld across the galaxy.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Adeptus_Arbites"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Adeptus_Arbites"
+          }
+        ]
       },
       {
         "title": "Death Korps of Krieg",
         "slug": "death-korps-of-krieg",
         "iconId": "death-korps-of-krieg",
         "description": "Hardened by endless war and chemical warfare, the Death Korps of Krieg are stoic soldiers who embrace death as a path to glory.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Death_Korps_of_Krieg"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Death_Korps_of_Krieg"
+          }
+        ]
       },
       {
         "title": "Catachan Jungle Fighters",
         "slug": "catachan-jungle-fighters",
         "iconId": "catachan-jungle-fighters",
         "description": "Survivors of the deadliest jungles, the Catachan Jungle Fighters are expert guerrilla warriors who thrive in hostile environments.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Catachan_Jungle_Fighters"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Catachan_Jungle_Fighters"
+          }
+        ]
       },
-      { 
+      {
         "title": "Rogue Traders",
         "slug": "rogue-traders",
         "iconId": "rogue-traders",
         "description": "Independent explorers and merchants, Rogue Traders venture beyond the Imperium’s borders to seek fortune and forge new alliances.",
-        "lexicanum-link":"https://wh40k.lexicanum.com/wiki/Rogue_Traders"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Rogue_Traders"
+          }
+        ]
       }
     ]
   },
- "chaos-space-marines": {
+  "chaos-space-marines": {
     "meta": {
       "title": "Chaos Space Marines",
       "iconId": "chaos-space-marines",
       "slug": "chaos-space-marines",
       "description": "Once loyal Astartes, these traitors turned to the Warp and now serve the Ruinous Powers in their eternal war against the Imperium.",
-      "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Chaos_Space_Marines"
+      "links": [
+        {
+          "type": "Lexicanum",
+          "url": "https://wh40k.lexicanum.com/wiki/Chaos_Space_Marines"
+        }
+      ]
     },
     "items": [
       {
@@ -259,70 +434,120 @@
         "slug": "death-guard",
         "iconId": "death-guard",
         "description": "Followers of Nurgle, the Death Guard spread disease and despair across the galaxy, unstoppable in their rotting resilience.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Death_Guard"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Death_Guard"
+          }
+        ]
       },
       {
         "title": "Thousand Sons",
         "slug": "thousand-sons",
         "iconId": "thousand-sons",
         "description": "Once scholars and psykers, the Thousand Sons are cursed servants of Tzeentch, masters of sorcery and manipulation.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Thousand_Sons"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Thousand_Sons"
+          }
+        ]
       },
       {
         "title": "World Eaters",
         "slug": "world-eaters",
         "iconId": "world-eaters",
         "description": "Devotees of Khorne, the World Eaters live for the slaughter, charging into battle with berserk fury and chainaxes raised high.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/World_Eaters"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/World_Eaters"
+          }
+        ]
       },
       {
         "title": "Night Lords",
         "slug": "night-lords",
         "iconId": "night-lords",
         "description": "Masters of terror and psychological warfare, the Night Lords strike fear into the hearts of their enemies before delivering the killing blow.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Night_Lords"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Night_Lords"
+          }
+        ]
       },
       {
         "title": "Black Legion",
         "slug": "black-legion",
         "iconId": "black-legion",
         "description": "The heirs of the Sons of Horus, the Black Legion unites countless warbands under Abaddon the Despoiler to wage the Long War against the Imperium.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Black_Legion"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Black_Legion"
+          }
+        ]
       },
       {
         "title": "Emperor's Children",
         "slug": "emperors-children",
         "iconId": "emperors-children",
         "description": "Devotees of Slaanesh, the Emperor's Children pursue perfection through excess, unleashing sonic and sensory horrors on every battlefield.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Emperor%27s_Children"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Emperor%27s_Children"
+          }
+        ]
       },
       {
         "title": "Iron Warriors",
         "slug": "iron-warriors",
         "iconId": "iron-warriors",
         "description": "Siege masters turned bitter traitors, the Iron Warriors level fortresses with ruthless artillery, trench warfare, and brutal attrition.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Iron_Warriors"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Iron_Warriors"
+          }
+        ]
       },
       {
         "title": "Word Bearers",
         "slug": "word-bearers",
         "iconId": "word-bearers",
         "description": "Fanatical apostles of Chaos, the Word Bearers spread dark creed and corruption, summoning daemons and raising cults across the galaxy.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Word_Bearers"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Word_Bearers"
+          }
+        ]
       },
       {
         "title": "Alpha Legion",
         "slug": "alpha-legion",
         "iconId": "alpha-legion",
         "description": "Masters of deception and sabotage, the Alpha Legion fights through subterfuge, sleeper cells, and misdirection—always several moves ahead.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Alpha_Legion"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Alpha_Legion"
+          }
+        ]
       },
       {
         "title": "Sons of Horus",
         "slug": "sons-of-horus",
         "iconId": "sons-of-horus",
         "description": "Once the favored legion of the Warmaster Horus, the Sons of Horus fell to Chaos and now serve as his dark inheritors in the Long War.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Sons_of_Horus"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Sons_of_Horus"
+          }
+        ]
       }
     ]
   },
@@ -332,7 +557,12 @@
       "iconId": "chaos-daemons",
       "slug": "forces-of-chaos",
       "description": "The forces of Chaos are the corrupted reflection of the Imperium — heretics, daemons, and traitors who worship the Dark Gods.",
-      "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Chaos"
+      "links": [
+        {
+          "type": "Lexicanum",
+          "url": "https://wh40k.lexicanum.com/wiki/Chaos"
+        }
+      ]
     },
     "items": [
       {
@@ -340,56 +570,96 @@
         "slug": "khorne",
         "iconId": "khorne",
         "description": "The Blood God, Khorne is the embodiment of war, violence, and bloodshed, demanding constant battle and sacrifice.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Khorne"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Khorne"
+          }
+        ]
       },
       {
         "title": "Nurgle",
         "slug": "nurgle",
         "iconId": "nurgle",
         "description": "The Plague God, Nurgle is the lord of decay, disease, and despair, offering twisted gifts of resilience and rot.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Nurgle"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Nurgle"
+          }
+        ]
       },
       {
         "title": "Tzeentch",
         "slug": "tzeentch",
         "iconId": "tzeentch",
         "description": "The Changer of Ways, Tzeentch is the master of change, ambition, and sorcery, weaving intricate plots and schemes.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Tzeentch"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Tzeentch"
+          }
+        ]
       },
       {
         "title": "Slaanesh",
         "slug": "slaanesh",
         "iconId": "slaanesh",
         "description": "The Prince of Pleasure, Slaanesh is the god of excess, indulgence, and sensation, driving followers to ever greater extremes.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Slaanesh"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Slaanesh"
+          }
+        ]
       },
       {
         "title": "Chaos Daemons",
         "slug": "chaos-daemons",
         "iconId": "chaos-daemons",
         "description": "Manifestations of the Warp, the Daemons of Chaos are the living will of the Dark Gods made flesh — horror given form.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Daemon"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Daemon"
+          }
+        ]
       },
       {
         "title": "Dark Mechanicum",
         "slug": "dark-mechanicum",
         "iconId": "adeptus-mechanicus",
         "description": "Renegade Tech-Priests who have turned to the worship of Chaos, the Dark Mechanicum perverts technology to serve the Ruinous Powers.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Dark_Mechanicum"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Dark_Mechanicum"
+          }
+        ]
       },
       {
         "title": "Titanicus Traitoris",
         "slug": "titanicus-traitoris",
         "iconId": "titanicus-traitoris",
         "description": "Colossal war machines corrupted by Chaos, Traitor Titans bring devastating firepower and ruin to the battlefield in service to the Dark Gods.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Traitor_Titan_Legions"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Traitor_Titan_Legions"
+          }
+        ]
       },
       {
         "title": "Chaos Knights",
         "slug": "chaos-knights",
         "iconId": "chaos-knights",
         "description": "Noble pilots clad in towering war machines, Chaos Knights bring ancient honor and devastating firepower to the battlefield in the name of Chaos.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Chaos_Knight"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Chaos_Knight"
+          }
+        ]
       }
     ]
   },
@@ -399,7 +669,12 @@
       "iconId": "xenos",
       "slug": "xenos",
       "description": "The xenos are the alien races of the galaxy — from ancient Aeldari to savage Orks, each a dire threat to mankind’s survival.",
-      "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Xenos"
+      "links": [
+        {
+          "type": "Lexicanum",
+          "url": "https://wh40k.lexicanum.com/wiki/Xenos"
+        }
+      ]
     },
     "items": [
       {
@@ -407,56 +682,96 @@
         "slug": "aeldari",
         "iconId": "aeldari",
         "description": "An ancient and dying race, the Aeldari wield psychic power and elegant technology to survive in a galaxy that has outlived them.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Aeldari"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Aeldari"
+          }
+        ]
       },
       {
         "title": "Drukhari",
         "slug": "drukhari",
         "iconId": "drukhari",
         "description": "The Dark Eldar revel in pain and terror, raiding realspace from their shadowy city of Commorragh to sustain their immortal cruelty.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Drukhari"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Drukhari"
+          }
+        ]
       },
       {
         "title": "Tyranids",
         "slug": "tyranids",
         "iconId": "tyranids",
         "description": "The Tyranids are a vast hive fleet of bio-engineered monsters, consuming all life in their path to fuel their endless evolution.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Tyranid"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Tyranid"
+          }
+        ]
       },
       {
         "title": "Genestealer Cults",
         "slug": "genestealer-cults",
         "iconId": "genestealer-cults",
         "description": "Insidious infiltrators, the Genestealer Cults corrupt worlds from within before the Tyranid hive fleets descend to devour them.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Genestealer_Cult"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Genestealer_Cult"
+          }
+        ]
       },
       {
         "title": "Leagues of Votann",
         "slug": "leagues-of-votann",
         "iconId": "leagues-of-votann",
         "description": "The Kin of the Leagues of Votann are hardy clonesmiths and explorers, guided by ancient ancestor cores and unbreakable bonds.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Leagues_of_Votann"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Leagues_of_Votann"
+          }
+        ]
       },
       {
         "title": "Necrons",
         "slug": "necrons",
         "iconId": "necrons",
         "description": "Undying machine legions of a long-dead empire, the Necrons rise from their tomb worlds to reclaim the stars they once ruled.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Necron"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Necron"
+          }
+        ]
       },
       {
         "title": "Orks",
         "slug": "orks",
         "iconId": "orks",
         "description": "Green-skinned brutes who live for war, Orks are the galaxy’s most prolific and destructive species — loud, violent, and unstoppable.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/Ork"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/Ork"
+          }
+        ]
       },
       {
         "title": "T'au Empire",
         "slug": "tau-empire",
         "iconId": "tau-empire",
         "description": "United under the philosophy of the Greater Good, the T’au bring advanced technology and idealistic zeal to their growing empire.",
-        "lexicanum-link": "https://wh40k.lexicanum.com/wiki/T%27au_Empire"
+        "links": [
+          {
+            "type": "Lexicanum",
+            "url": "https://wh40k.lexicanum.com/wiki/T%27au_Empire"
+          }
+        ]
       }
     ]
   }
