@@ -4,14 +4,19 @@ import React from "react";
 import Carousel from "@/components/modules/Carousel";
 import type { SwiperOptions } from "swiper/types";
 import AuthorCard from "@/components/modules/AuthorCard";
+import type { Author40k } from "@/types/sanity";
 
 export type Author = {
   id: string | number;
   name: string;
   slug: string;
-  booksCount?: number; // optional
-  count?: number; // sometimes you may already have this
-  imageUrl?: string; // ignored by AuthorCard for now
+  booksCount?: number; 
+  count?: number;
+  image?: {
+    url: string;
+    lqip?: string;
+    aspect?: number;
+  }
 };
 
 type Props = {
@@ -36,7 +41,7 @@ export default function AuthorCarousel({
 }: Props) {
   const items = authors.map((a) => {
     const count = a.count ?? a.booksCount ?? 0; // map -> AuthorCard's `count`
-    return <AuthorCard key={a.id} name={a.name} slug={a.slug} count={count} imageUrl={a.imageUrl} />;
+    return <AuthorCard key={a.id} name={a.name} slug={a.slug} count={count} image={a.image} />;
   });
 
   return (

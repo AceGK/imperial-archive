@@ -56,10 +56,7 @@ export default async function AuthorsPage() {
               name={a.name}
               slug={a.slug}
               count={countsByAuthor.get(a.name) ?? 0}
-              imageUrl={a.image ? 
-                urlFor(a.image).width(80).height(80).fit("crop").url()
-                : undefined
-              }
+              image={a.image}
             />
           ))}
         </div>

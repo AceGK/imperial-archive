@@ -87,12 +87,7 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
               height={200}
               priority
               placeholder="blur"
-              blurDataURL={urlFor(profile?.image)
-                .width(20)
-                .height(20)
-                .blur(50)
-                .quality(20)
-                .url()}
+              blurDataURL={profile.image?.lqip || undefined}
             />
           </div>
         )}

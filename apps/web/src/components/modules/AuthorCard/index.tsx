@@ -3,11 +3,15 @@ import Image from "next/image";
 import styles from "./styles.module.scss";
 
 type AuthorCardProps = {
-  name: string;
-  slug: string;
-  count: number;
-  imageUrl?: string;
-};
+  name: string
+  slug: string
+  count: number
+  image?: {
+    url: string
+    lqip?: string
+    aspect?: number
+  }
+}
 
 function getInitials(fullName: string) {
   if (!fullName) return null;
@@ -21,20 +25,22 @@ function getInitials(fullName: string) {
   return initials ? initials.toUpperCase() : null;
 }
 
-export default function AuthorCard({ name, slug, count, imageUrl }: AuthorCardProps) {
+export default function AuthorCard({ name, slug, count, image }: AuthorCardProps) {
   const initials = getInitials(name);
 
   return (
     <Link href={`/authors/${slug}`} className={styles.card}>
       <div className={styles.image} aria-hidden="true" title={name}>
-        {imageUrl ? (
+        {image?.url ? (
           <Image
-            src={imageUrl}
+            src={image.url}
             alt={name}
             width={240}
             height={240}
             style={{ objectFit: "cover" }}
             sizes="(max-width: 768px) 33vw, 240px"
+            placeholder="blur"
+            blurDataURL={image.lqip || undefined}
           />
         ) : (
           initials
