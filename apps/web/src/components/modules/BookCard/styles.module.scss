@@ -16,12 +16,11 @@
   }
 }
 
-/* keep parity with your FactionCard naming */
 .title {
   font-weight: 600;
+  font-size:1rem;
 }
 
-/* cover container mirrors .image role in your FactionCard */
 .image {
   display: grid;
   place-items: center;
@@ -41,21 +40,19 @@
   filter: invert(1) opacity(0.9);
 }
 
-/* small line (like your .count) for subtle metadata */
 .count {
   font-size: 0.875rem;
   color: var(--subtle);
   text-align: center;
 }
 
-/* extra bits for book-specific details */
 .meta {
   display: grid;
   gap: 0.25rem;
 }
 
 .author {
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   opacity: 0.9;
 }
 
@@ -64,7 +61,6 @@
   color: var(--subtle);
 }
 
-/* chips for collections, harmonized with your palette */
 .chips {
   display: flex;
   flex-wrap: wrap;

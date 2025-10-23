@@ -67,7 +67,7 @@ $author-profile-bg: color-mix(in oklab, var(--bg), var(--subtle) 10%);
     background: linear-gradient(to top, $author-profile-bg, transparent);
     pointer-events: none;
     opacity: 1;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
   }
 
   &.expanded::after {
@@ -120,6 +120,7 @@ $author-profile-bg: color-mix(in oklab, var(--bg), var(--subtle) 10%);
 
 .links {
   display: flex;
+  flex-wrap:wrap;
   gap: 1rem;
   list-style: none;
   padding:1rem 0;
