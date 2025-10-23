@@ -1,8 +1,7 @@
-// /components/modules/AuthorProfile/index.tsx
 'use client';
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useState } from "react"; //todo maybe move to separate accordion component
 import { urlFor } from "@/lib/sanity/sanity.image";
 import { PortableText } from "@portabletext/react";
 import type { Author40k } from "@/types/sanity";
@@ -51,6 +50,25 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
   const visibleLinks = (profile?.links ?? []).filter((l) => !!l?.url);
   const bookCount = authored.length;
   const [expanded, setExpanded] = useState(false);
+  const [showToggle, setShowToggle] = useState(false);
+  const bioRef = useRef<HTMLDivElement | null>(null);
+
+  // ✅ Count lines and hide button/gradient if ≤ 5 lines
+  useEffect(() => {
+    const el = bioRef.current;
+    if (!el) return;
+
+    const measure = () => {
+      const style = window.getComputedStyle(el);
+      const lineHeight = parseFloat(style.lineHeight);
+      const totalLines = Math.round(el.scrollHeight / lineHeight);
+      setShowToggle(totalLines > 5);
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [profile?.bio]);
 
   return (
     <div className={styles.authorProfilePage}>
@@ -72,14 +90,17 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
 
         {profile?.bio && (
           <div
-            className={`${styles.bio} ${expanded ? styles.expanded : styles.collapsed}`}
+            ref={bioRef}
+            className={`${styles.bio} 
+              ${expanded ? styles.expanded : styles.collapsed} 
+              ${!showToggle ? styles.noFade : ""}`}
           >
             <PortableText value={profile.bio as any} />
           </div>
         )}
 
-        {/* Toggle button appears only if bio is long */}
-        {profile?.bio && (
+        {/* ✅ Only render button if bio is long */}
+        {profile?.bio && showToggle && (
           <Button
             variant="link"
             size="sm"
@@ -88,7 +109,9 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
             title={expanded ? "Show less" : "Read more"}
           >
             {expanded ? "Show less" : "Read more"}
-            <ChevronDown className={`${styles.chevron} ${expanded ? styles.expanded : ""}`} />
+            <ChevronDown
+              className={`${styles.chevron} ${expanded ? styles.expanded : ""}`}
+            />
           </Button>
         )}
 
@@ -99,6 +122,7 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
               const label =
                 LABELS[link.type] ??
                 link.type.replace(/^\w/, (c) => c.toUpperCase());
+
               return (
                 <li key={`${link.type}-${link.url}`}>
                   <Button

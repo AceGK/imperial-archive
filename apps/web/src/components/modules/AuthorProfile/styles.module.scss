@@ -56,6 +56,7 @@ $author-profile-bg: color-mix(in oklab, var(--bg), var(--subtle) 10%);
     max-height: none;
   }
 
+  // default gradient
   &::after {
     content: "";
     position: absolute;
@@ -66,10 +67,16 @@ $author-profile-bg: color-mix(in oklab, var(--bg), var(--subtle) 10%);
     background: linear-gradient(to top, $author-profile-bg, transparent);
     pointer-events: none;
     opacity: 1;
+    transition: opacity 0.3s ease;
   }
 
   &.expanded::after {
     opacity: 0;
+  }
+
+  // ✅ Hide gradient completely for short bios (<= 5 lines)
+  &.noFade::after {
+    display: none;
   }
 }
 
