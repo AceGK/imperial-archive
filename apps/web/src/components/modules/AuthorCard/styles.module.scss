@@ -1,5 +1,7 @@
 .card {
+  height: 100%;
   display: flex;
+  justify-content: center;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
@@ -19,6 +21,7 @@
 .name {
   font-weight: 600;
   text-align: center;
+  font-size: 0.938rem;
 }
 
 .image {
@@ -49,4 +52,11 @@
 .count {
   font-size: 0.875rem;
   color: var(--subtle);
+}
+
+.meta {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
 }

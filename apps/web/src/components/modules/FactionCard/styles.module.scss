@@ -1,17 +1,18 @@
 /* /components/modules/styles.module.scss */
+@use "@/styles/breakpoints" as *;
 
 .card {
   --hover-bg: var(--faction-primary);
   --hover-fg: var(--faction-secondary);
   height:100%;
   display: grid;
-  gap: 0.5rem;
+  gap: 1rem;
   align-content: center;
   justify-items: center;
   padding: 0.875rem 1rem;
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   background: var(--bg);
-  color: var(--subtle); 
+  color: var(--text); 
   border: 1px solid var(--border, #2a2a2a);
   text-decoration: none;
 
@@ -30,22 +31,23 @@
 }
 
 .icon {
-  width: 60px;
-  height: 60px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
   svg {
     width: 60px;
     height: 60px;
     color: currentColor;
     fill: currentColor;
+    @include max(md) {
+      width:50px;
+      height:50px;
+    }
   }
 }
 
 .title {
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.938rem;
   text-align: center;
   line-height: 1.2;
 }

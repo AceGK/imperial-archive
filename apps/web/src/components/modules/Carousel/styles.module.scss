@@ -1,3 +1,5 @@
+@use "@/styles/breakpoints" as *;
+
 .wrap {
   width: 100%;
   margin-inline: auto;
@@ -41,10 +43,20 @@
   color: var(--subtle);
 }
 
+.swiper {
+  padding:0 1px;
+}
 /* Swiper overrides */
 .swiper :global(.swiper-button-prev),
 .swiper :global(.swiper-button-next) {
   color: var(--foreground);
+  @include max(md) {
+    display: none;
+  }
+}
+
+.swiper :global(.swiper-button-disabled) {
+  display: none;
 }
 
 .swiper :global(.swiper-pagination-bullet) {

@@ -3,15 +3,15 @@ import Image from "next/image";
 import styles from "./styles.module.scss";
 
 type AuthorCardProps = {
-  name: string
-  slug: string
-  count: number
+  name: string;
+  slug: string;
+  count: number;
   image?: {
-    url: string
-    lqip?: string
-    aspect?: number
-  }
-}
+    url: string;
+    lqip?: string;
+    aspect?: number;
+  };
+};
 
 function getInitials(fullName: string) {
   if (!fullName) return null;
@@ -21,11 +21,16 @@ function getInitials(fullName: string) {
     .trim()
     .split(/[\s-]+/)
     .filter(Boolean);
-  const initials = parts.map((p) => (p.match(/\p{L}/u)?.[0] || "")).join("");
+  const initials = parts.map((p) => p.match(/\p{L}/u)?.[0] || "").join("");
   return initials ? initials.toUpperCase() : null;
 }
 
-export default function AuthorCard({ name, slug, count, image }: AuthorCardProps) {
+export default function AuthorCard({
+  name,
+  slug,
+  count,
+  image,
+}: AuthorCardProps) {
   const initials = getInitials(name);
 
   return (
@@ -46,11 +51,12 @@ export default function AuthorCard({ name, slug, count, image }: AuthorCardProps
           initials
         )}
       </div>
-
-      <div className={styles.name}>{name}</div>
-      <span className={styles.count}>
-        {count} Work{count === 1 ? "" : "s"}
-      </span>
+      <div className={styles.meta}>
+        <div className={styles.name}>{name}</div>
+        <span className={styles.count}>
+          {count} Work{count === 1 ? "" : "s"}
+        </span>
+      </div>
     </Link>
   );
 }

@@ -18,7 +18,7 @@ export default async function FactionsPage() {
     <main className="container">
       <section>
         <h1>Factions</h1>
-        <p>Browse Warhammer 40,000 books by army, legion, chapter, and faction.</p>
+        <p>Discover Warhammer 40,000 stories organized by the Imperium’s armies, traitor legions, xenos empires, and heretical factions.</p>
 
         {groups.map((g) => {
           const Icon = resolveGroupIcon(g.iconId || '')

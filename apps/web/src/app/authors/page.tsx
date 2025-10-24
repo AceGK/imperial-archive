@@ -41,6 +41,7 @@ export default async function AuthorsPage() {
             ({authors.length})
           </span>
         </h1>
+        <p>Discover the writers who bring the grim darkness of the far future to life across the Black Library.</p>
 
         <div
           style={{

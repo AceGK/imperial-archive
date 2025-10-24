@@ -73,7 +73,8 @@
   font-size: 0.925rem;
   opacity: 0.9;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* keep grid tidy */
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

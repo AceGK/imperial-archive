@@ -10,9 +10,10 @@ export default async function EraListPage() {
 
   return (
     <main className="container">
-      <h1>Warhammer 40k Eras</h1>
-
-      <div style={{ display: "grid", gap: "1.5rem", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))" }}>
+      <section>
+      <h1>Eras</h1>
+      <p>Discover Warhammer 40,000 stories organized by the defining ages of the Imperium, from the Great Crusade to the Indomitus Crusade.</p>
+      <div style={{ display: "grid", gap: "1.5rem", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", marginTop: "2rem" }}>
         {eras.map((era) => (
           <EraCard
             key={era._id}
@@ -24,6 +25,7 @@ export default async function EraListPage() {
           />
         ))}
       </div>
+      </section>
     </main>
   )
 }

@@ -1,4 +1,4 @@
-/* Uses your theme variables: color pulls from var(--foreground) */
+
 .hero {
   position: relative;
   color: white;
@@ -65,9 +65,4 @@
   color: color-mix(in oklab, white, transparent 20%);
   font-size: clamp(1rem, 2.2vw, 1.25rem);
   max-width: 70ch;
-}
-
-/* Respect prefers-reduced-motion if you later add video etc. */
-@media (prefers-reduced-motion: reduce) {
-  /* No special handling needed now */
 }
