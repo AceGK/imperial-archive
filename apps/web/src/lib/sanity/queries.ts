@@ -1,5 +1,7 @@
 import { groq } from "next-sanity";
 
+//todo consolidate faction queries
+
 export const testPostsQuery = groq`
   *[_type == "post" && !(_id match "drafts.*")] 
     | order(publishedAt desc)[0...20]{

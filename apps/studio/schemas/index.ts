@@ -7,6 +7,7 @@ import blockContent from './objects/blockContent'
 import faction40k from './documents/faction40k'
 import factionGroup40k from './documents/factionGroup40k'
 import factionLink from './objects/factionLink'
+import era40k from './documents/era40k'
 
 export const schemaTypes = [
   post,
@@ -18,4 +19,5 @@ export const schemaTypes = [
   faction40k,
   factionGroup40k,
   factionLink,
+  era40k,
 ]

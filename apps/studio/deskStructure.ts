@@ -1,5 +1,5 @@
 import { StructureResolver } from "sanity/structure";
-import { DocumentsIcon, UsersIcon, TagIcon } from "@sanity/icons";
+import { DocumentsIcon, UsersIcon, TagIcon, ClockIcon } from "@sanity/icons";
 import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 
 export const deskStructure: StructureResolver = (S, context) =>
@@ -24,6 +24,14 @@ export const deskStructure: StructureResolver = (S, context) =>
 
       // --- MAIN CONTENT ---
       S.documentTypeListItem("author40k").title("40k Authors").icon(UsersIcon),
+
+     orderableDocumentListDeskItem({
+        type: 'era40k',
+        title: '40k Eras',
+        icon: ClockIcon,
+        S,
+        context,
+      }),
 
       S.listItem()
         .title("Factions")

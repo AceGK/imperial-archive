@@ -6,6 +6,7 @@ import {resolveGroupIcon, resolveIcon} from "@/components/icons/factions/resolve
 import FactionTheme from "@/components/modules/FactionTheme";
 import {getBooksByCollection} from "@/lib/40k-books";
 import type {Faction40kDoc} from "@/types/sanity";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 
 export const revalidate = 60;
 
@@ -36,9 +37,9 @@ export default async function FactionPage(
 
   return (
     <main className="container">
+      <Breadcrumb />
       <section>
-        <p><Link href="/factions">← All factions</Link></p>
-
+        
         <header
           style={{
             display: "grid",
@@ -69,6 +70,7 @@ export default async function FactionPage(
                     borderRadius: 16,
                     background: "var(--faction-primary)",
                     color: "var(--faction-secondary)",
+                    fill:"currentcolor",
                   }}
                 >
                   <FactionIcon width={120} height={120} role="img" aria-label={`${faction.title} icon`} />
