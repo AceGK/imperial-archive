@@ -221,7 +221,13 @@ export const single40kEraQuery = groq`
     title,
     "slug": slug.current,
     period,
-    description
+    description,
+    image{
+        ...,
+        "url": asset->url,
+        "lqip": asset->metadata.lqip,
+        "aspect": asset->metadata.dimensions.aspectRatio
+      }
   }
 `;
 

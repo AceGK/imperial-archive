@@ -1,15 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import styles from "./styles.module.scss";
-import Search from "@/components/modules/Search";
-
-// Data
-import Books from "../../../../data/40k-books.json";
-
+import type { Image as SanityImage } from "sanity";
+import { urlFor } from "@/lib/sanity/sanity.image";
 
 type HeroProps = {
   /** Background image path or URL */
-  image: string;
+  image: string | SanityImage;
   /** Alt text (leave empty if decorative) */
   alt?: string;
   /** Main heading */
@@ -24,6 +21,7 @@ type HeroProps = {
   height?: "sm" | "md" | "lg" | "xl";
   /** Extra class hook */
   className?: string;
+  children?: React.ReactNode;
 };
 
 export default function Hero({
@@ -35,6 +33,7 @@ export default function Hero({
   align = "left",
   height = "lg",
   className = "",
+  children,
 }: HeroProps) {
   
   const sectionClass = [
@@ -46,6 +45,12 @@ export default function Hero({
     .filter(Boolean)
     .join(" ");
 
+   // Build URL if given a Sanity image object
+  const src =
+    typeof image === "string"
+      ? image
+      : urlFor(image).width(2400).auto("format").url();
+
   return (
     <section
       className={sectionClass}
@@ -53,7 +58,7 @@ export default function Hero({
     >
       <div className={styles.media}>
         <Image
-          src={image}
+          src={src}
           alt={alt}
           fill
           priority={priority}
@@ -66,12 +71,7 @@ export default function Hero({
       <div className={`${styles.inner} container`}>
         <h1 className={styles.title}>{title}</h1>
         {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
-
-        {/* Pass both datasets to Search */}
-        <Search
-          books={Books as any}
-          placeholder="Search the Archive..."
-        />
+        {children}
       </div>
     </section>
   );
