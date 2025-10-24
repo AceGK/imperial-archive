@@ -48,7 +48,7 @@ export default async function AuthorsPage() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
             gap: "1rem",
-            marginTop: "1rem",
+            marginTop: "2rem",
           }}
         >
           {authors.map((a) => (

@@ -23,6 +23,7 @@ export default async function BrowsePage() {
             ({count})
           </span>
         </h1>
+        <p>Browse the full catalog of Warhammer 40,000 stories across every age of the Imperium.</p>
 
         <div
           style={{
@@ -30,6 +31,7 @@ export default async function BrowsePage() {
             gap: "1rem",
             gridTemplateColumns:
               "repeat(auto-fill, minmax(min(200px, 100%), 1fr))",
+            marginTop: "2rem",
           }}
         >
           {books.map((b) => (
