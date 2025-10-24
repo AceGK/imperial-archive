@@ -1,0 +1,83 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  background: var(--bg);
+  height: 100%;
+
+  &:hover {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--bg) 98%, var(--subtle));
+  }
+}
+
+.image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--muted, rgba(0,0,0,0.06));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 0.75rem;
+  color: var(--accent);
+}
+
+.placeholderTitle {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.placeholderPeriod {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--subtle);
+}
+
+.content {
+  padding: 1rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.period {
+  font-size: 0.875rem;
+  color: var(--subtle);
+}
+
+.description {
+  margin-top: 0.25rem;
+  font-size: 0.925rem;
+  opacity: 0.9;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* keep grid tidy */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+[data-theme="light"] .image {
+  filter: none;
+}

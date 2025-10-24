@@ -197,3 +197,31 @@ export const singleFaction40kBySlugsQuery = groq`
   }
 }
 `;
+
+export const all40kErasQuery = groq`
+  *[_type == "era40k" && !(_id match "drafts.*")] 
+    | order(orderRank) {
+      _id,
+      title,
+      "slug": slug.current,
+      period,
+      description, 
+      image{
+        ...,
+        "url": asset->url,
+        "lqip": asset->metadata.lqip,
+        "aspect": asset->metadata.dimensions.aspectRatio
+      }
+    }
+`;
+
+export const single40kEraQuery = groq`
+  *[_type == "era40k" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    period,
+    description
+  }
+`;
+

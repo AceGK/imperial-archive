@@ -11,6 +11,7 @@ const links = [
   { href: "/books", label: "Books" },
   { href: "/authors", label: "Authors" },
   { href: "/factions", label: "Factions" },
+  { href: "/eras", label: "Eras" },
 ];
 
 export default function Nav() {

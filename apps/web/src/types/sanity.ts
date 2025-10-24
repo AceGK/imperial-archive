@@ -57,3 +57,16 @@ export type Faction40kDoc = {
   links?: FactionLink[];
   group: FactionGroupRef;
 };
+
+export type Era40k = {
+  _id: string
+  title: string
+  slug: string
+  period?: string
+  image?: {
+    url: string
+    lqip?: string
+    aspect?: number
+  }
+  description?: string
+}
