@@ -1,12 +1,12 @@
-// /deskStructure.ts
 import { StructureResolver } from "sanity/structure";
 import { DocumentsIcon, UsersIcon, TagIcon } from "@sanity/icons";
+import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 
-export const deskStructure: StructureResolver = (S) =>
+export const deskStructure: StructureResolver = (S, context) =>
   S.list()
     .title("Content")
     .items([
-      // --- BLOG GROUP ---
+      // --- BLOG ---
       S.listItem()
         .title("Blog")
         .icon(DocumentsIcon)
@@ -20,10 +20,9 @@ export const deskStructure: StructureResolver = (S) =>
             ])
         ),
 
-      // Divider
       S.divider(),
 
-      // --- MAIN LIST ITEMS ---
+      // --- MAIN CONTENT ---
       S.documentTypeListItem("author40k").title("40k Authors").icon(UsersIcon),
 
       S.listItem()
@@ -33,12 +32,49 @@ export const deskStructure: StructureResolver = (S) =>
           S.list()
             .title("Factions")
             .items([
-              S.documentTypeListItem("factionGroup40k")
-                .title("40k Faction Groups")
-                .icon(TagIcon),
-              S.documentTypeListItem("faction40k")
-                .title("40k Factions")
-                .icon(UsersIcon),
+              // Make the main "Groups" reorderable
+              orderableDocumentListDeskItem({
+                type: "factionGroup40k",
+                title: "40k Faction Groups",
+                icon: TagIcon,
+                S,
+                context,
+              }),
+
+              // Make the main "Factions" reorderable
+              orderableDocumentListDeskItem({
+                type: "faction40k",
+                title: "40k Factions (All)",
+                icon: UsersIcon,
+                S,
+                context,
+              }),
+
+              S.divider(),
+
+              // --- Factions by Group ---
+              S.listItem()
+                .title("Factions by Group")
+                .icon(TagIcon)
+                .child(
+                  S.documentTypeList("factionGroup40k")
+                    .title("Factions by Group")
+                    .child((groupId) =>
+                      S.list()
+                        .title("Factions")
+                        .items([
+                          orderableDocumentListDeskItem({
+                            type: "faction40k",
+                            title: "Factions",
+                            filter:
+                              '_type == "faction40k" && references($groupId)',
+                            params: { groupId },
+                            S,
+                            context,
+                          }),
+                        ])
+                    )
+                ),
             ])
         ),
     ]);

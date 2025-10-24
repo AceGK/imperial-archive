@@ -26,11 +26,9 @@ export type Faction = {
 
 type Props = {
   books: Book[];
-  factions: Faction[];
   placeholder?: string;
   maxResults?: number;
   onSelectBook?: (book: Book) => void;
-  onSelectFaction?: (faction: Faction) => void;
 };
 
 type Hit =
@@ -140,11 +138,9 @@ function highlight(text: string, query: string): React.ReactNode {
 
 export default function Search({
   books,
-  factions,
   placeholder = "Search books and factions…",
   maxResults = 10,
   onSelectBook,
-  onSelectFaction,
 }: Props) {
   const router = useRouter();
   const [value, setValue] = useState("");
@@ -171,18 +167,12 @@ export default function Search({
       authorsLine: joinAuthors(b),
       collectionsLine: joinCollections(b),
     }));
-    const factionHits: Hit[] = factions.map((f) => ({
-      kind: "faction",
-      score: scoreFaction(f, q),
-      faction: f,
-      title: f.title ?? "",
-      groupLine: f.group ?? "",
-    }));
-    return [...bookHits, ...factionHits]
+  
+    return [...bookHits]
       .filter((h) => h.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, maxResults);
-  }, [books, factions, q, maxResults]);
+  }, [books, q, maxResults]);
 
   useEffect(() => setActive(0), [q]);
 
@@ -201,11 +191,6 @@ export default function Search({
     if (hit.kind === "book") {
       if (onSelectBook) return onSelectBook(hit.book);
       router.push(`/books/${hit.book.slug}`);
-    } else {
-      if (onSelectFaction) return onSelectFaction(hit.faction);
-      const groupSeg =
-        hit.faction.groupSlug || slugify(hit.faction.group || "all");
-      router.push(`/factions/${groupSeg}/${hit.faction.slug}`);
     }
   }
 

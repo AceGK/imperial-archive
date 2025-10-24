@@ -1,13 +1,21 @@
 // /schemas/documents/factionGroup40k.ts
 import {defineType, defineField} from 'sanity'
 import {FolderIcon} from '@sanity/icons'
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 
 export default defineType({
   name: 'factionGroup40k',
   title: '40k Faction Group',
   type: 'document',
   icon: FolderIcon,
+
+  // enables sorting by orderRank (used by the plugin + GROQ)
+  orderings: [orderRankOrdering],
+
   fields: [
+    // must come first
+    orderRankField({type: 'factionGroup40k'}),
+
     defineField({
       name: 'title',
       title: 'Title',
@@ -29,8 +37,9 @@ export default defineType({
       type: 'array',
       of: [{type: 'factionLink'}],
     }),
-    defineField({name: 'order', title: 'Order', type: 'number'}),
+    // remove your old numeric `order` field
   ],
+
   preview: {
     select: {title: 'title', subtitle: 'slug.current'},
     prepare: ({title, subtitle}) => ({

@@ -5,10 +5,7 @@ import Search from "@/components/modules/Search";
 
 // Data
 import Books from "../../../../data/40k-books.json";
-import RawFactions from "../../../../data/40k-factions.json";
 
-// Normalizer
-import { flattenFactions } from "@/lib/flatten-factions";
 
 type HeroProps = {
   /** Background image path or URL */
@@ -39,9 +36,7 @@ export default function Hero({
   height = "lg",
   className = "",
 }: HeroProps) {
-  // Normalize factions once on the server (pure + cheap)
-  const factions = flattenFactions(RawFactions as any);
-
+  
   const sectionClass = [
     styles.hero,
     styles[`align-${align}`],
@@ -75,7 +70,6 @@ export default function Hero({
         {/* Pass both datasets to Search */}
         <Search
           books={Books as any}
-          factions={factions}
           placeholder="Search the Archive..."
         />
       </div>

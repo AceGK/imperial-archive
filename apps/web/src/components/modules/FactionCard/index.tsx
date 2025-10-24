@@ -1,48 +1,52 @@
-// /components/modules/FactionCard.tsx
+// /components/modules/FactionCard/index.tsx
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./styles.module.scss";
 import { resolveIcon } from "@/components/icons/factions/resolve";
-import type { CSSProperties } from "react";
+import FactionTheme from "@/components/modules/FactionTheme";
 
-type FactionCardProps = {
+type Props = {
   title: string;
-  slug: string;          // e.g. "dark-angels"
-  iconId?: string;
-  image?: string;
+  slug: string;
   group?: string;
-  href?: string;
+  iconId?: string;
+  className?: string;
 };
 
+function toHref(slug: string, group?: string) {
+  if (slug.includes("/")) return slug;
+  return group ? `/factions/${group}/${slug}` : `/factions/${slug}`;
+}
+
 export default function FactionCard({
-  title, slug, iconId, image, group, href,
-}: FactionCardProps) {
-  const link =
-    href ?? (slug.startsWith("/")
-      ? slug
-      : group
-      ? `/factions/${group}/${slug}`
-      : `/factions/${slug}`);
-
-  const Icon = resolveIcon(iconId);
-
-  // Map this card's local vars → your global palette vars
-  const style = {
-    // fallbacks ensure readable contrast if a slug color is missing
-    ["--faction-primary" as any]: `var(--${slug}-primary, #2c3e94)`,
-    ["--faction-secondary" as any]: `var(--${slug}-secondary, #e5e5e5)`,
-  } as CSSProperties;
+  title,
+  slug,
+  group,
+  iconId,
+  className,
+}: Props) {
+  const Icon = resolveIcon(iconId || slug);
+  const href = toHref(slug, group);
+  const themeKey = iconId || slug;
 
   return (
-    <Link href={link} className={styles.card} style={style}>
-      <div className={styles.image}>
-        {Icon ? (
-          <Icon width={60} height={60} role="img" aria-label={`${title} icon`} />
-        ) : image ? (
-          <Image src={image} alt={title} width={60} height={60} loading="lazy" />
-        ) : null}
+    <FactionTheme
+      slugOrIconId={themeKey}
+      as={Link}
+      href={href}
+      className={`${styles.card} ${className ?? ""}`}
+      aria-label={`Open ${title}`}
+    >
+      <div className={styles.imageWrap}>
+        {Icon && (
+          <div className={styles.icon}>
+            <Icon width={80} height={80} aria-hidden />
+          </div>
+        )}
       </div>
-      <div className={styles.title}>{title}</div>
-    </Link>
+      <div className={styles.meta}>
+        <div className={styles.title}>{title}</div>
+      </div>
+    </FactionTheme>
   );
 }

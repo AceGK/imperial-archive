@@ -1,20 +1,27 @@
+// /components/modules/Carousel/FactionCarousel/client.tsx  (client)
 "use client";
 
 import React, { useMemo, useState } from "react";
-import carouselStyles from "@/components/modules/Carousel/styles.module.scss";
-import styles from "./styles.module.scss";
 import Carousel from "@/components/modules/Carousel";
 import type { SwiperOptions } from "swiper/types";
-import type { GroupedFactions } from "@/lib/40k-factions";
 import FactionCard from "@/components/modules/FactionCard";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
+import styles from "./styles.module.scss";
+import carouselStyles from "@/components/modules/Carousel/styles.module.scss";
+
+type GroupMeta = { title: string; iconId?: string; description?: string };
+type AdaptedGroup = {
+  key: string;                 // group slug
+  meta: GroupMeta;
+  items: { _id: string; title: string; slug: string; iconId?: string }[];
+};
 
 type Props = {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
-  groups: GroupedFactions[];
+  groups: AdaptedGroup[];
   initialGroupKey?: string;
-  basePath?: string;
+  basePath?: string;           // not used in links now (we build /factions/{group}/{slug})
   className?: string;
 };
 
@@ -33,37 +40,28 @@ export default function FactionCarouselClient({
   basePath = "/factions",
   className,
 }: Props) {
-  const defaultKey = useMemo(
-    () => initialGroupKey || groups[0]?.key,
-    [initialGroupKey, groups]
-  );
-
+  const defaultKey = initialGroupKey || groups[0]?.key;
   const [activeKey, setActiveKey] = useState<string>(defaultKey);
 
   const activeGroup = useMemo(
-    () => groups.find((g) => g.key === activeKey) || groups[0],
+    () => groups.find(g => g.key === activeKey) || groups[0],
     [groups, activeKey]
   );
 
-  // Build slides using YOUR FactionCard component
   const items = useMemo(() => {
     if (!activeGroup) return [];
-    return activeGroup.items.map((f) => (
+    return activeGroup.items.map(f => (
       <FactionCard
-        key={`${activeGroup.key}-${f.slug}`}
+        key={f._id}
         title={f.title}
         slug={f.slug}
         iconId={f.iconId}
-        image={f.image}
-        group={activeGroup.key} // ensures /factions/[group]/[slug]
+        group={activeGroup.key}
       />
     ));
   }, [activeGroup]);
 
-  // View-All for current group (works with your Carousel’s “last slide” + bottom button)
-  // const viewAllLink = `${basePath}/${activeGroup?.key ?? groups[0]?.key}`;
-  // const viewAllLabel = `All ${activeGroup?.meta.title ?? "Factions"}`;
-  const viewAllLink = basePath; // e.g. "/factions"
+  const viewAllLink = basePath;          // "/factions"
   const viewAllLabel = "View All Factions";
 
   return (
@@ -75,9 +73,8 @@ export default function FactionCarouselClient({
         </header>
       )}
 
-      {/* Tabs with group icon + title */}
       <div className={styles.tabs} role="tablist" aria-label="Faction groups">
-        {groups.map((g) => {
+        {groups.map(g => {
           const GroupIcon = resolveGroupIcon(g.meta.iconId);
           const isActive = g.key === activeKey;
           return (
@@ -89,16 +86,13 @@ export default function FactionCarouselClient({
               className={`${styles.tab} ${isActive ? styles.active : ""}`}
               onClick={() => setActiveKey(g.key)}
             >
-              {GroupIcon && (
-                <GroupIcon width={18} height={18} className={styles.tabIcon} />
-              )}
+              {GroupIcon && <GroupIcon width={18} height={18} className={styles.tabIcon} />}
               <span className={styles.tabLabel}>{g.meta.title}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Carousel for selected group */}
       <Carousel
         items={items}
         slidesPerView={1.2}

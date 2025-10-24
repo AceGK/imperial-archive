@@ -1,11 +1,17 @@
 import Link from "next/link";
-import { getGroupedFactions, getGroupMeta } from "@/lib/40k-factions";
-import FactionCard from "@/components/modules/FactionCard";
+import { notFound } from "next/navigation";
+import { client } from "@/lib/sanity/sanity.client";
+import { groupedFactions40kQuery } from "@/lib/sanity/queries";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
-import { getBooksByCollection } from "@/lib/40k-books";
+import FactionCard from "@/components/modules/FactionCard";
+import type { FactionGroupWithItems } from "@/types/sanity";
 
+export const revalidate = 60;
+
+// Generate static params for all groups
 export async function generateStaticParams() {
-  return getGroupedFactions().map(({ key }) => ({ group: key }));
+  const groups = await client.fetch<FactionGroupWithItems[]>(groupedFactions40kQuery);
+  return groups.map((g) => ({ group: g.slug }));
 }
 
 export default async function GroupPage({
@@ -14,22 +20,18 @@ export default async function GroupPage({
   params: Promise<{ group: string }>;
 }) {
   const { group } = await params;
-  const all = getGroupedFactions();
-  const bucket = all.find((g) => g.key === group || g.meta.slug === group);
-  if (!bucket)
-    return (
-      <main className="container">
-        <p>Group not found.</p>
-      </main>
-    );
 
-  const { key, meta, items } = bucket;
-  const Icon = resolveGroupIcon(meta.iconId);
-  const books = getBooksByCollection(meta.title);
+  // Fetch all groups + their factions
+  const groups = await client.fetch<FactionGroupWithItems[]>(groupedFactions40kQuery);
+  const bucket = groups.find((g) => g.slug === group);
 
-  // ✅ Read the Lexicanum link safely (kebab-case or camelCase)
-  const lexicanumLink =
-    (meta as any)?.["lexicanum-link"] ?? (meta as any)?.lexicanumLink ?? null;
+  if (!bucket) notFound();
+
+  const { title, description, iconId, links, items } = bucket;
+  const Icon = resolveGroupIcon(iconId);
+
+  // Find Lexicanum link
+  const lexicanumLink = links?.find((l) => l.type === "lexicanum")?.url ?? null;
 
   return (
     <main className="container">
@@ -43,13 +45,13 @@ export default async function GroupPage({
             display: "flex",
             gap: 16,
             alignItems: "center",
+            marginBottom: 24,
           }}
         >
           {Icon && <Icon width={100} height={100} />}
           <div>
-            <h1 style={{ margin: 0 }}>{meta.title}</h1>
+            <h1 style={{ margin: 0 }}>{title}</h1>
 
-            {/* ✅ Group Lexicanum link */}
             {lexicanumLink && (
               <p style={{ margin: "6px 0 8px" }}>
                 <a
@@ -62,57 +64,42 @@ export default async function GroupPage({
                     alignItems: "center",
                     textDecoration: "underline",
                   }}
-                  aria-label={`Open ${meta.title} on Lexicanum (opens in a new tab)`}
+                  aria-label={`Open ${title} on Lexicanum (opens in a new tab)`}
                 >
                   View on Lexicanum →
                 </a>
               </p>
             )}
 
-            {meta.description && (
-              <p style={{ opacity: 0.8 }}>{meta.description}</p>
-            )}
+            {description && <p style={{ opacity: 0.8 }}>{description}</p>}
           </div>
         </header>
 
-        <section style={{ marginTop: 24 }}>
+        <section>
           <h2>Chapters / Sub-factions</h2>
-          <ul
-            style={{
-              display: "grid",
-              gap: 16,
-              listStyle: "none",
-              padding: 0,
-              gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
-            }}
-          >
-            {items.map((f) => (
-              <li key={f.slug}>
-                <FactionCard
-                  title={f.title}
-                  iconId={f.iconId}
-                  slug={`/factions/${key}/${f.slug}`}
-                  group={key}
-                />
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section style={{ marginTop: 32 }}>
-          <h2>
-            Books featuring {meta.title} ({books.length})
-          </h2>
-          {books.length === 0 ? (
-            <p style={{ opacity: 0.8 }}>No books yet.</p>
-          ) : (
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              {books.map((b) => (
-                <li key={b.id}>
-                  <Link href={`/books/${b.slug}`}>{b.title}</Link>
+          {items?.length > 0 ? (
+            <ul
+              style={{
+                display: "grid",
+                gap: 16,
+                listStyle: "none",
+                padding: 0,
+                gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
+              }}
+            >
+              {items.map((f) => (
+                <li key={f._id}>
+                  <FactionCard
+                    title={f.title}
+                    slug={`/factions/${group}/${f.slug}`}
+                    iconId={f.iconId}
+                    group={group}
+                  />
                 </li>
               ))}
             </ul>
+          ) : (
+            <p style={{ opacity: 0.8 }}>No factions found.</p>
           )}
         </section>
       </section>

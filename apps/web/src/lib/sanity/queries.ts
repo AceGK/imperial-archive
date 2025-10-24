@@ -83,3 +83,115 @@ export const featuredAuthors40kQuery = groq`
   "count": count(*[_type == "book40k" && references(^._id)])
 }
 `;
+
+// All groups with nested factions, ordered
+export const groupedFactions40kQuery = groq`
+  *[
+    _type == "factionGroup40k"
+    && !(_id match "drafts.*")
+  ] | order(orderRank asc){
+    _id,
+    title,
+    "slug": slug.current,
+    iconId,
+    description,
+    links[]{type, url},
+
+    "items": *[
+      _type == "faction40k"
+      && !(_id match "drafts.*")
+      && references(^._id)
+    ] | order(orderRank asc){
+      _id,
+      title,
+      "slug": slug.current,
+      iconId,
+      description,
+      links[]{type, url}
+    }
+  }
+`
+
+// Flat list for cards, with group key
+export const factions40kForCardsQuery = groq`
+  *[
+    _type == "faction40k"
+    && !(_id match "drafts.*")
+  ] | order(orderRank asc){
+    _id,
+    title,
+    "slug": slug.current,
+    iconId,
+    description,
+    "groupKey": group->slug.current,
+    "groupTitle": group->title
+  }
+`
+
+
+// Single faction (by slug) including its group
+export const singleFaction40kQuery = groq`
+  *[
+    _type == "faction40k"
+    && slug.current == $slug
+  ][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    iconId,
+    description,
+    links[]{type, url},
+    "group": group->{
+      _id, title, "slug": slug.current, iconId
+    }
+  }
+`;
+
+// All groups only (no nesting), ordered
+export const factionGroups40kQuery = groq`
+  *[
+    _type == "factionGroup40k"
+    && !(_id match "drafts.*")
+  ] | order(orderRank asc){
+    _id,
+    title,
+    "slug": slug.current,
+    iconId,
+    description,
+    links[]{type, url}
+  }
+`
+
+// All [group]/[slug] pairs for SSG
+export const factionPairs40kQuery = groq`
+*[
+  _type == "faction40k"
+  && defined(slug.current)
+  && defined(group->slug.current)
+]{
+  "group": group->slug.current,
+  "slug": slug.current
+}
+`;
+
+// Single faction by group+slug
+export const singleFaction40kBySlugsQuery = groq`
+*[
+  _type == "faction40k"
+  && slug.current == $slug
+  && group->slug.current == $group
+][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  iconId,
+  description,
+  links[]{type, url},
+  "group": {
+    "title": group->title,
+    "slug": group->slug.current,
+    "iconId": group->iconId,
+    links
+  }
+}
+`;
