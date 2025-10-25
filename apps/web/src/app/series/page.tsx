@@ -18,7 +18,7 @@ export default function SeriesPage() {
         alt="Eisenhorn by Alexander Ovchinnikov"
       />
       <section className="container">
-        <ul style={{ listStyle: "none", padding: 0, marginTop: "1.5rem" }}>
+        <ul style={{ listStyle: "none"}}>
           {series.map((s) => (
             <li key={s.slug} style={{ padding: "0.25rem 0" }}>
               <Link href={`/series/${s.slug}`}>{s.name}</Link>
