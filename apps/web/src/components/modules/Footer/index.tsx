@@ -85,7 +85,7 @@ export default function Footer({
           <div className="container">
             <div className={styles.bottomInner}>
               <small className={styles.copy}>
-                © {year} Imperial Archive. All rights reserved.
+                © {year} Imperial Archive
               </small>
 
               <div className={styles.bottomLinks}>
