@@ -1,6 +1,9 @@
 import PageHeader from "@/components/modules/PageHeader";
+import Link from "next/link";
+import { getAllSeries } from "@/lib/40k-series";
 
 export default function SeriesPage() {
+  const series = getAllSeries();
   return (
     <main>
       <PageHeader
@@ -15,7 +18,13 @@ export default function SeriesPage() {
         alt="Eisenhorn by Alexander Ovchinnikov"
       />
       <section className="container">
-        <h1>Series</h1>
+        <ul style={{ listStyle: "none", padding: 0, marginTop: "1.5rem" }}>
+          {series.map((s) => (
+            <li key={s.slug} style={{ padding: "0.25rem 0" }}>
+              <Link href={`/series/${s.slug}`}>{s.name}</Link>
+            </li>
+          ))}
+        </ul>
       </section>
     </main>
   );
