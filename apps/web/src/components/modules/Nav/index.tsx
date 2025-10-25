@@ -14,6 +14,7 @@ const links = [
   { href: "/authors", label: "Authors" },
   { href: "/factions", label: "Factions" },
   { href: "/eras", label: "Eras" },
+  { href: "/series", label: "Series" },
 ];
 
 export default function Nav() {

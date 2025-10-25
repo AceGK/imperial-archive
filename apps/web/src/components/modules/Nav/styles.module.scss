@@ -61,7 +61,7 @@
   margin: 0;
   padding: 0;
 
-  @include max(md) {
+  @include max(md, 110) {
     display: none;
   }
 }
@@ -75,7 +75,7 @@
   display: flex;
   gap: 0.5rem;
 
-  @include max(md) {
+  @include max(md, 110) {
     display: none;
   }
 }
@@ -94,7 +94,7 @@
   background: transparent;
   cursor: pointer;
 
-  @include max(md) {
+  @include max(md, 110) {
     display: inline-flex;
   }
 
@@ -147,7 +147,7 @@
 /* mobile panel */
 .mobile {
   display: none;
-  @include max(md) {
+  @include max(md, 110) {
     display: block;
   }
 
@@ -218,7 +218,7 @@
     visibility 160ms;
   z-index: 48;
 
-  @include min(md) {
+  @include min(md, 110) {
     display: none;
   }
 }

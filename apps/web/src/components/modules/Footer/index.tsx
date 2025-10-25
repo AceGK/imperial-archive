@@ -17,10 +17,11 @@ export type FooterProps = {
 };
 
 const defaultPrimary: FooterLink[] = [
-  { href: "/books", label: "Books" },
-  { href: "/authors", label: "Authors" },
-  { href: "/factions", label: "Factions" },
-  { href: "/eras", label: "Eras" },
+  { href: "/books", label: "All Books" },
+  { href: "/authors", label: "By Author" },
+  { href: "/factions", label: "By Faction" },
+  { href: "/eras", label: "By Era" },
+  { href: "/series", label: "By Series" },
 ];
 
 const defaultSecondary: FooterLink[] = [
@@ -52,7 +53,7 @@ export default function Footer({
 
           {/* Primary links */}
           <nav className={styles.nav} aria-label="Footer navigation">
-            <h2 className={styles.heading}>Explore</h2>
+            <h2 className={styles.heading}>Browse</h2>
             <ul className={styles.linkList}>
               {links.map((l) => (
                 <li key={l.href}>
