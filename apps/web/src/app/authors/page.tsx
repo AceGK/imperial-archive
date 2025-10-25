@@ -1,11 +1,11 @@
 // /app/authors/page.tsx
 import { client } from "@/lib/sanity/sanity.client";
 import { all40kAuthorsQuery } from "@/lib/sanity/queries";
-import { urlFor } from "@/lib/sanity/sanity.image";
 import type { Author40k } from "@/types/sanity";
 
 import { getAllBooks } from "@/lib/40k-books";
 import AuthorCard from "@/components/modules/AuthorCard";
+import PageHeader from "@/components/modules/PageHeader";
 
 export const revalidate = 60;
 
@@ -33,16 +33,23 @@ export default async function AuthorsPage() {
   }
 
   return (
-    <main className="container">
-      <section>
+    <main>
+      <PageHeader
+        title={`Authors`}
+        subtitle="Discover the writers who bring the grim darkness of the far future to life across the Black Library."
+        align="center"
+        strongOverlay
+        height="xs"
+        priority
+        image="/images/imperial-library-erik-nykvist.jpg"
+      />
+      <section className="container">
         <h1 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           Authors{" "}
           <span style={{ fontSize: "0.9rem", borderRadius: 999 }}>
             ({authors.length})
           </span>
         </h1>
-        <p>Discover the writers who bring the grim darkness of the far future to life across the Black Library.</p>
-
         <div
           style={{
             display: "grid",

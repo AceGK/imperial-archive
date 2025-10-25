@@ -4,6 +4,7 @@ import { groupedFactions40kQuery } from '@/lib/sanity/queries'
 import type { FactionGroupWithItems } from '@/types/sanity'
 import FactionCard from '@/components/modules/FactionCard'
 import { resolveGroupIcon } from '@/components/icons/factions/resolve'
+import PageHeader from '@/components/modules/PageHeader'
 
 export const revalidate = 60
 
@@ -15,10 +16,17 @@ export default async function FactionsPage() {
   )
 
   return (
-    <main className="container">
-      <section>
-        <h1>Factions</h1>
-        <p>Discover Warhammer 40,000 stories organized by the Imperium’s armies, traitor legions, xenos empires, and heretical factions.</p>
+    <main>
+      <PageHeader
+        title="Factions"
+        subtitle="Discover Warhammer 40,000 stories organized by the Imperium’s armies, traitor legions, xenos empires, and heretical factions."
+        align="center"
+        strongOverlay
+        height="xs"
+        priority
+        image="/images/astra-militarum-lewis-jones.jpg"
+      />
+      <div className="container">
 
         {groups.map((g) => {
           const Icon = resolveGroupIcon(g.iconId || '')
@@ -56,7 +64,7 @@ export default async function FactionsPage() {
             </section>
           )
         })}
-      </section>
+      </div>
     </main>
   )
 }

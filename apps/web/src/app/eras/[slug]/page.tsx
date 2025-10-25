@@ -27,14 +27,14 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
     <main>
       <PageHeader
         title={era.title}
-        subtitle={era.period}
+        subtitle={era.description}
         image={era.image}
         align="center"
         strongOverlay
         height="xs"
         priority
       >
-        {era.description && <p style={{textWrap: "balance"}}>{era.description}</p>}
+        {era.description && <p style={{textWrap: "balance"}}>{era.period}</p>}
       </PageHeader>
       <section className="container">
 

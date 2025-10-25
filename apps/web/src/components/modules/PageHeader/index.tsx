@@ -11,7 +11,7 @@ export type PageHeaderImage = {
 export type PageHeaderProps = {
   title: string;
   subtitle?: string;
-  image?: PageHeaderImage | null;
+  image?: PageHeaderImage | string | null;
   children?: React.ReactNode;
   align?: "left" | "center";
   height?: "xs" | "sm" | "md" | "lg";
@@ -39,23 +39,29 @@ export default function PageHeader({
     .filter(Boolean)
     .join(" ");
 
-  const overlayClass = [styles.overlay, strongOverlay ? styles.overlayStrong : ""]
+  const overlayClass = [
+    styles.overlay,
+    strongOverlay ? styles.overlayStrong : "",
+  ]
     .filter(Boolean)
     .join(" ");
+
+  const resolvedUrl = typeof image === "string" ? image : image?.url;
+  const blur = typeof image === "string" ? undefined : image?.lqip;
 
   return (
     <section className={rootClass}>
       <div className={styles.media}>
-        {image?.url ? (
+        {resolvedUrl ? (
           <Image
-            src={image.url}
+            src={resolvedUrl}
             alt=""
             role="presentation"
             fill
             sizes="100vw"
             priority={priority}
-            placeholder={image.lqip ? "blur" : undefined}
-            blurDataURL={image.lqip}
+            placeholder={blur ? "blur" : undefined}
+            blurDataURL={blur}
             style={{ objectFit: "cover" }}
           />
         ) : (
