@@ -19,6 +19,7 @@ export default async function BrowsePage() {
         height="xs"
         priority
         image="/images/black-library-books.jpg"
+        alt="Black Library © Games Workshop"
       />
 
       <section className="container">

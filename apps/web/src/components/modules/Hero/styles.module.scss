@@ -66,3 +66,11 @@
   font-size: clamp(1rem, 2.2vw, 1.25rem);
   max-width: 70ch;
 }
+
+.altText {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 0.625rem;
+  color: #858585;
+}

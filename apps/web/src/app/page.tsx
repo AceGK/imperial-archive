@@ -57,6 +57,7 @@ export default async function Home() {
     <main>
       <Hero
         image="/images/black-library-books.jpg"
+        alt="Black Library © Games Workshop"
         title="Explore the Black Library"
         subtitle="Browse Warhammer 40,000 books by author, faction, era, and series."
         priority

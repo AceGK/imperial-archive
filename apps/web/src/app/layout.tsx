@@ -6,6 +6,7 @@ import "@/styles/reset.scss";
 import "@/styles/globals.scss";
 import "@/styles/utils.scss";
 import Nav from "@/components/modules/Nav";
+import Footer from "@/components/modules/Footer";
 import ConvextClientProvider from "@/context/convex-client-provider";
 
 const geistSans = Geist({
@@ -47,6 +48,7 @@ export default async function RootLayout({
           <ConvextClientProvider>
             <Nav />
             {children}
+            <Footer />
           </ConvextClientProvider>
         </ThemeProvider>
       </body>

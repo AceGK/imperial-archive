@@ -6,12 +6,14 @@ export type PageHeaderImage = {
   url: string;
   lqip?: string;
   aspect?: number;
+  alt?: string;
 };
 
 export type PageHeaderProps = {
   title: string;
   subtitle?: string;
   image?: PageHeaderImage | string | null;
+  alt?: string;
   children?: React.ReactNode;
   align?: "left" | "center";
   height?: "xs" | "sm" | "md" | "lg";
@@ -24,6 +26,7 @@ export default function PageHeader({
   title,
   subtitle,
   image,
+  alt,
   children,
   align = "left",
   height = "md",
@@ -48,6 +51,9 @@ export default function PageHeader({
 
   const resolvedUrl = typeof image === "string" ? image : image?.url;
   const blur = typeof image === "string" ? undefined : image?.lqip;
+  // logic: if dev passes imageAlt, use it; otherwise use Sanity alt; otherwise fallback empty
+  const imageAlt =
+    typeof image === "string" ? alt || "" : image?.alt || alt || "";
 
   return (
     <section className={rootClass}>
@@ -55,8 +61,7 @@ export default function PageHeader({
         {resolvedUrl ? (
           <Image
             src={resolvedUrl}
-            alt=""
-            role="presentation"
+            alt={imageAlt}
             fill
             sizes="100vw"
             priority={priority}
@@ -77,6 +82,7 @@ export default function PageHeader({
           {children && <div className={styles.children}>{children}</div>}
         </div>
       </div>
+      <div className={styles.altText}>{imageAlt}</div>
     </section>
   );
 }

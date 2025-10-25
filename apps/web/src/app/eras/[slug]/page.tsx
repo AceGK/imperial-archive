@@ -29,6 +29,7 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
         title={era.title}
         subtitle={era.description}
         image={era.image}
+        alt={era.image?.alt}
         align="center"
         strongOverlay
         height="xs"
@@ -39,9 +40,6 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
       <section className="container">
 
       </section>
-      {/* <h1>{era.title}</h1>
-      {era.period && <h2 style={{ opacity: 0.8 }}>{era.period}</h2>}
-      {era.description && <p style={{ marginTop: "1rem" }}>{era.description}</p>} */}
     </main>
   );
 }

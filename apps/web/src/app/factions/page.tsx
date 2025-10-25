@@ -25,6 +25,7 @@ export default async function FactionsPage() {
         height="xs"
         priority
         image="/images/astra-militarum-lewis-jones.jpg"
+        alt="Astra Militarum by Lewis Jones"
       />
       <div className="container">
 

@@ -224,6 +224,7 @@ export const single40kEraQuery = groq`
     description,
     image{
         ...,
+        alt,
         "url": asset->url,
         "lqip": asset->metadata.lqip,
         "aspect": asset->metadata.dimensions.aspectRatio

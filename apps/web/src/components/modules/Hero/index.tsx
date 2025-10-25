@@ -73,6 +73,7 @@ export default function Hero({
         {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
         {children}
       </div>
+      <div className={styles.altText}>{alt}</div>
     </section>
   );
 }

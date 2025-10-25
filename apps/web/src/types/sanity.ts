@@ -67,6 +67,7 @@ export type Era40k = {
     url: string
     lqip?: string
     aspect?: number
+    alt?: string
   }
   description?: string
 }
