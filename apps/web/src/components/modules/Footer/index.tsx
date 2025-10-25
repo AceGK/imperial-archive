@@ -33,7 +33,7 @@ const defaultSecondary: FooterLink[] = [
 export default function Footer({
   links = defaultPrimary,
   secondary = defaultSecondary,
-  note = "Imperial Archive is a fan-made resource for Warhammer reading and lore. Not affiliated with Games Workshop.",
+  note = "Imperial Archive is a fan-made resource for Warhammer reading and lore. Not affiliated with Games Workshop. All Warhammer® trademarks, logos and images are owned by Games Workshop Limited.",
   showBottomBar = true,
 }: FooterProps) {
   const year = new Date().getFullYear();
