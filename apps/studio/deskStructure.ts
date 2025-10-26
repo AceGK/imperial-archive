@@ -24,6 +24,8 @@ export const deskStructure: StructureResolver = (S, context) =>
 
       // --- MAIN CONTENT ---
       S.documentTypeListItem("author40k").title("40k Authors").icon(UsersIcon),
+      S.documentTypeListItem("book40k").title("40k Books").icon(DocumentsIcon),
+      S.documentTypeListItem("series40k").title("40k Series").icon(TagIcon),
 
      orderableDocumentListDeskItem({
         type: 'era40k',
