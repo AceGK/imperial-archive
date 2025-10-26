@@ -19,20 +19,17 @@ function authorLabel(arr?: string[]) {
 
 export default async function BookPage({
   params,
-  // If you use query strings on this page, keep this and await it similarly.
   searchParams,
 }: {
   params: Promise<Params>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  // ✅ Next 15: await params (and searchParams if you use it)
   const { slug } = await params;
 
   const book = await getBookBySlug(slug);
   if (!book) notFound();
 
   const byline = authorLabel(book.author);
-  const tags = Array.isArray(book.tags) ? book.tags : [];
   const collections = Array.isArray(book.collections) ? book.collections : [];
 
   return (
@@ -41,16 +38,11 @@ export default async function BookPage({
         <article>
           <h1>{book.title}</h1>
           <p className="author">By {byline}</p>
-
-          {/* Series & Number */}
-          {(book.series || typeof book.series_number === "number") && (
-            <p>
-              <strong>Series:</strong> {book.series ?? "—"}
-              {typeof book.series_number === "number"
-                ? ` (#${book.series_number})`
-                : ""}
+          {book?.series.map((s, i) => (
+            <p key={i} className="series">
+              <strong>Series:</strong> {s.name}
             </p>
-          )}
+          ))}
 
           {/* Release date */}
           {book.releaseDate && (
@@ -60,20 +52,13 @@ export default async function BookPage({
           )}
 
           {/* Era / Setting */}
-          {(book.era || book.setting) && (
+          {(book.era) && (
             <p>
               {book.era && (
                 <>
                   <strong>Era:</strong> {book.era}{" "}
                 </>
               )}
-            </p>
-          )}
-
-          {/* Tags */}
-          {tags.length > 0 && (
-            <p>
-              <strong>Tags:</strong> {tags.join(", ")}
             </p>
           )}
 
@@ -84,7 +69,7 @@ export default async function BookPage({
             </p>
           )}
 
-          {/* Cover */}
+          {/* Cover
           {book.cover_image_url && (
             <img
               src={book.cover_image_url}
@@ -93,7 +78,7 @@ export default async function BookPage({
               height={600}
               style={{ objectFit: "cover", borderRadius: 8, marginTop: "1rem" }}
             />
-          )}
+          )} */}
 
           {/* Description/Story */}
           <section>

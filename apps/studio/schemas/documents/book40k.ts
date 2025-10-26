@@ -43,17 +43,6 @@ export default defineType({
       validation: (R) => R.min(1).error("Add at least one author."),
     }),
 
-    // Optional helper for previews/search
-    defineField({
-      name: "authorNames",
-      title: "Author Names (helper)",
-      type: "array",
-      of: [{ type: "string" }],
-      hidden: true,
-      description:
-        "Optional denormalized names to power previews/filters. Keep authors[] (refs) as the source of truth.",
-    }),
-
     defineField({
       name: "seriesMembership",
       title: "Belongs to series",
@@ -87,7 +76,7 @@ export default defineType({
       validation: (R) => R.required(),
     }),
 
-        defineField({
+    defineField({
       name: "contents",
       title: "Contents",
       type: "array",
@@ -152,12 +141,13 @@ export default defineType({
     }),
 
     defineField({
-      name: "eraName",
-      title: "Era (Search Helper)",
-      type: "string",
-      hidden: true,
-      description:
-        "Optional denormalized field for search/filters. Not source of truth.",
+      name: "factions",
+      title: "Factions",
+      description: "All factions that significantly appear in this work.",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "faction40k" }] }],
+      // Optional: nudge editors to add at least one when relevant, but not required.
+      validation: (R) => R.unique(), // keep refs unique; not required
     }),
 
     // IMAGE

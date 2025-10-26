@@ -5,8 +5,8 @@ import styles from "./styles.module.scss";
 
 type Props = {
   book: Book;
-  href?: string;      // override if needed
-  compact?: boolean;  // hides some extras in tight grids
+  href?: string; // override if needed
+  compact?: boolean; // hides some extras in tight grids
   className?: string;
 };
 
@@ -19,10 +19,7 @@ function authorsLabel(arr: string[]) {
 export default function BookCard({ book, href, compact, className }: Props) {
   const link = href ?? `/books/${book.slug}`;
   const author = authorsLabel(book.author);
-  const series =
-    book.series && typeof book.series_number === "number"
-      ? `${book.series} #${book.series_number}`
-      : book.series || null;
+  const series = book.series ? book.series : null;
 
   const collections = book.collections ?? [];
   const shown = collections.slice(0, compact ? 2 : 3);
@@ -33,49 +30,34 @@ export default function BookCard({ book, href, compact, className }: Props) {
       {/* Cover (or placeholder) */}
       <div
         className={styles.image}
-        aria-label={book.cover_image_url ? `${book.title} cover` : "No cover image"}
+        aria-label={book.title ? `${book.title} cover` : "No cover image"}
       >
-        {book.cover_image_url ? (
-          <Image
-            src={book.cover_image_url}
-            alt={book.title}
-            fill
-            sizes="(max-width: 768px) 40vw, 240px"
-            style={{ objectFit: "cover" }}
-            priority={false}
-          />
-        ) : (
-          // simple placeholder block that matches your card aesthetic
-          <div
-            className={styles.placeholderImage}
-            aria-hidden="true"
-          />
-        )}
+        <div className={styles.placeholderImage} aria-hidden="true" />
       </div>
-      
-      <div className={styles.content}>
-      {/* Title */}
-      <h3 className={styles.title} title={book.title}>
-        {book.title}
-      </h3>
 
-      {/* Meta block (author / series / year) */}
-      <div className={styles.meta}>
-        <div className={styles.author} title={author}>
-          {author}
+      <div className={styles.content}>
+        {/* Title */}
+        <h3 className={styles.title} title={book.title}>
+          {book.title}
+        </h3>
+
+        {/* Meta block (author / series / year) */}
+        <div className={styles.meta}>
+          <div className={styles.author} title={author}>
+            {author}
+          </div>
+
+          {!compact && (series || book.year) && (
+            <div className={styles.series}>
+              {/* {series} */}
+              {series && book.year ? " · " : ""}
+              {book.year ?? ""}
+            </div>
+          )}
         </div>
 
-        {!compact && (series || book.year) && (
-          <div className={styles.series}>
-            {series}
-            {series && book.year ? " · " : ""}
-            {book.year ?? ""}
-          </div>
-        )}
-      </div>
-
-      {/* Collections */}
-      {/* {shown.length > 0 && (
+        {/* Collections */}
+        {/* {shown.length > 0 && (
         <div className={styles.chips}>
           {shown.map((c) => (
             <span className={styles.chip} key={c} title={c}>
