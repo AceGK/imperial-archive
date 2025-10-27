@@ -18,10 +18,10 @@ export type FooterProps = {
 
 const defaultPrimary: FooterLink[] = [
   { href: "/books", label: "All Books" },
+  { href: "/series", label: "By Series" },
   { href: "/authors", label: "By Author" },
   { href: "/factions", label: "By Faction" },
   { href: "/eras", label: "By Era" },
-  { href: "/series", label: "By Series" },
 ];
 
 const defaultSecondary: FooterLink[] = [
@@ -34,7 +34,7 @@ const defaultSecondary: FooterLink[] = [
 export default function Footer({
   links = defaultPrimary,
   secondary = defaultSecondary,
-  note = "Imperial Archive is a fan-made resource for Warhammer reading and lore. Not affiliated with Games Workshop. All Warhammer® trademarks, logos and images are owned by Games Workshop Limited.",
+  note = "Imperial Archive is an unofficial, fan-made database and reading guide for the Warhammer universe. This site is not affiliated with or endorsed by Games Workshop. All Warhammer® and Warhammer 40,000® trademarks, logos, names, and images are the property of Games Workshop Limited.",
   showBottomBar = true,
 }: FooterProps) {
   const year = new Date().getFullYear();
