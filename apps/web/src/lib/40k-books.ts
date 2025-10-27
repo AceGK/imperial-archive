@@ -107,7 +107,7 @@ const BookZ = z
     // legacy/optional
     isbn: z.string().optional().nullable(),
     page_count: z.number().optional().nullable(),
-    // NOTE: we tolerate both "factions" (current) and legacy "collections"
+    // prefer new "factions"; tolerate legacy "collections"
     factions: z.array(z.string()).optional().nullable(),
     collections: z.array(z.string()).optional().nullable(),
     editor: z.array(z.string()).optional().nullable(),
@@ -167,6 +167,7 @@ const DATA_FILE = path.join(process.cwd(), "data", "40k-books.json");
 /** ---------- Helpers ---------- */
 
 const stripLeadingSlash = (s: string) => s.replace(/^\/+/, "");
+const norm = (s: string) => s.trim().toLowerCase();
 
 function bestReleaseDate(b: RawBook): string | undefined {
   const d = b.release_date ?? b.publication_date ?? undefined;
@@ -194,10 +195,22 @@ function normalizeLinks(b: RawBook): Link[] {
 }
 
 function normalizeFactions(b: RawBook): string[] {
-  // prefer new "factions", fall back to legacy "collections"
-  if (Array.isArray(b.factions)) return b.factions;
-  if (Array.isArray(b.collections)) return b.collections;
-  return [];
+  const src = Array.isArray(b.factions)
+    ? b.factions
+    : Array.isArray(b.collections)
+    ? b.collections
+    : [];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const f of src) {
+    const n = (f ?? "").trim();
+    if (!n) continue;
+    if (!seen.has(n)) {
+      seen.add(n);
+      out.push(n);
+    }
+  }
+  return out;
 }
 
 function normalizeBook(b: RawBook): Book {
@@ -261,11 +274,11 @@ function indexAll(books: Book[]) {
 
   for (const b of books) {
     _bySlug.set(b.slug, b);
-    b.author.forEach((a) => pushMapArray(_byAuthor, a.toLowerCase(), b));
+    b.author.forEach((a) => pushMapArray(_byAuthor, norm(a), b));
     if (b.year) pushMapArray(_byYear, b.year, b);
-    b.series.forEach((s) => pushMapArray(_bySeries, s.name.toLowerCase(), b));
-    b.factions.forEach((f) => pushMapArray(_byFaction, f.toLowerCase(), b));
-    if (b.era) pushMapArray(_byEra, b.era.toLowerCase(), b);
+    b.series.forEach((s) => pushMapArray(_bySeries, norm(s.name), b));
+    b.factions.forEach((f) => pushMapArray(_byFaction, norm(f), b));
+    if (b.era) pushMapArray(_byEra, norm(b.era), b);
     if (b.format) pushMapArray(_byFormat, b.format, b);
   }
 }
@@ -288,7 +301,7 @@ export function getBookBySlug(slug: string): Book | null {
 
 export function getBooksByAuthor(author: string): Book[] {
   getAllBooks();
-  return _byAuthor.get(author.toLowerCase()) ?? [];
+  return _byAuthor.get(norm(author)) ?? [];
 }
 
 export function getBooksByYear(year: string): Book[] {
@@ -298,12 +311,12 @@ export function getBooksByYear(year: string): Book[] {
 
 export function getBooksBySeries(seriesName: string): Book[] {
   getAllBooks();
-  return _bySeries.get(seriesName.toLowerCase()) ?? [];
+  return _bySeries.get(norm(seriesName)) ?? [];
 }
 
 export function getBooksByEra(era: string): Book[] {
   getAllBooks();
-  return _byEra.get(era.toLowerCase()) ?? [];
+  return _byEra.get(norm(era)) ?? [];
 }
 
 export function getBooksByFormat(format: BookFormat): Book[] {
@@ -314,7 +327,7 @@ export function getBooksByFormat(format: BookFormat): Book[] {
 /** New: by faction */
 export function getBooksByFaction(faction: string): Book[] {
   getAllBooks();
-  return _byFaction.get(faction.toLowerCase()) ?? [];
+  return _byFaction.get(norm(faction)) ?? [];
 }
 
 /** Back-compat alias: keep older imports working */
@@ -342,32 +355,32 @@ export function searchBooks(params: {
 
   let list = getAllBooks();
 
-  // Pick strongest constraint to seed the list
+  // Seed by strongest constraint
   if (author) list = getBooksByAuthor(author);
   else if (series) list = getBooksBySeries(series);
   else if (faction ?? collection) list = getBooksByFaction((faction ?? collection)!);
   else if (era) list = getBooksByEra(era);
   else if (format) list = getBooksByFormat(format);
 
-  // Apply remaining filters
-  if (author) list = list.filter((b) => b.author.map((a) => a.toLowerCase()).includes(author.toLowerCase()));
-  if (series) list = list.filter((b) => b.series.some((s) => s.name.toLowerCase() === series.toLowerCase()));
+  // Apply remaining filters (all normalized)
+  if (author) list = list.filter((b) => b.author.map(norm).includes(norm(author)));
+  if (series) list = list.filter((b) => b.series.some((s) => norm(s.name) === norm(series)));
   if (faction ?? collection) {
-    const f = (faction ?? collection)!.toLowerCase();
-    list = list.filter((b) => b.factions.map((x) => x.toLowerCase()).includes(f));
+    const f = norm(faction ?? collection!);
+    list = list.filter((b) => b.factions.map(norm).includes(f));
   }
-  if (era) list = list.filter((b) => (b.era ?? "").toLowerCase() === era.toLowerCase());
+  if (era) list = list.filter((b) => norm(b.era ?? "") === norm(era));
   if (format) list = list.filter((b) => b.format === format);
   if (year) list = list.filter((b) => b.year === year);
 
   if (q) {
-    const needle = q.toLowerCase();
+    const needle = norm(q);
     list = list.filter((b) => {
-      const inTitle = b.title.toLowerCase().includes(needle);
-      const inAuthors = b.author.some((a) => a.toLowerCase().includes(needle));
-      const inEra = (b.era ?? "").toLowerCase().includes(needle);
-      const inFactions = b.factions.some((f) => f.toLowerCase().includes(needle));
-      const inSeries = b.series.some((s) => s.name.toLowerCase().includes(needle));
+      const inTitle = norm(b.title).includes(needle);
+      const inAuthors = b.author.some((a) => norm(a).includes(needle));
+      const inEra = norm(b.era ?? "").includes(needle);
+      const inFactions = b.factions.some((f) => norm(f).includes(needle));
+      const inSeries = b.series.some((s) => norm(s.name).includes(needle));
       return inTitle || inAuthors || inEra || inFactions || inSeries;
     });
   }
