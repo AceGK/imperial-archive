@@ -11,7 +11,7 @@ export type Book = {
   slug: string;                 // e.g. "horus-rising"
   author?: string[] | string;
   authors?: string[];
-  collections?: string[];
+  factions?: string[];
 };
 
 /** FACTIONS **/
@@ -38,7 +38,7 @@ type Hit =
       book: Book;
       title: string;
       authorsLine: string;
-      collectionsLine: string;
+      factionsLine: string;
     }
   | {
       kind: "faction";
@@ -72,8 +72,8 @@ function joinAuthors(b: Book): string {
   return a.join(", ");
 }
 
-function joinCollections(b: Book): string {
-  return Array.isArray(b.collections) ? b.collections.join(", ") : "";
+function joinFactions(b: Book): string {
+  return Array.isArray(b.factions) ? b.factions.join(", ") : "";
 }
 
 /** scoring **/
@@ -94,12 +94,12 @@ function scoreBook(book: Book, q: string): number {
   const tokens = qn.split(/\s+/).filter(Boolean);
   const title = normalize(book.title || "");
   const authors = normalize(joinAuthors(book));
-  const collections = normalize(joinCollections(book));
+  const factions = normalize(joinFactions(book));
 
   let score = 0;
   score += scoreText(title, qn, tokens) * 2.2;     // title weight
   score += scoreText(authors, qn, tokens) * 1.4;   // authors weight
-  score += scoreText(collections, qn, tokens) * 1.1;
+  score += scoreText(factions, qn, tokens) * 1.1;
   score += Math.max(0, 2 - Math.log10((book.title?.length || 30))); // tiny bias for shorter titles
   return score;
 }
@@ -165,7 +165,7 @@ export default function Search({
       book: b,
       title: b.title ?? "",
       authorsLine: joinAuthors(b),
-      collectionsLine: joinCollections(b),
+      factionsLine: joinFactions(b),
     }));
   
     return [...bookHits]
@@ -256,8 +256,8 @@ export default function Search({
                   {h.kind === "book" ? (
                     <>
                       {h.authorsLine && <span>{highlight(h.authorsLine, q)}</span>}
-                      {h.collectionsLine && <span className={styles.dot}>·</span>}
-                      {h.collectionsLine && <span>{highlight(h.collectionsLine, q)}</span>}
+                      {h.factionsLine && <span className={styles.dot}>·</span>}
+                      {h.factionsLine && <span>{highlight(h.factionsLine, q)}</span>}
                     </>
                   ) : (
                     <>

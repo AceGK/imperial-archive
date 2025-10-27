@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
-/** ---------- Zod Schemas (tolerant to legacy data) ---------- */
+/** ---------- Zod Schemas (tolerant to legacy-ish data) ---------- */
 
 const SeriesEntryZ = z.object({
   name: z.string(),
@@ -107,9 +107,10 @@ const BookZ = z
     // legacy/optional
     isbn: z.string().optional().nullable(),
     page_count: z.number().optional().nullable(),
-    // prefer new "factions"; tolerate legacy "collections"
+
+    // ✅ current field
     factions: z.array(z.string()).optional().nullable(),
-    collections: z.array(z.string()).optional().nullable(),
+
     editor: z.array(z.string()).optional().nullable(),
   })
   .passthrough();
@@ -145,7 +146,7 @@ export interface Book {
   format?: BookFormat | null;
   editions: Edition[];
   page_count?: number | null;
-  factions: string[];
+  factions: string[];            // ✅ the only facet we keep
   editor?: string[];
 }
 
@@ -195,11 +196,7 @@ function normalizeLinks(b: RawBook): Link[] {
 }
 
 function normalizeFactions(b: RawBook): string[] {
-  const src = Array.isArray(b.factions)
-    ? b.factions
-    : Array.isArray(b.collections)
-    ? b.collections
-    : [];
+  const src = Array.isArray(b.factions) ? b.factions : [];
   const seen = new Set<string>();
   const out: string[] = [];
   for (const f of src) {
@@ -239,7 +236,9 @@ function normalizeBook(b: RawBook): Book {
     format: p.format ?? null,
     editions: normalizeEditions(p),
     page_count: typeof p.page_count === "number" ? p.page_count : null,
+
     factions: normalizeFactions(p),
+
     editor: Array.isArray(p.editor) ? p.editor : [],
   };
 }
@@ -330,7 +329,7 @@ export function getBooksByFaction(faction: string): Book[] {
   return _byFaction.get(norm(faction)) ?? [];
 }
 
-/** Back-compat alias: keep older imports working */
+/** Back-compat alias so existing imports keep working */
 export function getBooksByCollection(collection: string): Book[] {
   return getBooksByFaction(collection);
 }
@@ -343,9 +342,9 @@ export function searchBooks(params: {
   tag?: string;
   year?: string;
   series?: string;
-  /** Preferred new param */
+  // preferred param
   faction?: string;
-  /** Legacy alias (supported but not advertised) */
+  // (optional) legacy alias still accepted
   collection?: string;
   era?: string;
   format?: BookFormat;

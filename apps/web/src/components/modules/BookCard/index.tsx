@@ -21,9 +21,9 @@ export default function BookCard({ book, href, compact, className }: Props) {
   const author = authorsLabel(book.author);
   const series = book.series ? book.series : null;
 
-  const collections = book.collections ?? [];
-  const shown = collections.slice(0, compact ? 2 : 3);
-  const extra = Math.max(0, collections.length - shown.length);
+  const factions = book.factions ?? [];
+  const shown = factions.slice(0, compact ? 2 : 3);
+  const extra = Math.max(0, factions.length - shown.length);
 
   return (
     <Link href={link} className={`${styles.card} ${className ?? ""}`}>

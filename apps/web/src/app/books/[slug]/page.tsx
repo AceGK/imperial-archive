@@ -30,7 +30,7 @@ export default async function BookPage({
   if (!book) notFound();
 
   const byline = authorLabel(book.author);
-  const collections = Array.isArray(book.collections) ? book.collections : [];
+  const factions = Array.isArray(book.factions) ? book.factions : [];
 
   return (
     <main className="container">
@@ -62,10 +62,10 @@ export default async function BookPage({
             </p>
           )}
 
-          {/* Collections */}
-          {collections.length > 0 && (
+          {/* factions */}
+          {factions.length > 0 && (
             <p>
-              <strong>Collections:</strong> {collections.join(", ")}
+              <strong>Factions:</strong> {factions.join(", ")}
             </p>
           )}
 
