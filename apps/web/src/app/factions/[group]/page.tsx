@@ -76,7 +76,6 @@ export default async function GroupPage({
         </header>
 
         <section>
-          <h2>Chapters / Sub-factions</h2>
           {items?.length > 0 ? (
             <ul
               style={{
