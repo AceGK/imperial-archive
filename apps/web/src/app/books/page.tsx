@@ -23,18 +23,7 @@ export default async function BrowsePage() {
       />
 
       <section className="container">
-        {/* <h1 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          All Books{" "}
-          <span
-            style={{
-              fontSize: "0.9rem",
-              borderRadius: 999,
-            }}
-            aria-label={`Total books: ${count}`}
-          >
-            ({count})
-          </span>
-        </h1> */}
+        <div style={{opacity: 0.5, paddingBottom:"1rem"}}>{count} Books</div>
        
         <div
           style={{

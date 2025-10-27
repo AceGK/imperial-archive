@@ -5,7 +5,7 @@ $author-profile-bg: color-mix(in oklab, var(--bg), var(--subtle) 10%);
 .authorProfilePage {
   display: grid;
   gap: 3rem;
-  margin-top: 3rem;
+  margin: 3rem 0 6rem;
   grid-template-columns: 320px 1fr;
   @include max(md) {
     grid-template-columns: 1fr;

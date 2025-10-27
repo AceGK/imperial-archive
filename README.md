@@ -4,3 +4,4 @@ additional resources
 - https://wh40k.lexicanum.com/wiki/List_of_Novels
 - https://www.trackofwords.com/2021/02/14/a-guide-to-dan-abnetts-inquisition-series/
 - https://wh40k.lexicanum.com/wiki/Portal:Publications
+- https://wh40k.lexicanum.com/wiki/The_Sabbat_Worlds_Crusade_(Background_Book)
