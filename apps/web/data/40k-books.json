@@ -7828,7 +7828,16 @@
     "publication_date": null,
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/warhammer-40000/novels/the-vincula-insurgency-ghost-dossier-1-eng-ebook-2022.html"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/The_Vincula_Insurgency_(Novel)"
+      }
+    ],
     "editions": [
       {
         "isbn": "9781800261358",
@@ -8256,6 +8265,10 @@
       {
         "type": "black_library",
         "url": "https://www.blacklibrary.com/all-products/thorn-and-talon-mp3.html"
+      }, 
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Thorn_and_Talon_(Audio_Book)"
       }
     ],
     "editions": [
@@ -8276,8 +8289,10 @@
         "note": null
       }
     ],
-    "format": "novel",
-    "factions": []
+    "format": "audio_drama",
+    "factions": [
+      "Inquisition"
+    ]
   },
   {
     "id": 137,
@@ -16557,17 +16572,21 @@
     "era": "Classic 40k",
     "description": "Venture into the underhive of Necromunda with a collection of action-packed tales encompassing gang war, strange events, desperate escapes, and cunning schemes.",
     "story": "At the heart of Necromunda, a sickness festers.Where the word of Helmawr is law, many go hungry… but murder is cheap, and meat is everywhere, for those willing to take it. While the nobles of the spire sit and watch, bloody-handed gangers fight in an endless battle for survival.\n\nThe venator Yar Umbra cuts a swathe through Hive Primus, chasing the promise of escape from Necromunda. A Cawdor juve, desperate to prove himself, finds a statue of the Emperor that will change his life forever. A Corpse Guild drudge learns what his superiors are desperate to keep forbidden. And Caleb Cursebound, ninth most dangerous man in the underhive, thief of the Hand of Harrow, flees to the remote mining settlement of Hope’s End, pursued by those who would see his reputation forever tarnished…",
-    "publication_date": null,
-    "page_count": null,
+    "publication_date": "September 2020",
+    "page_count": "384",
     "editor": [],
     "links": [
       {
         "type": "black_library",
         "url": "https://www.blacklibrary.com/series/necromunda/necromunda-uprising-ebook-2020.html"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Uprising_(Anthology)"
       }
     ],
     "editions": [],
-    "format": "novel",
+    "format": "anthology",
     "factions": []
   },
   {
@@ -22631,21 +22650,26 @@
     "title": "Sedition’s Gate",
     "slug": "/seditions-gate",
     "author": [
-      "Various"
+      	"Nick Kyme", "Chris Wraight", "Guy Haley", "Rob Sanders", "David Annandale"
     ],
     "series": [
       {
-        "name": "Horus Heresy Anthologies",
+        "name": "Horus Heresy - Short Stories",
         "number": null
       }
     ],
     "era": "The Great Crusade & Horus Heresy",
-    "description": null,
-    "story": null,
+    "description": "Sedition's Gate is a short-story anthology that was released exclusively at Horus Heresy Weekender in 2014. These short stories were re-collected as part of War Without End published in January 2016.",
+    "story": "Across the galaxy, the war for the future of humanity rests on a knife-edge. While the greatest heroes of the Imperium battle the traitor forces, in the shadows, the power of Chaos is in the ascendance.",
     "publication_date": null,
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Sedition%27s_Gate_(Anthology)"
+      }
+    ],
     "editions": [],
     "format": "anthology",
     "factions": []
@@ -25060,8 +25084,8 @@
   },
   {
     "id": 498,
-    "title": "Belisarius Cawl: Genefather",
-    "slug": "/belisarius-cawl-genefather",
+    "title": "Genefather",
+    "slug": "/genefather",
     "author": [
       "Guy Haley"
     ],
@@ -25077,10 +25101,18 @@
     "publication_date": null,
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Genefather_(Novel)"
+      }
+    ],
     "editions": [],
     "format": "novel",
-    "factions": []
+    "factions": [
+      "Mechanicum",
+      "Emperor's Children"
+    ]
   },
   {
     "id": 499,
@@ -29349,16 +29381,27 @@
     ],
     "series": [],
     "era": "The Age of the Dark Imperium",
-    "description": null,
-    "story": null,
+    "description": "Battling alongside the Dark Angels on a plague-wracked world, Kor'sarro Khan and the White Scars are plunged into danger when treachery strikes.",
+    "story": "On the benighted world of Gehöft, the White Scars battle the forces of Chaos, both mortal and daemonic. As plague spreads and darkness reigns, Kor’sarro Khan takes to the field, eager to take the head of the traitor responsible for the world’s corruption. But when his Dark Angels allies abandon the fight, the Khan and his bikers are forced into a deadly confrontation with the servants of Nurgle that threatens to damn them.",
     "publication_date": null,
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Kor%27sarro_Khan:_Huntmaster_(Short_Story)"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://www.blacklibrary.com/authors/graeme-lyon/advent-day-four-korsarro-khan-huntmaster-ebook.html"
+      }
+    ],
     "editions": [],
     "format": "short_story",
     "factions": [
-      "Lords of the Space Marines"
+      "White Scars",
+      "Dark Angels",
+      "Nurgle"
     ]
   },
   {
@@ -29460,8 +29503,8 @@
     ],
     "series": [],
     "era": "The Age of the Dark Imperium",
-    "description": null,
-    "story": null,
+    "description": "Supporting the White Scars on Gehöft, Sammael, Master of the Ravenwing, prepares to aid Kor’sarro Khan against the plague-ridden warriors of Chaos. But when an ancient secret is revealed, Sammael must choose between the bonds of brotherhood and pursuit of the oldest foe of his Chapter.",
+    "story": "Supporting the White Scars on Gehöft, Sammael, Master of the Ravenwing, prepares to aid Kor’sarro Khan against the plague-ridden warriors of Chaos. But when an ancient secret is revealed, Sammael must choose between the bonds of brotherhood and pursuit of the oldest foe of his Chapter.",
     "publication_date": null,
     "page_count": null,
     "editor": [],
@@ -29469,12 +29512,17 @@
       {
         "type": "lexicanum",
         "url": "https://wh40k.lexicanum.com/wiki/Sammael:_Lord_of_the_Eternal_Hunt_(Short_Story)"
+      }, 
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/all-products/advent-day-twenty-four-sammael-lord-of-the-eternal-hunt.html"
       }
     ],
     "editions": [],
     "format": "short_story",
     "factions": [
-      "Lords of the Space Marines"
+      "Dark Angels", 
+      "White Scars"
     ]
   },
   {
@@ -29645,15 +29693,22 @@
     ],
     "series": [],
     "era": "The Age of the Dark Imperium",
-    "description": null,
-    "story": null,
-    "publication_date": null,
-    "page_count": null,
+    "description": "Three, drawn from Two, born of One meet once more, as is tradition. Yet times have changed, and the galaxy is not what it once was. Perhaps tradition is dead for these Angels of Death in this short story by Aaron Dembski-Bowden.",
+    "story": "On the former homeworld of the Blood Eagles, envoys from the chapters of the Triarchy meet once more, to discuss what is to come in the wake of the opening of the Cicatrix Maledictum.\n\nAs they share tales of the hardships suffered by each chapter, Red Seraphs, Angels Numinous and Charnel Guard, the envoys admit they haven't been able to cross the Rift. Noting how tradition has failed them, they agree on risking it all to join forces, cross and try to join the Indomitus Crusade and Roboute Guilliman at the risk of total extermination.\n\nEach envoy leaves to bring the news to their chapters, and in the coming months their fleets will gather above the same world.",
+    "publication_date": "June 2020",
+    "page_count": 2,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Tradition%27s_End_(Short_Story)"
+      }
+    ],
     "editions": [],
     "format": "short_story",
-    "factions": []
+    "factions": [
+      "Blood Angels"
+    ]
   },
   {
     "id": 653,
@@ -29682,7 +29737,7 @@
     "editions": [],
     "format": "short_story",
     "factions": [
-      "Eisenhorn"
+      "Inquisition"
     ]
   },
   {
@@ -30182,9 +30237,6 @@
     "id": 670,
     "title": "Deathwing (1st Edition)",
     "slug": "deathwing-1st-edition",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       "Warhammer 40,000 Anthologies"
@@ -30211,9 +30263,6 @@
     "id": 671,
     "title": "Deathwing (2nd Edition)",
     "slug": "deathwing-2nd-edition",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       "Warhammer 40,000 Anthologies"
@@ -30240,9 +30289,6 @@
     "id": 672,
     "title": "Into the Maelstrom",
     "slug": "into-the-maelstrom",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       "Warhammer 40,000 Anthologies"
@@ -30267,23 +30313,33 @@
   },
   {
     "id": 673,
-    "title": "Dark Imperium (Anthology, 2001)",
-    "slug": "dark-imperium-anthology-2001",
-    "authors": [
-      "Various"
-    ],
+    "title": "Dark Imperium (Anthology)",
+    "slug": "dark-imperium-anthology",
     "format": "Anthology",
     "series": [],
     "publication_date": "2001",
     "author": [
-      "Various"
+      "Barrington J. Bayley",
+      "Andy Chambers",
+      "Ben Counter",
+      "Robert Earl",
+      "Matthew Farrer",
+      "Simon Jowett",
+      "William King",
+      "Neil Rutledge",
+      "Gav Thorpe"
     ],
     "era": null,
     "description": null,
     "story": null,
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Dark_Imperium_(Anthology)"
+      }
+    ],
     "editions": [],
     "factions": []
   },
@@ -30291,9 +30347,6 @@
     "id": 674,
     "title": "Words of Blood",
     "slug": "words-of-blood",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30322,9 +30375,6 @@
     "id": 675,
     "title": "Crucible of War",
     "slug": "crucible-of-war",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30353,9 +30403,6 @@
     "id": 676,
     "title": "What Price Victory",
     "slug": "what-price-victory",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30384,9 +30431,6 @@
     "id": 677,
     "title": "Bringers of Death",
     "slug": "bringers-of-death",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30415,9 +30459,6 @@
     "id": 678,
     "title": "Tales from the Dark Millennium",
     "slug": "tales-from-the-dark-millennium",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30442,9 +30483,6 @@
     "id": 679,
     "title": "The Book of Blood",
     "slug": "the-book-of-blood",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30473,9 +30511,6 @@
     "id": 680,
     "title": "The Best of Hammer and Bolter: Volume One",
     "slug": "the-best-of-hammer-and-bolter-volume-one",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30500,9 +30535,6 @@
     "id": 681,
     "title": "The Best of Hammer and Bolter: Volume Two",
     "slug": "the-best-of-hammer-and-bolter-volume-two",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30527,9 +30559,6 @@
     "id": 682,
     "title": "Games Day Anthology 2011/2012",
     "slug": "games-day-anthology-20112012",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -30554,9 +30583,6 @@
     "id": 683,
     "title": "Games Day Anthology 2012/2013",
     "slug": "games-day-anthology-20122013",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -30581,9 +30607,6 @@
     "id": 684,
     "title": "Space Marines: Angels of Death (Anthology)",
     "slug": "space-marines-angels-of-death-anthology",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -30606,11 +30629,8 @@
   },
   {
     "id": 685,
-    "title": "Armageddon (Space Marine Battles Anthology)",
-    "slug": "armageddon-space-marine-battles-anthology",
-    "authors": [
-      "Various"
-    ],
+    "title": "Armageddon",
+    "slug": "armageddon",
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -30622,39 +30642,52 @@
     "story": null,
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Armageddon_(Anthology)"
+      }
+    ],
     "editions": [],
     "factions": []
   },
   {
     "id": 686,
-    "title": "Damnos (Space Marine Battles Anthology)",
-    "slug": "damnos-space-marine-battles-anthology",
-    "authors": [
-      "Various"
+    "title": "Damnos",
+    "slug": "damnos",
+    "author": [
+      "Nick Kyme"
     ],
     "format": "Anthology",
-    "series": [],
-    "publication_date": null,
-    "author": [
-      "Various"
+    "series": [
+      "Space Marine Battles"
     ],
+    "publication_date": "September 2013",
     "era": null,
-    "description": null,
-    "story": null,
-    "page_count": null,
+    "description": "When Damnos is hit by cataclysmic earthquakes, an ancient force is awakened. Deep beneath the earth, the necrons rise from their slumber to decimate the human populace.",
+    "story": "When Damnos is hit by cataclysmic earthquakes, an ancient force is awakened. Deep beneath the earth, the necrons rise from their slumber to decimate the human populace. All appears lost until salvation comes from the heavens - the Ultramarines brave an orbital bombardment to deploy their forces on Damnos, led by two legendary warriors - Captain Cato Sicarius and Chief Librarian Tigurius. They are the planet's last, great hope against the remorseless alien foes, but tensions within their ranks threaten to derail victory. As battle rages on Damnos, and the Ultramarines seek to defeat their soulless enemies, Tigurius receives a terrible vision – a vision telling of the death of a hero...",
+    "page_count": "446",
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Damnos_(Anthology)"
+      },
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/all-products/damnos-ebook.html"
+      }
+    ],
     "editions": [],
-    "factions": []
+    "factions": [
+      "Ultramarines",
+      "Necrons"
+    ]
   },
   {
     "id": 687,
     "title": "The Book of the Lion",
     "slug": "the-book-of-the-lion",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30683,9 +30716,6 @@
     "id": 688,
     "title": "Black Library Weekender",
     "slug": "black-library-weekender",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30714,9 +30744,6 @@
     "id": 689,
     "title": "Black Library Advent Calendar (2012)",
     "slug": "black-library-advent-calendar-2012",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": "2012",
@@ -30741,9 +30768,6 @@
     "id": 690,
     "title": "The Scripts: Volume 1",
     "slug": "the-scripts-volume-1",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30768,9 +30792,6 @@
     "id": 691,
     "title": "The Space Marine Script Book",
     "slug": "the-space-marine-script-book",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30799,9 +30820,6 @@
     "id": 692,
     "title": "Angron (Anthology)",
     "slug": "angron-anthology",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -30826,9 +30844,6 @@
     "id": 693,
     "title": "The Black Library Anthology (2013/14)",
     "slug": "the-black-library-anthology-201314",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -30853,9 +30868,6 @@
     "id": 694,
     "title": "Black Library Events Anthology (2017/18)",
     "slug": "black-library-events-anthology-201718",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -30880,9 +30892,6 @@
     "id": 695,
     "title": "Black Library Events Anthology (2018/19)",
     "slug": "black-library-events-anthology-201819",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -30902,9 +30911,6 @@
     "id": 696,
     "title": "Black Library Events Anthology (2019/20)",
     "slug": "black-library-events-anthology-201920",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -30924,9 +30930,6 @@
     "id": 697,
     "title": "Servants of the Machine-God",
     "slug": "servants-of-the-machine-god",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -30955,9 +30958,6 @@
     "id": 698,
     "title": "War for Armageddon: The Omnibus",
     "slug": "war-for-armageddon-the-omnibus",
-    "authors": [
-      "Various"
-    ],
     "format": "Omnibus",
     "series": [],
     "publication_date": null,
@@ -30982,9 +30982,6 @@
     "id": 699,
     "title": "Inferno! Vol. 1",
     "slug": "inferno-vol-1",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       {
@@ -31009,9 +31006,6 @@
     "id": 700,
     "title": "Inferno! Vol. 2",
     "slug": "inferno-vol-2",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       {
@@ -31036,9 +31030,6 @@
     "id": 701,
     "title": "Inferno! Vol. 3",
     "slug": "inferno-vol-3",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       {
@@ -31063,9 +31054,6 @@
     "id": 702,
     "title": "Inferno! Vol. 4",
     "slug": "inferno-vol-4",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       {
@@ -31090,9 +31078,6 @@
     "id": 703,
     "title": "Inferno! Vol. 5",
     "slug": "inferno-vol-5",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       {
@@ -31117,9 +31102,6 @@
     "id": 704,
     "title": "Inferno! Vol. 6",
     "slug": "inferno-vol-6",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       {
@@ -31144,9 +31126,6 @@
     "id": 705,
     "title": "The Hammer and the Eagle: Icons of Warhammer",
     "slug": "the-hammer-and-the-eagle-icons-of-warhammer",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       "Warhammer 40,000 Anthologies"
@@ -31177,9 +31156,6 @@
     "id": 706,
     "title": "Imperium at War",
     "slug": "imperium-at-war",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -31204,9 +31180,6 @@
     "id": 707,
     "title": "Anathemas",
     "slug": "anathemas",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -31231,9 +31204,6 @@
     "id": 708,
     "title": "Nexus + Other Stories",
     "slug": "nexus-other-stories",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -31258,9 +31228,6 @@
     "id": 709,
     "title": "Deathwatch: The Long Vigil",
     "slug": "deathwatch-the-long-vigil",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       "Warhammer 40,000 Anthologies"
@@ -31291,9 +31258,6 @@
     "id": 710,
     "title": "The Book of Martyrs",
     "slug": "the-book-of-martyrs",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       "Adepta Sororitas"
@@ -31324,9 +31288,6 @@
     "id": 711,
     "title": "Sons of Sanguinius: A Blood Angels Omnibus",
     "slug": "sons-of-sanguinius-a-blood-angels-omnibus",
-    "authors": [
-      "Various"
-    ],
     "format": "Omnibus",
     "series": [],
     "publication_date": null,
@@ -31351,9 +31312,6 @@
     "id": 712,
     "title": "Deliverance and Damnation",
     "slug": "deliverance-and-damnation",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -31382,9 +31340,6 @@
     "id": 713,
     "title": "Loyal Sons",
     "slug": "loyal-sons",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -31409,9 +31364,6 @@
     "id": 714,
     "title": "The Successors",
     "slug": "the-successors",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -31436,21 +31388,36 @@
     "id": 715,
     "title": "Lupercal’s War",
     "slug": "lupercals-war",
-    "authors": [
-      "Various"
-    ],
-    "format": "Novel",
-    "series": [],
-    "publication_date": null,
+    "format": "anthology",
+    "series": ["Horus Heresy"],
+    "publication_date": "June 2022",
     "author": [
-      "Various"
+        "Aaron Dembski-Bowden",
+  "Ben Counter",
+  "Chris Forrester",
+  "Chris Wraight",
+  "Dan Abnett",
+  "Gav Thorpe",
+  "Graham McNeill",
+  "Guy Haley",
+  "James Swallow",
+  "John French",
+  "Matthew Farrer",
+  "Nick Kyme"
     ],
-    "era": null,
-    "description": null,
-    "story": null,
-    "page_count": null,
+    "era": "The Great Crusade & Horus Heresy",
+    "description": "The Horus Heresy is an epic conflict spanning hundreds of worlds and thousands of battles, laced with countless tales of heroism and valour, betrayal and villainy. This anthology collects some of the most memorable, featuring every one of the Loyalist and Traitor Legions.",
+    "story": "Never has the Imperium known a weapon as deadly as the massed might of a Space Marine Legion. Together, these mighty warriors form an unbreakable spear at the forefront of the Great Crusade. Together, they quest to reclaim humanity's birthright – its dominion over the stars. Each Legion is led by a legendary primarch, and the greatest among them is Horus Lupercal, Warmaster of the Imperium. Yet at the height of his power, this beloved son betrayed his oaths, taking half his brothers with him into damnation.\n\nCondemned to an eternity of war, the galaxy burns as loyal Space Marine Legions and their traitorous kin tear apart everything they bled to build. This anthology collects over 20 existing stories from a variety of authors, featuring every one of the Space Marine Legions and ranging from the Unification Wars to the most brutal days of the Age of Darkness.",
+    "page_count": "624 (paperback edition)",
     "editor": [],
-    "links": [],
+    "links": [{
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/all-products/ebook-lupercals-war-eng-2022.html"
+    },
+    {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Lupercal%27s_War_(Anthology)"
+    }],
     "editions": [],
     "factions": []
   },
@@ -31458,9 +31425,6 @@
     "id": 716,
     "title": "Cthonia’s Reckoning",
     "slug": "cthonias-reckoning",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -31485,9 +31449,6 @@
     "id": 717,
     "title": "Inferno! Presents: The Inquisition",
     "slug": "inferno-presents-the-inquisition",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -31512,9 +31473,6 @@
     "id": 718,
     "title": "Inferno! Presents: The Emperor’s Finest",
     "slug": "inferno-presents-the-emperors-finest",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [],
     "publication_date": null,
@@ -31539,9 +31497,6 @@
     "id": 719,
     "title": "Heirs of the Emperor",
     "slug": "heirs-of-the-emperor",
-    "authors": [
-      "Various"
-    ],
     "format": "Anthology",
     "series": [
       "Warhammer 40,000 Anthologies"
@@ -31572,9 +31527,6 @@
     "id": 720,
     "title": "Legends of the Dark Angels",
     "slug": "legends-of-the-dark-angels",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -31599,9 +31551,6 @@
     "id": 721,
     "title": "For Glory and Honour",
     "slug": "for-glory-and-honour",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -31626,9 +31575,6 @@
     "id": 722,
     "title": "Galaxy of Horrors",
     "slug": "galaxy-of-horrors",
-    "authors": [
-      "Various"
-    ],
     "format": "Novel",
     "series": [],
     "publication_date": null,
@@ -31657,9 +31603,6 @@
     "id": 723,
     "title": "Yarrick: Chains of Golgotha",
     "slug": "yarrick-chains-of-golgotha",
-    "authors": [
-      "David Annandale"
-    ],
     "format": "Novella",
     "series": [
       "Commissar Yarrick"
@@ -31690,9 +31633,6 @@
     "id": 724,
     "title": "Daenyathos",
     "slug": "daenyathos",
-    "authors": [
-      "Ben Counter"
-    ],
     "format": "Novel",
     "series": [
       "Soul Drinkers"
@@ -31727,9 +31667,6 @@
     "id": 725,
     "title": "Dark Vengeance",
     "slug": "dark-vengeance",
-    "authors": [
-      "C.Z. Dunn"
-    ],
     "format": "Novel",
     "series": [
       "Dark Angels"
@@ -31760,9 +31697,6 @@
     "id": 726,
     "title": "Traitor by Deed",
     "slug": "traitor-by-deed",
-    "authors": [
-      "Ben Counter"
-    ],
     "format": "Novel",
     "series": [
       "Soul Drinkers"
@@ -32256,9 +32190,6 @@
     "author": [
       "Chris Wraight"
     ],
-    "authors": [
-      "Chris Wraight"
-    ],
     "series": [
       {
         "name": "Watchers of the Throne",
@@ -32287,22 +32218,28 @@
     "author": [
       "Dan Abnett"
     ],
-    "authors": [
-      "Dan Abnett"
-    ],
     "series": [
       {
-        "name": "Gaunt's Ghosts Omnibus",
+        "name": "Gaunt's Ghosts",
         "number": null
       }
     ],
     "era": "41st Millennium",
-    "description": null,
-    "story": null,
-    "publication_date": null,
+    "description": "The Sabbat Worlds Crusade is at a standstill. Drastic action is required. Can a turncoat from the traitor camp help Gaunt's Ghosts to turn the tide of war and bring victory to the Imperium?",
+    "story": "After twenty-five hard, blood-soaked years, Warmaster Macaroth’s crusade to free the Sabbat Worlds from the clutch of Chaos has ground to a halt. The Warmaster’s forces are split and deadlocked on two separate fronts, haemorrhaging momentum, men and materiel. A series of ambitious covert operations is planned across the sector – their aim to break the stalemate so the Imperial forces can move forward once more. Key players in this shadow war are Colonel-Commissar Gaunt and the Tanith First-and-Only. Will the bravery and cunning of this infamous regiment tip the balance in the Imperium’s favour?",
+    "publication_date": "2018",
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+      "type": "lexicanum",
+      "url": "https://wh40k.lexicanum.com/wiki/The_Victory_(Omnibus)"
+    }, 
+    {
+      "type": "black_library",
+      "url": "https://www.blacklibrary.com/authors/dan-abnett/gaunt's-ghosts-the-victory-part-1-ebook.html"
+    }
+  ],
     "editions": [],
     "format": "Omnibus",
     "factions": [
@@ -32317,9 +32254,6 @@
     "author": [
       "Dan Abnett"
     ],
-    "authors": [
-      "Dan Abnett"
-    ],
     "series": [
       {
         "name": "Eisenhorn",
@@ -32327,12 +32261,20 @@
       }
     ],
     "era": "41st Millennium",
-    "description": null,
-    "story": null,
+    "description": "Inquisitor Gregor Eisenhorn is one of Warhammer 40,000's most beloved anti-heroes. Operating on the very edge of Imperial doctrine, he investigates conspiracies that pit him against aliens, heretics, daemons, and even fellow Inquisitors.",
+    "story": "From investigating strange murders to facing off against a vast interstellar organisation, Gregor Eisenhorn is an Inquisitor who is willing to pursue dubious means to guarantee success. Follow his journey as he becomes entangled in the fate of the alien text known as the Necroteuch, and draws the ire of the Imperium to him as he becomes embroiled in cat and mouse games and double-crossing with powerful friends and foes.",
     "publication_date": null,
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [{
+      "type": "lexicanum",
+      "url": "https://wh40k.lexicanum.com/wiki/Eisenhorn_(Novel_Series)"
+      }, 
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/series/eisenhorn/ebook-eisenhorn-the-omnibus-eng-2022.html"
+      }
+      ],
     "editions": [],
     "format": "Omnibus",
     "factions": [
@@ -32345,9 +32287,6 @@
     "title": "Ravenor: The Omnibus",
     "slug": "/ravenor-the-omnibus",
     "author": [
-      "Dan Abnett"
-    ],
-    "authors": [
       "Dan Abnett"
     ],
     "series": [
@@ -32385,9 +32324,6 @@
     "author": [
       "Dan Abnett"
     ],
-    "authors": [
-      "Dan Abnett"
-    ],
     "series": [
       {
         "name": "Gaunt's Ghosts Omnibus",
@@ -32395,25 +32331,26 @@
       }
     ],
     "era": "41st Millennium",
-    "description": null,
-    "story": null,
-    "publication_date": null,
+    "description": "The opening trilogy of the Gaunt's Ghosts saga returns! From the destruction of their world to their deadliest battle in the shattered hives of Verghast, this is the first act in the long-running fan favourite series.",
+    "story": "In the Chaos-infested Sabbat system, the massed ranks of the Imperial Guard stand shoulder to shoulder as they counter an invasion by heretical forces. Amongst the Guard are the troops of the Tanith First and Only, a displaced army forced to flee their home planet before it succumbed to the unrelenting assault of Chaos. Nicknamed the Ghosts, their specialist scouting role has thrown them into the thickest of the fighting, trying to complete whatever desperate mission their uncaring commanders have volunteered them for. Now, their leader Ibram Gaunt must evade the treacherous scheming of rival regiments and the lethal firepower of the enemy if he is to win through and lead his Ghosts to victory.",
+    "publication_date": "2003",
     "page_count": null,
     "editor": [],
     "links": [
       {
         "type": "lexicanum",
-        "url": "https://wh40k.lexicanum.com/wiki/Gaunt's_Ghosts:_The_Founding"
-      },
-      {
-        "type": "lexicanum",
         "url": "https://wh40k.lexicanum.com/wiki/The_Founding_(Omnibus)"
+      }, 
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/warhammer-40000/novels/gg-the-founding-ebook.html"
       }
     ],
     "editions": [],
     "format": "Omnibus",
     "factions": [
       "Astra Militarum",
+      "Imperial Guard",
       "Tanith First and Only"
     ]
   },
@@ -32424,9 +32361,6 @@
     "author": [
       "Dan Abnett"
     ],
-    "authors": [
-      "Dan Abnett"
-    ],
     "series": [
       {
         "name": "Gaunt's Ghosts Omnibus",
@@ -32434,12 +32368,21 @@
       }
     ],
     "era": "41st Millennium",
-    "description": null,
-    "story": null,
+    "description": "From a deadly trek across a fallen world to the defence of a holy city alongside Saint Sabbat herself, this second Gaunt's Ghosts collection contains four novels of classic Astra Militarum action.",
+    "story": "In the blood-soaked Sabbat Worlds Crusade, the massed ranks of the Imperium battle the dark forces of Chaos for dominion. At the forefront of this conflict are the Imperial Guard - untold numbers of ordinary soldiers fighting to preserve the Emperor's holy realm. Colonel-Commissar Ibram Gaunt and the men of the Tanith First and Only are at the heart of this struggle. Forced to flee their planet before it was destroyed by Chaos, their specialist scouting role has earned them the nickname 'Ghosts', along with any dangerous mission their commanders choose to throw at them. Follow Gaunt's epic adventures as he and his men storm into battle with their war cry: 'Men of Tanith, do you want to live forever?'",
     "publication_date": null,
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/series/gaunts-ghosts/the-saint-omnibus-ebook.html"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/The_Saint_(Omnibus)"
+      }
+    ],
     "editions": [],
     "format": "Omnibus",
     "factions": [
@@ -32454,18 +32397,15 @@
     "author": [
       "Dan Abnett"
     ],
-    "authors": [
-      "Dan Abnett"
-    ],
     "series": [
       {
         "name": "Gaunt's Ghosts Omnibus",
         "number": null
       }
     ],
-    "era": "41st Millennium",
-    "description": null,
-    "story": null,
+    "era": "Classic 40k",
+    "description": "From a small team on a vital mission to the defence of a house haunted by literal ghosts, the Tanith First are back in action in four fantastic stories.",
+    "story": "It's the third collection of the Gaunt's Ghosts series, and gives four completely different showcases for the Tanith, including some of the most memorable and heart-rending tales of the entire series.",
     "publication_date": null,
     "page_count": null,
     "editor": [],
@@ -32473,6 +32413,10 @@
       {
         "type": "black_library",
         "url": "https://www.blacklibrary.com/all-products/gaunts-ghosts-the-lost-ebook.html"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/The_Lost_(Omnibus)"
       }
     ],
     "editions": [],
@@ -32487,9 +32431,6 @@
     "title": "Night Lords: The Omnibus",
     "slug": "/night-lords-the-omnibus",
     "author": [
-      "Aaron Dembski-Bowden"
-    ],
-    "authors": [
       "Aaron Dembski-Bowden"
     ],
     "series": [
@@ -32528,9 +32469,6 @@
     "author": [
       "John French"
     ],
-    "authors": [
-      "John French"
-    ],
     "series": [
       {
         "name": "Ahriman",
@@ -32567,9 +32505,6 @@
     "author": [
       "William King"
     ],
-    "authors": [
-      "William King"
-    ],
     "series": [
       {
         "name": "Space Wolf Omnibus",
@@ -32599,9 +32534,6 @@
     "title": "Uriel Ventris Chronicles: Volume 1",
     "slug": "/uriel-ventris-chronicles-volume-1",
     "author": [
-      "Graham McNeill"
-    ],
-    "authors": [
       "Graham McNeill"
     ],
     "series": [
@@ -32635,9 +32567,6 @@
     "author": [
       "Graham McNeill"
     ],
-    "authors": [
-      "Graham McNeill"
-    ],
     "series": [
       {
         "name": "Uriel Ventris Chronicles",
@@ -32664,9 +32593,6 @@
     "author": [
       "Graham McNeill"
     ],
-    "authors": [
-      "Graham McNeill"
-    ],
     "series": [
       {
         "name": "Uriel Ventris Chronicles",
@@ -32691,9 +32617,6 @@
     "title": "The Beast Arises: Volume 1",
     "slug": "/the-beast-arises-volume-1",
     "author": [
-      "Various"
-    ],
-    "authors": [
       "Various"
     ],
     "series": [
@@ -32723,9 +32646,6 @@
     "author": [
       "Various"
     ],
-    "authors": [
-      "Various"
-    ],
     "series": [
       {
         "name": "The Beast Arises Omnibus",
@@ -32751,9 +32671,6 @@
     "title": "The Beast Arises: Volume 3",
     "slug": "/the-beast-arises-volume-3",
     "author": [
-      "Various"
-    ],
-    "authors": [
       "Various"
     ],
     "series": [
@@ -34232,9 +34149,14 @@
     "publication_date": null,
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Sabbat_War_(Anthology)"
+      }
+    ],
     "editions": [],
-    "format": "novel",
+    "format": "short_story",
     "factions": []
   },
   {
@@ -36176,7 +36098,7 @@
     "title": "Heart of the Pharos",
     "slug": "/heart-of-the-pharos",
     "author": [
-      "Guy Haley"
+      "L.J. Goulding"
     ],
     "series": [
       {
@@ -36185,54 +36107,37 @@
       }
     ],
     "era": "The Great Crusade & Horus Heresy",
-    "description": null,
-    "story": null,
-    "publication_date": null,
+    "description": "Young Oberdeii and Tebecai, Scouts of the Ultramarines 199th Company, descend into the depths beneath Mount Pharos in search of a dark truth... though it may haunt them for all time.",
+    "story": "The Pharos stands as a beacon of light in the darkness, a whisper of hope in the silent void, a bastion of defiance in the face of treachery. Without it there could be no Imperium Secundus – why, then, do the masters of Ultramar know so little about its operation, or the dangers it could present? Young Oberdeii and Tebecai, Scouts of the 199th Company, descend into the depths beneath Mount Pharos in search of the truth... though it may haunt them for all time.",
+    "publication_date": "2016",
     "page_count": null,
     "editor": [],
-    "links": [],
-    "editions": [],
-    "format": "novel",
-    "factions": []
-  },
-  {
-    "id": 888,
-    "title": "Ghost of Arkio",
-    "slug": "/ghost-of-arkio",
-    "author": [
-      "Anthony Reynolds"
-    ],
-    "series": [
+    "links": [
       {
-        "name": "The Horus Heresy — Short Fiction",
-        "number": null
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/The_Heart_of_the_Pharos_(Audio_Drama)"
+      },
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/all-products/heart-of-the-pharos-mp3.html"
       }
     ],
-    "era": "The Great Crusade & Horus Heresy",
-    "description": null,
-    "story": null,
-    "publication_date": null,
-    "page_count": null,
-    "editor": [],
-    "links": [],
     "editions": [],
-    "format": "novel",
-    "factions": []
+    "format": "audio_drama",
+    "factions": [
+      "Ultramarines",
+      "Scythes of the Emperor"
+    ]
   },
   {
     "id": 889,
     "title": "The Fall of Malvolion",
     "slug": "/the-fall-of-malvolion",
     "author": [
-      "Graham McNeill"
+      "Dan Abnett"
     ],
-    "series": [
-      {
-        "name": "The Horus Heresy — Short Fiction",
-        "number": null
-      }
-    ],
-    "era": "The Great Crusade & Horus Heresy",
+    "series": [],
+    "era": null,
     "description": null,
     "story": null,
     "publication_date": null,
@@ -36245,8 +36150,11 @@
       }
     ],
     "editions": [],
-    "format": "novel",
-    "factions": []
+    "format": "short_story",
+    "factions": [
+      "Astra Militarum",
+      "Tyranids"
+    ]
   },
   {
     "id": 890,
@@ -36839,18 +36747,23 @@
       }
     ],
     "era": "The Great Crusade & Horus Heresy",
-    "description": null,
-    "story": null,
-    "publication_date": "2013",
+    "description": "On a distant world of the Imperium, an agent of Rogal Dorn finds himself the prisoner of a Legion whose loyalties may be divided.",
+    "story": "On a distant world of the Imperium, an agent of Rogal Dorn finds himself the prisoner of a Legion whose loyalties may be divided. Shackled and bound, the former Luna Wolf must fight a battle of wits with his captor, lest the course of the Horus Heresy take an unexpected turn. Will his very presence drive his erstwhile allies into the arms of the Warmaster or will maintaining the status quo prevent another Legion from turning traitor? And just who is the mysterious Space Marine aiding him from the shadows?",
+    "publication_date": "August 2012",
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Grey_Angel_(Audio_Book)"
+      }
+    ],
     "editions": [],
-    "format": "short_story",
+    "format": "audio_drama",
     "factions": [
       "Dark Angels",
-      "Sigillite",
-      "Caliban"
+      "Luna Wolves"
+
     ]
   },
   {
@@ -37049,17 +36962,21 @@
       }
     ],
     "era": "The Great Crusade & Horus Heresy",
-    "description": null,
+    "description": "Dark Apostle Kalta-Ar seeks to raise a religious monument to gain his primarch's favour. But when warriors of the Legion begin to die in suspicious circumstances, he learns something has come hunting. Its prey is not the legionaries slaughtered by its hands, but the one who they call father, the Daemon Primarch Lorgar.",
     "story": null,
     "publication_date": null,
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Sons_of_the_Emperor_(Anthology)#Shadow_of_the_Past"
+      }
+    ],
     "editions": [],
     "format": "short_story",
     "factions": [
-      "Dark Angels",
-      "Caliban"
+      "Word Bearers"
     ]
   },
   {
@@ -37373,28 +37290,38 @@
   },
   {
     "id": 927,
-    "title": "Blood and Lies",
-    "slug": "/blood-and-lies",
+    "title": "Agent of the Throne: Blood and Lies",
+    "slug": "/agent-of-the-throne-blood-and-lies",
     "author": [
-      "Gav Thorpe"
+      "John French"
     ],
     "series": [
       {
-        "name": "The Horus Heresy — Short Fiction",
+        "name": "Agent of the Throne",
         "number": null
       }
     ],
-    "era": "The Great Crusade & Horus Heresy",
+    "era": "Classic 40k",
     "description": null,
     "story": null,
-    "publication_date": "2016",
+    "publication_date": "August 2017",
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Agent_of_the_Throne:_Blood_and_Lies_(Audio_Drama)"
+      },
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/all-products/blood-and-lies-mp3.html"
+      }
+    ],
     "editions": [],
-    "format": "novella",
+    "format": "audio_drama",
     "factions": [
-      "Raven Guard"
+      "Astra Militarum",
+      "Inquisition"
     ]
   },
   {
@@ -37456,8 +37383,8 @@
   },
   {
     "id": 930,
-    "title": "Siren",
-    "slug": "/siren",
+    "title": "Tallarn: Siren",
+    "slug": "/tallarn-siren",
     "author": [
       "John French"
     ],
@@ -37468,16 +37395,25 @@
       }
     ],
     "era": "The Great Crusade & Horus Heresy",
-    "description": null,
-    "story": null,
-    "publication_date": null,
+    "description": "The Battle for Tallarn has begun, but the Imperium needs to send a distress call. The hunt is on for the planet's last surviving astropath...",
+    "story": "In the immediate aftermath of the Iron Warriors' attack, the loyalist forces on Tallarn mount a desperate mission to locate the last surviving astropath on the planet, so that they can send a distress call to the rest of the Imperium.",
+    "publication_date": "April 2016",
     "page_count": null,
     "editor": [],
-    "links": [],
+    "links": [
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/authors/john-french/tallarn-siren-ebook.html"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Tallarn:_Siren_(Short_Story)"
+      }
+    ],
     "editions": [],
     "format": "short_story",
-    "factions": [
-      "Alpha Legion"
+    "factions": [ 
+      "Iron Warriors"
     ]
   },
   {
@@ -37637,32 +37573,6 @@
     ]
   },
   {
-    "id": 936,
-    "title": "Reborn in Blood",
-    "slug": "/reborn-in-blood",
-    "author": [
-      "Ian St. Martin"
-    ],
-    "series": [
-      {
-        "name": "The Horus Heresy — Short Fiction",
-        "number": null
-      }
-    ],
-    "era": "The Great Crusade & Horus Heresy",
-    "description": null,
-    "story": null,
-    "publication_date": "2019",
-    "page_count": null,
-    "editor": [],
-    "links": [],
-    "editions": [],
-    "format": "short_story",
-    "factions": [
-      "World Eaters"
-    ]
-  },
-  {
     "id": 937,
     "title": "The Grey Raven",
     "slug": "/the-grey-raven",
@@ -37676,15 +37586,19 @@
       }
     ],
     "era": "The Great Crusade & Horus Heresy",
-    "description": null,
-    "story": null,
-    "publication_date": "2019",
-    "page_count": null,
+    "description": "Returning to Terra, the Librarian Balsar Kurthuri of the Raven Guard must face judgement for breaking the Edict of Nikaea, even if it turns all of his erstwhile allies against him.",
+    "story": "Balsar Kurthuri of the Raven Guard has always followed his primarch's orders. When the Edict of Nikaea forbade psykers within the Legions, he returned to the line squads without a second thought. When the Warmaster's treachery became known, he gave freely of his powers. Now, as the war appears to be entering its final, grim stages, at Lord Corax's command he must return to Terra to face judgement for the apparent crime of unswerving loyalty…",
+    "publication_date": "December 2016",
+    "page_count": 21,
     "editor": [],
     "links": [
       {
         "type": "lexicanum",
         "url": "https://wh40k.lexicanum.com/wiki/The_Grey_Raven_(Short_Story)"
+      },
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/all-products/the-grey-raven-ebook.html"
       }
     ],
     "editions": [],
@@ -37722,32 +37636,6 @@
     "format": "short_story",
     "factions": [
       "Iron Hands"
-    ]
-  },
-  {
-    "id": 939,
-    "title": "Confessions of a Reborn",
-    "slug": "/confessions-of-a-reborn",
-    "author": [
-      "Anthony Reynolds"
-    ],
-    "series": [
-      {
-        "name": "The Horus Heresy — Short Fiction",
-        "number": null
-      }
-    ],
-    "era": "The Great Crusade & Horus Heresy",
-    "description": null,
-    "story": null,
-    "publication_date": "2018",
-    "page_count": null,
-    "editor": [],
-    "links": [],
-    "editions": [],
-    "format": "short_story",
-    "factions": [
-      "Word Bearers"
     ]
   },
   {

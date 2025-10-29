@@ -2,7 +2,7 @@
 import fs from "fs";
 
 // Read and parse your nameless array JSON file
-const data = JSON.parse(fs.readFileSync("./40k-books.json", "utf-8"));
+const data = JSON.parse(fs.readFileSync("./missing-lexicanum.json", "utf-8"));
 
 // Loop through each book and print title + author(s)
 data.forEach((book, index) => {
