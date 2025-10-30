@@ -112,7 +112,7 @@ export const groupedFactions40kQuery = groq`
       links[]{type, url}
     }
   }
-`
+`;
 
 // Flat list for cards, with group key
 export const factions40kForCardsQuery = groq`
@@ -128,8 +128,7 @@ export const factions40kForCardsQuery = groq`
     "groupKey": group->slug.current,
     "groupTitle": group->title
   }
-`
-
+`;
 
 // Single faction (by slug) including its group
 export const singleFaction40kQuery = groq`
@@ -162,7 +161,7 @@ export const factionGroups40kQuery = groq`
     description,
     links[]{type, url}
   }
-`
+`;
 
 // All [group]/[slug] pairs for SSG
 export const factionPairs40kQuery = groq`
@@ -232,3 +231,90 @@ export const single40kEraQuery = groq`
   }
 `;
 
+export const allBooks40kQuery = groq`
+  *[_type == "book40k"] | order(_id asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    "author": coalesce(authors[]->name, []),
+    "era": era->title,
+    "factions": coalesce(factions[]->title, []),
+    description,
+    story,
+    "publication_date": publicationDate,
+    "page_count": pageCount,
+    format,
+    "editions": coalesce(editions[]{isbn, note}, []),
+    "links": coalesce(links[]{type, url}, []),
+    image{
+      alt,
+      credit,
+      asset->{ _id, url, metadata{ dimensions } }
+    },
+    "series": coalesce(
+      *[_type == "series40k" && references(^._id)]{
+        "name": title,
+        "number": items[work._ref == ^._id][0].number
+      },
+      []
+    )
+  }
+`;
+
+export const bookSlugs40kQuery = groq`
+  *[_type == "book40k" && defined(slug.current)][]{
+    "slug": slug.current
+  }
+`;
+
+export const bookBySlug40kQuery = groq`
+  *[_type == "book40k" && slug.current == $slug][0]{
+    _id,
+    title,
+    "slug": slug.current,
+
+    // full author objects for linking
+    "authors": coalesce(
+      authors[]->{
+        "name": coalesce(name, title),
+        "slug": slug.current
+      },
+      []
+    ),
+
+    // optional label if you still want it
+    "authorLabel": select(
+      !defined(authors) || count(authors) == 0 => "Unknown",
+      count(authors) == 1 => authors[0]->name,
+      "Various Authors"
+    ),
+
+    format,
+
+    "era": era->title,
+    "factions": coalesce(factions[]->title, []),
+
+    description,
+    story,
+
+    "publication_date": publicationDate,
+    "page_count": pageCount,
+
+    "editions": coalesce(editions[]{isbn, note}, []),
+    "links": coalesce(links[]{type, url}, []),
+
+    image{
+      alt,
+      credit,
+      asset->{ _id, url, metadata{ dimensions } }
+    },
+
+    "series": coalesce(
+      *[_type == "series40k" && references(^._id)]{
+        "name": title,
+        "number": items[work._ref == ^._id][0].number
+      },
+      []
+    )
+  }
+`;

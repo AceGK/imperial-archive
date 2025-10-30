@@ -1,0 +1,365 @@
+  
+  [{
+    "id": 1,
+    "title": "Horus Rising",
+    "slug": "/horus-rising",
+    "author": [
+      "Dan Abnett"
+    ],
+    "series": [
+      {
+        "name": "Horus Heresy - Main Series",
+        "number": 1
+      }
+    ],
+    "era": "The Great Crusade & Horus Heresy",
+    "description": "After thousands of years of expansion and conquest, the human Imperium is at its height. His dream for humanity accomplished, the Emperor hands over the reins of power to his Warmaster, Horus, and heads back to Terra.",
+    "story": "It is the 31st millennium. Under the benevolent leadership of the Immortal Emperor, the Imperium of Man has stretched out across the galaxy. It is a golden age of discovery and conquest. But now, on the eve of victory, the Emperor leaves the front lines, entrusting the great crusade to his favourite son, Horus. Promoted to Warmaster, can the idealistic Horus carry out the Emperor's grand plan, or will this promotion sow the seeds of heresy amongst his brothers? Horus Rising is the first chapter in the epic tale of the Horus Heresy, a galactic civil war that threatened to bring about the extinction of humanity.",
+    "publication_date": "2006",
+    "page_count": null,
+    "editor": [],
+    "links": [
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/series/the-horus-heresy/horus-rising.html"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Horus_Rising_(Novel)"
+      }
+    ],
+    "editions": [
+      {
+        "isbn": "9781849707442",
+        "note": null
+      },
+      {
+        "isbn": "1849707448",
+        "note": null
+      },
+      {
+        "isbn": "1849701121",
+        "note": null
+      },
+      {
+        "isbn": "9781849701129",
+        "note": null
+      },
+      {
+        "isbn": "678694071",
+        "note": null
+      },
+      {
+        "isbn": "1849703825",
+        "note": null
+      },
+      {
+        "isbn": "9781849703826",
+        "note": null
+      },
+      {
+        "isbn": "1784961574",
+        "note": null
+      },
+      {
+        "isbn": "9781784961572",
+        "note": null
+      }
+    ],
+    "format": "novel",
+    "factions": [
+      "Sons of Horus"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "False Gods",
+    "slug": "/false-gods",
+    "author": [
+      "Graham McNeill"
+    ],
+    "series": [
+      {
+        "name": "Horus Heresy - Main Series",
+        "number": 2
+      }
+    ],
+    "era": "The Great Crusade & Horus Heresy",
+    "description": "The Great Crusade that has taken humanity into the stars continues. The Emperor of Mankind has handed the reins of command to his favoured son, the Warmaster Horus. Yet all is not well in the armies of the Imperium...",
+    "story": "The Great Crusade that has taken humanity into the stars continues. The Emperor of mankind has handed the reins of command to his favoured son, the Warmaster Horus. Yet all is not well in the armies of the Imperium. Horus is still battling against the jealousy and resentment of his brother primarchs and, when he is injured in combat on the planet Davin, he must also battle his inner daemons. With all the temptations that Chaos has to offer, can the weakened Horus resist?",
+    "publication_date": "2006",
+    "page_count": null,
+    "editor": [],
+    "links": [
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/the-horus-heresy/novels/False-Gods-eBook.html"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/False_Gods_(Novel)"
+      }
+    ],
+    "editions": [
+      {
+        "isbn": "9781849707473",
+        "note": null
+      },
+      {
+        "isbn": "1849707472",
+        "note": null
+      },
+      {
+        "isbn": "1849707464",
+        "note": null
+      },
+      {
+        "isbn": "9781849707466",
+        "note": null
+      },
+      {
+        "isbn": "1849703833",
+        "note": null
+      },
+      {
+        "isbn": "9781849703833",
+        "note": null
+      },
+      {
+        "isbn": "678694081",
+        "note": null
+      },
+      {
+        "isbn": "6563552",
+        "note": null
+      }
+    ],
+    "format": "novel",
+    "factions": [
+      "Sons of Horus",
+      "Word Bearers",
+      "World Eaters",
+      "Nurgle"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Galaxy in Flames",
+    "slug": "/galaxy-in-flames",
+    "author": [
+      "Ben Counter"
+    ],
+    "series": [
+      {
+        "name": "Horus Heresy - Main Series",
+        "number": 3
+      }
+    ],
+    "era": "The Great Crusade & Horus Heresy",
+    "description": "Having recovered from his grievous injuries, Warmaster Horus leads the triumphant Imperial forces against the rebel world of Isstvan III where Horus's treachery is finally revealed ...",
+    "story": "Having recovered from his grievous injuries, Warmaster Horus leads the triumphant Imperial forces against the rebel world of Isstvan III. Though the rebels are swiftly crushed, Horus's treachery is finally revealed when the planet is razed by virus bombs and Space Marines turn on their battle-brothers in the most bitter struggle imaginable.",
+    "publication_date": "2006",
+    "page_count": null,
+    "editor": [],
+    "links": [
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/all-products/galaxy-in-flames-ebook.html"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Galaxy_in_Flames_(Novel)"
+      }
+    ],
+    "editions": [
+      {
+        "isbn": "9781849707541",
+        "note": null
+      },
+      {
+        "isbn": "1849707545",
+        "note": null
+      },
+      {
+        "isbn": "1849707537",
+        "note": null
+      },
+      {
+        "isbn": "9781849707534",
+        "note": null
+      },
+      {
+        "isbn": "1849703841",
+        "note": null
+      },
+      {
+        "isbn": "9781849703840",
+        "note": null
+      },
+      {
+        "isbn": "678694084",
+        "note": null
+      },
+      {
+        "isbn": "9786156075741",
+        "note": null
+      },
+      {
+        "isbn": "6156075747",
+        "note": null
+      }
+    ],
+    "format": "novel",
+    "factions": [
+      "Horus Heresy Series"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "The Flight of the Eisenstein",
+    "slug": "/the-flight-of-the-eisenstein",
+    "author": [
+      "James Swallow"
+    ],
+    "series": [
+      {
+        "name": "Horus Heresy - Main Series",
+        "number": 4
+      }
+    ],
+    "era": "The Great Crusade & Horus Heresy",
+    "description": "Having witnessed the terrible massacre on Isstvan III, Death Guard Captain Garro seizes a ship and sets a course for Terra to warn the Emperor of Horus’s treachery.",
+    "story": "Having witnessed the terrible massacre of Imperial forces on Isstvan III, Death Guard Captain Garro seizes a ship and sets a course for Terra to warn the Emperor of Horus's treachery. But when the fleeing Eisenstein is damaged by enemy fire, it becomes stranded in the warp - the realm of the Dark Powers. Can Garro and his men survive the depredations of Chaos and get his warning to the Emperor before Horus's plans reach fruition?",
+    "publication_date": "2007",
+    "page_count": null,
+    "editor": [],
+    "links": [
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/the-horus-heresy/novels/flight-of-the-eisenstein-ebook.html"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/The_Flight_of_the_Eisenstein_(Novel)"
+      }
+    ],
+    "editions": [
+      {
+        "isbn": "9781849708128",
+        "note": null
+      },
+      {
+        "isbn": "1849708126",
+        "note": null
+      },
+      {
+        "isbn": "184970385X",
+        "note": null
+      },
+      {
+        "isbn": "9781849703857",
+        "note": null
+      },
+      {
+        "isbn": "1849703345",
+        "note": null
+      },
+      {
+        "isbn": "9781849703345",
+        "note": null
+      },
+      {
+        "isbn": "9781476783154",
+        "note": null
+      },
+      {
+        "isbn": "1476783152",
+        "note": null
+      },
+      {
+        "isbn": "9781451696615",
+        "note": null
+      },
+      {
+        "isbn": "1451696612",
+        "note": null
+      }
+    ],
+    "format": "novel",
+    "factions": [
+      "Horus Heresy Series"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Fulgrim",
+    "slug": "/fulgrim",
+    "author": [
+      "Graham McNeill"
+    ],
+    "series": [
+      {
+        "name": "Horus Heresy - Main Series",
+        "number": 5
+      }
+    ],
+    "era": "The Great Crusade & Horus Heresy",
+    "description": "As the Great Crusade draws to a close, primarch Fulgrim and the Emperor's Children continue their pursuit of perfection. But pride comes before a fall, and this most proud of Legions is about to fall a very, very long way...",
+    "story": "Under the command of the newly appointed Warmaster Horus, the Great Crusade continues. Fulgrim, Primarch of the Emperor's Children, leads his warriors into battle against a vile alien foe, unaware of the darker forces that have already set their sights upon the Imperium of Man. Loyalties are tested, and every murderous whim indulged as the Emperor's Children take their first steps down the road to true corruption - a road that will ultimately lead them to the killing fields of Isstvan V...",
+    "publication_date": "2007",
+    "page_count": null,
+    "editor": [],
+    "links": [
+      {
+        "type": "black_library",
+        "url": "https://www.blacklibrary.com/the-horus-heresy/novels/fulgrim-ebook.html"
+      },
+      {
+        "type": "lexicanum",
+        "url": "https://wh40k.lexicanum.com/wiki/Fulgrim_(Novel)"
+      }
+    ],
+    "editions": [
+      {
+        "isbn": "9789635890033",
+        "note": null
+      },
+      {
+        "isbn": "9635890036",
+        "note": null
+      },
+      {
+        "isbn": "488494908",
+        "note": null
+      },
+      {
+        "isbn": "0857870289",
+        "note": null
+      },
+      {
+        "isbn": "9780857870285",
+        "note": null
+      },
+      {
+        "isbn": "8448044142",
+        "note": null
+      },
+      {
+        "isbn": "9788448044145",
+        "note": null
+      },
+      {
+        "isbn": "9788445003497",
+        "note": null
+      },
+      {
+        "isbn": "8445003496",
+        "note": null
+      }
+    ],
+    "format": "novel",
+    "factions": [
+      "Horus Heresy Series"
+    ]
+  }
+]

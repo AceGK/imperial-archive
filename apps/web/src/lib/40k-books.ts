@@ -1,37 +1,52 @@
-// /src/lib/40k-books.ts
 import fs from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 
 /** ---------- Zod Schemas (tolerant to legacy-ish data) ---------- */
 
-const SeriesEntryZ = z.object({
+/** Raw series entry as it might appear in JSON (number could be string/null/etc.) */
+const SeriesEntryRawZ = z.object({
   name: z.string(),
-  number: z.number().optional().nullable(),
+  number: z.union([z.number(), z.string(), z.null(), z.undefined()]).optional().nullable(),
 });
 
+/** Normalize any series-like input into Array<{name:string; number:number|null}> */
 const SeriesZ = z
   .union([
-    z.array(SeriesEntryZ),
+    z.array(SeriesEntryRawZ),
     z.array(z.string()),
-    SeriesEntryZ,
+    SeriesEntryRawZ,
     z.string(),
     z.null(),
     z.undefined(),
   ])
-  .transform((val) => {
+  .transform((val): Array<{ name: string; number: number | null }> => {
+    const toNum = (v: unknown): number | null => {
+      if (v === undefined || v === null || v === "") return null;
+      if (typeof v === "number") return Number.isFinite(v) ? Math.trunc(v) : null;
+      if (typeof v === "string") {
+        const n = parseInt(v.replace(/[^\d-]/g, ""), 10);
+        return Number.isFinite(n) ? n : null;
+      }
+      return null;
+    };
+
     if (!val) return [];
     if (Array.isArray(val)) {
       if (val.length === 0) return [];
       if (typeof val[0] === "string") {
         return (val as string[]).map((s) => ({ name: s, number: null }));
       }
-      return val as Array<{ name: string; number?: number | null }>;
+      return (val as Array<z.infer<typeof SeriesEntryRawZ>>).map((e) => ({
+        name: e.name,
+        number: toNum(e.number),
+      }));
     }
     if (typeof val === "string") return [{ name: val, number: null }];
-    return [val as { name: string; number?: number | null }];
-  })
-  .pipe(z.array(SeriesEntryZ)); // ensure TS sees a clean array of SeriesEntryZ
+
+    const e = val as z.infer<typeof SeriesEntryRawZ>;
+    return [{ name: e.name, number: toNum(e.number) }];
+  });
 
 const EditionZ = z.object({
   isbn: z.string(),
@@ -48,7 +63,6 @@ const FormatZ = z.preprocess((v) => {
   if (typeof v !== "string") return v;
 
   const raw = v.trim().toLowerCase().replace(/[\s-]+/g, "_");
-
   const map: Record<string, string> = {
     shortstory: "short_story",
     short_story: "short_story",
@@ -61,7 +75,6 @@ const FormatZ = z.preprocess((v) => {
     novella: "novella",
     other: "other",
   };
-
   return map[raw] ?? raw;
 }, z.union([
   z.literal("novel"),
@@ -75,47 +88,59 @@ const FormatZ = z.preprocess((v) => {
   z.literal("other"),
 ]).optional().nullable());
 
-const BookZ = z
+const BookInputZ = z
   .object({
     id: z.number(),
     title: z.string(),
     slug: z.string(),
 
-    author: z.array(z.string()).or(z.string().transform((s) => [s])),
+    // tolerate author/authors
+    author: z.array(z.string()).or(z.string().transform((s) => [s])).optional(),
+    authors: z.array(z.string()).or(z.string().transform((s) => [s])).optional(),
 
     tags: z.array(z.string()).or(z.string().transform((s) => [s])).optional(),
 
-    // dates
     release_date: z.string().optional().nullable(),
     publication_date: z.string().optional().nullable(),
 
-    // series (tolerant input, normalized to array)
     series: SeriesZ,
-    series_number: z.number().optional().nullable(), // legacy (not used, but allowed)
+    series_number: z.preprocess((v) => {
+      if (v === undefined || v === null || v === "") return null;
+      if (typeof v === "number") return v;
+      if (typeof v === "string") {
+        const n = parseInt(v.replace(/[^\d-]/g, ""), 10);
+        return Number.isFinite(n) ? n : null;
+      }
+      return null;
+    }, z.number().optional().nullable()),
 
     era: z.string().optional().nullable(),
 
     links: z.array(LinkZ).optional().nullable(),
-
     description: z.string().optional().nullable(),
     story: z.string().optional().nullable(),
 
     format: FormatZ,
 
     editions: z.array(EditionZ).optional().nullable(),
-
-    // legacy/optional
     isbn: z.string().optional().nullable(),
-    page_count: z.number().optional().nullable(),
 
-    // ✅ current field
+    page_count: z.preprocess((v) => {
+      if (v === undefined || v === null || v === "") return null;
+      if (typeof v === "number") return v;
+      if (typeof v === "string") {
+        const n = parseInt(v.replace(/[^\d-]/g, ""), 10);
+        return Number.isFinite(n) ? n : null;
+      }
+      return null;
+    }, z.number().int().gte(1).optional().nullable()),
+
     factions: z.array(z.string()).optional().nullable(),
-
     editor: z.array(z.string()).optional().nullable(),
   })
   .passthrough();
 
-export type RawBook = z.infer<typeof BookZ>;
+export type RawBook = z.infer<typeof BookInputZ>;
 
 /** ---------- Normalized Runtime Types ---------- */
 
@@ -146,7 +171,7 @@ export interface Book {
   format?: BookFormat | null;
   editions: Edition[];
   page_count?: number | null;
-  factions: string[];            // ✅ the only facet we keep
+  factions: string[];
   editor?: string[];
 }
 
@@ -210,19 +235,25 @@ function normalizeFactions(b: RawBook): string[] {
   return out;
 }
 
-function normalizeBook(b: RawBook): Book {
-  const p = BookZ.parse(b);
+function normalizeBook(input: unknown): Book {
+  const p = BookInputZ.parse(input);
 
-  const series: SeriesMembership[] = p.series.map((s) => ({
-    name: s.name,
-    number: s.number ?? null,
-  }));
+  // Merge author/authors, preferring `author` if present & non-empty
+  const authorArr: string[] =
+    p.author && p.author.length > 0 ? p.author : (p.authors ?? []);
+
+  const series: SeriesMembership[] = (p.series as Array<{ name: string; number: number | null }>).map(
+    (s: { name: string; number: number | null }) => ({
+      name: s.name,
+      number: s.number ?? null,
+    })
+  );
 
   return {
     id: p.id,
     title: p.title,
     slug: stripLeadingSlash(p.slug),
-    author: p.author,
+    author: authorArr,
 
     releaseDate: bestReleaseDate(p),
     year: bestYear(p),
@@ -248,7 +279,7 @@ function normalizeBook(b: RawBook): Book {
 let _all: Book[] | null = null;
 const _bySlug = new Map<string, Book>();
 const _byAuthor = new Map<string, Book[]>();
-const _byTag = new Map<string, Book[]>(); // present for future tag support
+const _byTag = new Map<string, Book[]>();
 const _byYear = new Map<string, Book[]>();
 const _bySeries = new Map<string, Book[]>();
 const _byFaction = new Map<string, Book[]>();
@@ -273,10 +304,10 @@ function indexAll(books: Book[]) {
 
   for (const b of books) {
     _bySlug.set(b.slug, b);
-    b.author.forEach((a) => pushMapArray(_byAuthor, norm(a), b));
+    b.author.forEach((a: string) => pushMapArray(_byAuthor, norm(a), b));
     if (b.year) pushMapArray(_byYear, b.year, b);
-    b.series.forEach((s) => pushMapArray(_bySeries, norm(s.name), b));
-    b.factions.forEach((f) => pushMapArray(_byFaction, norm(f), b));
+    b.series.forEach((s: SeriesMembership) => pushMapArray(_bySeries, norm(s.name), b));
+    b.factions.forEach((f: string) => pushMapArray(_byFaction, norm(f), b));
     if (b.era) pushMapArray(_byEra, norm(b.era), b);
     if (b.format) pushMapArray(_byFormat, b.format, b);
   }
@@ -287,7 +318,7 @@ function indexAll(books: Book[]) {
 export function getAllBooks(): Book[] {
   if (_all) return _all;
   const rawArr = JSON.parse(fs.readFileSync(DATA_FILE, "utf-8")) as unknown[];
-  const parsed = rawArr.map((x) => normalizeBook(x as any));
+  const parsed = rawArr.map((x: unknown) => normalizeBook(x));
   _all = parsed;
   indexAll(parsed);
   return _all;

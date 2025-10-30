@@ -1,76 +1,105 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { Book } from "@/lib/40k-books";
 import styles from "./styles.module.scss";
 
+type SanitySeries = { name: string; number?: number | null };
+type SanityImage =
+  | {
+      alt?: string | null;
+      credit?: string | null;
+      asset?: {
+        _id: string;
+        url: string;
+        metadata?: { dimensions?: { width?: number; height?: number } };
+      } | null;
+    }
+  | null
+  | undefined;
+
+type SanityBook = {
+  _id: string;
+  title: string;
+  slug: string;
+   author?: string[];        // keep the array if you want elsewhere
+  authorLabel?: string; 
+  series?: SanitySeries[];
+  publication_date?: string | null;
+  factions?: string[];
+  image?: SanityImage;
+  description?: string | null;
+  story?: string | null;
+  format?: string | null;
+};
+
 type Props = {
-  book: Book;
-  href?: string; // override if needed
-  compact?: boolean; // hides some extras in tight grids
+  book: SanityBook;
+  href?: string;
+  compact?: boolean;
   className?: string;
 };
 
-function authorsLabel(arr: string[]) {
-  if (!arr?.length) return "Unknown";
-  if (arr.length === 1) return arr[0];
-  return "Various Authors";
+function yearFromDate(d?: string | null) {
+  if (!d) return undefined;
+  const y = String(d).slice(0, 4);
+  return /^\d{4}$/.test(y) ? y : undefined;
+}
+function primarySeriesLabel(series?: SanitySeries[]) {
+  if (!series?.length) return undefined;
+  const s = series[0];
+  if (!s?.name) return undefined;
+  const n = typeof s.number === "number" && Number.isFinite(s.number) ? ` #${s.number}` : "";
+  return `${s.name}${n}`;
 }
 
 export default function BookCard({ book, href, compact, className }: Props) {
-  const link = href ?? `/books/${book.slug}`;
-  const author = authorsLabel(book.author);
-  const series = book.series ? book.series : null;
-
-  const factions = book.factions ?? [];
-  const shown = factions.slice(0, compact ? 2 : 3);
-  const extra = Math.max(0, factions.length - shown.length);
+  const link = href ?? `/books/${book.slug}`; 
+  const seriesLabel = primarySeriesLabel(book.series);
+  const year = yearFromDate(book.publication_date);
+  const hasImage = Boolean(book.image?.asset?.url);
+  const imgUrl = book.image?.asset?.url ?? "";
+  const imgAlt =
+    (book.image?.alt && book.image.alt.trim()) ||
+    (book.title ? `${book.title} cover` : "Book cover");
+    const authorText =
+  !book.author || book.author.length === 0
+    ? "Unknown"
+    : book.author.length === 1
+      ? book.author[0]
+      : "Various";
 
   return (
     <Link href={link} className={`${styles.card} ${className ?? ""}`}>
-      {/* Cover (or placeholder) */}
-      <div
-        className={styles.image}
-        aria-label={book.title ? `${book.title} cover` : "No cover image"}
-      >
-        <div className={styles.placeholderImage} aria-hidden="true" />
+      <div className={styles.image} aria-label={book.title ? `${book.title} cover` : "No cover image"}>
+        {hasImage ? (
+          <Image
+            src={imgUrl}
+            alt={imgAlt}
+            fill
+            sizes="(max-width: 600px) 50vw, 200px"
+            priority={false}
+          />
+        ) : (
+          <div className={styles.placeholderImage} aria-hidden="true" />
+        )}
       </div>
 
       <div className={styles.content}>
-        {/* Title */}
         <h3 className={styles.title} title={book.title}>
           {book.title}
         </h3>
 
-        {/* Meta block (author / series / year) */}
         <div className={styles.meta}>
-          <div className={styles.author} title={author}>
-            {author}
-          </div>
-
-          {!compact && (series || book.year) && (
+          {book.author && <div className={styles.author}>
+            {authorText}
+          </div>}
+          {/* {!compact && (seriesLabel || year) && (
             <div className={styles.series}>
-              {/* {series} */}
-              {series && book.year ? " · " : ""}
-              {book.year ?? ""}
+              {seriesLabel}
+              {seriesLabel && year ? " · " : ""}
+              {year ?? ""}
             </div>
-          )}
+          )} */}
         </div>
-
-        {/* Collections */}
-        {/* {shown.length > 0 && (
-        <div className={styles.chips}>
-          {shown.map((c) => (
-            <span className={styles.chip} key={c} title={c}>
-              {c}
-            </span>
-          ))}
-          {extra > 0 && (
-            <span className={styles.chip} aria-label={`${extra} more collections`}>
-              +{extra} more
-            </span>
-          )}
-        </div>
-      )} */}
       </div>
     </Link>
   );

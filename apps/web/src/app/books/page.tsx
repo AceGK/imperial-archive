@@ -1,12 +1,13 @@
 // /app/books/page.tsx
-import { searchBooks, type Book } from "@/lib/40k-books";
+import { allBooks40kQuery } from "@/lib/sanity/queries";
+import { client } from "@/lib/sanity/sanity.client";
 import BookCard from "@/components/modules/BookCard";
 import PageHeader from "@/components/modules/PageHeader";
 
 export const revalidate = 60;
 
 export default async function BrowsePage() {
-  const books: Book[] = await searchBooks({ sort: "title_asc" });
+  const books = await client.fetch(allBooks40kQuery);
   const count = books.length;
 
   return (
@@ -23,18 +24,18 @@ export default async function BrowsePage() {
       />
 
       <section className="container">
-        <div style={{opacity: 0.5, paddingBottom:"1rem"}}>{count} Books</div>
-       
+        <div style={{ opacity: 0.5, paddingBottom: "1rem" }}>{count} Books</div>
+
         <div
           style={{
             display: "grid",
             gap: "1rem",
             gridTemplateColumns:
-              "repeat(auto-fill, minmax(min(200px, 100%), 1fr))"
+              "repeat(auto-fill, minmax(min(200px, 100%), 1fr))",
           }}
         >
-          {books.map((b) => (
-            <BookCard key={b.id} book={b} />
+          {books.map((b: any) => (
+            <BookCard key={b._id} book={b} />
           ))}
         </div>
       </section>
