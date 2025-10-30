@@ -71,3 +71,41 @@ export type Era40k = {
   }
   description?: string
 }
+
+export type SanityImageAsset = {
+  _id: string;
+  url: string;
+  metadata?: {
+    dimensions?: { width?: number; height?: number };
+    lqip?: string;
+  };
+};
+
+export type SanityImageField =
+  | {
+      alt?: string | null;
+      credit?: string | null;
+      asset?: SanityImageAsset | null;
+    }
+  | null
+  | undefined;
+
+export type Series40k = {
+  name: string;
+  number?: number | null;
+};
+
+export type Book40k = {
+  _id: string;
+  title: string;
+  slug: string;
+  author?: string[];
+  authorLabel?: string;
+  series?: Series40k[];
+  publication_date?: string | null;
+  factions?: string[];
+  image?: SanityImageField;
+  description?: string | null;
+  story?: string | null;
+  format?: string | null;
+};

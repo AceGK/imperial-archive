@@ -24,10 +24,10 @@
 }
 
 .image {
-  /* Must be positioned for next/image fill */
   position: relative;
   width: 100%;
   aspect-ratio: 2 / 3;
+  aspect-ratio: 5 / 8;
   overflow: hidden;
   background: var(--muted, rgba(0, 0, 0, 0.06));
   border-bottom: 1px solid var(--border);

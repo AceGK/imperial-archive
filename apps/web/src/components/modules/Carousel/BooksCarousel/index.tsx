@@ -1,19 +1,20 @@
+// /src/components/modules/Carousel/BooksCarousel/index.tsx
 "use client";
 
 import React from "react";
 import Carousel from "@/components/modules/Carousel";
 import type { SwiperOptions } from "swiper/types";
 import BookCard from "@/components/modules/BookCard";
-import type { Book } from "@/lib/40k-books";
+import type { Book40k } from "@/types/sanity";
 
 type Props = {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
-  books: Book[];
+  books: Book40k[]; 
   className?: string;
-  compact?: boolean;          // pass through to BookCard
-  viewAllLink?: string;       // e.g. "/books"
-  viewAllLabel?: string;      // optional, defaults inside Carousel to "View All"
+  compact?: boolean;
+  viewAllLink?: string; 
+  viewAllLabel?: string;
 };
 
 const breakpoints: SwiperOptions["breakpoints"] = {
@@ -23,7 +24,7 @@ const breakpoints: SwiperOptions["breakpoints"] = {
   1200: { slidesPerView: 5,   spaceBetween: 18 },
 };
 
-export default function BookCarousel({
+export default function BooksCarousel({
   title,
   subtitle,
   books,
@@ -33,7 +34,7 @@ export default function BookCarousel({
   viewAllLabel = "View All Books",
 }: Props) {
   const items = books.map((b) => (
-    <BookCard key={b.id} book={b} compact={compact} />
+    <BookCard key={b._id} book={b} compact={compact} />
   ));
 
   return (
@@ -50,7 +51,7 @@ export default function BookCarousel({
       pagination={false}
       className={className}
       viewAllLink={viewAllLink}
-      viewAllLabel={viewAllLabel} 
+      viewAllLabel={viewAllLabel}
     />
   );
 }

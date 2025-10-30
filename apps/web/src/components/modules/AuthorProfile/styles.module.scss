@@ -19,7 +19,7 @@ $author-profile-bg: color-mix(in oklab, var(--bg), var(--subtle) 10%);
   border-radius: var(--radius);
   height: fit-content;
   position: sticky;
-  top: 1rem;
+  top: 6rem;
 
   @include max(md) {
     position: static;

@@ -1,38 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./styles.module.scss";
-
-type SanitySeries = { name: string; number?: number | null };
-type SanityImage =
-  | {
-      alt?: string | null;
-      credit?: string | null;
-      asset?: {
-        _id: string;
-        url: string;
-        metadata?: { dimensions?: { width?: number; height?: number } };
-      } | null;
-    }
-  | null
-  | undefined;
-
-type SanityBook = {
-  _id: string;
-  title: string;
-  slug: string;
-   author?: string[];        // keep the array if you want elsewhere
-  authorLabel?: string; 
-  series?: SanitySeries[];
-  publication_date?: string | null;
-  factions?: string[];
-  image?: SanityImage;
-  description?: string | null;
-  story?: string | null;
-  format?: string | null;
-};
+import type { Book40k, Series40k } from "@/types/sanity";
 
 type Props = {
-  book: SanityBook;
+  book: Book40k;
   href?: string;
   compact?: boolean;
   className?: string;
@@ -43,7 +15,7 @@ function yearFromDate(d?: string | null) {
   const y = String(d).slice(0, 4);
   return /^\d{4}$/.test(y) ? y : undefined;
 }
-function primarySeriesLabel(series?: SanitySeries[]) {
+function primarySeriesLabel(series?: Series40k[]) {
   if (!series?.length) return undefined;
   const s = series[0];
   if (!s?.name) return undefined;

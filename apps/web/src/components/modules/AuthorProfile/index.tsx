@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import { PortableText } from "@portabletext/react";
-import type { Author40k } from "@/types/sanity";
-import type { Book } from "@/lib/40k-books";
+import type { Author40k, Book40k } from "@/types/sanity";
 import styles from "./styles.module.scss";
 import BookCard from "@/components/modules/BookCard";
 import Button from "@/components/ui/Button";
@@ -22,7 +21,7 @@ import ChevronDown from "@/components/icons/chevron-down.svg";
 type Props = {
   slug: string;
   profile: Author40k | null;
-  authored: Book[];
+  authored: Book40k[];
   makeHref?: (slug: string) => string;
 };
 
@@ -46,14 +45,16 @@ const ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
   instagram: InstagramIcon,
 };
 
-export default function AuthorProfile({ profile, authored, makeHref }: Props) {
+
+export default function AuthorProfile({ profile, authored }: Props) {
   const visibleLinks = (profile?.links ?? []).filter((l) => !!l?.url);
   const bookCount = authored.length;
+
   const [expanded, setExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const bioRef = useRef<HTMLDivElement | null>(null);
 
-  // Count bio lines and hide button/gradient if ≤ 5 lines
+  // Count bio lines and hide the toggle if ≤ 5 lines
   useEffect(() => {
     const el = bioRef.current;
     if (!el) return;
@@ -75,7 +76,7 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
       <div className={styles.profile}>
         {profile?.image && (
           <div className={styles.imageWrapper}>
-            <Image
+              <Image
               className={styles.image}
               src={urlFor(profile.image)
                 .width(200)
@@ -97,27 +98,22 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
         {profile?.bio && (
           <div
             ref={bioRef}
-            className={`${styles.bio} 
-              ${expanded ? styles.expanded : styles.collapsed} 
-              ${!showToggle ? styles.noFade : ""}`}
+            className={`${styles.bio} ${expanded ? styles.expanded : styles.collapsed} ${!showToggle ? styles.noFade : ""}`}
           >
             <PortableText value={profile.bio as any} />
           </div>
         )}
 
-        {/* Only render button if bio is long */}
         {profile?.bio && showToggle && (
           <Button
             variant="link"
             size="sm"
             className={styles.readMore}
-            onClick={() => setExpanded(!expanded)}
+            onClick={() => setExpanded((v) => !v)}
             title={expanded ? "Show less" : "Read more"}
           >
             {expanded ? "Show less" : "Read more"}
-            <ChevronDown
-              className={`${styles.chevron} ${expanded ? styles.expanded : ""}`}
-            />
+            <ChevronDown className={`${styles.chevron} ${expanded ? styles.expanded : ""}`} />
           </Button>
         )}
 
@@ -125,10 +121,7 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
           <ul className={styles.links}>
             {visibleLinks.map((link) => {
               const Icon = ICONS[link.type];
-              const label =
-                LABELS[link.type] ??
-                link.type.replace(/^\w/, (c) => c.toUpperCase());
-
+              const label = LABELS[link.type] ?? link.type.replace(/^\w/, (c) => c.toUpperCase());
               return (
                 <li key={`${link.type}-${link.url}`}>
                   <Button
@@ -161,9 +154,9 @@ export default function AuthorProfile({ profile, authored, makeHref }: Props) {
           <div className={styles.bookGrid}>
             {authored.map((b) => (
               <BookCard
-                key={b.id}
+                key={b._id}                              
                 book={b}
-                href={makeHref ? makeHref(b.slug) : undefined}
+                href={`/books/${b.slug}`}
                 compact
               />
             ))}

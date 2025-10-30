@@ -6,16 +6,20 @@ import FactionCarousel from "@/components/modules/Carousel/FactionCarousel";
 import EraCarousel from "@/components/modules/Carousel/EraCarousel";
 
 import { client } from "@/lib/sanity/sanity.client";
-import { featuredAuthors40kQuery } from "@/lib/sanity/queries";
+import {
+  featuredAuthors40kQuery,
+  featuredBooks40kQuery,
+} from "@/lib/sanity/queries";
 
-// todo replace when books are migrated to Sanity
-import { getAllBooks } from "@/lib/40k-books";
-import { getBooksByAuthor } from "@/lib/40k-books";
+// keep this for now if your <Search> still expects the local JSON lib
+import { getAllBooks, getBooksByAuthor } from "@/lib/40k-books";
+
 import Search from "@/components/modules/Search";
 
 export const revalidate = 60;
 
 export default async function Home() {
+
   const featuredNames = [
     "Dan Abnett",
     "Aaron Dembski-Bowden",
@@ -35,23 +39,48 @@ export default async function Home() {
   const authors = await client.fetch(
     featuredAuthors40kQuery,
     { names: featuredNames },
-    { cache: "force-cache", next: { revalidate } }
+    { next: { revalidate } }
   );
 
-  // Keep the original order defined in featuredNames + add book counts (todo switch to sanity when migrated)
+  // preserve the order from featuredNames;
+  // (optionally use the "count" returned by the query instead of JSON lib)
   const featuredAuthors = authors
-   .map((a: any) => ({
-    ...a,
-    count: getBooksByAuthor(a.name)?.length ?? 0,
-  }))
+    .map((a: any) => ({
+      ...a,
+      count: getBooksByAuthor(a.name)?.length ?? a.count ?? 0, // keep your current behavior
+    }))
     .sort(
       (a: any, b: any) =>
         featuredNames.indexOf(a.name) - featuredNames.indexOf(b.name)
     );
 
-  // Books (todo switch to sanity when migrated)
+  // Must match titles exactly.
+  const featuredTitles = [
+    "Horus Rising",
+    "False Gods",
+    "Galaxy in Flames",
+    "The Flight of the Eisenstein",
+    "Fulgrim",
+    "Descent of Angels",
+    "Legion",
+    "Mechanicum",
+    "A Thousand Sons",
+  ];
+
+  const featuredBooksRaw = await client.fetch(
+    featuredBooks40kQuery,
+    { titles: featuredTitles },
+    { next: { revalidate } }
+  );
+
+  // Preserve order based on featuredTitles
+  const featuredBooks = (featuredBooksRaw as any[]).sort(
+    (a, b) =>
+      featuredTitles.indexOf(a.title) - featuredTitles.indexOf(b.title)
+  );
+
+  /** -------- Search (still JSON for now) -------- */
   const allBooks = getAllBooks();
-  const featuredBooks = allBooks.slice(0, 9);
 
   return (
     <main>
@@ -64,11 +93,8 @@ export default async function Home() {
         align="center"
         height="md"
       >
-          <Search
-          books={allBooks as any}
-          placeholder="Search the Archive..."
-        />
-        </Hero>
+        <Search books={allBooks as any} placeholder="Search the Archive..." />
+      </Hero>
 
       <section className="container">
         <BooksCarousel

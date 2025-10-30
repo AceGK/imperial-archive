@@ -318,3 +318,56 @@ export const bookBySlug40kQuery = groq`
     )
   }
 `;
+
+export const booksByAuthorSlug40kQuery = groq`
+  *[_type == "book40k" && references(*[_type=="author40k" && slug.current == $slug]._id)]
+  | order(title asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    "author": coalesce(authors[]->name, []),
+    "era": era->title,
+    "factions": coalesce(factions[]->title, []),
+    "publication_date": publicationDate,
+    format,
+    image{
+      alt,
+      credit,
+      asset->{ _id, url, metadata{ dimensions } }
+    },
+    "series": coalesce(
+      *[_type == "series40k" && references(^._id)]{
+        "name": title,
+        "number": items[work._ref == ^._id][0].number
+      },
+      []
+    )
+  }
+`;
+
+export const featuredBooks40kQuery = groq`
+*[
+  _type == "book40k"
+  && !(_id match "drafts.*")
+  && title in $titles
+]{
+  _id,
+  title,
+  "slug": slug.current,
+  "author": coalesce(authors[]->name, []),
+  "publication_date": publicationDate,
+  format,
+  image{
+    alt,
+    credit,
+    asset->{ _id, url, metadata{ dimensions } }
+  },
+  "series": coalesce(
+    *[_type == "series40k" && references(^._id)]{
+      "name": title,
+      "number": items[work._ref == ^._id][0].number
+    },
+    []
+  )
+}
+`;
