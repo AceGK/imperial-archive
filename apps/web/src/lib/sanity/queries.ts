@@ -232,33 +232,35 @@ export const single40kEraQuery = groq`
 `;
 
 export const allBooks40kQuery = groq`
-  *[_type == "book40k"] | order(_id asc) {
-    _id,
-    title,
-    "slug": slug.current,
-    "author": coalesce(authors[]->name, []),
-    "era": era->title,
-    "factions": coalesce(factions[]->title, []),
-    description,
-    story,
-    "publication_date": publicationDate,
-    "page_count": pageCount,
-    format,
-    "editions": coalesce(editions[]{isbn, note}, []),
-    "links": coalesce(links[]{type, url}, []),
-    image{
-      alt,
-      credit,
-      asset->{ _id, url, metadata{ dimensions } }
+  *[_type == "book40k" && !(_id match "drafts.*")]
+| order(_createdAt asc) {
+  _id,
+  _createdAt,
+  title,
+  "slug": slug.current,
+  "author": coalesce(authors[]->name, []),
+  "era": era->title,
+  "factions": coalesce(factions[]->title, []),
+  description,
+  story,
+  "publication_date": publicationDate,
+  "page_count": pageCount,
+  format,
+  "editions": coalesce(editions[]{isbn, note}, []),
+  "links": coalesce(links[]{type, url}, []),
+  image{
+    alt,
+    credit,
+    asset->{ _id, url, metadata{ dimensions } }
+  },
+  "series": coalesce(
+    *[_type == "series40k" && references(^._id)]{
+      "name": title,
+      "number": items[work._ref == ^._id][0].number
     },
-    "series": coalesce(
-      *[_type == "series40k" && references(^._id)]{
-        "name": title,
-        "number": items[work._ref == ^._id][0].number
-      },
-      []
-    )
-  }
+    []
+  )
+}
 `;
 
 export const bookSlugs40kQuery = groq`
