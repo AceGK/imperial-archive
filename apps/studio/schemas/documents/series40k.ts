@@ -1,6 +1,9 @@
 import { defineType, defineField } from "sanity";
 import { TagIcon, ListIcon } from "@sanity/icons";
-import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
+import {
+  orderRankField,
+  orderRankOrdering,
+} from "@sanity/orderable-document-list";
 
 export default defineType({
   name: "series40k",
@@ -46,59 +49,47 @@ export default defineType({
     }),
 
     defineField({
-      name: "items",
-      title: "Books in Order",
+      name: "lists",
+      title: "Reading Lists",
       type: "array",
       of: [
         {
           type: "object",
-          icon: ListIcon,
+          name: "seriesList40k", // still name it for clarity
+          title: "Reading List",
           fields: [
-            // Book ref must use your book type name
-            defineField({
-              name: "book",
-              title: "Book",
-              type: "reference",
-              to: [{ type: "book40k" }],
-              validation: (R) => R.required(),
-            }),
-            defineField({
-              name: "number",
-              title: "Series Number",
-              type: "number",
-              description: "Use simple integers where possible.",
-              validation: (R) => R.min(0),
-            }),
-            defineField({
-              name: "label",
-              title: "Display Label (optional)",
-              type: "string",
-              description:
-                'Label for special ordering like "0.5", "Prologue", "Interlude".',
-            }),
-            defineField({
-              name: "note",
-              title: "Note (optional)",
-              type: "string",
-              description:
-                "Editorial guidance, e.g., 'Read after Book 5 if following character X'.",
-            }),
-            
+            { name: "title", type: "string", validation: (R) => R.required() },
+            {
+              name: "key",
+              type: "slug",
+              options: { source: "title", maxLength: 96 },
+            },
+            { name: "description", type: "text", rows: 2 },
+            {
+              name: "items",
+              type: "array",
+              of: [
+                {
+                  type: "object",
+                  fields: [
+                    {
+                      name: "book",
+                      type: "reference",
+                      to: [{ type: "book40k" }],
+                      validation: (R) => R.required(),
+                    },
+                    {
+                      name: "number",
+                      type: "number",
+                      validation: (R) => R.min(0),
+                    },
+                    { name: "label", type: "string" },
+                    { name: "note", type: "string" },
+                  ],
+                },
+              ],
+            },
           ],
-          preview: {
-            select: {
-              title: "book.title",
-              number: "number",
-              label: "label",
-              role: "role",
-              media: "book.image",
-            },
-            prepare({ title, number, label, role, media }) {
-              const badge = label || (Number.isFinite(number) ? `#${number}` : "");
-              const subtitle = [badge, role].filter(Boolean).join(" • ");
-              return { title: title || "(Untitled book)", subtitle, media };
-            },
-          },
         },
       ],
     }),
@@ -109,9 +100,8 @@ export default defineType({
       type: "array",
       of: [{ type: "seriesLink" }],
     }),
-
   ],
-  
+
   preview: {
     select: { title: "title", subtitle: "group", media: "image" },
     prepare: ({ title, subtitle, media }) => ({

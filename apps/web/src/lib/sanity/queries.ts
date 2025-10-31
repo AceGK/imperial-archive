@@ -373,3 +373,73 @@ export const featuredBooks40kQuery = groq`
   )
 }
 `;
+
+
+export const allSeries40kQuery = groq`
+*[_type == "series40k"]
+| order(orderRank asc, title asc) {
+  _id,
+  _type,
+  title,
+  "slug": slug.current,
+  description,
+  // image fields projected with a direct URL for convenience
+  "image": {
+    "url": image.asset->url,
+    "alt": image.alt,
+    "credit": image.credit
+  },
+  // items sorted by number (if any), then label
+  "items": items[] 
+    | order(coalesce(number, 1e9) asc, label asc) {
+      number,
+      label,
+      note,
+      "book": book->{
+        _id,
+        _type,
+        title,
+        "slug": slug.current,
+        "image": {
+          "url": image.asset->url,
+          "alt": image.alt,
+          "credit": image.credit
+        }
+      }
+    },
+}
+`;
+
+/** One series by slug */
+export const series40kBySlugQuery = groq`
+*[_type == "series40k" && slug.current == $slug][0]{
+  _id,
+  _type,
+  title,
+  "slug": slug.current,
+  description,
+  "image": {
+    "url": image.asset->url,
+    "alt": image.alt,
+    "credit": image.credit
+  },
+  "items": items[] 
+    | order(coalesce(number, 1e9) asc, label asc) {
+      number,
+      label,
+      note,
+      "book": book->{
+        _id,
+        _type,
+        title,
+        "slug": slug.current,
+        "image": {
+          "url": image.asset->url,
+          "alt": image.alt,
+          "credit": image.credit
+        }
+      }
+    },
+  links
+}
+`;

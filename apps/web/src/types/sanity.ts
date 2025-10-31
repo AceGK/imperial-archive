@@ -109,3 +109,36 @@ export type Book40k = {
   story?: string | null;
   format?: string | null;
 };
+
+
+// ---- Series (documents) ----
+
+export type SeriesLink =
+  | { type: 'black_library'; url: string }
+  | { type: 'lexicanum'; url: string }
+  | { type: 'wikipedia'; url: string }
+  | { type: 'goodreads'; url: string }
+  | { type: 'amazon'; url: string }
+  | { type: 'other'; url: string; label?: string };
+
+export type SeriesBookRefLite = Pick<Book40k, '_id' | 'title' | 'slug' | 'image'>;
+
+export type SeriesItem = {
+  number?: number | null;
+  label?: string | null;
+  note?: string | null;
+  book: SeriesBookRefLite; 
+};
+
+export type Series40kDoc = {
+  _id: string;
+  _type: 'series40k';
+  title: string;
+  slug: string; 
+  description?: string | null;
+  image?: SanityImageField; 
+  items?: SeriesItem[] | null;
+  links?: SeriesLink[] | null;
+};
+
+export type Series40kList = Series40kDoc[];
