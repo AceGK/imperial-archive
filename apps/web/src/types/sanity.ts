@@ -113,6 +113,7 @@ export type Book40k = {
 
 // ---- Series (documents) ----
 
+// Links used on series docs (mirror your `seriesLink` schema)
 export type SeriesLink =
   | { type: 'black_library'; url: string }
   | { type: 'lexicanum'; url: string }
@@ -121,24 +122,40 @@ export type SeriesLink =
   | { type: 'amazon'; url: string }
   | { type: 'other'; url: string; label?: string };
 
+// Minimal book shape embedded inside a series list item
 export type SeriesBookRefLite = Pick<Book40k, '_id' | 'title' | 'slug' | 'image'>;
 
-export type SeriesItem = {
-  number?: number | null;
-  label?: string | null;
-  note?: string | null;
-  book: SeriesBookRefLite; 
+// One ordered entry inside a reading list
+export type SeriesItem40k = {
+  number?: number | null;     // simple integer if available
+  label?: string | null;      // e.g., "0.5", "Prologue"
+  note?: string | null;       // editor guidance
+  book: SeriesBookRefLite;    // dereferenced reference
 };
 
+// One titled reading list (e.g., "Novels", "Short Stories", subseries, etc.)
+export type SeriesList40k = {
+  title: string;
+  key?: string | null;           // from slug.current
+  description?: string | null;
+  items?: SeriesItem40k[] | null;
+};
+
+// Full Series document projection
 export type Series40kDoc = {
   _id: string;
   _type: 'series40k';
   title: string;
-  slug: string; 
+  slug: string;                  // projected as slug.current
   description?: string | null;
-  image?: SanityImageField; 
-  items?: SeriesItem[] | null;
+  image?: SanityImageField;      // matches your global image shape
+  lists?: SeriesList40k[] | null;
+  totalCount?: number;           // optional convenience from GROQ: count(lists[].items[])
   links?: SeriesLink[] | null;
+
+  // Back-compat: if some docs still have the old single "items" array,
+  // keep this optional so UI can render during migration.
+  items?: SeriesItem40k[] | null;
 };
 
-export type Series40kList = Series40kDoc[];
+export type Series40kDocList = Series40kDoc[];
