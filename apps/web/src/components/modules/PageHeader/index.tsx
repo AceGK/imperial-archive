@@ -7,13 +7,15 @@ export type PageHeaderImage = {
   lqip?: string;
   aspect?: number;
   alt?: string;
+  credit?: string;
 };
 
 export type PageHeaderProps = {
   title: string;
   subtitle?: string;
   image?: PageHeaderImage | string | null;
-  alt?: string;
+  alt?: string;  
+  credit?: string;       
   children?: React.ReactNode;
   align?: "left" | "center";
   height?: "xs" | "sm" | "md" | "lg";
@@ -27,6 +29,7 @@ export default function PageHeader({
   subtitle,
   image,
   alt,
+  credit,     
   children,
   align = "left",
   height = "md",
@@ -34,26 +37,19 @@ export default function PageHeader({
   priority = false,
   className,
 }: PageHeaderProps) {
-  const rootClass = [styles.wrapper, styles[height], className]
-    .filter(Boolean)
-    .join(" ");
 
-  const innerClass = ["container", styles.inner, styles[align]]
-    .filter(Boolean)
-    .join(" ");
+  const rootClass = [styles.wrapper, styles[height], className].filter(Boolean).join(" ");
 
-  const overlayClass = [
-    styles.overlay,
-    strongOverlay ? styles.overlayStrong : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const innerClass = ["container", styles.inner, styles[align]].filter(Boolean).join(" ");
+
+  const overlayClass = [styles.overlay, strongOverlay ? styles.overlayStrong : ""].filter(Boolean).join(" ");
 
   const resolvedUrl = typeof image === "string" ? image : image?.url;
   const blur = typeof image === "string" ? undefined : image?.lqip;
-  // logic: if dev passes imageAlt, use it; otherwise use Sanity alt; otherwise fallback empty
-  const imageAlt =
-    typeof image === "string" ? alt || "" : image?.alt || alt || "";
+
+  const imageAlt = typeof image === "string" ? alt || "" : image?.alt || alt || "";
+
+  const imageCredit = credit ?? (typeof image === "string" ? undefined : image?.credit);
 
   return (
     <section className={rootClass}>
@@ -82,7 +78,8 @@ export default function PageHeader({
           {children && <div className={styles.children}>{children}</div>}
         </div>
       </div>
-      <div className={styles.altText}>{imageAlt}</div>
+
+      {imageCredit && <div className={styles.altText}>{imageCredit}</div>}
     </section>
   );
 }

@@ -1,10 +1,7 @@
 // /schemas/documents/era40k.ts
-import { defineType, defineField } from "sanity"
-import { ClockIcon, ImageIcon } from "@sanity/icons"
-import {
-  orderRankField,
-  orderRankOrdering,
-} from "@sanity/orderable-document-list"
+import { defineType, defineField } from "sanity";
+import { ClockIcon, ImageIcon } from "@sanity/icons";
+import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
 
 export default defineType({
   name: "era40k",
@@ -13,7 +10,6 @@ export default defineType({
   icon: ClockIcon,
   orderings: [orderRankOrdering],
   fields: [
-    // Enables drag-and-drop ordering
     orderRankField({ type: "era40k" }),
 
     defineField({
@@ -50,9 +46,7 @@ export default defineType({
       title: "Era Image",
       type: "image",
       icon: ImageIcon,
-      options: {
-        hotspot: true,
-      },
+      options: { hotspot: true },
       fields: [
         defineField({
           name: "alt",
@@ -60,20 +54,22 @@ export default defineType({
           type: "string",
           description: "Important for accessibility and SEO.",
         }),
+        defineField({
+          name: "credit",
+          title: "Credit",
+          type: "string",
+          description: "Photographer/artist or source credit to display.",
+        }),
       ],
     }),
   ],
 
   preview: {
-    select: {
-      title: "title",
-      subtitle: "period",
-      media: "image",
-    },
+    select: { title: "title", subtitle: "period", media: "image" },
     prepare: ({ title, subtitle, media }) => ({
       title: title || "Untitled Era",
       subtitle: subtitle || "",
       media,
     }),
   },
-})
+});

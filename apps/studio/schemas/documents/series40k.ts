@@ -1,9 +1,7 @@
+// /sanity/schemas/documents/series40k.ts
 import { defineType, defineField } from "sanity";
-import { TagIcon, ListIcon } from "@sanity/icons";
-import {
-  orderRankField,
-  orderRankOrdering,
-} from "@sanity/orderable-document-list";
+import { TagIcon } from "@sanity/icons";
+import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
 
 export default defineType({
   name: "series40k",
@@ -12,7 +10,6 @@ export default defineType({
   icon: TagIcon,
   orderings: [orderRankOrdering],
   fields: [
-    // MUST match this document's name
     orderRankField({ type: "series40k" }),
 
     defineField({
@@ -55,41 +52,68 @@ export default defineType({
       of: [
         {
           type: "object",
-          name: "seriesList40k", // still name it for clarity
+          name: "seriesList40k",
           title: "Reading List",
           fields: [
-            { name: "title", type: "string", validation: (R) => R.required() },
-            {
+            defineField({
+              name: "title",
+              title: "List Title",
+              type: "string",
+              validation: (R) => R.required(),
+            }),
+            defineField({
               name: "key",
+              title: "List Key",
               type: "slug",
               options: { source: "title", maxLength: 96 },
-            },
-            { name: "description", type: "text", rows: 2 },
-            {
+              description: "Stable key for anchors/links (optional).",
+            }),
+            defineField({
+              name: "description",
+              title: "List Description",
+              type: "text",
+              rows: 2,
+            }),
+            defineField({
               name: "items",
+              title: "Books in Order",
               type: "array",
               of: [
                 {
                   type: "object",
+                  name: "seriesContentItem",
                   fields: [
-                    {
-                      name: "book",
+                    defineField({
+                      name: "work",
+                      title: "Work",
                       type: "reference",
                       to: [{ type: "book40k" }],
                       validation: (R) => R.required(),
-                    },
-                    {
-                      name: "number",
-                      type: "number",
-                      validation: (R) => R.min(0),
-                    },
-                    { name: "label", type: "string" },
-                    { name: "note", type: "string" },
+                    }),
                   ],
+                  preview: {
+                    select: {
+                      title: "work.title",
+                      media: "work.image",
+                    },
+                    prepare: ({ title, media }) => ({
+                      title: title || "(Untitled work)",
+                      media,
+                    }),
+                  },
                 },
               ],
-            },
+              options: { sortable: true },
+              validation: (R) => R.min(1),
+            }),
           ],
+          preview: {
+            select: { title: "title", cnt: "items.length" },
+            prepare: ({ title, cnt }) => ({
+              title: title || "Untitled List",
+              subtitle: `${cnt ?? 0} work${(cnt ?? 0) === 1 ? "" : "s"}`,
+            }),
+          },
         },
       ],
     }),
@@ -103,10 +127,10 @@ export default defineType({
   ],
 
   preview: {
-    select: { title: "title", subtitle: "group", media: "image" },
-    prepare: ({ title, subtitle, media }) => ({
+    select: { title: "title", media: "image", listCount: "lists.length" },
+    prepare: ({ title, media, listCount }) => ({
       title: title || "Untitled Series",
-      subtitle: subtitle || "",
+      subtitle: `${listCount ?? 0} list${(listCount ?? 0) === 1 ? "" : "s"}`,
       media,
     }),
   },

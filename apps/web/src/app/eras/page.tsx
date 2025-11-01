@@ -23,7 +23,7 @@ export default async function EraListPage() {
         height="xs"
         priority
         image="/images/the-holy-war-begins-eddy-gonz.jpg"
-        alt="The War Begins by Eduardo González Dávila"
+        credit="The War Begins by Eduardo González Dávila"
       />
       <section className="container">
         <div

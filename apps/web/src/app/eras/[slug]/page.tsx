@@ -29,6 +29,7 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
         title={era.title}
         subtitle={era.description}
         image={era.image}
+        credit={era.image?.credit}
         alt={era.image?.alt}
         align="center"
         strongOverlay

@@ -4,7 +4,8 @@ import PageHeader from "@/components/modules/PageHeader";
 import { client } from "@/lib/sanity/sanity.client";
 import { series40kBySlugQuery } from "@/lib/sanity/queries";
 import type { Series40kDoc } from "@/types/sanity";
-import Link from "next/link";
+import { urlFor } from "@/lib/sanity/sanity.image";
+import BookCard from "@/components/modules/BookCard";
 
 export const revalidate = 60;
 
@@ -17,15 +18,31 @@ export async function generateStaticParams(): Promise<Params[]> {
   return slugs.map((slug) => ({ slug }));
 }
 
-// NOTE: params is a Promise here
-export default async function SeriesPage({ params }: { params: Promise<Params> }) {
+export default async function SeriesPage({
+  params,
+}: {
+  params: Promise<Params>;
+}) {
   const { slug } = await params;
 
-  const data = await client.fetch<Series40kDoc | null>(series40kBySlugQuery, { slug });
+  const data = await client.fetch<Series40kDoc | null>(series40kBySlugQuery, {
+    slug,
+  });
   if (!data) notFound();
 
-  const heroUrl = data.image?.asset?.url ?? "/images/placeholder-series.jpg";
-  const heroAlt = data.image?.alt ?? data.title;
+  const hero = data.image?.asset
+    ? {
+        url: urlFor(data.image)
+          .width(1600)
+          .height(900)
+          .fit("crop")
+          .auto("format")
+          .url(),
+        lqip: data.image.asset.metadata?.lqip,
+        alt: data.image.alt ?? "",
+        credit: data.image.credit ?? undefined,
+      }
+    : null;
 
   return (
     <>
@@ -36,38 +53,51 @@ export default async function SeriesPage({ params }: { params: Promise<Params> }
         strongOverlay
         height="xs"
         priority
-        image={heroUrl}
-        alt={heroAlt}
+        image={hero}
+        alt={hero?.alt}
+        credit={hero?.credit}
       />
 
       <main className="container" style={{ marginTop: "2rem" }}>
-        {/* If you adopted the new multi-list schema, render lists; else keep the single items block */}
         {data.lists?.length ? (
-          <div style={{ display: "grid", gap: "1.25rem" }}>
+          <div style={{ display: "grid", gap: "1.75rem" }}>
             {data.lists.map((list, li) => (
-              <section key={list.key ?? `${li}`} style={{ display: "grid", gap: "0.5rem" }}>
-                <h2 style={{ fontSize: "1.125rem", fontWeight: 700 }}>{list.title}</h2>
-                {list.description && (
-                  <p style={{ margin: 0, color: "var(--subtle)" }}>{list.description}</p>
-                )}
+              <section
+                key={list.key ?? `${li}`}
+                style={{ display: "grid", gap: "0.75rem" }}
+              >
+                <header>
+                  <h2
+                    style={{ fontSize: "1.125rem", fontWeight: 700, margin: 0 }}
+                  >
+                    {list.title}
+                  </h2>
+                  {list.description && (
+                    <p
+                      style={{ margin: "0.25rem 0 0", color: "var(--subtle)" }}
+                    >
+                      {list.description}
+                    </p>
+                  )}
+                </header>
+
                 {list.items?.length ? (
-                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: "0.75rem" }}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(220px, 1fr))",
+                      gap: "1rem",
+                    }}
+                  >
                     {list.items.map((it, i) => (
-                      <li key={`${it.book._id}-${i}`} style={{ display: "grid", gap: "0.125rem" }}>
-                        <div style={{ fontWeight: 600 }}>
-                          {typeof it.number === "number"
-                            ? `#${it.number} `
-                            : it.label
-                            ? `${it.label} `
-                            : ""}
-                          <Link href={`/books/${it.book.slug}`}>{it.book.title}</Link>
-                        </div>
-                        {it.note && (
-                          <div style={{ fontSize: "0.9rem", color: "var(--subtle)" }}>{it.note}</div>
-                        )}
-                      </li>
+                      <BookCard
+                        key={`${it.work._id}-${i}`}
+                        book={it.work} // ✅ full Book40k from GROQ
+                        href={`/books/${it.work.slug}`}
+                      />
                     ))}
-                  </ul>
+                  </div>
                 ) : (
                   <div style={{ opacity: 0.6 }}>
                     <em>No books in this list yet.</em>
@@ -76,21 +106,6 @@ export default async function SeriesPage({ params }: { params: Promise<Params> }
               </section>
             ))}
           </div>
-        ) : data.items?.length ? (
-          // Back-compat for old single "items" field
-          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: "0.75rem" }}>
-            {data.items.map((it, i) => (
-              <li key={`${it.book._id}-${i}`} style={{ display: "grid", gap: "0.125rem" }}>
-                <div style={{ fontWeight: 600 }}>
-                  {typeof it.number === "number" ? `#${it.number} ` : it.label ? `${it.label} ` : ""}
-                  <Link href={`/books/${it.book.slug}`}>{it.book.title}</Link>
-                </div>
-                {it.note && (
-                  <div style={{ fontSize: "0.9rem", color: "var(--subtle)" }}>{it.note}</div>
-                )}
-              </li>
-            ))}
-          </ul>
         ) : (
           <div style={{ padding: "2rem 0", opacity: 0.6 }}>
             <em>No books linked yet.</em>

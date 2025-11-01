@@ -197,24 +197,25 @@ export const singleFaction40kBySlugsQuery = groq`
 }
 `;
 
-export const all40kErasQuery = groq`
+export const all40kErasQuery = groq `
   *[_type == "era40k" && !(_id match "drafts.*")] 
-    | order(orderRank) {
-      _id,
-      title,
-      "slug": slug.current,
-      period,
-      description, 
-      image{
-        ...,
-        "url": asset->url,
-        "lqip": asset->metadata.lqip,
-        "aspect": asset->metadata.dimensions.aspectRatio
-      }
+  | order(orderRank) {
+    _id,
+    title,
+    "slug": slug.current,
+    period,
+    description, 
+    image{
+      alt,
+      credit,                               // <- NEW
+      "url": asset->url,
+      "lqip": asset->metadata.lqip,
+      "aspect": asset->metadata.dimensions.aspectRatio
     }
+  }
 `;
 
-export const single40kEraQuery = groq`
+export const single40kEraQuery = groq `
   *[_type == "era40k" && slug.current == $slug][0]{
     _id,
     title,
@@ -222,12 +223,12 @@ export const single40kEraQuery = groq`
     period,
     description,
     image{
-        ...,
-        alt,
-        "url": asset->url,
-        "lqip": asset->metadata.lqip,
-        "aspect": asset->metadata.dimensions.aspectRatio
-      }
+      alt,
+      credit,                               // <- NEW
+      "url": asset->url,
+      "lqip": asset->metadata.lqip,
+      "aspect": asset->metadata.dimensions.aspectRatio
+    }
   }
 `;
 
@@ -374,72 +375,75 @@ export const featuredBooks40kQuery = groq`
 }
 `;
 
-
-export const allSeries40kQuery = groq`
-*[_type == "series40k"]
-| order(orderRank asc, title asc) {
+// A tiny field bundle to keep things DRY (optional but handy)
+const bookCardFields = `
   _id,
-  _type,
+  title,
+  "slug": slug.current,
+  "author": coalesce(authors[]->name, []),
+  "authorLabel": select(
+    !defined(authors) || count(authors) == 0 => "Unknown",
+    count(authors) == 1 => authors[0]->name,
+    "Various Authors"
+  ),
+  "series": coalesce(
+    *[_type == "series40k" && references(^._id)]{
+      "name": title
+    }, []
+  ),
+  "publication_date": publicationDate,
+  "factions": coalesce(factions[]->title, []),
+  image{
+    alt, credit, crop, hotspot,
+    asset->{ _id, url, metadata{ lqip, dimensions } }
+  },
+  description,
+  story,
+  format
+`;
+
+export const allSeries40kQuery = /* groq */ `
+*[_type == "series40k"] | order(orderRank asc, title asc){
+  _id,
   title,
   "slug": slug.current,
   description,
-  // image fields projected with a direct URL for convenience
-  "image": {
-    "url": image.asset->url,
-    "alt": image.alt,
-    "credit": image.credit
+  image{
+    alt, credit, crop, hotspot,
+    asset->{ _id, url, metadata{ lqip, dimensions } }
   },
-  // items sorted by number (if any), then label
-  "items": items[] 
-    | order(coalesce(number, 1e9) asc, label asc) {
-      number,
-      label,
-      note,
-      "book": book->{
-        _id,
-        _type,
-        title,
-        "slug": slug.current,
-        "image": {
-          "url": image.asset->url,
-          "alt": image.alt,
-          "credit": image.credit
-        }
-      }
-    },
+  "totalCount": count(lists[].items[]),
+  lists[]{
+    title,
+    "key": key.current,
+    description,
+    items[]{
+      "work": work->{ ${bookCardFields} }
+    }
+  },
+  links
 }
 `;
 
-/** One series by slug */
-export const series40kBySlugQuery = groq`
+export const series40kBySlugQuery = /* groq */ `
 *[_type == "series40k" && slug.current == $slug][0]{
   _id,
-  _type,
   title,
   "slug": slug.current,
   description,
-  "image": {
-    "url": image.asset->url,
-    "alt": image.alt,
-    "credit": image.credit
+  image{
+    alt, credit, crop, hotspot,
+    asset->{ _id, url, metadata{ lqip, dimensions } }
   },
-  "items": items[] 
-    | order(coalesce(number, 1e9) asc, label asc) {
-      number,
-      label,
-      note,
-      "book": book->{
-        _id,
-        _type,
-        title,
-        "slug": slug.current,
-        "image": {
-          "url": image.asset->url,
-          "alt": image.alt,
-          "credit": image.credit
-        }
-      }
-    },
+  "totalCount": count(lists[].items[]),
+  lists[]{
+    title,
+    "key": key.current,
+    description,
+    items[]{
+      "work": work->{ ${bookCardFields} }
+    }
+  },
   links
 }
 `;

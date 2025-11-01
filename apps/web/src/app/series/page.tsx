@@ -1,4 +1,3 @@
-// /app/series/page.tsx
 import PageHeader from "@/components/modules/PageHeader";
 import SeriesCard from "@/components/modules/SeriesCard";
 import { client } from "@/lib/sanity/sanity.client";
@@ -20,10 +19,10 @@ export default async function SeriesIndexPage() {
         height="xs"
         priority
         image="/images/eisenhorn-alexander-ovchinnikov.jpg"
-        alt="Eisenhorn by Alexander Ovchinnikov"
+        credit="Eisenhorn by Alexander Ovchinnikov"
       />
 
-      <section className="container" style={{ padding: "1.5rem 0 2.5rem" }}>
+      <section className="container">
         <div
           style={{
             display: "grid",
@@ -31,27 +30,29 @@ export default async function SeriesIndexPage() {
             gap: "1rem",
           }}
         >
-          {series.map((s) => (
-            <SeriesCard
-              key={s._id}
-              title={s.title}
-              slug={s.slug}
-              description={s.description ?? undefined}
-              image={
-                s.image
-                  ? {
-                      url: s.image?.asset?.url,
-                      lqip: s.image?.asset?.metadata?.lqip ?? null,
-                      alt: s.image?.alt ?? null,
-                    }
-                  : undefined
-              }
-              countLabel={
-                s.items?.length ? `${s.items.length} book${s.items.length > 1 ? "s" : ""}` : undefined
-              }
-              compact
-            />
-          ))}
+          {series.map((s) => {
+            const count =
+              typeof s.totalCount === "number"
+                ? s.totalCount
+                : (s.lists ?? []).reduce(
+                    (acc, list) => acc + (list.items?.length ?? 0),
+                    0
+                  );
+
+            return (
+              <SeriesCard
+                key={s._id}
+                title={s.title}
+                slug={s.slug}
+                description={s.description ?? undefined}
+                image={s.image}
+                countLabel={
+                  count ? `${count} book${count > 1 ? "s" : ""}` : undefined
+                }
+                compact
+              />
+            );
+          })}
         </div>
       </section>
     </main>
