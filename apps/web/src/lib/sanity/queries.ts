@@ -447,3 +447,14 @@ export const series40kBySlugQuery = /* groq */ `
   links
 }
 `;
+
+export const booksByFactionId40kQuery = groq `
+*[
+  _type == "book40k"
+  && !(_id match "drafts.*")
+  && references($factionId)
+]
+| order(publicationDate asc, title asc){
+  ${bookCardFields}
+}
+`;
