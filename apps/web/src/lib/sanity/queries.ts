@@ -412,3 +412,14 @@ export const booksByFactionId40kQuery = groq`
   ${bookCardFields}
 }
 `;
+
+export const factionPairs40kQuery = groq`
+*[
+  _type == "faction40k" &&
+  defined(slug.current) &&
+  defined(group->slug.current)
+]{
+  "group": group->slug.current,
+  "slug": slug.current
+}
+`;
