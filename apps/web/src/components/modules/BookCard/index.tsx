@@ -44,6 +44,7 @@ export default function BookCard({ book, href, compact, className }: Props) {
             fill
             sizes="(max-width: 600px) 50vw, 200px"
             priority={false}
+            unoptimized
           />
         ) : (
           <div className={styles.placeholderImage} aria-hidden="true" />

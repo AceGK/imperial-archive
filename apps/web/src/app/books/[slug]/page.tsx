@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { client } from "@/lib/sanity/sanity.client";
 import { bookSlugs40kQuery, bookBySlug40kQuery } from "@/lib/sanity/queries";
+import { urlFor } from "@/lib/sanity/sanity.image";
 
 export const revalidate = 60;
 
@@ -28,7 +29,6 @@ function AuthorsInline({
       <span>{a?.name ?? "Unknown"}</span>
     );
   }
-  // Multiple authors: list and link each, comma-separated
   return (
     <>
       {authors.map((a, i) => {
@@ -60,24 +60,54 @@ export default async function BookPage({
   const book = await client.fetch(bookBySlug40kQuery, { slug });
   if (!book) notFound();
 
-  const factions: string[] = Array.isArray(book.factions) ? book.factions : [];
-  const series: { name: string; number?: number | null }[] = book.series ?? [];
+  // Expect enriched arrays from GROQ:
+  // series: [{ name, slug, number? }]
+  // factions: [{ title, slug, groupSlug? }]
+  const series = Array.isArray(book.series) ? book.series : [];
+  const factions = Array.isArray(book.factions) ? book.factions : [];
 
   const hasImage = Boolean(book?.image?.asset?.url);
-  const imgUrl: string | undefined = book?.image?.asset?.url;
+  const imgUrl = book?.image?.asset?.url;
   const imgAlt: string =
     (book?.image?.alt && String(book.image.alt).trim()) ||
     (book?.title ? `${book.title} cover` : "Book cover");
 
   return (
     <main className="container">
-      <section>
-        <article>
+      <article className="book_page">
+        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+          {/* Cover */}
+          {hasImage && imgUrl && (
+            <div
+              style={{
+                position: "relative",
+                width: 500,
+                height: 600,
+                marginTop: "1rem",
+                background: "rgba(0,0,0,.05)", // optional letterbox backdrop
+                borderRadius: 8,
+                overflow: "hidden",
+              }}
+            >
+              <Image
+                src={urlFor(book.image).width(1200).auto("format").fit("max").url()}
+                alt={imgAlt}
+                fill
+                sizes="500px"
+                style={{ objectFit: "contain" }} // <- key change
+                priority={true}
+                unoptimized
+              />
+            </div>
+          )}
+        </div>
+
+        <div>
           <h1>{book.title}</h1>
 
           {/* Byline with author links */}
           <p>
-            <strong>By: </strong>
+            <strong>Author: </strong>
             <AuthorsInline authors={book.authors} />
           </p>
 
@@ -88,84 +118,100 @@ export default async function BookPage({
             </p>
           )}
 
-          {/* Series */}
+          {/* Series: link each series slug, include #number if present */}
           {series.length > 0 && (
-            <div>
+            <p>
               <strong>Series:</strong>{" "}
-              {series
-                .map((s) =>
-                  typeof s.number === "number" && Number.isFinite(s.number)
-                    ? `${s.name} #${s.number}`
-                    : s.name
-                )
-                .join(", ")}
-            </div>
+              {series.map((s: any, i: number) => {
+                const label =
+                  typeof s?.number === "number" && Number.isFinite(s.number)
+                    ? `${s?.name} #${s.number}`
+                    : (s?.name ?? s?.slug);
+                const href = s?.slug
+                  ? `/series/${encodeURIComponent(s.slug)}`
+                  : "";
+                const node = href ? (
+                  <Link key={s?.slug ?? i} href={href}>
+                    {label}
+                  </Link>
+                ) : (
+                  <span key={s?.name ?? i}>{label}</span>
+                );
+                return (
+                  <span key={`series-${s?.slug ?? i}`}>
+                    {node}
+                    {i < series.length - 1 ? ", " : ""}
+                  </span>
+                );
+              })}
+            </p>
           )}
 
           {/* Publication date */}
           {book.publication_date && (
             <p>
-              <strong>Publication Date:</strong> {book.publication_date}
+              <strong>Released:</strong> {String(book.publication_date).slice(0, 4)}
             </p>
           )}
 
-          {/* Era */}
-          {book.era && (
+          {/* Era with slug link */}
+          {book.era?.slug && (
             <p>
-              <strong>Era:</strong> {book.era}
+              <strong>Era:</strong>{" "}
+              <Link href={`/eras/${encodeURIComponent(book.era.slug)}`}>
+                {book.era.title ?? book.era.slug}
+              </Link>
             </p>
           )}
 
-          {/* Factions */}
+          {/* Factions: link each to /factions/[group]/[slug] when groupSlug present */}
           {factions.length > 0 && (
             <p>
-              <strong>Factions:</strong> {factions.join(", ")}
+              <strong>Factions:</strong>{" "}
+              {factions.map((f: any, i: number) => {
+                const href = f?.groupSlug
+                  ? `/factions/${encodeURIComponent(f.groupSlug)}/${encodeURIComponent(
+                      f.slug
+                    )}`
+                  : f?.slug
+                    ? `/factions/${encodeURIComponent(f.slug)}`
+                    : "";
+                const label = f?.title ?? f?.slug ?? "Unknown";
+                const node = href ? (
+                  <Link
+                    key={`${f?.groupSlug ?? "nogroup"}-${f?.slug ?? i}`}
+                    href={href}
+                  >
+                    {label}
+                  </Link>
+                ) : (
+                  <span key={`${label}-${i}`}>{label}</span>
+                );
+                return (
+                  <span key={`f-${f?.slug ?? i}`}>
+                    {node}
+                    {i < factions.length - 1 ? ", " : ""}
+                  </span>
+                );
+              })}
             </p>
-          )}
-
-          {/* Cover */}
-          {hasImage && imgUrl && (
-            <div
-              style={{
-                position: "relative",
-                width: 300,
-                height: 400,
-                marginTop: "1rem",
-              }}
-            >
-              <Image
-                src={imgUrl}
-                alt={imgAlt}
-                fill
-                sizes="300px"
-                style={{ objectFit: "cover", borderRadius: 8 }}
-                priority={false}
-              />
-            </div>
           )}
 
           {/* Description & Story */}
           {book.description && (
-            <section>
+            <div>
               <h2>Description</h2>
               <p>{book.description}</p>
-            </section>
+            </div>
           )}
           {book.story && (
-            <section>
+            <div>
               <h2>Story</h2>
               <p>{book.story}</p>
-            </section>
+            </div>
           )}
-
-          {/* Optional credit */}
-          {book?.image?.credit && (
-            <p style={{ opacity: 0.7, marginTop: "0.5rem" }}>
-              <small>{book.image.credit}</small>
-            </p>
-          )}
-        </article>
-      </section>
+        </div>
+      </article>
     </main>
   );
 }

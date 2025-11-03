@@ -45,7 +45,6 @@ const ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
   instagram: InstagramIcon,
 };
 
-
 export default function AuthorProfile({ profile, authored }: Props) {
   const visibleLinks = (profile?.links ?? []).filter((l) => !!l?.url);
   const bookCount = authored.length;
@@ -76,7 +75,7 @@ export default function AuthorProfile({ profile, authored }: Props) {
       <div className={styles.profile}>
         {profile?.image && (
           <div className={styles.imageWrapper}>
-              <Image
+            <Image
               className={styles.image}
               src={urlFor(profile.image)
                 .width(200)
@@ -87,6 +86,7 @@ export default function AuthorProfile({ profile, authored }: Props) {
               width={200}
               height={200}
               priority
+              unoptimized
               placeholder="blur"
               blurDataURL={profile.image?.lqip || undefined}
             />
@@ -113,7 +113,9 @@ export default function AuthorProfile({ profile, authored }: Props) {
             title={expanded ? "Show less" : "Read more"}
           >
             {expanded ? "Show less" : "Read more"}
-            <ChevronDown className={`${styles.chevron} ${expanded ? styles.expanded : ""}`} />
+            <ChevronDown
+              className={`${styles.chevron} ${expanded ? styles.expanded : ""}`}
+            />
           </Button>
         )}
 
@@ -121,7 +123,9 @@ export default function AuthorProfile({ profile, authored }: Props) {
           <ul className={styles.links}>
             {visibleLinks.map((link) => {
               const Icon = ICONS[link.type];
-              const label = LABELS[link.type] ?? link.type.replace(/^\w/, (c) => c.toUpperCase());
+              const label =
+                LABELS[link.type] ??
+                link.type.replace(/^\w/, (c) => c.toUpperCase());
               return (
                 <li key={`${link.type}-${link.url}`}>
                   <Button
@@ -154,7 +158,7 @@ export default function AuthorProfile({ profile, authored }: Props) {
           <div className={styles.bookGrid}>
             {authored.map((b) => (
               <BookCard
-                key={b._id}                              
+                key={b._id}
                 book={b}
                 href={`/books/${b.slug}`}
                 compact

@@ -42,6 +42,7 @@ export default function EraCard({
             style={{ objectFit: "cover" }}
             placeholder={image.lqip ? "blur" : "empty"}
             blurDataURL={image.lqip || undefined}
+            unoptimized
           />
         ) : (
           <div className={styles.placeholder} aria-hidden="true">

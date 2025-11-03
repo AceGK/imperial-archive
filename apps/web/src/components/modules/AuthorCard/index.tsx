@@ -46,6 +46,7 @@ export default function AuthorCard({
             sizes="(max-width: 768px) 33vw, 240px"
             placeholder="blur"
             blurDataURL={image.lqip || undefined}
+            unoptimized
           />
         ) : (
           initials

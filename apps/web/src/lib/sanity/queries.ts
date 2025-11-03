@@ -271,55 +271,69 @@ export const bookSlugs40kQuery = groq`
 `;
 
 export const bookBySlug40kQuery = groq`
-  *[_type == "book40k" && slug.current == $slug][0]{
-    _id,
-    title,
-    "slug": slug.current,
+*[_type == "book40k" && slug.current == $slug][0]{
+  _id,
+  title,
+  "slug": slug.current,
 
-    // full author objects for linking
-    "authors": coalesce(
-      authors[]->{
-        "name": coalesce(name, title),
-        "slug": slug.current
-      },
-      []
-    ),
-
-    // optional label if you still want it
-    "authorLabel": select(
-      !defined(authors) || count(authors) == 0 => "Unknown",
-      count(authors) == 1 => authors[0]->name,
-      "Various Authors"
-    ),
-
-    format,
-
-    "era": era->title,
-    "factions": coalesce(factions[]->title, []),
-
-    description,
-    story,
-
-    "publication_date": publicationDate,
-    "page_count": pageCount,
-
-    "editions": coalesce(editions[]{isbn, note}, []),
-    "links": coalesce(links[]{type, url}, []),
-
-    image{
-      alt,
-      credit,
-      asset->{ _id, url, metadata{ dimensions } }
+  // authors (unchanged)
+  "authors": coalesce(
+    authors[]->{
+      "name": coalesce(name, title),
+      "slug": slug.current
     },
+    []
+  ),
+  "authorLabel": select(
+    !defined(authors) || count(authors) == 0 => "Unknown",
+    count(authors) == 1 => authors[0]->name,
+    "Various Authors"
+  ),
 
-    "series": coalesce(
-      *[_type == "series40k" && references(^._id)]{
-        "name": title,
-        "number": items[work._ref == ^._id][0].number
-      },
-      []
-    )
-  }
+  // format (your preferred strategy here)
+  format,
+
+  // ERA: include slug for linking
+  "era": era->{
+    title,
+    "slug": slug.current
+  },
+
+  // FACTIONS: include slug + group slug for /factions/[group]/[slug]
+  "factions": coalesce(
+    factions[]->{
+      title,
+      "slug": slug.current,
+      "groupSlug": group->slug.current
+    },
+    []
+  ),
+
+  description,
+  story,
+
+  "publication_date": publicationDate,
+  "page_count": pageCount,
+
+  "editions": coalesce(editions[]{isbn, note}, []),
+  "links": coalesce(links[]{type, url}, []),
+
+  image{
+    alt,
+    credit,
+    asset->{ _id, url, metadata{ dimensions } }
+  },
+
+  // series (optional)
+  "series": coalesce(
+    *[_type == "series40k" && references(^._id)]{
+      "name": title,
+      "slug": slug.current,
+      "number": items[work._ref == ^._id][0].number
+    },
+    []
+  )
+}
 `;
 
 export const booksByAuthorSlug40kQuery = groq`

@@ -44,6 +44,7 @@ const src = image?.asset
             placeholder={blur ? "blur" : "empty"}
             blurDataURL={blur}
             style={{ objectFit: "cover" }}
+            unoptimized
           />
         ) : (
           <div className={styles.placeholder} aria-hidden="true">
