@@ -70,6 +70,10 @@ import SonsOfHorus from "./sons-of-horus.svg";
 import ChaosKnights from "./chaos-knights.svg";
 import IronSnakes from "./iron-snakes.svg";
 import KnightsErrant from "./knights-errant.svg";
+import Mortifactors from "./mortifactors.svg";
+import SonsOfMalice from "./sons-of-malice.svg";
+import Kasrkin from "./kasrkin.svg";
+import CrimsonSlaughter from "./crimson-slaughter.svg";
 
 export type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -143,6 +147,10 @@ export const iconRegistry = {
   "chaos-knights": ChaosKnights,
   "iron-snakes": IronSnakes,
   "knights-errant": KnightsErrant,
+  "mortifactors": Mortifactors,
+  "sons-of-malice": SonsOfMalice,
+  "kasrkin": Kasrkin,
+  "crimson-slaughter": CrimsonSlaughter,
 } as const;
 
 export type IconId = keyof typeof iconRegistry;
