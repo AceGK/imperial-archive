@@ -84,17 +84,16 @@ export default async function BookPage({
                 width: 500,
                 height: 600,
                 marginTop: "1rem",
-                background: "rgba(0,0,0,.05)", // optional letterbox backdrop
                 borderRadius: 8,
                 overflow: "hidden",
               }}
             >
               <Image
-                src={urlFor(book.image).width(1200).auto("format").fit("max").url()}
+                src={urlFor(book.image).width(500).auto("format").fit("max").url()}
                 alt={imgAlt}
                 fill
                 sizes="500px"
-                style={{ objectFit: "contain" }} // <- key change
+                style={{ objectFit: "contain" }} 
                 priority={true}
                 unoptimized
               />
