@@ -1,18 +1,19 @@
-// /app/books/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { client } from "@/lib/sanity/sanity.client";
 import { bookSlugs40kQuery, bookBySlug40kQuery } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/sanity.image";
+import styles from "./styles.module.scss";
+import Button from "@/components/ui/Button";
 
 export const revalidate = 60;
 
 type Params = { slug: string };
 
 export async function generateStaticParams(): Promise<Params[]> {
-  const rows: { slug: string }[] = await client.fetch(bookSlugs40kQuery);
-  return rows.map((r) => ({ slug: r.slug }));
+  const slugs: { slug: string }[] = await client.fetch(bookSlugs40kQuery);
+  return slugs.map((s) => ({ slug: s.slug }));
 }
 
 function AuthorsInline({
@@ -60,154 +61,148 @@ export default async function BookPage({
   const book = await client.fetch(bookBySlug40kQuery, { slug });
   if (!book) notFound();
 
-  // Expect enriched arrays from GROQ:
-  // series: [{ name, slug, number? }]
-  // factions: [{ title, slug, groupSlug? }]
   const series = Array.isArray(book.series) ? book.series : [];
   const factions = Array.isArray(book.factions) ? book.factions : [];
 
   const hasImage = Boolean(book?.image?.asset?.url);
-  const imgUrl = book?.image?.asset?.url;
-  const imgAlt: string =
+  const imgAlt =
     (book?.image?.alt && String(book.image.alt).trim()) ||
     (book?.title ? `${book.title} cover` : "Book cover");
 
   return (
     <main className="container">
-      <article className="book_page">
-        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-          {/* Cover */}
-          {hasImage && imgUrl && (
-            <div
-              style={{
-                position: "relative",
-                width: 500,
-                height: 600,
-                marginTop: "1rem",
-                borderRadius: 8,
-                overflow: "hidden",
-              }}
-            >
+      <article className={styles.page}>
+        <div className={styles.mediaCol}>
+          {hasImage && (
+            <div className={styles.imageContainer}>
               <Image
-                src={urlFor(book.image).width(500).auto("format").fit("max").url()}
+                src={urlFor(book.image)
+                  .width(500)
+                  .auto("format")
+                  .fit("max")
+                  .url()}
                 alt={imgAlt}
                 fill
-                sizes="500px"
-                style={{ objectFit: "contain" }} 
-                priority={true}
+                sizes="(max-width: 768px) 80vw, 500px"
+                className={styles.image}
+                priority
                 unoptimized
               />
             </div>
           )}
         </div>
 
-        <div>
-          <h1>{book.title}</h1>
+        <div className={styles.content}>
+          <h1 className={styles.title}>{book.title}</h1>
 
-          {/* Byline with author links */}
-          <p>
-            <strong>Author: </strong>
-            <AuthorsInline authors={book.authors} />
-          </p>
+          {book.authors && (
+            <div className={styles.meta}>
+              <div className={styles.label}>Author</div>
+              <div className={styles.authors}>
+                <AuthorsInline authors={book.authors} />
+              </div>
+            </div>
+          )}
 
-          {/* Format */}
           {book.format && (
-            <p>
-              <strong>Format:</strong> {book.format}
-            </p>
+            <div className={styles.meta}>
+              <div className={styles.label}>Format</div>
+              <div className={styles.format}>{book.format}</div>
+            </div>
           )}
 
-          {/* Series: link each series slug, include #number if present */}
-          {series.length > 0 && (
-            <p>
-              <strong>Series:</strong>{" "}
-              {series.map((s: any, i: number) => {
-                const label =
-                  typeof s?.number === "number" && Number.isFinite(s.number)
-                    ? `${s?.name} #${s.number}`
-                    : (s?.name ?? s?.slug);
-                const href = s?.slug
-                  ? `/series/${encodeURIComponent(s.slug)}`
-                  : "";
-                const node = href ? (
-                  <Link key={s?.slug ?? i} href={href}>
-                    {label}
-                  </Link>
-                ) : (
-                  <span key={s?.name ?? i}>{label}</span>
-                );
-                return (
-                  <span key={`series-${s?.slug ?? i}`}>
-                    {node}
-                    {i < series.length - 1 ? ", " : ""}
-                  </span>
-                );
-              })}
-            </p>
-          )}
-
-          {/* Publication date */}
           {book.publication_date && (
-            <p>
-              <strong>Released:</strong> {String(book.publication_date).slice(0, 4)}
-            </p>
+            <div className={styles.meta}>
+              <div className={styles.label}>Released</div>
+              <div>{String(book.publication_date).slice(0, 4)}</div>
+            </div>
           )}
 
-          {/* Era with slug link */}
           {book.era?.slug && (
-            <p>
-              <strong>Era:</strong>{" "}
-              <Link href={`/eras/${encodeURIComponent(book.era.slug)}`}>
-                {book.era.title ?? book.era.slug}
-              </Link>
-            </p>
+            <div className={styles.meta}>
+              <div className={styles.label}>Era</div>
+              <div className={styles.value}>
+                <Link href={`/eras/${encodeURIComponent(book.era.slug)}`}>
+                  {book.era.title ?? book.era.slug}
+                </Link>
+              </div>
+            </div>
           )}
 
-          {/* Factions: link each to /factions/[group]/[slug] when groupSlug present */}
-          {factions.length > 0 && (
-            <p>
-              <strong>Factions:</strong>{" "}
-              {factions.map((f: any, i: number) => {
-                const href = f?.groupSlug
-                  ? `/factions/${encodeURIComponent(f.groupSlug)}/${encodeURIComponent(
-                      f.slug
-                    )}`
-                  : f?.slug
-                    ? `/factions/${encodeURIComponent(f.slug)}`
+          {series.length > 0 && (
+            <div className={styles.meta}>
+              <div className={styles.label}>Series</div>
+              <div className={styles.value}>
+                {series.map((s: any, i: number) => {
+                  const label =
+                    typeof s?.number === "number" && Number.isFinite(s.number)
+                      ? `${s?.name} #${s.number}`
+                      : (s?.name ?? s?.slug);
+                  const href = s?.slug
+                    ? `/series/${encodeURIComponent(s.slug)}`
                     : "";
-                const label = f?.title ?? f?.slug ?? "Unknown";
-                const node = href ? (
-                  <Link
-                    key={`${f?.groupSlug ?? "nogroup"}-${f?.slug ?? i}`}
-                    href={href}
-                  >
-                    {label}
-                  </Link>
-                ) : (
-                  <span key={`${label}-${i}`}>{label}</span>
-                );
-                return (
-                  <span key={`f-${f?.slug ?? i}`}>
-                    {node}
-                    {i < factions.length - 1 ? ", " : ""}
-                  </span>
-                );
-              })}
-            </p>
+                  const node = href ? (
+                    <Link key={s?.slug ?? i} href={href}>
+                      {label}
+                    </Link>
+                  ) : (
+                    <span key={s?.name ?? i}>{label}</span>
+                  );
+                  return (
+                    <span key={`series-${s?.slug ?? i}`}>
+                      {node}
+                      {i < series.length - 1 ? ", " : ""}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
           )}
 
-          {/* Description & Story */}
+          {factions.length > 0 && (
+            <div className={styles.meta}>
+              <div className={styles.label}>Factions</div>
+              <div className={styles.value}>
+                {factions.map((f: any, i: number) => {
+                  const href = f?.groupSlug
+                    ? `/factions/${encodeURIComponent(f.groupSlug)}/${encodeURIComponent(f.slug)}`
+                    : f?.slug
+                      ? `/factions/${encodeURIComponent(f.slug)}`
+                      : "";
+                  const label = f?.title ?? f?.slug ?? "Unknown";
+                  const node = href ? (
+                    <Link
+                      key={`${f?.groupSlug ?? "nogroup"}-${f?.slug ?? i}`}
+                      href={href}
+                    >
+                      {label}
+                    </Link>
+                  ) : (
+                    <span key={`${label}-${i}`}>{label}</span>
+                  );
+                  return (
+                    <span key={`f-${f?.slug ?? i}`}>
+                      {node}
+                      {i < factions.length - 1 ? ", " : ""}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {book.description && (
-            <div>
+            <section className={styles.block}>
               <h2>Description</h2>
               <p>{book.description}</p>
-            </div>
+            </section>
           )}
+
           {book.story && (
-            <div>
+            <section className={styles.block}>
               <h2>Story</h2>
               <p>{book.story}</p>
-            </div>
+            </section>
           )}
         </div>
       </article>

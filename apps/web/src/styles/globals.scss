@@ -56,13 +56,3 @@ section {
   position: absolute;
   width: 1px;
 }
-
-.book_page {
-  display: grid;
-  margin:2rem 0;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 2rem;
-  @include max(md) {
-    grid-template-columns: 1fr;
-  }
-}

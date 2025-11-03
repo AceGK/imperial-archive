@@ -1,0 +1,88 @@
+@use "@/styles/breakpoints" as *;
+
+.page {
+  display: grid;
+  margin: 4rem 0;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2rem;
+
+  section {
+    padding: 0;
+  }
+
+  @include max(md) {
+    grid-template-columns: 1fr;
+    row-gap: 1.5rem;
+  }
+}
+
+/* Left column: image */
+.mediaCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imageContainer {
+  position: sticky;
+  top: 5rem;
+  z-index: 0;
+  width: 500px;
+  height: 600px;
+  overflow: hidden;
+
+  @include max(md) {
+    position: relative;
+    top: auto;
+    width: min(80vw, 500px);
+    height: 420px;
+  }
+}
+
+.image {
+  object-fit: contain;
+}
+
+/* Right column content */
+.content {
+  display: block;
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  line-height: 1.15;
+}
+
+.row {
+  margin: 0.25rem 0;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+  .label {
+    font-weight: 600;
+  }
+}
+
+.authors {
+  font-size: 1.25rem;
+}
+
+.format {
+  text-transform: capitalize;
+}
+
+.block {
+  margin-top: 1.25rem;
+
+  h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.125rem;
+    line-height: 1.2;
+  }
+  p {
+    margin: 0;
+  }
+}
