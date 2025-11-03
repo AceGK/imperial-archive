@@ -93,7 +93,7 @@ export default async function SeriesPage({
                     {list.items.map((it, i) => (
                       <BookCard
                         key={`${it.work._id}-${i}`}
-                        book={it.work} // ✅ full Book40k from GROQ
+                        book={it.work}
                         href={`/books/${it.work.slug}`}
                       />
                     ))}

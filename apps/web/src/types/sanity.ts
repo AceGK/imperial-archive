@@ -94,6 +94,7 @@ export type SanityImageField =
 export type Series40k = {
   name: string;
   number?: number | null;
+  slug: string;
 };
 
 export type Book40k = {
@@ -109,8 +110,8 @@ export type Book40k = {
   description?: string | null;
   story?: string | null;
   format?: string | null;
+  formatLabel?: string | null;
 };
-
 
 // Links on series docs
 export type SeriesLink =

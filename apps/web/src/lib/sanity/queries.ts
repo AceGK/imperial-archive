@@ -224,7 +224,7 @@ export const single40kEraQuery = groq `
     description,
     image{
       alt,
-      credit,                               // <- NEW
+      credit,
       "url": asset->url,
       "lqip": asset->metadata.lqip,
       "aspect": asset->metadata.dimensions.aspectRatio
@@ -386,9 +386,11 @@ const bookCardFields = `
     count(authors) == 1 => authors[0]->name,
     "Various Authors"
   ),
-  "series": coalesce(
+   "series": coalesce(
     *[_type == "series40k" && references(^._id)]{
-      "name": title
+      "name": title,
+      "slug": slug.current,
+      "number": items[work._ref == ^._id][0].number
     }, []
   ),
   "publication_date": publicationDate,
@@ -399,10 +401,24 @@ const bookCardFields = `
   },
   description,
   story,
-  format
+  // Preserve normalized value
+  "formatValue": format,
+  // Override the displayed field
+  "format": select(
+    format == "novel" => "Novel",
+    format == "novella" => "Novella",
+    format == "short_story" => "Short Story",
+    format == "audio_drama" => "Audio Drama",
+    format == "anthology" => "Anthology",
+    format == "omnibus" => "Omnibus",
+    format == "graphic_novel" => "Graphic Novel",
+    format == "audio_anthology" => "Audio Anthology",
+    format == "other" => "Other",
+    format
+  )
 `;
 
-export const allSeries40kQuery = /* groq */ `
+export const allSeries40kQuery = groq `
 *[_type == "series40k"] | order(orderRank asc, title asc){
   _id,
   title,
@@ -425,7 +441,7 @@ export const allSeries40kQuery = /* groq */ `
 }
 `;
 
-export const series40kBySlugQuery = /* groq */ `
+export const series40kBySlugQuery = groq `
 *[_type == "series40k" && slug.current == $slug][0]{
   _id,
   title,
