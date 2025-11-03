@@ -52,17 +52,12 @@ export default function BookCard({ book, href, compact, className }: Props) {
       <span>Unknown</span>
     ) : authors.length === 1 ? (
       authors[0].slug ? (
-        <Link href={`/authors/${authors[0].slug}`}>{authors[0].name}</Link>
+        <Link className={styles.authorLink} href={`/authors/${authors[0].slug}`}>{authors[0].name}</Link>
       ) : (
         <span>{authors[0].name}</span>
       )
     ) : (
-      authors.map((a, idx) => (
-        <span key={a.slug ?? a.name}>
-          {a.slug ? <Link href={`/authors/${a.slug}`}>{a.name}</Link> : a.name}
-          {idx < authors.length - 1 ? ", " : ""}
-        </span>
-      ))
+      "Various"
     );
 
   return (
