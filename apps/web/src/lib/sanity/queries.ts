@@ -1,83 +1,145 @@
 import { groq } from "next-sanity";
 
-//todo consolidate faction queries
-
-export const testPostsQuery = groq`
-  *[_type == "post" && !(_id match "drafts.*")] 
-    | order(publishedAt desc)[0...20]{
-      _id,
-      title,
-      slug,
-      publishedAt,
-      mainImage{asset->{url}},
-      "authorName": author->name,
-      categories[]->{title}
-    }
-`;
-export const postsQuery = groq`
-  *[_type == "post"] | order(publishedAt desc)[0...20]{
-    _id, title, slug, mainImage, publishedAt,
-    "authorName": author->name,
-    categories[]-> {title}
-  }
+/* -------------------------------------------------------------
+   Shared format projection — "format" is pretty for UI, and
+   "formatValue" keeps the raw stored value if you still need it.
+-------------------------------------------------------------- */
+const formatProjection = groq`
+  "formatValue": format,
+  "format": select(
+    format == "novel" => "Novel",
+    format == "novella" => "Novella",
+    format == "short_story" => "Short Story",
+    format == "audio_drama" => "Audio Drama",
+    format == "anthology" => "Anthology",
+    format == "omnibus" => "Omnibus",
+    format == "graphic_novel" => "Graphic Novel",
+    format == "audio_anthology" => "Audio Anthology",
+    format == "other" => "Other",
+    format
+  )
 `;
 
-export const all40kAuthorsQuery = groq`
-  *[_type == "author40k"] | order(name asc) {
-    _id, 
-    name, 
-    "slug": slug.current,
-    image{
-      ...,
-      "url": asset->url,
-      "lqip": asset->metadata.lqip,
-      "aspect": asset->metadata.dimensions.aspectRatio
+/* -------------------------------------------------------------
+   Reusable book fields for cards/lists
+   NOTE:
+   - authors are returned as [{ name, slug }]
+   - format is already pretty ("Short Story", etc.)
+   - formatValue keeps raw ("short_story")
+-------------------------------------------------------------- */
+const bookCardFields = groq`
+  _id,
+  title,
+  "slug": slug.current,
+
+  // Authors with slug for linking
+  "authors": coalesce(
+    authors[]->{
+      "name": name,
+      "slug": slug.current
     },
-    bio,
-    links[]{type, url}
-  }
+    []
+  ),
+
+  // Pretty + raw format
+  ${formatProjection},
+
+  "publication_date": publicationDate,
+
+  // Simple faction titles (cards usually don't need deep linking)
+  "factions": coalesce(factions[]->title, []),
+
+  // Image (card-size decisions are made in the component)
+  image{
+    alt, credit, crop, hotspot,
+    asset->{ _id, url, metadata{ lqip, dimensions } }
+  },
+
+  description,
+  story,
+
+  // Series preview for chips
+  "series": coalesce(
+    *[_type == "series40k" && references(^._id)]{
+      "name": title,
+      "slug": slug.current,
+      "number": items[work._ref == ^._id][0].number
+    }, []
+  )
+`;
+
+/* -------------------------------------------------------------
+   POSTS
+-------------------------------------------------------------- */
+export const testPostsQuery = groq`
+*[_type == "post" && !(_id match "drafts.*")]
+| order(publishedAt desc)[0...20]{
+  _id, title, slug, publishedAt,
+  mainImage{asset->{url}},
+  "authorName": author->name,
+  categories[]->{title}
+}
+`;
+
+export const postsQuery = groq`
+*[_type == "post"] | order(publishedAt desc)[0...20]{
+  _id, title, slug, mainImage, publishedAt,
+  "authorName": author->name,
+  categories[]->{title}
+}
+`;
+
+/* -------------------------------------------------------------
+   AUTHORS
+-------------------------------------------------------------- */
+export const all40kAuthorsQuery = groq`
+*[_type == "author40k"] | order(name asc){
+  _id,
+  name,
+  "slug": slug.current,
+  image{
+    "url": asset->url,
+    "lqip": asset->metadata.lqip,
+    "aspect": asset->metadata.dimensions.aspectRatio
+  },
+  bio,
+  links[]{type,url}
+}
 `;
 
 export const single40kAuthorQuery = groq`
-  *[_type == "author40k" && slug.current == $slug][0]{
-    _id,
-    name,
-    slug,
-    image{
-      ...,
-      "lqip": asset->metadata.lqip,
-      "aspect": asset->metadata.dimensions.aspectRatio
-    },
-    bio,
-    links[]{type, url}
-  }
-`;
-
-export const authors40kForCardsQuery = groq`
-  *[_type == "author40k" && !(_id match "drafts.*")]{
-    name,
-    "slug": slug.current,
-    image{
-      ...,
-      "url": asset->url,
-      "lqip": asset->metadata.lqip,
-      "aspect": asset->metadata.dimensions.aspectRatio
-    }
-  }
-`;
-
-// Pass the list of names in $names
-export const featuredAuthors40kQuery = groq`
-*[
-  _type == "author40k" 
-  && !(_id match "drafts.*") 
-  && name in $names
-]{
+*[_type == "author40k" && slug.current == $slug][0]{
   _id,
   name,
   "slug": slug.current,
   image{
     ...,
+    "lqip": asset->metadata.lqip,
+    "aspect": asset->metadata.dimensions.aspectRatio
+  },
+  bio,
+  links[]{type, url}
+}
+`;
+
+export const authors40kForCardsQuery = groq`
+*[_type == "author40k" && !(_id match "drafts.*")]{
+  name,
+  "slug": slug.current,
+  image{
+    "url": asset->url,
+    "lqip": asset->metadata.lqip,
+    "aspect": asset->metadata.dimensions.aspectRatio
+  }
+}
+`;
+
+export const featuredAuthors40kQuery = groq`
+*[_type == "author40k" && !(_id match "drafts.*") && name in $names]{
+  _id,
+  name,
+  "slug": slug.current,
+  image{
     "url": asset->url,
     "lqip": asset->metadata.lqip,
     "aspect": asset->metadata.dimensions.aspectRatio
@@ -86,84 +148,73 @@ export const featuredAuthors40kQuery = groq`
 }
 `;
 
-// All groups with nested factions, ordered
+/* -------------------------------------------------------------
+   FACTIONS & ERAS
+-------------------------------------------------------------- */
 export const groupedFactions40kQuery = groq`
-  *[
-    _type == "factionGroup40k"
-    && !(_id match "drafts.*")
-  ] | order(orderRank asc){
-    _id,
-    title,
-    "slug": slug.current,
-    iconId,
-    description,
-    links[]{type, url},
+*[_type == "factionGroup40k" && !(_id match "drafts.*")]
+| order(orderRank asc){
+  _id,
+  title,
+  "slug": slug.current,
+  iconId,
+  description,
+  links[]{type,url},
 
-    "items": *[
-      _type == "faction40k"
-      && !(_id match "drafts.*")
-      && references(^._id)
-    ] | order(orderRank asc){
+  "items": *[_type == "faction40k" && !(_id match "drafts.*") && references(^._id)]
+    | order(orderRank asc){
       _id,
       title,
       "slug": slug.current,
       iconId,
       description,
-      links[]{type, url}
+      links[]{type,url}
     }
-  }
+}
 `;
 
-// Flat list for cards, with group key
 export const factions40kForCardsQuery = groq`
-  *[
-    _type == "faction40k"
-    && !(_id match "drafts.*")
-  ] | order(orderRank asc){
-    _id,
-    title,
-    "slug": slug.current,
-    iconId,
-    description,
-    "groupKey": group->slug.current,
-    "groupTitle": group->title
-  }
+*[_type == "faction40k" && !(_id match "drafts.*")]
+| order(orderRank asc){
+  _id,
+  title,
+  "slug": slug.current,
+  iconId,
+  description,
+  "groupKey": group->slug.current,
+  "groupTitle": group->title
+}
 `;
 
-// Single faction (by slug) including its group
 export const singleFaction40kQuery = groq`
-  *[
-    _type == "faction40k"
-    && slug.current == $slug
-  ][0]{
+*[_type == "faction40k" && slug.current == $slug][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  iconId,
+  description,
+  links[]{type,url},
+  "group": group->{
     _id,
     title,
     "slug": slug.current,
-    iconId,
-    description,
-    links[]{type, url},
-    "group": group->{
-      _id, title, "slug": slug.current, iconId
-    }
+    iconId
   }
+}
 `;
 
-// All groups only (no nesting), ordered
 export const factionGroups40kQuery = groq`
-  *[
-    _type == "factionGroup40k"
-    && !(_id match "drafts.*")
-  ] | order(orderRank asc){
-    _id,
-    title,
-    "slug": slug.current,
-    iconId,
-    description,
-    links[]{type, url}
-  }
+*[_type == "factionGroup40k" && !(_id match "drafts.*")]
+| order(orderRank asc){
+  _id,
+  title,
+  "slug": slug.current,
+  iconId,
+  description,
+  links[]{type,url}
+}
 `;
 
-// All [group]/[slug] pairs for SSG
 export const factionPairs40kQuery = groq`
 *[
   _type == "faction40k"
@@ -175,7 +226,7 @@ export const factionPairs40kQuery = groq`
 }
 `;
 
-// Single faction by group+slug
+/* fixed structure that caused the previous parse error */
 export const singleFaction40kBySlugsQuery = groq`
 *[
   _type == "faction40k"
@@ -188,86 +239,95 @@ export const singleFaction40kBySlugsQuery = groq`
   iconId,
   description,
   links[]{type, url},
+
   "group": {
     "title": group->title,
     "slug": group->slug.current,
     "iconId": group->iconId,
-    links
+    "links": group->links
   }
 }
 `;
 
-export const all40kErasQuery = groq `
-  *[_type == "era40k" && !(_id match "drafts.*")] 
-  | order(orderRank) {
-    _id,
-    title,
-    "slug": slug.current,
-    period,
-    description, 
-    image{
-      alt,
-      credit,                               // <- NEW
-      "url": asset->url,
-      "lqip": asset->metadata.lqip,
-      "aspect": asset->metadata.dimensions.aspectRatio
-    }
+export const all40kErasQuery = groq`
+*[_type == "era40k" && !(_id match "drafts.*")]
+| order(orderRank){
+  _id,
+  title,
+  "slug": slug.current,
+  period,
+  description,
+  image{
+    alt,
+    credit,
+    "url": asset->url,
+    "lqip": asset->metadata.lqip,
+    "aspect": asset->metadata.dimensions.aspectRatio
   }
+}
 `;
 
-export const single40kEraQuery = groq `
-  *[_type == "era40k" && slug.current == $slug][0]{
-    _id,
-    title,
-    "slug": slug.current,
-    period,
-    description,
-    image{
-      alt,
-      credit,
-      "url": asset->url,
-      "lqip": asset->metadata.lqip,
-      "aspect": asset->metadata.dimensions.aspectRatio
-    }
+export const single40kEraQuery = groq`
+*[_type == "era40k" && slug.current == $slug][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  period,
+  description,
+  image{
+    alt,
+    credit,
+    "url": asset->url,
+    "lqip": asset->metadata.lqip,
+    "aspect": asset->metadata.dimensions.aspectRatio
   }
+}
 `;
 
+/* -------------------------------------------------------------
+   BOOKS
+-------------------------------------------------------------- */
 export const allBooks40kQuery = groq`
-  *[_type == "book40k" && !(_id match "drafts.*")]
-| order(_createdAt asc) {
+*[_type == "book40k" && !(_id match "drafts.*")]
+| order(_createdAt asc){
   _id,
   _createdAt,
   title,
   "slug": slug.current,
+
+  // author names only for large lists (keep payload small)
   "author": coalesce(authors[]->name, []),
+
   "era": era->title,
   "factions": coalesce(factions[]->title, []),
+
   description,
   story,
+
   "publication_date": publicationDate,
-  "page_count": pageCount,
-  format,
-  "editions": coalesce(editions[]{isbn, note}, []),
-  "links": coalesce(links[]{type, url}, []),
+
+  ${formatProjection},
+
   image{
     alt,
     credit,
     asset->{ _id, url, metadata{ dimensions } }
   },
+
   "series": coalesce(
     *[_type == "series40k" && references(^._id)]{
       "name": title,
+      "slug": slug.current,
       "number": items[work._ref == ^._id][0].number
-    },
-    []
+    }, []
   )
 }
 `;
 
 export const bookSlugs40kQuery = groq`
-  *[_type == "book40k" && defined(slug.current)][]{
-    "slug": slug.current
-  }
+*[_type == "book40k" && defined(slug.current)][] {
+  "slug": slug.current
+}
 `;
 
 export const bookBySlug40kQuery = groq`
@@ -276,7 +336,7 @@ export const bookBySlug40kQuery = groq`
   title,
   "slug": slug.current,
 
-  // authors (unchanged)
+  // Detailed authors with slug for linking
   "authors": coalesce(
     authors[]->{
       "name": coalesce(name, title),
@@ -284,22 +344,18 @@ export const bookBySlug40kQuery = groq`
     },
     []
   ),
+
   "authorLabel": select(
     !defined(authors) || count(authors) == 0 => "Unknown",
     count(authors) == 1 => authors[0]->name,
     "Various Authors"
   ),
 
-  // format (your preferred strategy here)
-  format,
+  ${formatProjection},
 
-  // ERA: include slug for linking
-  "era": era->{
-    title,
-    "slug": slug.current
-  },
+  "era": era->{ title, "slug": slug.current },
 
-  // FACTIONS: include slug + group slug for /factions/[group]/[slug]
+  // Factions with group slug for nested routes
   "factions": coalesce(
     factions[]->{
       title,
@@ -324,42 +380,50 @@ export const bookBySlug40kQuery = groq`
     asset->{ _id, url, metadata{ dimensions } }
   },
 
-  // series (optional)
   "series": coalesce(
     *[_type == "series40k" && references(^._id)]{
       "name": title,
       "slug": slug.current,
       "number": items[work._ref == ^._id][0].number
-    },
-    []
+    }, []
   )
 }
 `;
 
 export const booksByAuthorSlug40kQuery = groq`
-  *[_type == "book40k" && references(*[_type=="author40k" && slug.current == $slug]._id)]
-  | order(title asc) {
-    _id,
-    title,
-    "slug": slug.current,
-    "author": coalesce(authors[]->name, []),
-    "era": era->title,
-    "factions": coalesce(factions[]->title, []),
-    "publication_date": publicationDate,
-    format,
-    image{
-      alt,
-      credit,
-      asset->{ _id, url, metadata{ dimensions } }
-    },
-    "series": coalesce(
-      *[_type == "series40k" && references(^._id)]{
-        "name": title,
-        "number": items[work._ref == ^._id][0].number
-      },
-      []
-    )
-  }
+*[
+  _type == "book40k"
+  && references(*[_type == "author40k" && slug.current == $slug]._id)
+]
+| order(title asc){
+  _id,
+  title,
+  "slug": slug.current,
+
+  // names-only here is fine, or switch to authors[] if you want links
+  "author": coalesce(authors[]->name, []),
+
+  "era": era->title,
+  "factions": coalesce(factions[]->title, []),
+
+  "publication_date": publicationDate,
+
+  ${formatProjection},
+
+  image{
+    alt,
+    credit,
+    asset->{ _id, url, metadata{ dimensions } }
+  },
+
+  "series": coalesce(
+    *[_type == "series40k" && references(^._id)]{
+      "name": title,
+      "slug": slug.current,
+      "number": items[work._ref == ^._id][0].number
+    }, []
+  )
+}
 `;
 
 export const featuredBooks40kQuery = groq`
@@ -371,68 +435,30 @@ export const featuredBooks40kQuery = groq`
   _id,
   title,
   "slug": slug.current,
+
   "author": coalesce(authors[]->name, []),
+
   "publication_date": publicationDate,
-  format,
+
+  ${formatProjection},
+
   image{
     alt,
     credit,
     asset->{ _id, url, metadata{ dimensions } }
   },
-  "series": coalesce(
-    *[_type == "series40k" && references(^._id)]{
-      "name": title,
-      "number": items[work._ref == ^._id][0].number
-    },
-    []
-  )
-}
-`;
 
-// A tiny field bundle to keep things DRY (optional but handy)
-const bookCardFields = `
-  _id,
-  title,
-  "slug": slug.current,
-  "author": coalesce(authors[]->name, []),
-  "authorLabel": select(
-    !defined(authors) || count(authors) == 0 => "Unknown",
-    count(authors) == 1 => authors[0]->name,
-    "Various Authors"
-  ),
-   "series": coalesce(
+  "series": coalesce(
     *[_type == "series40k" && references(^._id)]{
       "name": title,
       "slug": slug.current,
       "number": items[work._ref == ^._id][0].number
     }, []
-  ),
-  "publication_date": publicationDate,
-  "factions": coalesce(factions[]->title, []),
-  image{
-    alt, credit, crop, hotspot,
-    asset->{ _id, url, metadata{ lqip, dimensions } }
-  },
-  description,
-  story,
-  // Preserve normalized value
-  "formatValue": format,
-  // Override the displayed field
-  "format": select(
-    format == "novel" => "Novel",
-    format == "novella" => "Novella",
-    format == "short_story" => "Short Story",
-    format == "audio_drama" => "Audio Drama",
-    format == "anthology" => "Anthology",
-    format == "omnibus" => "Omnibus",
-    format == "graphic_novel" => "Graphic Novel",
-    format == "audio_anthology" => "Audio Anthology",
-    format == "other" => "Other",
-    format
   )
+}
 `;
 
-export const allSeries40kQuery = groq `
+export const allSeries40kQuery = groq`
 *[_type == "series40k"] | order(orderRank asc, title asc){
   _id,
   title,
@@ -455,7 +481,7 @@ export const allSeries40kQuery = groq `
 }
 `;
 
-export const series40kBySlugQuery = groq `
+export const series40kBySlugQuery = groq`
 *[_type == "series40k" && slug.current == $slug][0]{
   _id,
   title,
@@ -478,7 +504,7 @@ export const series40kBySlugQuery = groq `
 }
 `;
 
-export const booksByFactionId40kQuery = groq `
+export const booksByFactionId40kQuery = groq`
 *[
   _type == "book40k"
   && !(_id match "drafts.*")
