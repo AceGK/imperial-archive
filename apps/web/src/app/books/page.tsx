@@ -1,8 +1,8 @@
 // /app/books/page.tsx
 import { allBooks40kQuery } from "@/lib/sanity/queries";
 import { client } from "@/lib/sanity/sanity.client";
-import BookCard from "@/components/modules/BookCard";
 import PageHeader from "@/components/modules/PageHeader";
+import BookGrid from "@/components/modules/BookGrid";
 
 export const revalidate = 60;
 
@@ -26,18 +26,7 @@ export default async function BrowsePage() {
       <section className="container">
         <div style={{ opacity: 0.5, paddingBottom: "1rem" }}>{count} Books</div>
 
-        <div
-          style={{
-            display: "grid",
-            gap: "1rem",
-            gridTemplateColumns:
-              "repeat(auto-fill, minmax(min(200px, 100%), 1fr))",
-          }}
-        >
-          {books.map((b: any) => (
-            <BookCard key={b._id} book={b} />
-          ))}
-        </div>
+        <BookGrid books={books} />
       </section>
     </main>
   );

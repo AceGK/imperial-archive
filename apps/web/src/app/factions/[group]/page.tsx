@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { client } from "@/lib/sanity/sanity.client";
-import { groupedFactions40kQuery } from "@/lib/sanity/queries";
+import { groupedFactions40kQuery, booksByFactionGroupSlug40kQuery } from "@/lib/sanity/queries";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
 import FactionCard from "@/components/modules/FactionCard";
+import BookGrid from "@/components/modules/BookGrid";
 import type { FactionGroupWithItems } from "@/types/sanity";
+import type { BookCardData } from "@/components/modules/BookCard";
 
 export const revalidate = 60;
 
@@ -30,7 +32,13 @@ export default async function GroupPage({
   const { title, description, iconId, links, items } = bucket;
   const Icon = resolveGroupIcon(iconId);
 
-  // Find Lexicanum link
+  // Books that reference any faction in this group
+  const books = await client.fetch<BookCardData[]>(
+    booksByFactionGroupSlug40kQuery,
+    { group },
+    { perspective: "published" }
+  );
+
   const lexicanumLink = links?.find((l) => l.type === "lexicanum")?.url ?? null;
 
   return (
@@ -75,6 +83,7 @@ export default async function GroupPage({
           </div>
         </header>
 
+        {/* Faction list */}
         <section>
           {items?.length > 0 ? (
             <ul
@@ -100,6 +109,15 @@ export default async function GroupPage({
           ) : (
             <p style={{ opacity: 0.8 }}>No factions found.</p>
           )}
+        </section>
+
+        {/* Books grid */}
+        <section>
+          <h2>
+            Books featuring {title}{" "}
+            <span className="clr-subtle">({books.length})</span>
+          </h2>
+          <BookGrid books={books} noResultsText="No books yet." />
         </section>
       </section>
     </main>

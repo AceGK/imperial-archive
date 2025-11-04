@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import { PortableText } from "@portabletext/react";
-import type { Author40k, Book40k } from "@/types/sanity";
 import styles from "./styles.module.scss";
-import BookCard from "@/components/modules/BookCard";
 import Button from "@/components/ui/Button";
+import BookGrid from "@/components/modules/BookGrid";
+import type { Author40k } from "@/types/sanity";
+import type { BookCardData } from "@/components/modules/BookCard";
 
 import FacebookIcon from "@/components/icons/brands/facebook.svg";
 import XIcon from "@/components/icons/brands/x-twitter.svg";
@@ -21,7 +22,8 @@ import ChevronDown from "@/components/icons/chevron-down.svg";
 type Props = {
   slug: string;
   profile: Author40k | null;
-  authored: Book40k[];
+  /** IMPORTANT: make sure your GROQ returns the BookCardData shape (bookCardFields) */
+  authored: BookCardData[];
   makeHref?: (slug: string) => string;
 };
 
@@ -77,11 +79,7 @@ export default function AuthorProfile({ profile, authored }: Props) {
           <div className={styles.imageWrapper}>
             <Image
               className={styles.image}
-              src={urlFor(profile.image)
-                .width(200)
-                .height(200)
-                .fit("crop")
-                .url()}
+              src={urlFor(profile.image).width(200).height(200).fit("crop").url()}
               alt={profile.name}
               width={200}
               height={200}
@@ -98,7 +96,9 @@ export default function AuthorProfile({ profile, authored }: Props) {
         {profile?.bio && (
           <div
             ref={bioRef}
-            className={`${styles.bio} ${expanded ? styles.expanded : styles.collapsed} ${!showToggle ? styles.noFade : ""}`}
+            className={`${styles.bio} ${expanded ? styles.expanded : styles.collapsed} ${
+              !showToggle ? styles.noFade : ""
+            }`}
           >
             <PortableText value={profile.bio as any} />
           </div>
@@ -113,9 +113,7 @@ export default function AuthorProfile({ profile, authored }: Props) {
             title={expanded ? "Show less" : "Read more"}
           >
             {expanded ? "Show less" : "Read more"}
-            <ChevronDown
-              className={`${styles.chevron} ${expanded ? styles.expanded : ""}`}
-            />
+            <ChevronDown className={`${styles.chevron} ${expanded ? styles.expanded : ""}`} />
           </Button>
         )}
 
@@ -123,9 +121,7 @@ export default function AuthorProfile({ profile, authored }: Props) {
           <ul className={styles.links}>
             {visibleLinks.map((link) => {
               const Icon = ICONS[link.type];
-              const label =
-                LABELS[link.type] ??
-                link.type.replace(/^\w/, (c) => c.toUpperCase());
+              const label = LABELS[link.type] ?? link.type.replace(/^\w/, (c) => c.toUpperCase());
               return (
                 <li key={`${link.type}-${link.url}`}>
                   <Button
@@ -152,20 +148,7 @@ export default function AuthorProfile({ profile, authored }: Props) {
           Books <span style={{ fontSize: "0.85rem" }}>({bookCount})</span>
         </h2>
 
-        {bookCount === 0 ? (
-          <p>No books linked yet.</p>
-        ) : (
-          <div className={styles.bookGrid}>
-            {authored.map((b) => (
-              <BookCard
-                key={b._id}
-                book={b}
-                href={`/books/${b.slug}`}
-                compact
-              />
-            ))}
-          </div>
-        )}
+        <BookGrid books={authored} noResultsText="No books linked yet." />
       </div>
     </div>
   );

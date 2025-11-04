@@ -11,6 +11,7 @@ import FactionTheme from "@/components/modules/FactionTheme";
 import type { Faction40kDoc, Book40k } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import BookCard from "@/components/modules/BookCard";
+import BookGrid from "@/components/modules/BookGrid";
 
 export const revalidate = 60;
 
@@ -136,22 +137,7 @@ export default async function FactionPage({
             <span className="clr-subtle">({books.length})</span>
           </h2>
 
-          {books.length === 0 ? (
-            <p style={{ opacity: 0.8 }}>No books yet.</p>
-          ) : (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-                gap: 16,
-                marginTop: 12,
-              }}
-            >
-              {books.map((b) => (
-                <BookCard key={b._id} book={b} />
-              ))}
-            </div>
-          )}
+          <BookGrid books={books} noResultsText="No books linked to this faction yet." />
         </section>
       </section>
     </main>

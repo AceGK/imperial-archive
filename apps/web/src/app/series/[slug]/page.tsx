@@ -5,7 +5,8 @@ import { client } from "@/lib/sanity/sanity.client";
 import { series40kBySlugQuery } from "@/lib/sanity/queries";
 import type { Series40kDoc } from "@/types/sanity";
 import { urlFor } from "@/lib/sanity/sanity.image";
-import BookCard from "@/components/modules/BookCard";
+import BookGrid from "@/components/modules/BookGrid";
+import type { BookCardData } from "@/components/modules/BookCard";
 
 export const revalidate = 60;
 
@@ -25,9 +26,7 @@ export default async function SeriesPage({
 }) {
   const { slug } = await params;
 
-  const data = await client.fetch<Series40kDoc | null>(series40kBySlugQuery, {
-    slug,
-  });
+  const data = await client.fetch<Series40kDoc | null>(series40kBySlugQuery, { slug });
   if (!data) notFound();
 
   const hero = data.image?.asset
@@ -61,50 +60,33 @@ export default async function SeriesPage({
       <main className="container" style={{ marginTop: "2rem" }}>
         {data.lists?.length ? (
           <div style={{ display: "grid", gap: "1.75rem" }}>
-            {data.lists.map((list, li) => (
-              <section
-                key={list.key ?? `${li}`}
-                style={{ display: "grid", gap: "0.75rem" }}
-              >
-                <header>
-                  <h2
-                    style={{ fontSize: "1.125rem", fontWeight: 700, margin: 0 }}
-                  >
-                    {list.title}
-                  </h2>
-                  {list.description && (
-                    <p
-                      style={{ margin: "0.25rem 0 0", color: "var(--subtle)" }}
-                    >
-                      {list.description}
-                    </p>
-                  )}
-                </header>
+            {data.lists.map((list, li) => {
+              // Convert [{ work: Book }] -> Book[]
+              const books: BookCardData[] =
+                (list.items ?? [])
+                  .map((it: any) => it?.work)
+                  .filter(Boolean) as BookCardData[];
 
-                {list.items?.length ? (
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns:
-                        "repeat(auto-fill, minmax(220px, 1fr))",
-                      gap: "1rem",
-                    }}
-                  >
-                    {list.items.map((it, i) => (
-                      <BookCard
-                        key={`${it.work._id}-${i}`}
-                        book={it.work}
-                        href={`/books/${it.work.slug}`}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ opacity: 0.6 }}>
-                    <em>No books in this list yet.</em>
-                  </div>
-                )}
-              </section>
-            ))}
+              return (
+                <section
+                  key={list.key ?? `${li}`}
+                  style={{ display: "grid", gap: "0.75rem" }}
+                >
+                  <header>
+                    <h2 style={{ fontSize: "1.125rem", fontWeight: 700, margin: 0 }}>
+                      {list.title}
+                    </h2>
+                    {list.description && (
+                      <p style={{ margin: "0.25rem 0 0", color: "var(--subtle)" }}>
+                        {list.description}
+                      </p>
+                    )}
+                  </header>
+
+                  <BookGrid books={books} noResultsText="No books in this list yet." />
+                </section>
+              );
+            })}
           </div>
         ) : (
           <div style={{ padding: "2rem 0", opacity: 0.6 }}>

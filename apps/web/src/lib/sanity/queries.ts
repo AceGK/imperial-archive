@@ -339,6 +339,17 @@ export const booksByAuthorSlug40kQuery = groq`
 }
 `;
 
+export const booksByEraSlug40kQuery = groq`
+*[
+  _type == "book40k" &&
+  !(_id match "drafts.*") &&
+  era->slug.current == $slug
+]
+| order(publicationDate asc, title asc){
+  ${bookCardFields}
+}
+`;
+
 export const featuredBooks40kQuery = groq`
 *[
   _type == "book40k" &&
@@ -407,6 +418,19 @@ export const booksByFactionId40kQuery = groq`
   _type == "book40k" &&
   !(_id match "drafts.*") &&
   references($factionId)
+]
+| order(publicationDate asc, title asc){
+  ${bookCardFields}
+}
+`;
+
+export const booksByFactionGroupSlug40kQuery = groq`
+*[
+  _type == "book40k"
+  && !(_id match "drafts.*")
+  && references(
+    *[_type == "faction40k" && group->slug.current == $group]._id
+  )
 ]
 | order(publicationDate asc, title asc){
   ${bookCardFields}

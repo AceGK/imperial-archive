@@ -1,10 +1,10 @@
-// /app/era/[slug]/page.tsx
-import { client } from "@/lib/sanity/sanity.client";
-import { single40kEraQuery } from "@/lib/sanity/queries";
-import type { Era40k } from "@/types/sanity";
 import { notFound } from "next/navigation";
-import Breadcrumb from "@/components/ui/Breadcrumb";
+import { client } from "@/lib/sanity/sanity.client";
+import { single40kEraQuery, booksByEraSlug40kQuery } from "@/lib/sanity/queries";
+import type { Era40k } from "@/types/sanity";
 import PageHeader from "@/components/modules/PageHeader";
+import { type BookCardData } from "@/components/modules/BookCard";
+import BookGrid from "@/components/modules/BookGrid";
 
 export const revalidate = 60;
 
@@ -12,16 +12,22 @@ type Params = { slug: string };
 
 export async function generateStaticParams(): Promise<Params[]> {
   const eras = await client.fetch<{ slug: string }[]>(
-    `*[_type == "era40k"]{ "slug": slug.current }`
+    `*[_type == "era40k" && defined(slug.current)]{ "slug": slug.current }`
   );
   return eras.map((e) => ({ slug: e.slug }));
 }
 
 export default async function EraPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
-  const era = await client.fetch<Era40k | null>(single40kEraQuery, { slug });
 
+  const era = await client.fetch<Era40k | null>(single40kEraQuery, { slug });
   if (!era) notFound();
+
+  const books = await client.fetch<BookCardData[]>(
+    booksByEraSlug40kQuery,
+    { slug },
+    { perspective: "published" }
+  );
 
   return (
     <main>
@@ -36,10 +42,11 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
         height="xs"
         priority
       >
-        {era.description && <p style={{textWrap: "balance"}}>{era.period}</p>}
+        {era.period && <p style={{ textWrap: "balance" }}>{era.period}</p>}
       </PageHeader>
-      <section className="container">
 
+      <section className="container">
+        <BookGrid books={books} />
       </section>
     </main>
   );
