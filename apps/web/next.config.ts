@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
     images: {
     domains: ["cdn.sanity.io"],
   },
+  productionBrowserSourceMaps: false,
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
