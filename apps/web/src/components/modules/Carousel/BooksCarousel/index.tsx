@@ -4,7 +4,7 @@
 import React from "react";
 import Carousel from "@/components/modules/Carousel";
 import type { SwiperOptions } from "swiper/types";
-import BookCard from "@/components/modules/BookCard";
+import BookCard from "@/components/modules/Cards/BookCard";
 import type { Book40k } from "@/types/sanity";
 
 type Props = {

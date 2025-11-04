@@ -42,7 +42,10 @@ samp {
 }
 
 section {
-  padding-block: 6rem;
+  padding-block: 2rem;
+  &.row {
+    padding-block: 6rem;
+  }
 }
 
 .visually-hidden {

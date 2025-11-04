@@ -1,4 +1,4 @@
-import BookCard, { type BookCardData } from "@/components/modules/BookCard";
+import BookCard, { type BookCardData } from "@/components/modules/Cards/BookCard";
 import styles from "./styles.module.scss";
 
 type Props = {

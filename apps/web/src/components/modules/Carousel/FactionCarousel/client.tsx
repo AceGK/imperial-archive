@@ -4,7 +4,7 @@
 import React, { useMemo, useState } from "react";
 import Carousel from "@/components/modules/Carousel";
 import type { SwiperOptions } from "swiper/types";
-import FactionCard from "@/components/modules/FactionCard";
+import FactionCard from "@/components/modules/Cards/FactionCard";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
 import styles from "./styles.module.scss";
 import carouselStyles from "@/components/modules/Carousel/styles.module.scss";

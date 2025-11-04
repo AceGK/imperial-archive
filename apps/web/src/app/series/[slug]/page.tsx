@@ -6,7 +6,7 @@ import { series40kBySlugQuery } from "@/lib/sanity/queries";
 import type { Series40kDoc } from "@/types/sanity";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import BookGrid from "@/components/modules/BookGrid";
-import type { BookCardData } from "@/components/modules/BookCard";
+import type { BookCardData } from "@/components/modules/Cards/BookCard";
 
 export const revalidate = 60;
 

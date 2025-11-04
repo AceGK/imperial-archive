@@ -1,0 +1,33 @@
+@use "@/styles/breakpoints" as *;
+
+$panel-bg: color-mix(in oklab, var(--bg), var(--subtle) 10%);
+
+.layout {
+  display: grid;
+  gap: 3rem;
+  margin: 2rem 0 9rem;
+  grid-template-columns: 320px 1fr;
+  padding:0px;
+  @include max(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sidebar {
+  width: 100%;
+  background: $panel-bg;
+  padding: 1rem;
+  border-radius: var(--radius);
+  height: fit-content;
+  position: sticky;
+  top: 5rem;
+
+  @include max(md) {
+    position: static;
+    width: 100%;
+  }
+}
+
+.content {
+  min-width: 0; // allow grids to shrink properly
+}

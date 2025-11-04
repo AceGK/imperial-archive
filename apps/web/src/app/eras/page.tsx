@@ -1,7 +1,7 @@
 import { client } from "@/lib/sanity/sanity.client";
 import { all40kErasQuery } from "@/lib/sanity/queries";
 import type { Era40k } from "@/types/sanity";
-import EraCard from "@/components/modules/EraCard";
+import EraCard from "@/components/modules/Cards/EraCard";
 import PageHeader from "@/components/modules/PageHeader";
 
 export const revalidate = 60;

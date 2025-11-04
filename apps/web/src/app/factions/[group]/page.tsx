@@ -3,10 +3,11 @@ import { notFound } from "next/navigation";
 import { client } from "@/lib/sanity/sanity.client";
 import { groupedFactions40kQuery, booksByFactionGroupSlug40kQuery } from "@/lib/sanity/queries";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
-import FactionCard from "@/components/modules/FactionCard";
+import FactionCard from "@/components/modules/Cards/FactionCard";
 import BookGrid from "@/components/modules/BookGrid";
 import type { FactionGroupWithItems } from "@/types/sanity";
-import type { BookCardData } from "@/components/modules/BookCard";
+import type { BookCardData } from "@/components/modules/Cards/BookCard";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 
 export const revalidate = 60;
 
@@ -43,11 +44,8 @@ export default async function GroupPage({
 
   return (
     <main className="container">
+      <Breadcrumb />
       <section>
-        <p>
-          <Link href="/factions">← All factions</Link>
-        </p>
-
         <header
           style={{
             display: "flex",

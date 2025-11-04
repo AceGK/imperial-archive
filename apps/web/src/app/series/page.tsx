@@ -1,5 +1,5 @@
 import PageHeader from "@/components/modules/PageHeader";
-import SeriesCard from "@/components/modules/SeriesCard";
+import SeriesCard from "@/components/modules/Cards/SeriesCard";
 import { client } from "@/lib/sanity/sanity.client";
 import { allSeries40kQuery } from "@/lib/sanity/queries";
 import type { Series40kDoc } from "@/types/sanity";

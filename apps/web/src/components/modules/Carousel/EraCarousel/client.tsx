@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Carousel from '@/components/modules/Carousel'
-import EraCard from '@/components/modules/EraCard'
+import EraCard from '@/components/modules/Cards/EraCard'
 import type {SwiperOptions} from 'swiper/types'
 import type {Era40k} from '@/types/sanity'
 

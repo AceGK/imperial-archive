@@ -2,7 +2,7 @@
 import { client } from "@/lib/sanity/sanity.client";
 import { all40kAuthorsQuery } from "@/lib/sanity/queries";
 import PageHeader from "@/components/modules/PageHeader";
-import AuthorCard from "@/components/modules/AuthorCard";
+import AuthorCard from "@/components/modules/Cards/AuthorCard";
 
 export const revalidate = 60;
 

@@ -15,10 +15,10 @@
       align-items: center;
       text-transform: capitalize;
 
-      &:not(:last-child)::after {
-        content: "/";
+      svg {
+        fill: currentColor;
+        opacity: 0.6;
         margin: 0 0.5rem;
-        color: #999;
       }
 
       a {
@@ -35,5 +35,12 @@
         text-transform: capitalize;
       }
     }
+  }
+}
+
+.breadcrumbBack {
+  margin: 1rem 0;
+  a {
+    height:auto;
   }
 }

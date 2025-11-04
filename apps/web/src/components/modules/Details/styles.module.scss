@@ -1,0 +1,144 @@
+@use "@/styles/breakpoints" as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.authorImage,
+.factionImage {
+  display: grid;
+  place-items: center;
+  width: 160px;
+  height: 160px;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  object-fit: cover;
+  overflow: hidden;
+    margin-inline: auto;
+}
+
+.authorImage {
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--on-accent);
+  // border:1px solid var(--subtle);
+  img {
+    background: var(--accent);
+    color: var(--on-accent);
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+
+.authorInitials {
+  font-size: 3rem; /* tweak as desired */
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Faction icon */
+.factionImage {
+  background: var(--faction-primary);
+  color: var(--faction-secondary);
+  // border: 5px solid var(--faction-tertiary);
+  fill: currentColor;
+}
+
+.title h1 {
+  font-size: clamp(1rem, 4vw, 1.375rem);
+}
+
+.description {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--subtle);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+.footer {
+  margin-top: 0.75rem;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+  padding: 1rem 0;
+  justify-content: center;
+}
+.icon {
+  width: 32px;
+  height: 32px;
+  color: var(--text);
+  opacity: 0.8;
+  fill: currentColor;
+}
+a:hover .icon {
+  color: var(--primary);
+  opacity: 1;
+}
+
+.clamp {
+  max-height: calc(var(--max-lines, 5) * 1.6em);
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.3s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 3rem;
+    background: linear-gradient(
+      to top,
+      color-mix(in oklab, var(--bg), var(--subtle) 10%),
+      transparent
+    );
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  &.expanded {
+    max-height: none;
+  }
+  &.expanded::after {
+    opacity: 0;
+  }
+
+  &.unclamped {
+    max-height: none;
+    overflow: visible;
+  }
+  &.unclamped::after {
+    display: none;
+  }
+}
+
+.readMore {
+  display: flex;
+  gap: 3px;
+  margin-top: 0.25rem;
+  align-self: flex-start;
+  color: var(--primary);
+  padding: 0 !important;
+}
+.chevron {
+  fill: currentColor;
+  transition: transform 0.2s ease;
+}
+.chevron.expanded {
+  transform: rotate(180deg);
+}

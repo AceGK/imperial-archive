@@ -2,7 +2,7 @@
 import { client } from '@/lib/sanity/sanity.client'
 import { groupedFactions40kQuery } from '@/lib/sanity/queries'
 import type { FactionGroupWithItems } from '@/types/sanity'
-import FactionCard from '@/components/modules/FactionCard'
+import FactionCard from '@/components/modules/Cards/FactionCard'
 import { resolveGroupIcon } from '@/components/icons/factions/resolve'
 import PageHeader from '@/components/modules/PageHeader'
 
