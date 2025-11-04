@@ -1,41 +1,35 @@
 // /app/authors/page.tsx
 import { client } from "@/lib/sanity/sanity.client";
 import { all40kAuthorsQuery } from "@/lib/sanity/queries";
-import type { Author40k } from "@/types/sanity";
-
-import { getAllBooks } from "@/lib/40k-books";
-import AuthorCard from "@/components/modules/AuthorCard";
 import PageHeader from "@/components/modules/PageHeader";
+import AuthorCard from "@/components/modules/AuthorCard";
 
 export const revalidate = 60;
 
-type Book = {
-  id: number;
-  title: string;
+type AuthorFromQuery = {
+  _id: string;
+  name: string;
   slug: string;
-  author: string[];
+  image?: {
+    url?: string;
+    lqip?: string;
+    aspect?: number;
+  };
+  bookCount: number;
 };
 
 export default async function AuthorsPage() {
-  // Fetch authors from Sanity (typed)
-  const authors = await client.fetch<Author40k[]>(all40kAuthorsQuery);
-
-  // Build counts from your JSON books (todo replace with sanity)
-  const books: Book[] = await getAllBooks();
-  const countsByAuthor = new Map<string, number>();
-
-  for (const b of books) {
-    for (const raw of b.author || []) {
-      const name = (raw || "").trim();
-      if (!name) continue;
-      countsByAuthor.set(name, (countsByAuthor.get(name) ?? 0) + 1);
-    }
-  }
+  
+  const authors = await client.fetch<AuthorFromQuery[]>(
+    all40kAuthorsQuery,
+    {},
+    { perspective: "published" }
+  );
 
   return (
     <main>
       <PageHeader
-        title={`Authors`}
+        title="Authors"
         subtitle="Discover the writers who bring the grim darkness of the far future to life across the Black Library."
         align="center"
         strongOverlay
@@ -44,13 +38,12 @@ export default async function AuthorsPage() {
         image="/images/imperial-library-erik-nykvist.jpg"
         alt="Imperial Library by Erik Nykvist"
       />
+
       <section className="container">
         <h1 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          Authors{" "}
-          <span style={{ fontSize: "0.9rem", borderRadius: 999 }}>
-            ({authors.length})
-          </span>
+          Authors <span style={{ fontSize: "0.9rem" }}>({authors.length})</span>
         </h1>
+
         <div
           style={{
             display: "grid",
@@ -64,7 +57,7 @@ export default async function AuthorsPage() {
               key={a._id}
               name={a.name}
               slug={a.slug}
-              count={countsByAuthor.get(a.name) ?? 0}
+              count={a.bookCount} 
               image={a.image}
             />
           ))}

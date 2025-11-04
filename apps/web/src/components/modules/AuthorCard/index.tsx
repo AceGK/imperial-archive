@@ -7,7 +7,7 @@ type AuthorCardProps = {
   slug: string;
   count: number;
   image?: {
-    url: string;
+    url?: string;
     lqip?: string;
     aspect?: number;
   };

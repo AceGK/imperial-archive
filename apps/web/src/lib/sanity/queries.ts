@@ -105,7 +105,8 @@ export const all40kAuthorsQuery = groq`
     "aspect": asset->metadata.dimensions.aspectRatio
   },
   bio,
-  links[]{ type, url }
+  links[]{ type, url },
+  "bookCount": count(*[_type == "book40k" && references(^._id)])
 }
 `;
 
