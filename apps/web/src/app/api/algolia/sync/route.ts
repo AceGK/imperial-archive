@@ -5,7 +5,7 @@ import { createClient as createSanity } from '@sanity/client';
 
 export const runtime = 'nodejs';
 
-/* env */
+/* ----------------------------- env ----------------------------- */
 const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID!;
 const ALGOLIA_API_KEY = process.env.ALGOLIA_WRITE_API_KEY || process.env.ALGOLIA_ADMIN_API_KEY!;
 const INDEX_NAME = (process.env.ALGOLIA_INDEX_PREFIX || '') + 'books40k';
@@ -14,11 +14,12 @@ const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID!;
 const SANITY_DATASET = process.env.SANITY_DATASET || 'production';
 const SANITY_API_VERSION = process.env.SANITY_API_VERSION || '2024-01-01';
 const SANITY_WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET!;
+const SYNC_DEBUG = process.env.SYNC_DEBUG === '1';
 
-/* clients */
+/* --------------------------- clients --------------------------- */
 const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
 
-// Published: gatekeeping (only index if book exists as published)
+// Gatekeeper: is there a published doc with this id?
 const sanityPublished = createSanity({
   projectId: SANITY_PROJECT_ID,
   dataset: SANITY_DATASET,
@@ -27,7 +28,7 @@ const sanityPublished = createSanity({
   useCdn: false,
 });
 
-// PreviewDrafts: resolve referenced authors reliably while editing
+// Full payload for indexing (resolves refs reliably while you edit)
 const sanityPreview = createSanity({
   projectId: SANITY_PROJECT_ID,
   dataset: SANITY_DATASET,
@@ -36,7 +37,7 @@ const sanityPreview = createSanity({
   useCdn: false,
 });
 
-/* GROQ */
+/* ----------------------------- GROQ ---------------------------- */
 const BOOK_PUBLISHED_CHECK = `*[_id == $id && _type == "book40k"][0]._id`;
 
 const BOOK_FOR_INDEX = `
@@ -44,6 +45,7 @@ const BOOK_FOR_INDEX = `
   _id,
   "slug": slug.current,
   title,
+  // produce a clean array of strings with no nulls
   "authors": array::compact(authors[]->coalesce(name, title)),
   "era": era->title,
   format,
@@ -54,7 +56,7 @@ const BOOK_FOR_INDEX = `
 }
 `;
 
-/* utils */
+/* ----------------------------- utils --------------------------- */
 const stripDraft = (id?: string) => (id?.startsWith('drafts.') ? id.slice(7) : id);
 
 type AlgoliaBook = {
@@ -107,6 +109,7 @@ function mapToAlgolia(b: any): AlgoliaBook | null {
 
 async function upsertBook(publishedId: string) {
   const doc = await sanityPreview.fetch(BOOK_FOR_INDEX, { id: publishedId });
+  if (SYNC_DEBUG) console.log('[sync] fetched for index:', JSON.stringify(doc));
   const obj = mapToAlgolia(doc);
   if (!obj) return { ok: true, action: 'skip-null-map', id: publishedId };
 
@@ -117,7 +120,7 @@ async function upsertBook(publishedId: string) {
   return { ok: true, action: 'upsert', id: publishedId };
 }
 
-/* handler */
+/* ---------------------------- handler -------------------------- */
 export async function POST(req: NextRequest) {
   const secret = new URL(req.url).searchParams.get('secret');
   if (!SANITY_WEBHOOK_SECRET || secret !== SANITY_WEBHOOK_SECRET) {
@@ -125,34 +128,51 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json().catch(() => ({} as any));
-  const op: string | undefined = body?.operation;
-  const type: string | undefined = body?._type;
+  const op: string | undefined = body?.operation;               // may be undefined depending on webhook config
   const rawId: string | undefined = body?._id || body?.documentId || body?.id;
   const id = stripDraft(rawId);
+  const typ: string | undefined = body?._type;
 
-  // Only react to the book document type
-  if (type && type !== 'book40k') {
+  if (SYNC_DEBUG) {
+    console.log('[sync] payload:', JSON.stringify(body));
+    console.log('[sync] derived:', { op, id, typ });
+  }
+
+  // Only process book docs; if _type missing, we'll infer via a quick fetch
+  let effectiveType = typ;
+  if (!effectiveType && id) {
+    // Ask Sanity what type this id is (published perspective)
+    effectiveType = await sanityPublished.fetch<string | null>(
+      `*[_id == $id][0]._type`,
+      { id }
+    ) || undefined;
+    if (SYNC_DEBUG) console.log('[sync] inferred _type:', effectiveType);
+  }
+
+  if (effectiveType && effectiveType !== 'book40k') {
     return NextResponse.json({ ok: true, skipped: true, reason: 'non-book40k' });
   }
 
-  // Delete/unpublish => remove the published object
+  // Explicit deletion/unpublish
   if ((op === 'delete' || op === 'unpublish') && id) {
+    if (SYNC_DEBUG) console.log('[sync] delete', id);
     await algolia.deleteObject({ indexName: INDEX_NAME, objectID: id });
     return NextResponse.json({ ok: true, action: 'delete', id });
   }
 
-  // Create/update => upsert only if the book exists as published
+  // Upsert path: if we have an id, only upsert when a published doc exists
   if (id) {
     const publishedId = await sanityPublished.fetch<string | null>(BOOK_PUBLISHED_CHECK, { id });
+    if (SYNC_DEBUG) console.log('[sync] published check', { id, publishedId });
     if (!publishedId) {
-      // Book is draft-only (or no longer published) — do nothing
+      // Likely a draft save on a not-yet-published book: do nothing
       return NextResponse.json({ ok: true, action: 'skip-no-published', id });
     }
     const result = await upsertBook(publishedId);
     return NextResponse.json(result);
   }
 
-  // Batch fallback (mutations feed)
+  // Mutations feed batch fallback
   const updatedIds: string[] = body?.ids?.updated || body?.ids?.created || [];
   const deletedIds: string[] = body?.ids?.deleted || [];
 
