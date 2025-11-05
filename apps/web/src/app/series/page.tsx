@@ -22,7 +22,7 @@ export default async function SeriesIndexPage() {
         credit="Eisenhorn by Alexander Ovchinnikov"
       />
 
-      <section className="container">
+      <section className="container mb-3">
         <div
           style={{
             display: "grid",

@@ -9,12 +9,9 @@ export default defineType({
   type: 'document',
   icon: UserIcon,
 
-  // enables sorting by rank anywhere (e.g. Desk lists, GROQ | order(orderRank))
   orderings: [orderRankOrdering],
 
   fields: [
-    // put the rank field first so new docs get an initial rank
-    // use newItemPosition: 'before' to insert new docs at the top instead of bottom
     orderRankField({type: 'faction40k'}),
 
     defineField({
