@@ -11,8 +11,8 @@ const ALGOLIA_API_KEY =
   process.env.ALGOLIA_WRITE_API_KEY || process.env.ALGOLIA_ADMIN_API_KEY!;
 const INDEX_NAME = (process.env.ALGOLIA_INDEX_PREFIX || '') + 'books40k';
 
-const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID!;            // <-- server vars
-const SANITY_DATASET = process.env.SANITY_DATASET || 'production';   // <-- server vars
+const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID!;
+const SANITY_DATASET = process.env.SANITY_DATASET || 'production';
 const SANITY_API_VERSION = process.env.SANITY_API_VERSION || '2024-01-01';
 const SANITY_WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET!;
 
@@ -29,6 +29,25 @@ const sanity = createSanity({
 /* ----------------------------- GROQ ---------------------------- */
 const BOOK_BY_ID = `
 *[_id == $id && _type == "book40k"][0]{
+  _id,
+  "slug": slug.current,
+  title,
+  "authors": coalesce(authors[]->name, []),
+  "era": era->title,
+  format,
+  publicationDate,
+  "coverUrl": image.asset->url,
+  description,
+  story
+}
+`;
+
+// All published books that reference an author
+const BOOKS_BY_AUTHOR = `
+*[
+  _type == "book40k" &&
+  references($authorId)
+]{
   _id,
   "slug": slug.current,
   title,
@@ -100,34 +119,61 @@ export async function POST(req: NextRequest) {
   const id = stripDraft(rawId);
   const type = body?._type;
 
-  // Process ONLY book40k
+  // Handle author edits by re-indexing all related books
+  if (type === 'author40k') {
+    if (!id) return NextResponse.json({ ok: true, skipped: true, reason: 'no-author-id' });
+
+    // Fetch all published books that reference this author
+    const books = await sanity.fetch(BOOKS_BY_AUTHOR, { authorId: id });
+    if (!Array.isArray(books) || books.length === 0) {
+      return NextResponse.json({ ok: true, action: 'reindex-author', upserted: 0 });
+    }
+
+    const objects = books.map(mapToAlgolia).filter(Boolean) as AlgoliaBook[];
+    if (objects.length) {
+      await algolia.saveObjects({
+        indexName: INDEX_NAME,
+        objects: objects as unknown as Record<string, unknown>[],
+      });
+    }
+    return NextResponse.json({
+      ok: true,
+      action: 'reindex-author',
+      authorId: id,
+      upserted: objects.length,
+    });
+  }
+
+  // Only process individual book changes here
   if (type && type !== 'book40k') {
     return NextResponse.json({ ok: true, skipped: true, reason: 'non-book40k' });
   }
 
-  // Explicit deletes/unpublish: delete published ID (not draft)
-  if (op === 'delete' || op === 'unpublish') {
-    if (id) await algolia.deleteObject({ indexName: INDEX_NAME, objectID: id });
+  // Explicit delete/unpublish for a book
+  if ((op === 'delete' || op === 'unpublish') && id) {
+    await algolia.deleteObject({ indexName: INDEX_NAME, objectID: id });
     return NextResponse.json({ ok: true, action: 'delete', id });
   }
 
-  // Upsert (create/update). If id is draft-only (no published), do NOT delete.
+  // Upsert a single book
   if (id) {
     const doc = await sanity.fetch(BOOK_BY_ID, { id });
     if (!doc) {
-      // No published doc found. Skip delete; it might be an unpublished draft save.
+      // No published doc found; skip delete (could be draft save)
       return NextResponse.json({ ok: true, action: 'skip-no-published', id });
     }
     const obj = mapToAlgolia(doc);
     if (!obj) {
-      // Mapping failed. Do not delete; just skip.
       return NextResponse.json({ ok: true, action: 'skip-null-map', id });
     }
-    await algolia.saveObjects({ indexName: INDEX_NAME, objects: [obj] });
+    await algolia.saveObjects({
+      indexName: INDEX_NAME,
+      objects: [obj] as unknown as Record<string, unknown>[],
+    });
     return NextResponse.json({ ok: true, action: 'upsert', id });
   }
 
-  // Batch form (mutations feed)
+  // Batch (mutations feed) fallback
   const updatedIds: string[] = body?.ids?.updated || body?.ids?.created || [];
   const deletedIds: string[] = body?.ids?.deleted || [];
 
@@ -139,11 +185,14 @@ export async function POST(req: NextRequest) {
     if (m) toUpsert.push(m);
   }
   if (toUpsert.length) {
-    await algolia.saveObjects({ indexName: INDEX_NAME, objects: toUpsert });
+    await algolia.saveObjects({
+      indexName: INDEX_NAME,
+      objects: toUpsert as unknown as Record<string, unknown>[],
+    });
   }
   for (const rid of deletedIds) {
     const pid = stripDraft(rid);
-    await algolia.deleteObject({ indexName: INDEX_NAME, objectID: pid! });
+    if (pid) await algolia.deleteObject({ indexName: INDEX_NAME, objectID: pid });
   }
 
   return NextResponse.json({ ok: true, upserted: toUpsert.length, deleted: deletedIds.length });
