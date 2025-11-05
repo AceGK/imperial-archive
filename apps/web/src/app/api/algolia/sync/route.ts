@@ -17,8 +17,13 @@ const SANITY_API_VERSION = process.env.SANITY_API_VERSION || '2024-01-01';
 const SANITY_WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET!;
 
 /* --------------------------- clients --------------------------- */
+// Algolia (v5)
 const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
-const sanity = createSanity({
+
+// Sanity clients:
+// - published: used to verify a book is actually published
+// - preview: used to resolve referenced authors (draft or published)
+const sanityPublished = createSanity({
   projectId: SANITY_PROJECT_ID,
   dataset: SANITY_DATASET,
   apiVersion: SANITY_API_VERSION,
@@ -26,13 +31,26 @@ const sanity = createSanity({
   useCdn: false,
 });
 
+const sanityPreview = createSanity({
+  projectId: SANITY_PROJECT_ID,
+  dataset: SANITY_DATASET,
+  apiVersion: SANITY_API_VERSION,
+  perspective: 'previewDrafts',
+  useCdn: false,
+});
+
 /* ----------------------------- GROQ ---------------------------- */
-const BOOK_BY_ID = `
+// Minimal published check (don’t index draft-only books)
+const BOOK_PUBLISHED_CHECK = `*[_id == $id && _type == "book40k"][0]._id`;
+
+// Full payload (resolved with previewDrafts to pull author names even if draft)
+const BOOK_FOR_INDEX = `
 *[_id == $id && _type == "book40k"][0]{
   _id,
   "slug": slug.current,
   title,
-  "authors": coalesce(authors[]->name, []),
+  // author names with nulls removed
+  "authors": array::compact(authors[]->coalesce(name, title)),
   "era": era->title,
   format,
   publicationDate,
@@ -42,27 +60,15 @@ const BOOK_BY_ID = `
 }
 `;
 
-// All published books that reference an author
-const BOOKS_BY_AUTHOR = `
-*[
-  _type == "book40k" &&
-  references($authorId)
-]{
-  _id,
-  "slug": slug.current,
-  title,
-  "authors": coalesce(authors[]->name, []),
-  "era": era->title,
-  format,
-  publicationDate,
-  "coverUrl": image.asset->url,
-  description,
-  story
-}
+// All published books that reference an author (we’ll fetch details with preview client)
+const PUBLISHED_BOOK_IDS_BY_AUTHOR = `
+array::compact(*[
+  _type == "book40k" && references($authorId)
+]._id)
 `;
 
 /* ----------------------------- utils --------------------------- */
-const stripDraft = (id?: string) => id?.startsWith('drafts.') ? id.slice(7) : id;
+const stripDraft = (id?: string) => (id?.startsWith('drafts.') ? id.slice(7) : id);
 
 type AlgoliaBook = {
   objectID: string;
@@ -79,10 +85,19 @@ type AlgoliaBook = {
 
 function mapToAlgolia(b: any): AlgoliaBook | null {
   if (!b) return null;
+
   const year =
     typeof b.publicationDate === 'string' && b.publicationDate.length >= 4
       ? parseInt(b.publicationDate.slice(0, 4), 10)
       : null;
+
+  const authors: string[] = Array.isArray(b.authors)
+    ? b.authors
+        .map((a: any) =>
+          typeof a === 'string' ? a : a?.name ?? a?.title ?? null
+        )
+        .filter(Boolean)
+    : [];
 
   const excerptSrc =
     typeof b.description === 'string' && b.description.length
@@ -95,7 +110,7 @@ function mapToAlgolia(b: any): AlgoliaBook | null {
     objectID: String(b._id),
     slug: b.slug ?? null,
     title: b.title ?? '',
-    authors: Array.isArray(b.authors) ? (b.authors as string[]) : [],
+    authors,
     era: b.era ?? null,
     format: b.format ?? null,
     publicationDate: b.publicationDate ?? null,
@@ -103,6 +118,53 @@ function mapToAlgolia(b: any): AlgoliaBook | null {
     coverUrl: b.coverUrl ?? null,
     excerpt: excerptSrc.slice(0, 200),
   };
+}
+
+async function fetchPublishedBookId(id: string) {
+  return await sanityPublished.fetch<string | null>(BOOK_PUBLISHED_CHECK, { id });
+}
+
+async function fetchBookForIndex(id: string) {
+  return await sanityPreview.fetch<any>(BOOK_FOR_INDEX, { id });
+}
+
+async function upsertOne(id: string) {
+  // Only index if the book exists as published
+  const publishedId = await fetchPublishedBookId(id);
+  if (!publishedId) return { ok: true, action: 'skip-no-published', id };
+
+  const doc = await fetchBookForIndex(id);
+  const obj = mapToAlgolia(doc);
+  if (!obj) return { ok: true, action: 'skip-null-map', id };
+
+  await algolia.saveObjects({ indexName: INDEX_NAME, objects: [obj] });
+  return { ok: true, action: 'upsert', id };
+}
+
+async function reindexBooksByAuthor(authorId: string) {
+  // Get all published book IDs that reference the author
+  const bookIds = await sanityPublished.fetch<string[]>(
+    PUBLISHED_BOOK_IDS_BY_AUTHOR,
+    { authorId }
+  );
+  if (!Array.isArray(bookIds) || bookIds.length === 0) {
+    return { ok: true, action: 'reindex-author', authorId, upserted: 0 };
+  }
+
+  // For each, fetch with previewDrafts to resolve author names and upsert
+  const toUpsert: AlgoliaBook[] = [];
+  for (const id of bookIds) {
+    const doc = await fetchBookForIndex(id);
+    const obj = mapToAlgolia(doc);
+    if (obj) toUpsert.push(obj);
+  }
+  if (toUpsert.length) {
+    await algolia.saveObjects({
+      indexName: INDEX_NAME,
+      objects: toUpsert as unknown as Record<string, unknown>[],
+    });
+  }
+  return { ok: true, action: 'reindex-author', authorId, upserted: toUpsert.length };
 }
 
 /* ---------------------------- handler -------------------------- */
@@ -119,70 +181,43 @@ export async function POST(req: NextRequest) {
   const id = stripDraft(rawId);
   const type = body?._type;
 
-  // Handle author edits by re-indexing all related books
+  // 1) Author edits: reindex all published books that reference that author
   if (type === 'author40k') {
     if (!id) return NextResponse.json({ ok: true, skipped: true, reason: 'no-author-id' });
-
-    // Fetch all published books that reference this author
-    const books = await sanity.fetch(BOOKS_BY_AUTHOR, { authorId: id });
-    if (!Array.isArray(books) || books.length === 0) {
-      return NextResponse.json({ ok: true, action: 'reindex-author', upserted: 0 });
-    }
-
-    const objects = books.map(mapToAlgolia).filter(Boolean) as AlgoliaBook[];
-    if (objects.length) {
-      await algolia.saveObjects({
-        indexName: INDEX_NAME,
-        objects: objects as unknown as Record<string, unknown>[],
-      });
-    }
-    return NextResponse.json({
-      ok: true,
-      action: 'reindex-author',
-      authorId: id,
-      upserted: objects.length,
-    });
+    const result = await reindexBooksByAuthor(id);
+    return NextResponse.json(result);
   }
 
-  // Only process individual book changes here
+  // 2) Non-book docs: skip
   if (type && type !== 'book40k') {
     return NextResponse.json({ ok: true, skipped: true, reason: 'non-book40k' });
   }
 
-  // Explicit delete/unpublish for a book
+  // 3) Book deletes/unpublish: remove from index
   if ((op === 'delete' || op === 'unpublish') && id) {
     await algolia.deleteObject({ indexName: INDEX_NAME, objectID: id });
     return NextResponse.json({ ok: true, action: 'delete', id });
   }
 
-  // Upsert a single book
+  // 4) Book create/update: upsert (resolve author refs via previewDrafts)
   if (id) {
-    const doc = await sanity.fetch(BOOK_BY_ID, { id });
-    if (!doc) {
-      // No published doc found; skip delete (could be draft save)
-      return NextResponse.json({ ok: true, action: 'skip-no-published', id });
-    }
-    const obj = mapToAlgolia(doc);
-    if (!obj) {
-      return NextResponse.json({ ok: true, action: 'skip-null-map', id });
-    }
-    await algolia.saveObjects({
-      indexName: INDEX_NAME,
-      objects: [obj] as unknown as Record<string, unknown>[],
-    });
-    return NextResponse.json({ ok: true, action: 'upsert', id });
+    const result = await upsertOne(id);
+    return NextResponse.json(result);
   }
 
-  // Batch (mutations feed) fallback
+  // 5) Batch fallback (mutations feed)
   const updatedIds: string[] = body?.ids?.updated || body?.ids?.created || [];
   const deletedIds: string[] = body?.ids?.deleted || [];
 
   const toUpsert: AlgoliaBook[] = [];
   for (const rid of updatedIds) {
     const pid = stripDraft(rid);
-    const d = await sanity.fetch(BOOK_BY_ID, { id: pid });
-    const m = mapToAlgolia(d);
-    if (m) toUpsert.push(m);
+    if (!pid) continue;
+    const publishedId = await fetchPublishedBookId(pid);
+    if (!publishedId) continue;
+    const doc = await fetchBookForIndex(pid);
+    const obj = mapToAlgolia(doc);
+    if (obj) toUpsert.push(obj);
   }
   if (toUpsert.length) {
     await algolia.saveObjects({
