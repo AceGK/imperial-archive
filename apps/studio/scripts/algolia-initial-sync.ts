@@ -1,5 +1,5 @@
 // scripts/algolia-initial-sync.ts
-// run: npx sanity exec scripts/algolia-initial-sync.ts --with-user-token
+// Run: npx sanity exec scripts/algolia-initial-sync.ts --with-user-token
 
 import { env } from "node:process";
 import path from "node:path";
@@ -15,36 +15,50 @@ const ALGOLIA_INDEX_NAME = "books40k";
 const sanity = getCliClient();
 
 /* ------------------------------ helpers ------------------------------- */
-const hardTrim = (str: unknown, max = 8000) =>
+const hardTrim = (str: unknown, max = 8000): string =>
   typeof str === "string" ? (str.length > max ? str.slice(0, max) : str) : "";
 
-// Define Algolia record structure
+/* --------------------------- Algolia types ---------------------------- */
+type FactionRef = {
+  name: string;
+  slug: string;
+  iconId?: string | null;
+};
+
+type SeriesMini = { title: string; slug: string };
+type EraRef = { name: string; slug: string };
+
 type AlgoliaBook = {
   objectID: string;
   title: string;
   slug: string;
   format: string | null;
   publicationDate: string | null;
+
+  // image
   imageUrl: string | null;
   imageAlt: string | null;
+
+  // text
   description: string;
   story: string;
-  series: string | null;
-  seriesTitle: string | null;
-  seriesSlug: string | null;
-  seriesList: { title: string; slug: string }[];
-  eraName: string | null;
-  eraSlug: string | null;
-  factionNames: string[];
-  factionSlugs: string[];
+
+  // consolidated objects
+  series: SeriesMini | null;
+  era: EraRef | null;
+  factions: FactionRef[];
+
+  // authors (flat)
   authorNames: string[];
+
+  // meta
   _createdAt: string;
   _updatedAt: string;
 };
 
 /* --------------------------------- main -------------------------------- */
 async function initialSync() {
-  console.log("Starting initial sync to Algolia (index:", ALGOLIA_INDEX_NAME, ")");
+  console.log(`Starting initial sync to Algolia (index: ${ALGOLIA_INDEX_NAME})`);
 
   if (!ALGOLIA_APP_ID || !ALGOLIA_WRITE_API_KEY) {
     console.error("Missing required env: ALGOLIA_APP_ID / ALGOLIA_WRITE_API_KEY");
@@ -53,7 +67,7 @@ async function initialSync() {
 
   const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_API_KEY);
 
-  // --- GROQ: includes reverse lookup for series40k ---
+  // GROQ: includes faction.iconId and reverse lookup for series
   const books = await sanity.fetch<any[]>(`
     *[_type == "book40k" && !(_id in path("drafts.**")) ]{
       _id,
@@ -69,32 +83,24 @@ async function initialSync() {
       // authors -> strings
       "authorNames": authors[]->{"n": coalesce(name, title)}.n,
 
-      // era normalized to {name, slug}
+      // era normalized to object
       "era": era->{ "name": coalesce(title, name), "slug": slug.current },
 
-      // factions normalized to [{name, slug}]
-      "factions": factions[]->{ "name": coalesce(title, name), "slug": slug.current },
+      // factions normalized to [{name, slug, iconId}]
+      "factions": factions[]->{
+        "name": coalesce(title, name),
+        "slug": slug.current,
+        "iconId": iconId
+      },
 
       // image
       "imageUrl": image.asset->url,
       "imageAlt": image.alt,
 
-      // --- series ---
-      // first series (if any) where this book is referenced
-      "seriesObj": *[
+      // series (reverse lookup)
+      "series": *[
         _type == "series40k" && references(^._id)
-      ]{
-        "title": title,
-        "slug": slug.current
-      }[0],
-
-      // all series referencing this book
-      "seriesAll": *[
-        _type == "series40k" && references(^._id)
-      ]{
-        "title": title,
-        "slug": slug.current
-      },
+      ]{ "title": title, "slug": slug.current }[0],
 
       _createdAt,
       _updatedAt
@@ -108,20 +114,27 @@ async function initialSync() {
     const description = hardTrim(b.description, 6000);
     const story = hardTrim(b.story, 2000);
 
-    const authorNames = Array.isArray(b.authorNames) ? b.authorNames.filter(Boolean) : [];
-    const factions = Array.isArray(b.factions) ? b.factions : [];
-
-    const factionNames = factions.map((f: any) => f?.name).filter(Boolean);
-    const factionSlugs = factions.map((f: any) => f?.slug).filter(Boolean);
-
-    const eraName = b?.era?.name ?? null;
-    const eraSlug = b?.era?.slug ?? null;
-
-    const seriesTitle = b?.seriesObj?.title ?? null;
-    const seriesSlug = b?.seriesObj?.slug ?? null;
-    const seriesList = Array.isArray(b.seriesAll)
-      ? b.seriesAll.filter((s: any) => s?.title && s?.slug)
+    const authorNames: string[] = Array.isArray(b.authorNames)
+      ? b.authorNames.filter(Boolean)
       : [];
+
+    const factions: FactionRef[] = Array.isArray(b.factions)
+      ? b.factions
+          .map((f: any) => ({
+            name: f?.name ?? "",
+            slug: f?.slug ?? "",
+            iconId: f?.iconId ?? null,
+          }))
+          .filter((f: FactionRef) => f.name && f.slug)
+      : [];
+
+    const era: EraRef | null =
+      b?.era && b.era.name && b.era.slug ? { name: b.era.name, slug: b.era.slug } : null;
+
+    const series: SeriesMini | null =
+      b?.series && b.series.title && b.series.slug
+        ? { title: b.series.title, slug: b.series.slug }
+        : null;
 
     const doc: AlgoliaBook = {
       objectID: b._id,
@@ -129,25 +142,18 @@ async function initialSync() {
       slug: b.slug || "",
       format: b.format ?? null,
       publicationDate: b.publicationDate ?? null,
+
       imageUrl: b.imageUrl ?? null,
       imageAlt: b.imageAlt ?? null,
 
       description,
       story,
 
-      // --- series fields ---
-      series: seriesTitle,
-      seriesTitle,
-      seriesSlug,
-      seriesList,
+      series,
+      era,
+      factions,
 
-      // --- era & factions ---
-      eraName,
-      eraSlug,
-      factionNames,
-      factionSlugs,
       authorNames,
-
       _createdAt: b._createdAt,
       _updatedAt: b._updatedAt,
     };
