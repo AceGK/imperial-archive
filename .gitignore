@@ -64,3 +64,8 @@ next-env.d.ts
 
 # Sanity Studio v3 generated files
 apps/studio/.sanity/
+
+# Sanity Functions
+functions/**/.env*
+functions/**/.build/
+functions/**/node_modules/

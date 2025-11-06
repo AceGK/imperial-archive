@@ -8,12 +8,17 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@sanity/client": "^7.12.1",
     "@sanity/icons": "^3.7.4",
     "@sanity/orderable-document-list": "^1.4.0",
     "@sanity/vision": "^4.10.3",
+    "algoliasearch": "^5.42.0",
+    "dotenv": "^17.2.3",
     "sanity": "^4.10.3",
     "sanity-plugin-media": "^4.0.0",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.1.19",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "optionalDependencies": {
     "@esbuild/linux-x64": "0.21.x",

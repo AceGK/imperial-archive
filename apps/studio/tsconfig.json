@@ -1,8 +1,17 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": { 
-    "types": ["node"], 
-    "jsx": "react-jsx",
-   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "Preserve",
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
