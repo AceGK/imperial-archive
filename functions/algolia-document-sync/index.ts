@@ -1,7 +1,8 @@
+// functions/algolia-document-sync/index.ts
 import { env } from "node:process";
 import { documentEventHandler } from "@sanity/functions";
 import { algoliasearch } from "algoliasearch";
-import { buildImageUrl, parseImageAssetId, isImageAssetId } from "@sanity/asset-utils";
+import { createClient } from "@sanity/client";
 
 const {
   ALGOLIA_APP_ID = "",
@@ -12,101 +13,250 @@ const {
 
 const ALGOLIA_INDEX_NAME = "books40k";
 
-const trim = (x: unknown, max = 8000) =>
-  typeof x === "string" ? (x.length > max ? x.slice(0, max) : x) : "";
+/* ------------------------------ helpers ------------------------------- */
+const hardTrim = (str: unknown, max = 8000): string =>
+  typeof str === "string" ? (str.length > max ? str.slice(0, max) : str) : "";
 
-// Build CDN URL from asset ref (works in Functions)
-const urlFromAssetRef = (assetRef?: string | null) => {
-  if (!assetRef || !isImageAssetId(assetRef)) return null;
-  const parts = parseImageAssetId(assetRef);
-  return buildImageUrl({ ...parts, projectId: SANITY_STUDIO_PROJECT_ID, dataset: SANITY_STUDIO_DATASET });
+/* --------------------------- Algolia types ---------------------------- */
+type FactionRef = {
+  name: string;
+  slug: string;
+  iconId?: string | null;
 };
 
-// Fetch exactly the shape you used in the initial seed, for ONE doc
-const EXPAND_GROQ = `
-*[_id == $id][0]{
-  "authorNames": authors[]->coalesce(name, title),
-  "era": era->{ "name": coalesce(title, name), "slug": slug.current },
-  "factions": factions[]->{ "name": coalesce(title, name), "slug": slug.current }
-}
-`;
+type SeriesMini = { title: string; slug: string };
+type EraRef = { name: string; slug: string };
+type ImageRef = { url: string | null; alt: string | null };
 
-export const handler = documentEventHandler(async ({ event, context }: { event: any; context: any }) => {
-  const {
-    _id,
-    title,
-    slug,
-    format,
-    publicationDate,
-    description,
-    story,
-    seriesMembership,
-    imageAssetRef,
-    imageAlt,
-    _createdAt,
-    _updatedAt,
-    operation,
-  } = event.data;
+type AlgoliaBook = {
+  title: string;
+  slug: string;
+  format: string | null;
+  publicationDate: string | null;
+  image: ImageRef;
+  description: string;
+  story: string;
+  series: SeriesMini | null;
+  era: EraRef | null;
+  factions: FactionRef[];
+  authorNames: string[];
+  _createdAt: string;
+  _updatedAt: string;
+};
+
+export const handler = documentEventHandler(async ({ event, context }) => {
+  const { _id, operation } = event.data;
+
+  console.log("🚀 Function triggered for book:", _id, "Operation:", operation);
 
   const algolia = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_API_KEY);
 
   if (operation === "delete") {
-    await algolia.deleteObject({ indexName: ALGOLIA_INDEX_NAME, objectID: _id });
-    console.log(`Deleted ${_id} (${title}) from Algolia`);
-    return;
+    try {
+      await algolia.deleteObject({
+        indexName: ALGOLIA_INDEX_NAME,
+        objectID: _id,
+      });
+      console.log(`✅ Successfully deleted book ${_id} from Algolia`);
+    } catch (error) {
+      console.error("❌ Error deleting from Algolia:", error);
+      throw error;
+    }
+  } else {
+    try {
+      const {
+        title,
+        slug,
+        format,
+        publicationDate,
+        description,
+        story,
+        authors,
+        era,
+        factions,
+        image,
+        _createdAt,
+        _updatedAt,
+      } = event.data;
+
+      console.log("📦 Processing book:", _id);
+      console.log("  - Title:", title);
+
+      // Create Sanity client
+      const sanityClient = createClient({
+        projectId: SANITY_STUDIO_PROJECT_ID,
+        dataset: SANITY_STUDIO_DATASET,
+        apiVersion: "2024-01-01",
+        useCdn: false,
+        token: (context as any).token,
+      });
+
+      console.log("🔍 Fetching references by ID...");
+
+      // Extract reference IDs
+      const authorIds = Array.isArray(authors) 
+        ? authors.map((a: any) => a._ref).filter(Boolean) 
+        : [];
+      const eraId = era?._ref;
+      const factionIds = Array.isArray(factions)
+        ? factions.map((f: any) => f._ref).filter(Boolean)
+        : [];
+
+      console.log("  - Author IDs:", authorIds);
+      console.log("  - Era ID:", eraId);
+      console.log("  - Faction IDs:", factionIds);
+
+      // Fetch all referenced documents in one query
+      const bookData = await sanityClient.fetch(
+        `{
+          "authors": *[_id in $authorIds]{
+            _id,
+            name,
+            title,
+            "displayName": coalesce(name, title),
+            slug
+          },
+          "era": *[_id == $eraId][0]{
+            _id,
+            name,
+            title,
+            "displayName": coalesce(title, name),
+            slug
+          },
+          "factions": *[_id in $factionIds]{
+            _id,
+            name,
+            title,
+            "displayName": coalesce(title, name),
+            slug,
+            iconId
+          },
+          "imageUrl": *[_id == $imageAssetId][0].url,
+          "series": *[_type == "series40k" && references($bookId)][0]{
+            _id,
+            title,
+            slug
+          }
+        }`,
+        { 
+          authorIds,
+          eraId,
+          factionIds,
+          imageAssetId: image?.asset?._ref,
+          bookId: _id
+        }
+      );
+
+      console.log("  ✓ Query result:");
+      console.log(JSON.stringify(bookData, null, 2));
+
+      // Process author names
+      const processedAuthorNames: string[] = Array.isArray(bookData?.authors)
+        ? bookData.authors
+            .map((a: any) => a?.displayName || a?.name || a?.title)
+            .filter(Boolean)
+        : [];
+
+      console.log("  ✓ Processed authors:", processedAuthorNames);
+
+      // Process factions
+      const processedFactions: FactionRef[] = Array.isArray(bookData?.factions)
+        ? bookData.factions
+            .map((f: any) => ({
+              name: f?.displayName || f?.title || f?.name || "",
+              slug: typeof f?.slug === 'object' ? f.slug?.current : f?.slug || "",
+              iconId: f?.iconId ?? null,
+            }))
+            .filter((f: FactionRef) => f.name && f.slug)
+        : [];
+
+      console.log("  ✓ Processed factions:", processedFactions);
+
+      // Process era
+      const processedEra: EraRef | null =
+        bookData?.era
+          ? {
+              name: bookData.era.displayName || bookData.era.title || bookData.era.name || "",
+              slug: typeof bookData.era.slug === 'object' 
+                ? bookData.era.slug?.current || ""
+                : bookData.era.slug || "",
+            }
+          : null;
+
+      console.log("  ✓ Processed era:", processedEra);
+
+      // Process series
+      const processedSeries: SeriesMini | null =
+        bookData?.series?.title && bookData?.series?.slug
+          ? {
+              title: bookData.series.title,
+              slug: typeof bookData.series.slug === 'object'
+                ? bookData.series.slug?.current || ""
+                : bookData.series.slug || "",
+            }
+          : null;
+
+      console.log("  ✓ Processed series:", processedSeries);
+
+      // Process image - use the URL from event if available, otherwise from query
+      const processedImage: ImageRef = {
+        url: bookData?.imageUrl ?? image?.asset?.url ?? null,
+        alt: image?.alt ?? null,
+      };
+
+      console.log("  ✓ Processed image:", processedImage);
+
+      // Truncate text fields
+      const limitedDescription = hardTrim(description, 6000);
+      const limitedStory = hardTrim(story, 2000);
+      const limitedTitle = title ? title.slice(0, 500) : "";
+
+      const document: AlgoliaBook = {
+        title: limitedTitle,
+        slug: slug || "",
+        format: format ?? null,
+        publicationDate: publicationDate ?? null,
+        image: processedImage,
+        description: limitedDescription,
+        story: limitedStory,
+        series: processedSeries,
+        era: processedEra,
+        factions: processedFactions,
+        authorNames: processedAuthorNames,
+        _createdAt,
+        _updatedAt,
+      };
+
+      // Check document size
+      const documentSize = JSON.stringify(document).length;
+      if (documentSize > 9000) {
+        console.warn(`⚠️  Book ${_id} is ${documentSize} bytes (close to 10KB limit)`);
+      }
+
+      // Log what we're sending
+      console.log("\n📤 Sending to Algolia:");
+      console.log("  - Title:", limitedTitle);
+      console.log("  - Authors:", processedAuthorNames.join(", ") || "none");
+      console.log("  - Era:", processedEra?.name || "none");
+      console.log("  - Factions:", processedFactions.map(f => f.name).join(", ") || "none");
+      console.log("  - Image:", processedImage.url ? "✓" : "✗");
+      console.log("  - Series:", processedSeries?.title || "none");
+
+      await algolia.addOrUpdateObject({
+        indexName: ALGOLIA_INDEX_NAME,
+        objectID: _id,
+        body: document,
+      });
+
+      console.log(`\n✅ Synced book ${_id} ("${limitedTitle}") to Algolia`);
+    } catch (error) {
+      console.error("\n❌ Error syncing to Algolia:");
+      console.error("Error:", error);
+      if (error instanceof Error) {
+        console.error("Message:", error.message);
+        console.error("Stack:", error.stack);
+      }
+      throw error;
+    }
   }
-
-  // Auth'ed client from function context
-  const client = context.getClient ? context.getClient({ apiVersion: "2025-01-01" }) : context.client;
-
-  // Expand refs safely here (no deref in projection)
-  const expanded = (await client.fetch(EXPAND_GROQ, { id: _id }).catch(() => ({}))) || {};
-
-  const authorNames: string[] = Array.isArray(expanded.authorNames) ? expanded.authorNames.filter(Boolean) : [];
-  const factions: Array<{ name?: string; slug?: string }> = Array.isArray(expanded.factions) ? expanded.factions : [];
-  const factionNames = factions.map((f) => f?.name).filter(Boolean) as string[];
-  const factionSlugs = factions.map((f) => f?.slug).filter(Boolean) as string[];
-
-  const eraName = expanded?.era?.name ?? null;
-  const eraSlug = expanded?.era?.slug ?? null;
-
-  const imageUrl = urlFromAssetRef(imageAssetRef);
-
-  const record = {
-    objectID: _id,
-    title: trim(title, 500),
-    slug: slug || "",
-    format: format ?? null,
-    publicationDate: publicationDate ?? null,
-
-    description: trim(description, 6000),
-    story: trim(story, 2000),
-
-    // facets / filters (same shape as your initial seed)
-    eraName,
-    eraSlug,
-    factionNames,
-    factionSlugs,
-    authorNames,
-
-    imageUrl: imageUrl ?? null,
-    imageAlt: imageAlt ?? null,
-
-    // optional: keep your read-only series string if helpful
-    series: seriesMembership ?? null,
-
-    _createdAt,
-    _updatedAt,
-  };
-
-  const size = JSON.stringify(record).length;
-  if (size > 9000) console.warn(`Record ${_id} is ${size} bytes (close to Algolia 10KB limit).`);
-
-  await algolia.addOrUpdateObject({
-    indexName: ALGOLIA_INDEX_NAME,
-    objectID: _id,
-    body: record,
-  });
-
-  console.log(`Synced ${_id} (“${record.title}”) ${imageUrl ? "with image" : "no image"}`);
 });
