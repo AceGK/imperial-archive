@@ -1,4 +1,5 @@
 // sanity.blueprint.ts
+// npx sanity blueprints deploy
 import { defineBlueprint, defineDocumentFunction } from "@sanity/blueprints";
 import "dotenv/config";
 import process from "node:process";

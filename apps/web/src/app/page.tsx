@@ -14,7 +14,7 @@ import {
 // keep this for now if your <Search> still expects the local JSON lib
 import { getAllBooks, getBooksByAuthor } from "@/lib/40k-books";
 
-import Search from "@/components/modules/Search";
+import Search from "@/components/modules/SearchOld";
 
 export const revalidate = 60;
 

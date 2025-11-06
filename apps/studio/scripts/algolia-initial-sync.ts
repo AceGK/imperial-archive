@@ -19,6 +19,11 @@ const hardTrim = (str: unknown, max = 8000): string =>
   typeof str === "string" ? (str.length > max ? str.slice(0, max) : str) : "";
 
 /* --------------------------- Algolia types ---------------------------- */
+type AuthorRef = {
+  name: string;
+  slug: string;
+};
+
 type FactionRef = {
   name: string;
   slug: string;
@@ -48,8 +53,8 @@ type AlgoliaBook = {
   era: EraRef | null;
   factions: FactionRef[];
 
-  // authors (flat)
-  authorNames: string[];
+  // authors (with name and slug for linking)
+  authors: AuthorRef[];
 
   // meta
   _createdAt: string;
@@ -67,7 +72,7 @@ async function initialSync() {
 
   const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_API_KEY);
 
-  // GROQ: includes faction.iconId, nested image, and reverse lookup for series
+  // GROQ: includes author name AND slug, faction.iconId, nested image, and reverse lookup for series
   const books = await sanity.fetch<any[]>(`
     *[_type == "book40k" && !(_id in path("drafts.**")) ]{
       _id,
@@ -75,35 +80,25 @@ async function initialSync() {
       "slug": slug.current,
       format,
       publicationDate,
-
-      // text
       description,
       story,
-
-      // authors -> strings
-      "authorNames": authors[]->{"n": coalesce(name, title)}.n,
-
-      // era normalized to object
+      "authors": authors[]->{
+        "name": coalesce(name, title),
+        "slug": slug.current
+      },
       "era": era->{ "name": coalesce(title, name), "slug": slug.current },
-
-      // factions normalized to [{name, slug, iconId}]
       "factions": factions[]->{
         "name": coalesce(title, name),
         "slug": slug.current,
         "iconId": iconId
       },
-
-      // nested image
       "image": {
         "url": image.asset->url,
         "alt": image.alt
       },
-
-      // series (reverse lookup)
       "series": *[
         _type == "series40k" && references(^._id)
       ]{ "title": title, "slug": slug.current }[0],
-
       _createdAt,
       _updatedAt
     }
@@ -116,8 +111,13 @@ async function initialSync() {
     const description = hardTrim(b.description, 6000);
     const story = hardTrim(b.story, 2000);
 
-    const authorNames: string[] = Array.isArray(b.authorNames)
-      ? b.authorNames.filter(Boolean)
+    const authors: AuthorRef[] = Array.isArray(b.authors)
+      ? b.authors
+          .map((a: any) => ({
+            name: a?.name ?? "",
+            slug: a?.slug ?? "",
+          }))
+          .filter((a: AuthorRef) => a.name && a.slug)
       : [];
 
     const factions: FactionRef[] = Array.isArray(b.factions)
@@ -158,7 +158,7 @@ async function initialSync() {
       era,
       factions,
 
-      authorNames,
+      authors,
       _createdAt: b._createdAt,
       _updatedAt: b._updatedAt,
     };

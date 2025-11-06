@@ -18,6 +18,11 @@ const hardTrim = (str: unknown, max = 8000): string =>
   typeof str === "string" ? (str.length > max ? str.slice(0, max) : str) : "";
 
 /* --------------------------- Algolia types ---------------------------- */
+type AuthorRef = {
+  name: string;
+  slug: string;
+};
+
 type FactionRef = {
   name: string;
   slug: string;
@@ -39,7 +44,7 @@ type AlgoliaBook = {
   series: SeriesMini | null;
   era: EraRef | null;
   factions: FactionRef[];
-  authorNames: string[];
+  authors: AuthorRef[];
   _createdAt: string;
   _updatedAt: string;
 };
@@ -150,14 +155,17 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       console.log("  ✓ Query result:");
       console.log(JSON.stringify(bookData, null, 2));
 
-      // Process author names
-      const processedAuthorNames: string[] = Array.isArray(bookData?.authors)
+      // Process authors (return full objects with name and slug)
+      const processedAuthors: AuthorRef[] = Array.isArray(bookData?.authors)
         ? bookData.authors
-            .map((a: any) => a?.displayName || a?.name || a?.title)
-            .filter(Boolean)
+            .map((a: any) => ({
+              name: a?.displayName || a?.name || a?.title || "",
+              slug: typeof a?.slug === 'object' ? a.slug?.current : a?.slug || "",
+            }))
+            .filter((a: AuthorRef) => a.name && a.slug)
         : [];
 
-      console.log("  ✓ Processed authors:", processedAuthorNames);
+      console.log("  ✓ Processed authors:", processedAuthors);
 
       // Process factions
       const processedFactions: FactionRef[] = Array.isArray(bookData?.factions)
@@ -198,7 +206,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
 
       console.log("  ✓ Processed series:", processedSeries);
 
-      // Process image - use the URL from event if available, otherwise from query
+      // Process image
       const processedImage: ImageRef = {
         url: bookData?.imageUrl ?? image?.asset?.url ?? null,
         alt: image?.alt ?? null,
@@ -222,7 +230,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
         series: processedSeries,
         era: processedEra,
         factions: processedFactions,
-        authorNames: processedAuthorNames,
+        authors: processedAuthors,
         _createdAt,
         _updatedAt,
       };
@@ -236,7 +244,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       // Log what we're sending
       console.log("\n📤 Sending to Algolia:");
       console.log("  - Title:", limitedTitle);
-      console.log("  - Authors:", processedAuthorNames.join(", ") || "none");
+      console.log("  - Authors:", processedAuthors.map(a => a.name).join(", ") || "none");
       console.log("  - Era:", processedEra?.name || "none");
       console.log("  - Factions:", processedFactions.map(f => f.name).join(", ") || "none");
       console.log("  - Image:", processedImage.url ? "✓" : "✗");
