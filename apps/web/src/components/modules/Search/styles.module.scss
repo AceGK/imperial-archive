@@ -1,0 +1,212 @@
+// app/components/Search.module.scss
+
+.searchBox {
+  position: relative;
+  width: min(720px, 100%);
+  margin-top: 1rem;
+}
+
+.input {
+  width: 100%;
+  appearance: none;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg), black 4%);
+  color: var(--foreground);
+  border-radius: 12px;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease;
+
+  &::placeholder { 
+    color: var(--subtle); 
+  }
+  
+  &:focus { 
+    box-shadow: 0 0 0 3px color-mix(in oklab, orange, transparent 70%); 
+    border-color: orange; 
+  }
+}
+
+.list {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(100% + 6px);
+  background: var(--bg);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: auto;
+  max-height: 360px;
+  padding: 6px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+  z-index: 5;
+  list-style: none;
+  margin: 0;
+}
+
+.recentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px 4px;
+  margin-bottom: 2px;
+}
+
+.recentTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--subtle);
+}
+
+.clearButton {
+  font-size: 0.75rem;
+  color: var(--subtle);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: color-mix(in oklab, var(--accent), transparent 70%);
+    color: var(--foreground);
+  }
+}
+
+.recentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.recentIcon {
+  margin-right: 0.5rem;
+  opacity: 0.6;
+}
+
+.item {
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover { 
+    background: color-mix(in oklab, var(--accent), transparent 60%); 
+  }
+}
+
+.active {
+  background: color-mix(in oklab, var(--accent), transparent 50%);
+}
+
+.rowTitle {
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: baseline;
+
+  mark {
+    background: color-mix(in oklab, orange, transparent 70%);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+
+  .kind {
+    font-size: .75rem;
+    font-weight: 500;
+    opacity: .7;
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    margin-left: auto;
+  }
+}
+
+.rowMeta {
+  font-size: 0.9rem;
+  color: var(--subtle);
+  display: flex;
+  gap: .5ch;
+  align-items: baseline;
+
+  .dot { 
+    opacity: .6; 
+  }
+
+  mark {
+    background: color-mix(in oklab, orange, transparent 70%);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+}
+
+.seeAllItem {
+  font-weight: 500;
+  background: color-mix(in oklab, var(--accent), transparent 85%);
+  border: 1px solid color-mix(in oklab, var(--accent), transparent 70%);
+  margin-bottom: 6px;
+  
+  &:hover {
+    background: color-mix(in oklab, var(--accent), transparent 75%);
+    border-color: color-mix(in oklab, var(--accent), transparent 60%);
+  }
+
+  .rowTitle {
+    font-size: 0.95rem;
+    color: var(--foreground);
+    
+    mark {
+      font-weight: 600;
+      background: color-mix(in oklab, orange, transparent 60%);
+    }
+  }
+}
+
+.seeAllItem {
+  display:flex;
+  justify-content: flex-end;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+  padding-bottom: 12px;
+  border-radius: 0;
+  
+  &:hover {
+    background: color-mix(in oklab, var(--accent), transparent 85%);
+    border-radius: 10px;
+    border-bottom-color: transparent;
+  }
+
+  .rowTitle {
+    font-size: 0.9rem;
+    color: var(--subtle);
+    gap: 0.25rem;
+    
+    .queryHighlight {
+      font-weight: 600;
+      background: transparent;
+      color: var(--foreground);
+      padding: 0;
+    }
+  }
+}
+
+.seeAllIcon {
+  margin-right: 0.5rem;
+  opacity: 0.5;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  
+  .seeAllItem:hover & {
+    transform: translateX(2px);
+    opacity: 1;
+  }
+}

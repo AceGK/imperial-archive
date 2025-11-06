@@ -17,6 +17,24 @@ const ALGOLIA_INDEX_NAME = "books40k";
 const hardTrim = (str: unknown, max = 8000): string =>
   typeof str === "string" ? (str.length > max ? str.slice(0, max) : str) : "";
 
+function formatBookType(format: string | null): string {
+  if (!format) return "Book";
+  
+  const formatMap: Record<string, string> = {
+    novel: "Novel",
+    novella: "Novella",
+    short_story: "Short Story",
+    audio_drama: "Audio Drama",
+    anthology: "Anthology",
+    omnibus: "Omnibus",
+    graphic_novel: "Graphic Novel",
+    audio_anthology: "Audio Anthology",
+    other: "Other",
+  };
+  
+  return formatMap[format] || format;
+}
+
 /* --------------------------- Algolia types ---------------------------- */
 type AuthorRef = {
   name: string;
@@ -222,7 +240,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       const document: AlgoliaBook = {
         title: limitedTitle,
         slug: slug || "",
-        format: format ?? null,
+        format: formatBookType(format), // ✨ Format transformation
         publicationDate: publicationDate ?? null,
         image: processedImage,
         description: limitedDescription,
@@ -244,6 +262,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       // Log what we're sending
       console.log("\n📤 Sending to Algolia:");
       console.log("  - Title:", limitedTitle);
+      console.log("  - Format:", formatBookType(format));
       console.log("  - Authors:", processedAuthors.map(a => a.name).join(", ") || "none");
       console.log("  - Era:", processedEra?.name || "none");
       console.log("  - Factions:", processedFactions.map(f => f.name).join(", ") || "none");

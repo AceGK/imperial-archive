@@ -18,6 +18,24 @@ const sanity = getCliClient();
 const hardTrim = (str: unknown, max = 8000): string =>
   typeof str === "string" ? (str.length > max ? str.slice(0, max) : str) : "";
 
+function formatBookType(format: string | null): string {
+  if (!format) return "Book";
+  
+  const formatMap: Record<string, string> = {
+    novel: "Novel",
+    novella: "Novella",
+    short_story: "Short Story",
+    audio_drama: "Audio Drama",
+    anthology: "Anthology",
+    omnibus: "Omnibus",
+    graphic_novel: "Graphic Novel",
+    audio_anthology: "Audio Anthology",
+    other: "Other",
+  };
+  
+  return formatMap[format] || format;
+}
+
 /* --------------------------- Algolia types ---------------------------- */
 type AuthorRef = {
   name: string;
@@ -147,7 +165,7 @@ async function initialSync() {
       objectID: b._id,
       title: (b.title || "").slice(0, 500),
       slug: b.slug || "",
-      format: b.format ?? null,
+      format: formatBookType(b.format), // ✨ Format transformation
       publicationDate: b.publicationDate ?? null,
 
       image,

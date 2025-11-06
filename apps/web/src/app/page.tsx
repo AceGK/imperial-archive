@@ -14,7 +14,7 @@ import {
 // keep this for now if your <Search> still expects the local JSON lib
 import { getAllBooks, getBooksByAuthor } from "@/lib/40k-books";
 
-import Search from "@/components/modules/SearchOld";
+import Search from "@/components/modules/Search";
 
 export const revalidate = 60;
 
@@ -93,7 +93,7 @@ export default async function Home() {
         align="center"
         height="md"
       >
-        <Search books={allBooks as any} placeholder="Search the Archive..." />
+        <Search />
       </Hero>
 
       <section className="container row">
