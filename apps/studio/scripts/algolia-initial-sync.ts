@@ -27,6 +27,7 @@ type FactionRef = {
 
 type SeriesMini = { title: string; slug: string };
 type EraRef = { name: string; slug: string };
+type ImageRef = { url: string | null; alt: string | null };
 
 type AlgoliaBook = {
   objectID: string;
@@ -35,9 +36,8 @@ type AlgoliaBook = {
   format: string | null;
   publicationDate: string | null;
 
-  // image
-  imageUrl: string | null;
-  imageAlt: string | null;
+  // nested image
+  image: ImageRef;
 
   // text
   description: string;
@@ -67,7 +67,7 @@ async function initialSync() {
 
   const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_API_KEY);
 
-  // GROQ: includes faction.iconId and reverse lookup for series
+  // GROQ: includes faction.iconId, nested image, and reverse lookup for series
   const books = await sanity.fetch<any[]>(`
     *[_type == "book40k" && !(_id in path("drafts.**")) ]{
       _id,
@@ -93,9 +93,11 @@ async function initialSync() {
         "iconId": iconId
       },
 
-      // image
-      "imageUrl": image.asset->url,
-      "imageAlt": image.alt,
+      // nested image
+      "image": {
+        "url": image.asset->url,
+        "alt": image.alt
+      },
 
       // series (reverse lookup)
       "series": *[
@@ -136,6 +138,11 @@ async function initialSync() {
         ? { title: b.series.title, slug: b.series.slug }
         : null;
 
+    const image: ImageRef = {
+      url: b?.image?.url ?? null,
+      alt: b?.image?.alt ?? null,
+    };
+
     const doc: AlgoliaBook = {
       objectID: b._id,
       title: (b.title || "").slice(0, 500),
@@ -143,9 +150,7 @@ async function initialSync() {
       format: b.format ?? null,
       publicationDate: b.publicationDate ?? null,
 
-      imageUrl: b.imageUrl ?? null,
-      imageAlt: b.imageAlt ?? null,
-
+      image,
       description,
       story,
 
