@@ -253,7 +253,7 @@ function Trigger({
 function Content({
   children,
   align = "end",
-  sideOffset = 6,
+  sideOffset = 10,
   className,
 }: {
   children: React.ReactNode;

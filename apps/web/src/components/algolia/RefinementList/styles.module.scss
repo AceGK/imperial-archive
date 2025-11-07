@@ -1,4 +1,5 @@
 // components/algolia/RefinementList/styles.module.scss
+@use "@/styles/breakpoints" as *;
 
 .filterButton {
   display: flex;
@@ -57,21 +58,26 @@
 }
 
 .dropdown {
-  min-width: 200px;
+  min-width: 180px;
   max-width: 320px;
-  max-height: 400px;
-  overflow-y: auto;
-  padding:8px;
+  padding: 8px;
+  overflow: visible; // Allow arrow to show
+  display: flex;
+  flex-direction: column;
+  max-height: 400px; // Set max height on the dropdown itself
+  @include max(filter-breakpoint) {
+    display:none;
+  }
 }
 
 .searchHeader {
   position: sticky;
-  top: -8px;
-  background: var(--secondary);
+  top: 0;
   padding: 8px;
   margin: -8px -8px 8px -8px;
   border-bottom: 1px solid var(--border);
   z-index: 1;
+  flex-shrink: 0; // Prevent header from shrinking
 }
 
 .searchInput {
@@ -98,6 +104,9 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow-y: auto; // Scroll only the items
+  flex: 1; // Take remaining space
+  min-height: 0; // Important for flex scrolling
 }
 
 .checkbox {

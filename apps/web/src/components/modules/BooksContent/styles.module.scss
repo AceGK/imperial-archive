@@ -1,9 +1,6 @@
 // app/books/styles.module.scss
 @use "@/styles/breakpoints" as *;
 
-// filter breakpoint offset
-$filter-breakpoint-offset: 55px;
-
 .contentWrapper {
   display: flex;
   flex-direction: column;
@@ -20,7 +17,7 @@ $filter-breakpoint-offset: 55px;
   margin-bottom: 1rem;
   align-items: center;
 
-  @include max(md, $filter-breakpoint-offset) {
+  @include max(filter-breakpoint) {
     align-items: stretch;
   }
 }
@@ -32,7 +29,7 @@ $filter-breakpoint-offset: 55px;
   flex-wrap: wrap;
   width: 100%;
 
-  @include max(md, $filter-breakpoint-offset) {
+  @include max(filter-breakpoint) {
     width: 100%;
     justify-content: space-between;
   }
@@ -42,7 +39,7 @@ $filter-breakpoint-offset: 55px;
 .mobileFilters {
   display: flex;
   
-  @include min(md, $filter-breakpoint-offset) {
+  @include min(filter-breakpoint) {
     display: none;
   }
   @include max(sm) {
@@ -55,7 +52,7 @@ $filter-breakpoint-offset: 55px;
   display: none;
   gap: 0.5rem;
   
-  @include min(md, $filter-breakpoint-offset) {
+  @include min(filter-breakpoint) {
     display: flex;
   }
 }
