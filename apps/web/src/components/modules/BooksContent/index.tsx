@@ -1,4 +1,4 @@
-// app/books/BooksContent.tsx
+// components/modules/BooksContent/index.tsx
 "use client";
 
 import React from "react";
@@ -18,14 +18,15 @@ import {
   type FilterSection,
 } from "@/components/algolia";
 import { BookHit } from "@/types/algolia";
+import { createAlgoliaRouting } from "@/lib/algolia/routing";
 import styles from "./styles.module.scss";
 
 const algoliaAppId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
 const algoliaApiKey = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY!;
 
 const searchClient = algoliasearch(algoliaAppId, algoliaApiKey);
+const routing = createAlgoliaRouting("books40k");
 
-// Convert Algolia hit to BookCardData format
 function convertToBookCardData(hit: BookHit): BookCardData {
   return {
     _id: hit.objectID,
@@ -64,7 +65,6 @@ function convertToBookCardData(hit: BookHit): BookCardData {
   };
 }
 
-// Sort options for books
 const SORT_OPTIONS = [
   { label: "Most Recent", value: "books40k" },
   { label: "Title A-Z", value: "books40k_title_asc" },
@@ -106,7 +106,6 @@ function FilterControls() {
     sortBy: ["name:asc"],
   });
 
-  // Check if any filters are active
   const hasActiveFilters =
     formatFilter.items.some((item) => item.isRefined) ||
     authorFilter.items.some((item) => item.isRefined) ||
@@ -114,7 +113,6 @@ function FilterControls() {
     eraFilter.items.some((item) => item.isRefined) ||
     seriesFilter.items.some((item) => item.isRefined);
 
-  // Prepare sections for mobile filter modal
   const filterSections: FilterSection[] = [
     {
       label: "Format",
@@ -150,7 +148,6 @@ function FilterControls() {
 
   return (
     <>
-      {/* Mobile: Combined filter modal */}
       <div className={styles.mobileFilters}>
         <MobileFilterModal
           sections={filterSections}
@@ -158,7 +155,6 @@ function FilterControls() {
         />
       </div>
 
-      {/* Desktop: Individual filter dropdowns */}
       <div className={styles.desktopFilters}>
         <RefinementList attribute="format" title="Format" />
         <RefinementList
@@ -201,6 +197,7 @@ export default function BooksContent() {
     <InstantSearchNext
       indexName="books40k"
       searchClient={searchClient}
+      routing={routing}
       future={{ preserveSharedStateOnUnmount: true }}
     >
       <Configure hitsPerPage={25} />

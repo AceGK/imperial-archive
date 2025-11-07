@@ -65,18 +65,26 @@ export function RefinementList({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={styles.searchInput}
-              onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.preventDefault()}
             />
           </div>
         )}
         <div className={styles.items}>
           {filteredItems.length > 0 ? (
             filteredItems.map((item) => (
-              <label key={item.value} className={styles.checkbox}>
+              <label 
+                key={item.value} 
+                className={styles.checkbox}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  refine(item.value);
+                }}
+              >
                 <input
                   type="checkbox"
                   checked={item.isRefined}
-                  onChange={() => refine(item.value)}
+                  onChange={() => {}} // Keep it controlled
+                  tabIndex={-1}
                 />
                 <span className={styles.label}>
                   {item.label}{" "}

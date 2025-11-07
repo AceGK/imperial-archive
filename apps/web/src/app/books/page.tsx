@@ -4,7 +4,7 @@ import BooksContent from "@/components/modules/BooksContent";
 
 export const revalidate = 60;
 
-export default function BrowsePage() {
+export default async function BrowsePage() {
   return (
     <main>
       <PageHeader
