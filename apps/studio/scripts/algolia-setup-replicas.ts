@@ -15,7 +15,9 @@ async function setupReplicas() {
   console.log("🔧 Setting up Algolia index replicas for sorting...");
 
   if (!ALGOLIA_APP_ID || !ALGOLIA_WRITE_API_KEY) {
-    console.error("Missing required env: ALGOLIA_APP_ID / ALGOLIA_WRITE_API_KEY");
+    console.error(
+      "Missing required env: ALGOLIA_APP_ID / ALGOLIA_WRITE_API_KEY"
+    );
     process.exit(1);
   }
 
@@ -36,8 +38,10 @@ async function setupReplicas() {
         ],
         attributesForFaceting: [
           "searchable(format)",
+          "searchable(authors.name)",
           "searchable(factions.name)",
           "searchable(era.name)",
+          "searchable(series.title)",
         ],
         replicas: [
           "books40k_title_asc",
@@ -54,7 +58,17 @@ async function setupReplicas() {
     await client.setSettings({
       indexName: "books40k_title_asc",
       indexSettings: {
-        ranking: ["asc(title)", "typo", "geo", "words", "filters", "proximity", "attribute", "exact", "custom"],
+        ranking: [
+          "asc(title)",
+          "typo",
+          "geo",
+          "words",
+          "filters",
+          "proximity",
+          "attribute",
+          "exact",
+          "custom",
+        ],
       },
     });
 
@@ -64,7 +78,17 @@ async function setupReplicas() {
     await client.setSettings({
       indexName: "books40k_title_desc",
       indexSettings: {
-        ranking: ["desc(title)", "typo", "geo", "words", "filters", "proximity", "attribute", "exact", "custom"],
+        ranking: [
+          "desc(title)",
+          "typo",
+          "geo",
+          "words",
+          "filters",
+          "proximity",
+          "attribute",
+          "exact",
+          "custom",
+        ],
       },
     });
 
@@ -74,7 +98,17 @@ async function setupReplicas() {
     await client.setSettings({
       indexName: "books40k_date_desc",
       indexSettings: {
-        ranking: ["desc(publicationDate)", "typo", "geo", "words", "filters", "proximity", "attribute", "exact", "custom"],
+        ranking: [
+          "desc(publicationDate)",
+          "typo",
+          "geo",
+          "words",
+          "filters",
+          "proximity",
+          "attribute",
+          "exact",
+          "custom",
+        ],
       },
     });
 
@@ -84,7 +118,17 @@ async function setupReplicas() {
     await client.setSettings({
       indexName: "books40k_date_asc",
       indexSettings: {
-        ranking: ["asc(publicationDate)", "typo", "geo", "words", "filters", "proximity", "attribute", "exact", "custom"],
+        ranking: [
+          "asc(publicationDate)",
+          "typo",
+          "geo",
+          "words",
+          "filters",
+          "proximity",
+          "attribute",
+          "exact",
+          "custom",
+        ],
       },
     });
 

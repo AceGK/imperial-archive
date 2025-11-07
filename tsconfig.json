@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": ["sanity.blueprint.ts", "functions/**/*.ts"]
+  "include": ["sanity.blueprint.ts", "functions/**/*.ts", "scripts/**/*.ts"],
 }

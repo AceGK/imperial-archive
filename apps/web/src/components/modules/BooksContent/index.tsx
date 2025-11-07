@@ -12,9 +12,11 @@ import {
   usePagination,
   useStats,
   Configure,
+  useClearRefinements,
 } from "react-instantsearch";
 import BookGrid from "@/components/modules/BookGrid";
 import { BookCardData } from "@/components/modules/Cards/BookCard";
+import { Dropdown } from "@/components/ui/Dropdown";
 import styles from "./styles.module.scss";
 
 const algoliaAppId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
@@ -71,8 +73,6 @@ function convertToBookCardData(hit: BookHit): BookCardData {
       ? {
           alt: hit.image.alt || hit.title,
           credit: null,
-          // crop: null,
-          // hotspot: null,
           asset: {
             _id: "",
             url: hit.image.url,
@@ -155,100 +155,424 @@ function SortByDropdown() {
   );
 }
 
-function FormatFilter() {
-  const { items, refine } = useRefinementList({
+// Individual filter dropdown for desktop
+function IndividualFilterDropdown({
+  title,
+  items,
+  refine,
+  searchable = false,
+}: {
+  title: string;
+  items: Array<{ value: string; label: string; count: number; isRefined: boolean }>;
+  refine: (value: string) => void;
+  searchable?: boolean;
+}) {
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const hasActiveFilters = items.some((item) => item.isRefined);
+
+  if (items.length === 0) return null;
+
+  // Filter items based on search query
+  const filteredItems = searchQuery
+    ? items.filter((item) =>
+        item.label.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : items;
+
+  return (
+    <Dropdown.Root>
+      <Dropdown.Trigger asChild aria-label={`Filter by ${title}`}>
+        <button className={styles.filterButton}>
+          {title}
+          {hasActiveFilters && <span className={styles.badge} />}
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 4.5L6 7.5L9 4.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+      </Dropdown.Trigger>
+
+      <Dropdown.Content className={styles.individualFilterDropdown}>
+        {searchable && (
+          <div className={styles.filterSearchHeader}>
+            <input
+              type="search"
+              placeholder={`Search ${title.toLowerCase()}...`}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.filterSearchInput}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        )}
+        <div className={styles.filterItems}>
+          {filteredItems.length > 0 ? (
+            filteredItems.map((item) => (
+              <label key={item.value} className={styles.filterCheckbox}>
+                <input
+                  type="checkbox"
+                  checked={item.isRefined}
+                  onChange={() => refine(item.value)}
+                />
+                <span className={styles.filterLabel}>
+                  {item.label}{" "}
+                  <span className={styles.filterCount}>({item.count})</span>
+                </span>
+              </label>
+            ))
+          ) : (
+            <div className={styles.noResults}>No results found</div>
+          )}
+        </div>
+      </Dropdown.Content>
+    </Dropdown.Root>
+  );
+}
+
+// Combined filter dropdown for mobile
+function CombinedFilterDropdown() {
+  const formatFilter = useRefinementList({
     attribute: "format",
     sortBy: ["name:asc"],
   });
 
-  if (items.length === 0) return null;
-
-  return (
-    <div className={styles.filter}>
-      <h3>Format</h3>
-      <ul className={styles.filterList}>
-        {items.map((item) => (
-          <li key={item.value}>
-            <label className={styles.checkbox}>
-              <input
-                type="checkbox"
-                checked={item.isRefined}
-                onChange={() => refine(item.value)}
-              />
-              <span>
-                {item.label}{" "}
-                <span className={styles.count}>({item.count})</span>
-              </span>
-            </label>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function FactionFilter() {
-  const { items, refine } = useRefinementList({
-    attribute: "factions.name",
+  const authorFilter = useRefinementList({
+    attribute: "authors.name",
     sortBy: ["name:asc"],
-    limit: 20,
+    limit: 200,
+    showMore: true,
+    showMoreLimit: 300,
   });
 
-  if (items.length === 0) return null;
+  const factionFilter = useRefinementList({
+    attribute: "factions.name",
+    sortBy: ["name:asc"],
+    limit: 200,
+    showMore: true,
+    showMoreLimit: 300,
+  });
 
-  return (
-    <div className={styles.filter}>
-      <h3>Faction</h3>
-      <ul className={styles.filterList}>
-        {items.map((item) => (
-          <li key={item.value}>
-            <label className={styles.checkbox}>
-              <input
-                type="checkbox"
-                checked={item.isRefined}
-                onChange={() => refine(item.value)}
-              />
-              <span>
-                {item.label}{" "}
-                <span className={styles.count}>({item.count})</span>
-              </span>
-            </label>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function EraFilter() {
-  const { items, refine } = useRefinementList({
+  const eraFilter = useRefinementList({
     attribute: "era.name",
     sortBy: ["name:asc"],
   });
 
-  if (items.length === 0) return null;
+  const seriesFilter = useRefinementList({
+    attribute: "series.title",
+    sortBy: ["name:asc"],
+    limit: 100,
+    showMore: true,
+    showMoreLimit: 200,
+  });
+
+  const { canRefine, refine: clearRefinements } = useClearRefinements();
+
+  const [authorSearch, setAuthorSearch] = React.useState("");
+  const [factionSearch, setFactionSearch] = React.useState("");
+  const [seriesSearch, setSeriesSearch] = React.useState("");
+
+  const hasActiveFilters =
+    formatFilter.items.some((item) => item.isRefined) ||
+    authorFilter.items.some((item) => item.isRefined) ||
+    factionFilter.items.some((item) => item.isRefined) ||
+    eraFilter.items.some((item) => item.isRefined) ||
+    seriesFilter.items.some((item) => item.isRefined);
+
+  // Filter items based on search
+  const filteredAuthors = authorSearch
+    ? authorFilter.items.filter((item) =>
+        item.label.toLowerCase().includes(authorSearch.toLowerCase())
+      )
+    : authorFilter.items;
+
+  const filteredFactions = factionSearch
+    ? factionFilter.items.filter((item) =>
+        item.label.toLowerCase().includes(factionSearch.toLowerCase())
+      )
+    : factionFilter.items;
+
+  const filteredSeries = seriesSearch
+    ? seriesFilter.items.filter((item) =>
+        item.label.toLowerCase().includes(seriesSearch.toLowerCase())
+      )
+    : seriesFilter.items;
 
   return (
-    <div className={styles.filter}>
-      <h3>Era</h3>
-      <ul className={styles.filterList}>
-        {items.map((item) => (
-          <li key={item.value}>
-            <label className={styles.checkbox}>
+    <Dropdown.Root>
+      <Dropdown.Trigger asChild aria-label="Filter books">
+        <button className={styles.filterButton}>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M2 4h12M4 8h8M6 12h4"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+          Filters
+          {hasActiveFilters && <span className={styles.badge} />}
+        </button>
+      </Dropdown.Trigger>
+
+      <Dropdown.Content className={styles.combinedFilterDropdown}>
+        <div className={styles.filterDropdownHeader}>
+          <span>Filters</span>
+          {canRefine && (
+            <button
+              onClick={() => clearRefinements()}
+              className={styles.clearAllButton}
+              type="button"
+            >
+              Clear all
+            </button>
+          )}
+        </div>
+
+        {/* Format Filter */}
+        {formatFilter.items.length > 0 && (
+          <div className={styles.filterSection}>
+            <Dropdown.Label>Format</Dropdown.Label>
+            <div className={styles.filterItems}>
+              {formatFilter.items.map((item) => (
+                <label key={item.value} className={styles.filterCheckbox}>
+                  <input
+                    type="checkbox"
+                    checked={item.isRefined}
+                    onChange={() => formatFilter.refine(item.value)}
+                  />
+                  <span className={styles.filterLabel}>
+                    {item.label}{" "}
+                    <span className={styles.filterCount}>({item.count})</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Author Filter */}
+        {authorFilter.items.length > 0 && (
+          <div className={styles.filterSection}>
+            <Dropdown.Label>Author</Dropdown.Label>
+            <div className={styles.filterSectionSearch}>
               <input
-                type="checkbox"
-                checked={item.isRefined}
-                onChange={() => refine(item.value)}
+                type="search"
+                placeholder="Search authors..."
+                value={authorSearch}
+                onChange={(e) => setAuthorSearch(e.target.value)}
+                className={styles.filterSectionSearchInput}
+                onClick={(e) => e.stopPropagation()}
               />
-              <span>
-                {item.label}{" "}
-                <span className={styles.count}>({item.count})</span>
-              </span>
-            </label>
-          </li>
-        ))}
-      </ul>
-    </div>
+            </div>
+            <div className={styles.filterItems}>
+              {filteredAuthors.length > 0 ? (
+                filteredAuthors.map((item) => (
+                  <label key={item.value} className={styles.filterCheckbox}>
+                    <input
+                      type="checkbox"
+                      checked={item.isRefined}
+                      onChange={() => authorFilter.refine(item.value)}
+                    />
+                    <span className={styles.filterLabel}>
+                      {item.label}{" "}
+                      <span className={styles.filterCount}>({item.count})</span>
+                    </span>
+                  </label>
+                ))
+              ) : (
+                <div className={styles.noResults}>No results found</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Faction Filter */}
+        {factionFilter.items.length > 0 && (
+          <div className={styles.filterSection}>
+            <Dropdown.Label>Faction</Dropdown.Label>
+            <div className={styles.filterSectionSearch}>
+              <input
+                type="search"
+                placeholder="Search factions..."
+                value={factionSearch}
+                onChange={(e) => setFactionSearch(e.target.value)}
+                className={styles.filterSectionSearchInput}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+            <div className={styles.filterItems}>
+              {filteredFactions.length > 0 ? (
+                filteredFactions.map((item) => (
+                  <label key={item.value} className={styles.filterCheckbox}>
+                    <input
+                      type="checkbox"
+                      checked={item.isRefined}
+                      onChange={() => factionFilter.refine(item.value)}
+                    />
+                    <span className={styles.filterLabel}>
+                      {item.label}{" "}
+                      <span className={styles.filterCount}>({item.count})</span>
+                    </span>
+                  </label>
+                ))
+              ) : (
+                <div className={styles.noResults}>No results found</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Era Filter */}
+        {eraFilter.items.length > 0 && (
+          <div className={styles.filterSection}>
+            <Dropdown.Label>Era</Dropdown.Label>
+            <div className={styles.filterItems}>
+              {eraFilter.items.map((item) => (
+                <label key={item.value} className={styles.filterCheckbox}>
+                  <input
+                    type="checkbox"
+                    checked={item.isRefined}
+                    onChange={() => eraFilter.refine(item.value)}
+                  />
+                  <span className={styles.filterLabel}>
+                    {item.label}{" "}
+                    <span className={styles.filterCount}>({item.count})</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Series Filter */}
+        {seriesFilter.items.length > 0 && (
+          <div className={styles.filterSection}>
+            <Dropdown.Label>Series</Dropdown.Label>
+            <div className={styles.filterSectionSearch}>
+              <input
+                type="search"
+                placeholder="Search series..."
+                value={seriesSearch}
+                onChange={(e) => setSeriesSearch(e.target.value)}
+                className={styles.filterSectionSearchInput}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+            <div className={styles.filterItems}>
+              {filteredSeries.length > 0 ? (
+                filteredSeries.map((item) => (
+                  <label key={item.value} className={styles.filterCheckbox}>
+                    <input
+                      type="checkbox"
+                      checked={item.isRefined}
+                      onChange={() => seriesFilter.refine(item.value)}
+                    />
+                    <span className={styles.filterLabel}>
+                      {item.label}{" "}
+                      <span className={styles.filterCount}>({item.count})</span>
+                    </span>
+                  </label>
+                ))
+              ) : (
+                <div className={styles.noResults}>No results found</div>
+              )}
+            </div>
+          </div>
+        )}
+      </Dropdown.Content>
+    </Dropdown.Root>
+  );
+}
+
+function FilterControls() {
+  const formatFilter = useRefinementList({
+    attribute: "format",
+    sortBy: ["name:asc"],
+  });
+
+  const authorFilter = useRefinementList({
+    attribute: "authors.name",
+    sortBy: ["name:asc"],
+    limit: 100,
+    showMore: true,
+    showMoreLimit: 200,
+  });
+
+  const factionFilter = useRefinementList({
+    attribute: "factions.name",
+    sortBy: ["name:asc"],
+    limit: 50,
+  });
+
+  const eraFilter = useRefinementList({
+    attribute: "era.name",
+    sortBy: ["name:asc"],
+  });
+
+  const seriesFilter = useRefinementList({
+    attribute: "series.title",
+    sortBy: ["name:asc"],
+    limit: 100,
+    showMore: true,
+    showMoreLimit: 200,
+  });
+
+  return (
+    <>
+      {/* Mobile: Combined filter dropdown */}
+      <div className={styles.mobileFilters}>
+        <CombinedFilterDropdown />
+      </div>
+
+      {/* Desktop: Individual filter dropdowns */}
+      <div className={styles.desktopFilters}>
+        <IndividualFilterDropdown
+          title="Format"
+          items={formatFilter.items}
+          refine={formatFilter.refine}
+        />
+        <IndividualFilterDropdown
+          title="Author"
+          items={authorFilter.items}
+          refine={authorFilter.refine}
+          searchable
+        />
+        <IndividualFilterDropdown
+          title="Faction"
+          items={factionFilter.items}
+          refine={factionFilter.refine}
+          searchable
+        />
+        <IndividualFilterDropdown
+          title="Era"
+          items={eraFilter.items}
+          refine={eraFilter.refine}
+        />
+        <IndividualFilterDropdown
+          title="Series"
+          items={seriesFilter.items}
+          refine={seriesFilter.refine}
+          searchable
+        />
+      </div>
+    </>
   );
 }
 
@@ -320,24 +644,15 @@ export default function BooksContent() {
 
       <section className="container">
         <div className={styles.contentWrapper}>
-          {/* Main Content */}
           <div className={styles.mainContent}>
-            {/* Search and Sort Controls */}
+            {/* Search and Controls */}
             <div className={styles.controls}>
               <SearchBox />
-              <SortByDropdown />
-            </div>
-
-            {/* Filters */}
-            {/* <div className={styles.filters}>
-              <div className={styles.filtersHeader}>
-                <h2>Filters</h2>
+              <div className={styles.controlsRight}>
+                <FilterControls />
+                <SortByDropdown />
               </div>
-
-              <FormatFilter />
-              <FactionFilter />
-              <EraFilter />
-            </div> */}
+            </div>
 
             {/* Stats */}
             <Stats />

@@ -11,15 +11,11 @@ import {
   featuredBooks40kQuery,
 } from "@/lib/sanity/queries";
 
-// keep this for now if your <Search> still expects the local JSON lib
-import { getAllBooks, getBooksByAuthor } from "@/lib/40k-books";
-
 import Search from "@/components/modules/Search";
 
 export const revalidate = 60;
 
 export default async function Home() {
-
   const featuredNames = [
     "Dan Abnett",
     "Aaron Dembski-Bowden",
@@ -42,17 +38,12 @@ export default async function Home() {
     { next: { revalidate } }
   );
 
-  // preserve the order from featuredNames;
-  // (optionally use the "count" returned by the query instead of JSON lib)
-  const featuredAuthors = authors
-    .map((a: any) => ({
-      ...a,
-      count: getBooksByAuthor(a.name)?.length ?? a.count ?? 0, // keep your current behavior
-    }))
-    .sort(
-      (a: any, b: any) =>
-        featuredNames.indexOf(a.name) - featuredNames.indexOf(b.name)
-    );
+  // Preserve the order from featuredNames
+  // The query already returns the count from Sanity
+  const featuredAuthors = authors.sort(
+    (a: any, b: any) =>
+      featuredNames.indexOf(a.name) - featuredNames.indexOf(b.name)
+  );
 
   // Must match titles exactly.
   const featuredTitles = [
@@ -78,9 +69,6 @@ export default async function Home() {
     (a, b) =>
       featuredTitles.indexOf(a.title) - featuredTitles.indexOf(b.title)
   );
-
-  /** -------- Search (still JSON for now) -------- */
-  const allBooks = getAllBooks();
 
   return (
     <main>
