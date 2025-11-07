@@ -14,48 +14,16 @@ import {
   SortBy,
   RefinementList,
   MobileFilterModal,
+  CurrentRefinements,
   type FilterSection,
 } from "@/components/algolia";
+import { BookHit } from "@/types/algolia";
 import styles from "./styles.module.scss";
 
 const algoliaAppId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
 const algoliaApiKey = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY!;
 
 const searchClient = algoliasearch(algoliaAppId, algoliaApiKey);
-
-// Type for Algolia book hit
-type BookHit = {
-  objectID: string;
-  title: string;
-  slug: string;
-  format: string | null;
-  publicationDate: string | null;
-  description: string;
-  story: string;
-  image: {
-    url: string | null;
-    alt: string | null;
-  };
-  authors: Array<{
-    name: string;
-    slug: string;
-  }>;
-  factions: Array<{
-    name: string;
-    slug: string;
-    iconId?: string | null;
-  }>;
-  era: {
-    name: string;
-    slug: string;
-  } | null;
-  series: {
-    title: string;
-    slug: string;
-  } | null;
-  _createdAt: string;
-  _updatedAt: string;
-};
 
 // Convert Algolia hit to BookCardData format
 function convertToBookCardData(hit: BookHit): BookCardData {
@@ -106,7 +74,6 @@ const SORT_OPTIONS = [
 ];
 
 function FilterControls() {
-
   const formatFilter = useRefinementList({
     attribute: "format",
     sortBy: ["name:asc"],
@@ -241,7 +208,6 @@ export default function BooksContent() {
       <section className="container">
         <div className={styles.contentWrapper}>
           <div className={styles.mainContent}>
-
             {/* Search and Controls */}
             <div className={styles.controls}>
               <SearchBox placeholder="Search books..." />
@@ -251,10 +217,17 @@ export default function BooksContent() {
               </div>
             </div>
 
+            {/* Stats */}
             <Stats singularLabel="book" pluralLabel="books" />
+
+            {/* Active Filters */}
+            <CurrentRefinements />
+
+            {/* Results Grid */}
             <Results />
+
+            {/* Pagination */}
             <Pagination />
-            
           </div>
         </div>
       </section>
