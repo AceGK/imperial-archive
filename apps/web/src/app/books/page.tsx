@@ -1,15 +1,10 @@
-// /app/books/page.tsx
-import { allBooks40kQuery } from "@/lib/sanity/queries";
-import { client } from "@/lib/sanity/sanity.client";
+// app/books/page.tsx
 import PageHeader from "@/components/modules/PageHeader";
-import BookGrid from "@/components/modules/BookGrid";
+import BooksContent from "@/components/modules/BooksContent";
 
 export const revalidate = 60;
 
-export default async function BrowsePage() {
-  const books = await client.fetch(allBooks40kQuery);
-  const count = books.length;
-
+export default function BrowsePage() {
   return (
     <main>
       <PageHeader
@@ -23,11 +18,7 @@ export default async function BrowsePage() {
         alt="Black Library © Games Workshop"
       />
 
-      <section className="container">
-        <div style={{ opacity: 0.5, paddingBottom: "1rem" }}>{count} Books</div>
-
-        <BookGrid books={books} />
-      </section>
+      <BooksContent />
     </main>
   );
 }

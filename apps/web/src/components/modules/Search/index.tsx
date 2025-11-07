@@ -141,6 +141,7 @@ function CustomSearchBox() {
     router.push(`/books/${hit.slug}`);
   }
 
+
   function goToSearchPage() {
     setOpen(false);
     if (query) {
@@ -248,7 +249,7 @@ function CustomSearchBox() {
               onClick={clearRecentSearches}
               type="button"
             >
-              Clear
+              Clear History
             </button>
           </div>
           <ul className={styles.recentList}>
