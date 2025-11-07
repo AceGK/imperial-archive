@@ -4,8 +4,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  height: 48px; // Add fixed height to match search button
-  padding: 0 1rem; // Remove vertical padding since height is fixed
+  height: 48px;
+  padding: 0 1rem;
   font-size: 0.9rem;
   font-weight: 500;
   border: 1px solid var(--border);
@@ -28,12 +28,13 @@
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 80%);
   }
 
-  // Rotate chevron when dropdown is open (using aria-expanded attribute)
-  &[aria-expanded="true"] .chevron {
-    transform: rotate(180deg);
+  // Styles when dropdown is open
+  &[aria-expanded="true"] {
+    .chevron {
+      transform: rotate(180deg);
+    }
   }
 }
-
 
 .chevron {
   fill: currentColor;

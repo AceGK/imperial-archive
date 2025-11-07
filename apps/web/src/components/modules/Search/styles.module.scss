@@ -23,8 +23,8 @@
   }
   
   &:focus { 
-    box-shadow: 0 0 0 3px color-mix(in oklab, orange, transparent 70%); 
-    border-color: orange; 
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary), transparent 70%); 
+    border-color: var(--primary); 
   }
 }
 

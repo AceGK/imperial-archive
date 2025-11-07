@@ -46,19 +46,19 @@
   gap: 0.5rem;
   width: 100%;
   max-width: 400px;
-  height: 48px; // Add fixed height to match button
-  padding: 0 1rem; // Remove vertical padding
+  height: 48px;
+  padding: 0 1rem;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: color-mix(in oklab, var(--bg), black 2%);
+  transition: all 0.15s ease;
   
   @include max(md) {
     max-width: 100%;
   }
 
   &:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 80%);
+    border-color: var(--primary);
   }
 }
 
