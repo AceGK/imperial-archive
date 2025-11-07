@@ -1,0 +1,75 @@
+// components/algolia/Pagination/styles.module.scss
+@use "@/styles/breakpoints" as *;
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+
+  @include max(sm) {
+    gap: 0.25rem;
+  }
+}
+
+.paginationPages {
+  display: flex;
+  gap: 0.25rem;
+
+  @include max(sm) {
+    gap: 0.125rem;
+  }
+}
+
+.paginationButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: color-mix(in oklab, var(--bg), black 2%);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+
+  @include max(sm) {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    min-width: 38px;
+  }
+
+  &:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--accent), transparent 85%);
+    border-color: var(--accent);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    font-weight: 600;
+  }
+}
+
+.paginationButtonText {
+  @include max(sm) {
+    display: none;
+  }
+}
+
+.paginationButtonIcon {
+  display: none;
+  font-size: 1.2em;
+
+  @include max(sm) {
+    display: inline;
+  }
+}
