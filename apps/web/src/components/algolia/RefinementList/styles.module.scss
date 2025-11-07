@@ -4,7 +4,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  height: 48px; // Add fixed height to match search button
+  padding: 0 1rem; // Remove vertical padding since height is fixed
   font-size: 0.9rem;
   font-weight: 500;
   border: 1px solid var(--border);
@@ -33,12 +34,14 @@
   }
 }
 
+
 .chevron {
   fill: currentColor;
   width: 12px;
   height: 12px;
   opacity: 0.7;
   transition: transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .badge {
@@ -107,12 +110,13 @@
   transition: background-color 0.15s ease;
 
   &:hover {
-    background: color-mix(in oklab, var(--accent), transparent 95%);
+    background: color-mix(in oklab, var(--accent), transparent 55%);
   }
 
   input[type="checkbox"] {
     cursor: pointer;
     margin: 0;
+    accent-color: var(--primary);
   }
 }
 

@@ -1,26 +1,129 @@
 // components/algolia/SearchBox/styles.module.scss
+@use "@/styles/breakpoints" as *;
 
 .searchBox {
-  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
-.searchInput {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
+.searchButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: color-mix(in oklab, var(--bg), black 2%);
   color: var(--foreground);
+  cursor: pointer;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: all 0.15s ease;
 
-  &:focus {
+  &:hover {
+    border-color: color-mix(in oklab, var(--border), white 20%);
+    background: color-mix(in oklab, var(--accent), transparent 95%);
+  }
+
+  &:focus-visible {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 80%);
   }
 
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    opacity: 0.7;
+  }
+}
+
+.searchInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+  height: 48px; // Add fixed height to match button
+  padding: 0 1rem; // Remove vertical padding
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in oklab, var(--bg), black 2%);
+  
+  @include max(md) {
+    max-width: 100%;
+  }
+
+  &:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 80%);
+  }
+}
+
+.searchIcon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  opacity: 0.5;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  font-size: 1rem;
+  border: none;
+  background: transparent;
+  color: var(--foreground);
+  outline: none;
+
   &::placeholder {
     color: var(--subtle);
+  }
+
+  // Remove default search input styling
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    display: none;
+  }
+}
+
+.clearButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--subtle);
+  cursor: pointer;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: color-mix(in oklab, var(--accent), transparent 90%);
+    color: var(--foreground);
+  }
+}
+
+@keyframes expandSearch {
+  from {
+    width: 44px;
+    opacity: 0;
+    transform: scaleX(0.1);
+  }
+  to {
+    width: 100%;
+    opacity: 1;
+    transform: scaleX(1);
   }
 }

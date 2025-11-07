@@ -69,8 +69,8 @@ const SORT_OPTIONS = [
   { label: "Most Recent", value: "books40k" },
   { label: "Title A-Z", value: "books40k_title_asc" },
   { label: "Title Z-A", value: "books40k_title_desc" },
-  { label: "Publication Date (Newest)", value: "books40k_date_desc" },
-  { label: "Publication Date (Oldest)", value: "books40k_date_asc" },
+  { label: "Publication Date ↓", value: "books40k_date_desc" },
+  { label: "Publication Date ↑", value: "books40k_date_asc" },
 ];
 
 function FilterControls() {
@@ -87,6 +87,14 @@ function FilterControls() {
     showMoreLimit: 200,
   });
 
+  const seriesFilter = useRefinementList({
+    attribute: "series.title",
+    sortBy: ["name:asc"],
+    limit: 100,
+    showMore: true,
+    showMoreLimit: 200,
+  });
+
   const factionFilter = useRefinementList({
     attribute: "factions.name",
     sortBy: ["name:asc"],
@@ -96,14 +104,6 @@ function FilterControls() {
   const eraFilter = useRefinementList({
     attribute: "era.name",
     sortBy: ["name:asc"],
-  });
-
-  const seriesFilter = useRefinementList({
-    attribute: "series.title",
-    sortBy: ["name:asc"],
-    limit: 100,
-    showMore: true,
-    showMoreLimit: 200,
   });
 
   // Check if any filters are active
@@ -170,13 +170,6 @@ function FilterControls() {
           showMoreLimit={200}
         />
         <RefinementList
-          attribute="factions.name"
-          title="Faction"
-          searchable
-          limit={50}
-        />
-        <RefinementList attribute="era.name" title="Era" />
-        <RefinementList
           attribute="series.title"
           title="Series"
           searchable
@@ -184,6 +177,13 @@ function FilterControls() {
           showMore
           showMoreLimit={200}
         />
+        <RefinementList
+          attribute="factions.name"
+          title="Faction"
+          searchable
+          limit={50}
+        />
+        <RefinementList attribute="era.name" title="Era" />
       </div>
     </>
   );
@@ -211,10 +211,8 @@ export default function BooksContent() {
             {/* Search and Controls */}
             <div className={styles.controls}>
               <SearchBox placeholder="Search books..." />
-              <div className={styles.controlsRight}>
-                <FilterControls />
-                <SortBy items={SORT_OPTIONS} />
-              </div>
+              <FilterControls />
+              <SortBy items={SORT_OPTIONS} />
             </div>
 
             {/* Stats */}

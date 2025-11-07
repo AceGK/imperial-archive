@@ -58,6 +58,13 @@ async function setupReplicas() {
     await client.setSettings({
       indexName: "books40k_title_asc",
       indexSettings: {
+        attributesForFaceting: [
+          "searchable(format)",
+          "searchable(authors.name)",
+          "searchable(factions.name)",
+          "searchable(era.name)",
+          "searchable(series.title)",
+        ],
         ranking: [
           "asc(title)",
           "typo",
@@ -72,12 +79,17 @@ async function setupReplicas() {
       },
     });
 
-    console.log("✅ Replica 'books40k_title_asc' configured");
-
     // Configure replica: Title Z-A
     await client.setSettings({
       indexName: "books40k_title_desc",
       indexSettings: {
+        attributesForFaceting: [
+          "searchable(format)",
+          "searchable(authors.name)",
+          "searchable(factions.name)",
+          "searchable(era.name)",
+          "searchable(series.title)",
+        ],
         ranking: [
           "desc(title)",
           "typo",
@@ -92,12 +104,17 @@ async function setupReplicas() {
       },
     });
 
-    console.log("✅ Replica 'books40k_title_desc' configured");
-
     // Configure replica: Publication Date (Newest)
     await client.setSettings({
       indexName: "books40k_date_desc",
       indexSettings: {
+        attributesForFaceting: [
+          "searchable(format)",
+          "searchable(authors.name)",
+          "searchable(factions.name)",
+          "searchable(era.name)",
+          "searchable(series.title)",
+        ],
         ranking: [
           "desc(publicationDate)",
           "typo",
@@ -112,12 +129,17 @@ async function setupReplicas() {
       },
     });
 
-    console.log("✅ Replica 'books40k_date_desc' configured");
-
     // Configure replica: Publication Date (Oldest)
     await client.setSettings({
       indexName: "books40k_date_asc",
       indexSettings: {
+        attributesForFaceting: [
+          "searchable(format)",
+          "searchable(authors.name)",
+          "searchable(factions.name)",
+          "searchable(era.name)",
+          "searchable(series.title)",
+        ],
         ranking: [
           "asc(publicationDate)",
           "typo",
@@ -131,8 +153,6 @@ async function setupReplicas() {
         ],
       },
     });
-
-    console.log("✅ Replica 'books40k_date_asc' configured");
 
     console.log("\n🎉 All replicas configured successfully!");
     console.log("\nAvailable sort options:");

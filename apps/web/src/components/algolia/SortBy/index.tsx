@@ -2,7 +2,10 @@
 "use client";
 
 import { useSortBy } from "react-instantsearch";
+import { Dropdown } from "@/components/ui/Dropdown";
 import styles from "./styles.module.scss";
+import SortIcon from "@/components/icons/sort.svg";
+import ChevronDown from "@/components/icons/chevron-down.svg";
 
 export type SortOption = {
   label: string;
@@ -11,32 +14,42 @@ export type SortOption = {
 
 type SortByProps = {
   items: SortOption[];
-  label?: string;
-  showLabel?: boolean;
 };
 
-export function SortBy({ 
-  items, 
-  label = "Sort by:",
-  showLabel = true 
-}: SortByProps) {
+export function SortBy({ items }: SortByProps) {
   const { currentRefinement, options, refine } = useSortBy({ items });
+
+  // Find the current option label
+  const currentOption = options.find((opt) => opt.value === currentRefinement);
 
   return (
     <div className={styles.sortBy}>
-      {showLabel && <label htmlFor="sort-by">{label}</label>}
-      <select
-        id="sort-by"
-        value={currentRefinement}
-        onChange={(e) => refine(e.target.value)}
-        className={styles.select}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <Dropdown.Root>
+        <Dropdown.Trigger asChild aria-label="Sort results">
+          <button className={styles.sortButton}>
+            <SortIcon className={styles.sortIcon} />
+            <span className={styles.labelFull}>{currentOption?.label}</span>
+            <span className={styles.labelShort}>Sort</span>
+            <ChevronDown className={styles.chevron} />
+          </button>
+        </Dropdown.Trigger>
+
+        <Dropdown.Content className={styles.dropdown}>
+          <div className={styles.items}>
+            {options.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => refine(option.value)}
+                className={`${styles.sortOption} ${
+                  option.value === currentRefinement ? styles.active : ""
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </Dropdown.Content>
+      </Dropdown.Root>
     </div>
   );
 }

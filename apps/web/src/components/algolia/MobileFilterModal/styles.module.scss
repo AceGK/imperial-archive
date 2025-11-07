@@ -1,7 +1,11 @@
 // components/algolia/MobileFilterModal/styles.module.scss
+@use "@/styles/breakpoints" as *;
 
 .wrapper {
   position: relative;
+  @include max(sm) {
+    width: 100%;
+  }
 }
 
 .triggerButton {
@@ -17,7 +21,7 @@
   color: var(--foreground);
   cursor: pointer;
   outline: none;
-  transition: all 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
   position: relative;
   white-space: nowrap;
 
@@ -30,6 +34,13 @@
     width: 16px;
     height: 16px;
     opacity: 0.7;
+    fill: currentColor;
+    flex-shrink: 0;
+    opacity: 0.5;
+  }
+  @include max(sm) {
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -166,12 +177,13 @@
   transition: background-color 0.15s ease;
 
   &:hover {
-    background: color-mix(in oklab, var(--accent), transparent 95%);
+    background: color-mix(in oklab, var(--accent), transparent 55%);
   }
 
   input[type="checkbox"] {
     cursor: pointer;
     margin: 0;
+    accent-color: var(--primary);
   }
 }
 

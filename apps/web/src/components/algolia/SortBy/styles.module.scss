@@ -4,35 +4,111 @@
 .sortBy {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
-
-  label {
-    font-size: 0.9rem;
-    color: var(--subtle);
-
-    @include max(md) {
-      display: none;
-    }
-  }
+  margin-left: auto;
 }
 
-.select {
-  padding: 0.75rem 1rem;
+.sortButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 48px;
+  padding: 0 1rem;
   font-size: 0.9rem;
+  font-weight: 500;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: color-mix(in oklab, var(--bg), black 2%);
   color: var(--foreground);
   cursor: pointer;
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 
   &:hover {
     border-color: color-mix(in oklab, var(--border), white 20%);
+    background: color-mix(in oklab, var(--accent), transparent 95%);
   }
 
-  &:focus {
+  &:focus-visible {
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 80%);
+  }
+
+  &[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+  }
+}
+
+.sortIcon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+// Show full label on larger screens, hide on small
+.labelFull {
+  display: none;
+  
+  @include min(sm) {
+    display: inline;
+  }
+}
+
+// Show short label on small screens, hide on larger
+.labelShort {
+  display: inline;
+  
+  @include min(sm) {
+    display: none;
+  }
+}
+
+.chevron {
+  fill: currentColor;
+  width: 12px;
+  height: 12px;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.dropdown {
+  min-width: 200px;
+  padding: 8px;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sortOption {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  text-align: left;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  outline: none;
+
+  &:hover {
+    background: color-mix(in oklab, var(--accent), transparent 50%);
+  }
+
+  &:focus-visible {
+    background: color-mix(in oklab, var(--accent), transparent 90%);
+  }
+
+  &.active {
+    background: color-mix(in oklab, var(--accent), transparent 90%);
+    font-weight: 500;
+    color: var(--primary);
   }
 }
