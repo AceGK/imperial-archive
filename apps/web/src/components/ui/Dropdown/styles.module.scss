@@ -1,9 +1,9 @@
+// components/ui/Dropdown/styles.module.scss
 
 .root {
   display: inline-block;
 }
 
-/* When Trigger is used with `asChild`, we wrap it so we can hold a ref */
 .triggerWrap {
   display: inline-block;
 }
@@ -24,7 +24,7 @@
   }
 }
 
-/* The menu itself is portalled and positioned with inline style (fixed) */
+/* Desktop dropdown */
 .content {
   min-width: 180px;
   padding: 6px;
@@ -35,11 +35,75 @@
   box-shadow:
     0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px  6px -4px rgba(0, 0, 0, 0.1);
-  z-index: 1000; /* fallback; inline style also sets */
+  z-index: 1000;
   animation: ddIn 120ms ease-out;
 }
 
-/* We still keep align classes for arrow placement if needed */
+/* Mobile modal */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 999;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 40vh; // 40% of viewport height
+  background: var(--bg);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0; // Prevent header from shrinking
+
+  span {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--foreground);
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: color-mix(in oklab, var(--accent), transparent 90%);
+  }
+}
+
+.modalContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  min-height: 0; // Allow content to scroll properly
+}
 
 .item {
   width: 100%;
@@ -91,7 +155,6 @@
   letter-spacing: 0.04em;
 }
 
-/* caret */
 .arrow {
   position: absolute;
   top: -6px;
@@ -108,4 +171,14 @@
 @keyframes ddIn {
   from { opacity: 0; transform: translateY(-4px) scale(0.98); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }

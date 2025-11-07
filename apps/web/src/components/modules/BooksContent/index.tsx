@@ -208,24 +208,18 @@ export default function BooksContent() {
       <section className="container">
         <div className={styles.contentWrapper}>
           <div className={styles.mainContent}>
-            {/* Search and Controls */}
+
             <div className={styles.controls}>
               <SearchBox placeholder="Search books..." />
               <FilterControls />
               <SortBy items={SORT_OPTIONS} />
             </div>
 
-            {/* Stats */}
             <Stats singularLabel="book" pluralLabel="books" />
-
-            {/* Active Filters */}
             <CurrentRefinements />
-
-            {/* Results Grid */}
             <Results />
-
-            {/* Pagination */}
             <Pagination />
+
           </div>
         </div>
       </section>

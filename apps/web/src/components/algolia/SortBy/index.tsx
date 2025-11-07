@@ -24,7 +24,7 @@ export function SortBy({ items }: SortByProps) {
 
   return (
     <div className={styles.sortBy}>
-      <Dropdown.Root>
+      <Dropdown.Root modalTitle="Sort By">
         <Dropdown.Trigger asChild aria-label="Sort results">
           <button className={styles.sortButton}>
             <SortIcon className={styles.sortIcon} />

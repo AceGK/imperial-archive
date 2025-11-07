@@ -1,3 +1,4 @@
+// components/ui/Dropdown/index.tsx
 "use client";
 
 import React, {
@@ -29,6 +30,8 @@ type DropdownContextValue = {
   labelId: string | undefined;
   setLabelId: React.Dispatch<React.SetStateAction<string | undefined>>;
   onMenuKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  isMobile: boolean;
+  modalTitle?: string;
 };
 
 const DropdownCtx = createContext<DropdownContextValue | null>(null);
@@ -41,16 +44,49 @@ const useDropdown = () => {
 
 /** ---------- Root ---------- */
 
-function Root({ children }: { children: React.ReactNode }) {
+function Root({ 
+  children,
+  mobileBreakpoint = 576, // modal dropdown breakpoint
+  modalTitle = "Select an option"
+}: { 
+  children: React.ReactNode;
+  mobileBreakpoint?: number;
+  modalTitle?: string;
+}) {
   const [open, setOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const triggerRef = useRef<HTMLElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const itemsRef = useRef<HTMLElement[]>([]);
   const [labelId, setLabelId] = useState<string | undefined>(undefined);
 
-  // close on outside click / focus
+  // Detect mobile breakpoint
   useEffect(() => {
-    if (!open) return;
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= mobileBreakpoint);
+    };
+    
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [mobileBreakpoint]);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (open && isMobile) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open, isMobile]);
+
+  // close on outside click / focus (desktop only)
+  useEffect(() => {
+    if (!open || isMobile) return;
     const onDown = (e: MouseEvent) => {
       const t = e.target as Node;
       if (!menuRef.current?.contains(t) && !triggerRef.current?.contains(t))
@@ -67,7 +103,7 @@ function Root({ children }: { children: React.ReactNode }) {
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("focusin", onFocusIn);
     };
-  }, [open]);
+  }, [open, isMobile]);
 
   // keyboard nav inside menu
   const onMenuKeyDown = useCallback(
@@ -142,8 +178,10 @@ function Root({ children }: { children: React.ReactNode }) {
       labelId,
       setLabelId,
       onMenuKeyDown,
+      isMobile,
+      modalTitle,
     }),
-    [open, labelId, onMenuKeyDown]
+    [open, labelId, onMenuKeyDown, isMobile, modalTitle]
   );
 
   return (
@@ -210,7 +248,7 @@ function Trigger({
   );
 }
 
-/** ---------- Content (portalled & fixed-position) ---------- */
+/** ---------- Content (portalled & fixed-position OR modal) ---------- */
 
 function Content({
   children,
@@ -231,6 +269,8 @@ function Content({
     itemsRef,
     labelId,
     onMenuKeyDown,
+    isMobile,
+    modalTitle,
   } = useDropdown();
 
   const popId = useId();
@@ -245,7 +285,6 @@ function Content({
     if (!triggerEl || !menuEl) return;
 
     const t = triggerEl.getBoundingClientRect();
-    // compute left based on alignment (menuEl has size now)
     let left = t.left;
     if (align === "end") {
       left = Math.max(0, t.right - menuEl.offsetWidth);
@@ -254,9 +293,9 @@ function Content({
     setPos({ top, left });
   }, [align, sideOffset, triggerRef, menuRef]);
 
-  // Focus first item and position on open
+  // Focus first item and position on open (desktop only)
   useLayoutEffect(() => {
-    if (!open) return;
+    if (!open || isMobile) return;
     const raf = requestAnimationFrame(() => {
       const first = itemsRef.current.find(
         (el) => el && !(el as HTMLButtonElement).disabled
@@ -275,10 +314,52 @@ function Content({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
-  }, [open, itemsRef, updatePosition]);
+  }, [open, isMobile, itemsRef, updatePosition]);
 
   if (!open) return null;
 
+  // Mobile: Render as bottom sheet modal
+  if (isMobile) {
+    const modal = (
+      <>
+        {/* Backdrop */}
+        <div className={styles.backdrop} onClick={() => setOpen(false)} />
+
+        {/* Modal */}
+        <div className={styles.modal}>
+          <div className={styles.modalHeader}>
+            <span>{modalTitle}</span>
+            <button
+              onClick={() => setOpen(false)}
+              className={styles.closeButton}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div
+            ref={menuRef}
+            className={styles.modalContent}
+            onKeyDown={onMenuKeyDown}
+            onClick={(e) => {
+              // Close modal when any button inside is clicked
+              const target = e.target as HTMLElement;
+              if (target.tagName === 'BUTTON' && target.getAttribute('role') !== 'menuitem') {
+                setOpen(false);
+              }
+            }}
+          >
+            {children}
+          </div>
+        </div>
+      </>
+    );
+
+    return createPortal(modal, document.body);
+  }
+
+  // Desktop: Render as dropdown
   const menu = (
     <div
       id={popId}
@@ -294,7 +375,7 @@ function Content({
         position: "fixed",
         top: pos.top,
         left: pos.left,
-        zIndex: 1000, // ensure above transformed/dragging rows
+        zIndex: 1000,
       }}
       onKeyDown={onMenuKeyDown}
       onBlur={(e) => {
@@ -334,7 +415,7 @@ function Item({
     return () => {
       itemsRef.current = itemsRef.current.filter((el) => el !== ref.current);
     };
-  }, []);
+  }, [itemsRef]);
 
   const run = () => {
     if (disabled) return;
