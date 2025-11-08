@@ -1,21 +1,9 @@
-// components/modules/BooksContent/styles.module.scss
+// app/books/styles.module.scss
 @use "@/styles/breakpoints" as *;
-
-.stickyControlsWrapper {
-  position: sticky;
-  z-index: 40;
-  top: 0px;
-  background: color-mix(in oklab, var(--bg), transparent 5%);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-  padding: 1rem 0;
-  transition: transform 200ms ease; // Changed to transform
-}
 
 .contentWrapper {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 }
 
 .mainContent {
@@ -23,12 +11,39 @@
 }
 
 .controls {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border, rgba(0, 0, 0, 1));
+  padding: 1rem 0;
+  transition: top 180ms ease; // Smooth transition
+  
+  &.navVisible {
+    top: 61px; // Height of your nav
+  }
+}
+
+.controlsInner {
   display: flex;
   gap: 0.5rem;
   align-items: center;
 
   @include max(filter-breakpoint) {
     align-items: stretch;
+  }
+}
+
+.controlsRight {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+
+  @include max(filter-breakpoint) {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
@@ -40,7 +55,7 @@
     display: none;
   }
   @include max(sm) {
-    flex:1;
+    flex: 1;
   }
 }
 

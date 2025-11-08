@@ -15,6 +15,7 @@
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
   font-weight: 500;
+  height: 48px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: color-mix(in oklab, var(--bg), black 2%);
@@ -59,7 +60,7 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index: 9998; // Increased to be above sticky wrapper
   animation: fadeIn 0.2s ease;
 }
 
@@ -67,7 +68,7 @@
   position: fixed;
   inset: 0;
   background: var(--bg);
-  z-index: 1000;
+  z-index: 9999; // Increased to be above sticky wrapper
   display: flex;
   flex-direction: column;
   animation: slideUp 0.3s ease;
