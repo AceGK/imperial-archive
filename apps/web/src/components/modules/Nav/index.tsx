@@ -1,8 +1,10 @@
+// components/modules/Nav/index.tsx
 "use client";
 
 import Link from "next/link";
 import {useEffect, useState} from "react";
 import {usePathname} from "next/navigation";
+import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import styles from "./styles.module.scss";
 import ThemeToggle from "@/components/modules/ThemeToggle";
 import SiteWidthToggle from "@/components/modules/SiteWidthToggle";
@@ -20,6 +22,7 @@ const links = [
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const isVisible = useScrollVisibility();
 
   // lock scroll when menu open
   useEffect(() => {
@@ -32,7 +35,10 @@ export default function Nav() {
   useEffect(() => { setOpen(false); }, [pathname]);
 
   return (
-    <nav className={styles.navWrapper} aria-label="Primary">
+    <nav 
+      className={`${styles.navWrapper} ${!isVisible ? styles.hidden : ""}`} 
+      aria-label="Primary"
+    >
       <div className="container">
         <div className={styles.nav}>
           <div className={styles.primary}>

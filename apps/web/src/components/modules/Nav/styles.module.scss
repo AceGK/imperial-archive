@@ -6,6 +6,11 @@
   position: sticky;
   top: 0;
   z-index: 50;
+  transition: transform 200ms ease; // Changed from 200ms ease to match
+
+  &.hidden {
+    transform: translateY(-100%);
+  }
 }
 
 .nav {

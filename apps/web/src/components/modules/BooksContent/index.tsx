@@ -19,7 +19,9 @@ import {
 } from "@/components/algolia";
 import { BookHit } from "@/types/algolia";
 import { createAlgoliaRouting } from "@/lib/algolia/routing";
+import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import styles from "./styles.module.scss";
+import useIsSticky from "@/hooks/useIsSticky";
 
 const algoliaAppId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
 const algoliaApiKey = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY!;
@@ -193,6 +195,10 @@ function Results() {
 }
 
 export default function BooksContent() {
+  const controlsRef = React.useRef<HTMLDivElement>(null);
+  const isNavVisible = useScrollVisibility();
+  const isSticky = useIsSticky(controlsRef, 0);
+
   return (
     <InstantSearchNext
       indexName="books40k"
@@ -202,21 +208,29 @@ export default function BooksContent() {
     >
       <Configure hitsPerPage={25} />
 
+      <div
+        ref={controlsRef}
+        className={styles.stickyControlsWrapper}
+        style={{
+          transform: isSticky && isNavVisible ? "translateY(60px)" : "translateY(0)",
+        }}
+      >
+        <div className="container">
+          <div className={styles.controls}>
+            <SearchBox placeholder="Search books..." />
+            <FilterControls />
+            <SortBy items={SORT_OPTIONS} />
+          </div>
+        </div>
+      </div>
+
       <section className="container">
         <div className={styles.contentWrapper}>
           <div className={styles.mainContent}>
-
-            <div className={styles.controls}>
-              <SearchBox placeholder="Search books..." />
-              <FilterControls />
-              <SortBy items={SORT_OPTIONS} />
-            </div>
-
             <Stats singularLabel="book" pluralLabel="books" />
             <CurrentRefinements />
             <Results />
             <Pagination />
-
           </div>
         </div>
       </section>
