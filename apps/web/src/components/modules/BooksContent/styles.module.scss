@@ -4,6 +4,7 @@
 .contentWrapper {
   display: flex;
   flex-direction: column;
+   position: relative;
 }
 
 .mainContent {
@@ -17,10 +18,10 @@
   background: var(--bg);
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 1));
   padding: 1rem 0;
-  transition: top 180ms ease; // Smooth transition
+  transition: transform 200ms ease;
   
   &.navVisible {
-    top: 61px; // Height of your nav
+    transform: translateY(61px); // Moves down when nav is visible
   }
 }
 

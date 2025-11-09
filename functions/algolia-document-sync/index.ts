@@ -19,7 +19,7 @@ const hardTrim = (str: unknown, max = 8000): string =>
 
 function formatBookType(format: string | null): string {
   if (!format) return "Book";
-  
+
   const formatMap: Record<string, string> = {
     novel: "Novel",
     novella: "Novella",
@@ -31,7 +31,7 @@ function formatBookType(format: string | null): string {
     audio_anthology: "Audio Anthology",
     other: "Other",
   };
-  
+
   return formatMap[format] || format;
 }
 
@@ -117,19 +117,16 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       console.log("🔍 Fetching references by ID...");
 
       // Extract reference IDs
-      const authorIds = Array.isArray(authors) 
-        ? authors.map((a: any) => a._ref).filter(Boolean) 
+      const authorIds = Array.isArray(authors)
+        ? authors.map((a: any) => a._ref).filter(Boolean)
         : [];
-      const eraId = era?._ref;
+      const eraId = era?._ref || null; // ✅ Change to null instead of undefined
       const factionIds = Array.isArray(factions)
         ? factions.map((f: any) => f._ref).filter(Boolean)
         : [];
 
-      console.log("  - Author IDs:", authorIds);
-      console.log("  - Era ID:", eraId);
-      console.log("  - Faction IDs:", factionIds);
+      // ... later in the query parameters ...
 
-      // Fetch all referenced documents in one query
       const bookData = await sanityClient.fetch(
         `{
           "authors": *[_id in $authorIds]{
@@ -139,13 +136,16 @@ export const handler = documentEventHandler(async ({ event, context }) => {
             "displayName": coalesce(name, title),
             slug
           },
-          "era": *[_id == $eraId][0]{
-            _id,
-            name,
-            title,
-            "displayName": coalesce(title, name),
-            slug
-          },
+          "era": select(
+            defined($eraId) => *[_id == $eraId][0]{
+              _id,
+              name,
+              title,
+              "displayName": coalesce(title, name),
+              slug
+            },
+            null
+          ),
           "factions": *[_id in $factionIds]{
             _id,
             name,
@@ -154,19 +154,22 @@ export const handler = documentEventHandler(async ({ event, context }) => {
             slug,
             iconId
           },
-          "imageUrl": *[_id == $imageAssetId][0].url,
+          "imageUrl": select(
+            defined($imageAssetId) => *[_id == $imageAssetId][0].url,
+            null
+          ),
           "series": *[_type == "series40k" && references($bookId)][0]{
             _id,
             title,
             slug
           }
         }`,
-        { 
+        {
           authorIds,
-          eraId,
+          eraId: era?._ref || null,
           factionIds,
-          imageAssetId: image?.asset?._ref,
-          bookId: _id
+          imageAssetId: image?.asset?._ref || null,
+          bookId: _id,
         }
       );
 
@@ -178,7 +181,8 @@ export const handler = documentEventHandler(async ({ event, context }) => {
         ? bookData.authors
             .map((a: any) => ({
               name: a?.displayName || a?.name || a?.title || "",
-              slug: typeof a?.slug === 'object' ? a.slug?.current : a?.slug || "",
+              slug:
+                typeof a?.slug === "object" ? a.slug?.current : a?.slug || "",
             }))
             .filter((a: AuthorRef) => a.name && a.slug)
         : [];
@@ -190,7 +194,8 @@ export const handler = documentEventHandler(async ({ event, context }) => {
         ? bookData.factions
             .map((f: any) => ({
               name: f?.displayName || f?.title || f?.name || "",
-              slug: typeof f?.slug === 'object' ? f.slug?.current : f?.slug || "",
+              slug:
+                typeof f?.slug === "object" ? f.slug?.current : f?.slug || "",
               iconId: f?.iconId ?? null,
             }))
             .filter((f: FactionRef) => f.name && f.slug)
@@ -199,15 +204,19 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       console.log("  ✓ Processed factions:", processedFactions);
 
       // Process era
-      const processedEra: EraRef | null =
-        bookData?.era
-          ? {
-              name: bookData.era.displayName || bookData.era.title || bookData.era.name || "",
-              slug: typeof bookData.era.slug === 'object' 
+      const processedEra: EraRef | null = bookData?.era
+        ? {
+            name:
+              bookData.era.displayName ||
+              bookData.era.title ||
+              bookData.era.name ||
+              "",
+            slug:
+              typeof bookData.era.slug === "object"
                 ? bookData.era.slug?.current || ""
                 : bookData.era.slug || "",
-            }
-          : null;
+          }
+        : null;
 
       console.log("  ✓ Processed era:", processedEra);
 
@@ -216,9 +225,10 @@ export const handler = documentEventHandler(async ({ event, context }) => {
         bookData?.series?.title && bookData?.series?.slug
           ? {
               title: bookData.series.title,
-              slug: typeof bookData.series.slug === 'object'
-                ? bookData.series.slug?.current || ""
-                : bookData.series.slug || "",
+              slug:
+                typeof bookData.series.slug === "object"
+                  ? bookData.series.slug?.current || ""
+                  : bookData.series.slug || "",
             }
           : null;
 
@@ -256,16 +266,24 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       // Check document size
       const documentSize = JSON.stringify(document).length;
       if (documentSize > 9000) {
-        console.warn(`⚠️  Book ${_id} is ${documentSize} bytes (close to 10KB limit)`);
+        console.warn(
+          `⚠️  Book ${_id} is ${documentSize} bytes (close to 10KB limit)`
+        );
       }
 
       // Log what we're sending
       console.log("\n📤 Sending to Algolia:");
       console.log("  - Title:", limitedTitle);
       console.log("  - Format:", formatBookType(format));
-      console.log("  - Authors:", processedAuthors.map(a => a.name).join(", ") || "none");
+      console.log(
+        "  - Authors:",
+        processedAuthors.map((a) => a.name).join(", ") || "none"
+      );
       console.log("  - Era:", processedEra?.name || "none");
-      console.log("  - Factions:", processedFactions.map(f => f.name).join(", ") || "none");
+      console.log(
+        "  - Factions:",
+        processedFactions.map((f) => f.name).join(", ") || "none"
+      );
       console.log("  - Image:", processedImage.url ? "✓" : "✗");
       console.log("  - Series:", processedSeries?.title || "none");
 

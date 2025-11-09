@@ -19,13 +19,13 @@ export default async function FactionsPage() {
     <main>
       <PageHeader
         title="Factions"
-        subtitle="Discover Warhammer 40,000 stories organized by the Imperium’s armies, traitor legions, xenos empires, and heretical factions."
+        subtitle="Browse Warhammer 40,000 stories organized by the Imperium’s armies, traitor legions, xenos empires, and heretical factions."
         align="center"
         strongOverlay
         height="xs"
         priority
         image="/images/astra-militarum-lewis-jones.jpg"
-        alt="Astra Militarum by Lewis Jones"
+        credit="Astra Militarum by Lewis Jones"
       />
       <div className="container">
 

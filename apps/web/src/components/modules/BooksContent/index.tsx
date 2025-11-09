@@ -194,8 +194,49 @@ function Results() {
   return <BookGrid books={books} noResultsText="No books match your search." />;
 }
 
+// components/modules/BooksContent/index.tsx
 export default function BooksContent() {
   const isNavVisible = useScrollVisibility();
+  const [isSticky, setIsSticky] = React.useState(false);
+  const [isScrollingDown, setIsScrollingDown] = React.useState(true);
+  const controlsRef = React.useRef<HTMLDivElement>(null);
+  const sentinelRef = React.useRef<HTMLDivElement>(null);
+  const lastScrollY = React.useRef(0);
+
+  // Track scroll direction
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsScrollingDown(currentScrollY > lastScrollY.current);
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Intersection observer for sticky detection
+  React.useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSticky(!entry.isIntersecting);
+      },
+      { threshold: [1], 
+      rootMargin: `0px 0px 0px 0px`
+       }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
+
+  // Apply translation when:
+  // - Controls are sticky AND nav is visible
+  // - BUT when scrolling up, wait until NOT sticky to remove translation
+const shouldTranslate = isSticky && isNavVisible && (isScrollingDown || isSticky);
 
   return (
     <InstantSearchNext
@@ -207,8 +248,14 @@ export default function BooksContent() {
       <Configure hitsPerPage={25} />
 
       <div className={styles.contentWrapper}>
+        {/* Invisible sentinel element */}
+        <div ref={sentinelRef} style={{ height: '1px', marginTop: '-1px' }} />
+        
         {/* Full-width sticky controls */}
-        <div className={`${styles.controls} ${isNavVisible ? styles.navVisible : ''}`}>
+        <div 
+          ref={controlsRef}
+          className={`${styles.controls} ${shouldTranslate ? styles.navVisible : ''}`}
+        >
           <div className="container">
             <div className={styles.controlsInner}>
               <SearchBox placeholder="Search books..." />

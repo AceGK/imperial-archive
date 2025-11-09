@@ -16,7 +16,13 @@ export function useScrollVisibility() {
         return;
       }
 
-      setIsVisible(scrollY < lastScrollY || scrollY < 10);
+      // Always show nav if scrolled less than 50px
+      if (scrollY < 50) {
+        setIsVisible(true);
+      } else {
+        // Only apply hide/show logic after 50px threshold
+        setIsVisible(scrollY < lastScrollY);
+      }
       
       lastScrollY = scrollY > 0 ? scrollY : 0;
       ticking = false;

@@ -27,7 +27,7 @@ type MobileFilterModalProps = {
 export function MobileFilterModal({
   sections,
   hasActiveFilters,
-  buttonLabel = "Filters",
+  buttonLabel = "Filter",
 }: MobileFilterModalProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [searches, setSearches] = React.useState<Record<string, string>>({});

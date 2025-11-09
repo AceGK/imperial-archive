@@ -36,7 +36,7 @@ export default async function AuthorsPage() {
         height="xs"
         priority
         image="/images/imperial-library-erik-nykvist.jpg"
-        alt="Imperial Library by Erik Nykvist"
+        credit="Imperial Library by Erik Nykvist"
       />
 
       <section className="container">
