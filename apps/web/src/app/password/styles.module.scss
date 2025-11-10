@@ -86,8 +86,8 @@
   padding: 0.875rem 1rem;
   font-size: 1rem;
   font-weight: 500;
-  color: #ffffff;
-  background-color: #3b82f6;
+  color: black;
+  background-color: var(--primary);
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -95,7 +95,7 @@
 }
 
 .button:hover:not(:disabled) {
-  background-color: #2563eb;
+   background:color-mix(in srgb, var(--primary) 85%, #fff);
 }
 
 .button:focus {
