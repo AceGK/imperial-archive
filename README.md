@@ -4,20 +4,20 @@ A comprehensive web application for browsing [Games Workshop's Warhammer 40,000]
 
 <!-- ![Black Library](https://black-library.vercel.app/images/black-library-books.jpg) -->
 
-Visit the site at [ImperialArchive.com](https://imperialarchive.com). This site is currently in development, but you can access the site using the password **emperorprotects**
 
 ## 📑 Table of Contents
 
 - [The Imperial Archive](#the-imperial-archive)
   - [📑 Table of Contents](#-table-of-contents)
+  - [🌐 Live Site](#-live-site)
   - [🚧 Work in Progress](#-work-in-progress)
     - [🎯 Upcoming Features](#-upcoming-features)
   - [❓ Why](#-why)
   - [🎓 Learning Goals \& Technical Challenges](#-learning-goals--technical-challenges)
     - [📊 Data Complexity](#-data-complexity)
     - [💡 Technical Learnings](#-technical-learnings)
-  - [⚙️ Tech Stack](#️-tech-stack)
   - [✨ Features](#-features)
+  - [⚙️ Tech Stack](#️-tech-stack)
   - [🏗️ Architecture](#️-architecture)
     - [📝Content Management](#content-management)
     - [🔍 Search \& Discovery](#-search--discovery)
@@ -25,9 +25,14 @@ Visit the site at [ImperialArchive.com](https://imperialarchive.com). This site 
   - [🔑 Key Integrations](#-key-integrations)
     - [Sanity → Algolia Sync](#sanity--algolia-sync)
     - [🔄 Data Flow](#-data-flow)
-  - [🌐 Live Site](#-live-site)
   - [🤖 AI Development Notice](#-ai-development-notice)
   - [📝 License](#-license)
+
+
+## 🌐 Live Site
+
+Visit the site at [ImperialArchive.com](https://imperialarchive.com). This site is currently in development, but you can access the site using the password **emperorprotects**
+
 
 ## 🚧 Work in Progress
 
@@ -60,6 +65,7 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 **1. No Official API**
 - Games Workshop does not provide an official API 
 - Open APIs (OpenLibrary, Google Books) lack complete Black Library coverage
+  - Book data within the open APIs often don't include useful descriptions and have low resolution cover images
 - No official resource for data like author image/bio and faction svg icon/description
 
 **2. Multi-Format Publications**
@@ -90,17 +96,6 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 - Type-safe TypeScript interfaces mirroring CMS schemas
 - Next.js SSR/SSG optimization patterns
 
-## ⚙️ Tech Stack
-
-- **[Next.js](https://nextjs.org/)** - Full-stack React framework with server-side rendering, static generation, and API routes
-  - **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript for better developer experience and code quality
-  - **[SCSS](https://sass-lang.com/)** - CSS preprocessor with variables, nesting, and mixins
-   - **[Swiper](https://swiperjs.com/)** - Touch-enabled carousels and sliders
-   - **[dnd kit](https://dndkit.com/)** - Drag and drop toolkit for sortable lists and interactive UI
-- **[Sanity CMS](https://www.sanity.io/)** - Headless CMS for content management
-- **[Algolia](https://www.algolia.com/)** - Search and discovery API for fast, relevant search and filtering
-- **[Convex](https://www.convex.dev/)** - Real-time backend for user data, favorites, and library tracking
-
 ## ✨ Features
 
 - **Fast Search** - Powered by Algolia for instant results
@@ -109,6 +104,18 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 - **[Browse by Faction](https://black-library.vercel.app/factions)** - Find books about specific armies, legions, chapters, and factions
 - **[Browse by Era](https://black-library.vercel.app/eras)** - Discover books from different Warhammer 40,000 eras
 - **[Browse by Series](https://black-library.vercel.app/eras)** - Follow complete book series in order
+
+
+## ⚙️ Tech Stack
+
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript for better developer experience and code quality
+- **[Next.js](https://nextjs.org/)** - Full-stack React framework with server-side rendering, static generation, and API routes
+  - **[SCSS](https://sass-lang.com/)** - CSS preprocessor with variables, nesting, and mixins
+   - **[Swiper](https://swiperjs.com/)** - Touch-enabled carousels and sliders
+   - **[dnd kit](https://dndkit.com/)** - Drag and drop toolkit for sortable lists and interactive UI
+- **[Sanity CMS](https://www.sanity.io/)** - Headless CMS for content management
+- **[Algolia](https://www.algolia.com/)** - Search and discovery API for fast, relevant search and filtering
+- **[Convex](https://www.convex.dev/)** - Real-time backend for user data, favorites, and library tracking
 
 ## 🏗️ Architecture
 
@@ -148,10 +155,6 @@ The project includes a Sanity Function that automatically syncs book data to Alg
 ```
 Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
 ```
-
-## 🌐 Live Site
-
-Visit the site at [imperialarchive.com](https://imperialarchive.com)
 
 ## 🤖 AI Development Notice
 
