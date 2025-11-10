@@ -58,7 +58,9 @@ The official [Black Library](https://www.blacklibrary.com/) website and existing
 - **Modern UX** - A clean, fast interface built with modern web technologies
 
 ## 🎓 Learning Goals & Technical Challenges
-I started this app to gain deeper experience with **TypeScript**, **Algolia v5**, **Sanity v4**, and **Next.js 15**. I chose to use the Black Library catalog as the dataset because I'm a fan of these books, and the catalog presents several interesting technical challenges that make it ideal for learning:
+I started this app to gain deeper experience with **TypeScript**, **Algolia v5**, **Sanity v4**, and **Next.js 15**. I have built e-commerce applications with this stack professionally, but they are in private repositories. This project serves as a public demonstration. 
+
+I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and the catalog presents several interesting technical challenges that make it ideal for learning:
 
 ### 📊 Data Complexity
 
@@ -121,7 +123,7 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 
 ### 📝Content Management
 The site uses **Sanity CMS** as a headless content management system to manage:
-- Book catalog (title, descriptions, publication date, format, editions, series, included factions, external links)
+- Book catalog
 - Author information
 - Faction details
 - Era classifications
@@ -158,7 +160,7 @@ Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
 
 ## 🤖 AI Development Notice
 
-This project was developed with assistance from AI (Claude, ChatGPT) for:
+This project was developed with assistance from AI (Claude) for:
 - **Rapid prototyping** - Quickly scaffolding components, boilerplates, and testing ideas
 - **Debugging & troubleshooting** - Diagnosing functional and styling issues
 - **Documentation** - Helping structure and write this README
