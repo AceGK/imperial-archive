@@ -6,7 +6,9 @@ A comprehensive web application for browsing [Games Workshop's Warhammer 40,000]
 
 ## 🚧 Work in Progress
 
-This project is actively being developed! Here's what's currently in the works:
+This project is actively being developed! You can access the site with the password **emperorprotects**
+
+Here's what's currently in the works:
 
 ### Upcoming Features
 - **Enhanced UI/UX** - Continued improvements to the interface and user experience
