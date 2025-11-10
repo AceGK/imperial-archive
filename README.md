@@ -19,12 +19,15 @@ A comprehensive web application for browsing [Games Workshop's Warhammer 40,000]
   - [✨ Features](#-features)
   - [⚙️ Tech Stack](#️-tech-stack)
   - [🏗️ Architecture](#️-architecture)
+    - [📂 Project Structure](#-project-structure)
+    - [🧩Component Organization](#component-organization)
     - [📝Content Management](#content-management)
     - [🔍 Search \& Discovery](#-search--discovery)
     - [🖼️ Frontend](#️-frontend)
+    - [🎨 Why Not Use Pre-built Component Libraries or Design Systems?](#-why-not-use-pre-built-component-libraries-or-design-systems)
   - [🔑 Key Integrations](#-key-integrations)
-    - [Sanity → Algolia Sync](#sanity--algolia-sync)
-    - [🔄 Data Flow](#-data-flow)
+    - [🔄 Sanity → Algolia Sync](#-sanity--algolia-sync)
+    - [➡️ Data Flow](#️-data-flow)
   - [🤖 AI Development Notice](#-ai-development-notice)
   - [📝 License](#-license)
 
@@ -120,6 +123,30 @@ I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and 
 - **[Convex](https://www.convex.dev/)** - Real-time backend for user data, favorites, and library tracking
 
 ## 🏗️ Architecture
+### 📂 Project Structure
+
+This is a monorepo containing both the CMS and web application:
+```
+/
+├── apps/
+│   ├── studio/    # Sanity CMS studio, schemas, and Algolia scripts
+│   └── web/       # Next.js web application
+│       └── src/
+│           └── components/
+│               ├── algolia/    # Algolia-specific search comps
+│               ├── icons/      # SVG icons compiled with SVGR
+│               ├── layouts/    # Reusable page layouts
+│               ├── modules/    # Complex composite comps
+│               └── ui/         # Atomic UI comps
+```
+
+### 🧩Component Organization
+
+- **`/algolia`** - Search UI components that integrate with Algolia's API
+- **`/icons`** - Faction icons, UI icons, and custom SVG components
+- **`/layouts`** - Page-level layout wrappers and structural templates
+- **`/modules`** - Feature-rich components built from multiple smaller pieces
+- **`/ui`** - Simple, reusable building blocks following atomic design principles
 
 ### 📝Content Management
 The site uses **Sanity CMS** as a headless content management system to manage:
@@ -144,16 +171,29 @@ Built with **Next.js** for:
 - Fast page transitions
 - SEO optimization
 
+
+### 🎨 Why Not Use Pre-built Component Libraries or Design Systems?
+
+Since this is a solo project intended for learning, I wanted to avoid prebuilt component libraries and design systems like [Tailwind](https://tailwindcss.com/), [Shadcn](https://ui.shadcn.com/), or [Radix Primitives](https://www.radix-ui.com/). While more time-consuming and arguably reinventing the wheel, building components from scratch provides valuable opportunities to:
+
+- **Deepen understanding of UI architecture** - Learn how component libraries are structured internally
+- **Master CSS/SCSS patterns** - Develop custom styling systems and best practices
+- **Implement accessibility first-hand** - Implement ARIA, keyboard navigation, and focus management from scratch
+- **Practice design patterns** - Build reusable, composable components following atomic design principles
+- **Full creative control** - Customize every aspect without fighting against framework opinions
+
+This approach isn't practical for production work with tight deadlines, but it's ideal for a learning project where the journey matters as much as the destination.
+
 ## 🔑 Key Integrations
 
-### Sanity → Algolia Sync
+### 🔄 Sanity → Algolia Sync
 The project includes a Sanity Function that automatically syncs book data to Algolia:
 - Listens for document create/update/delete events
 - Fetches related references (authors, factions, eras, series)
 - Formats and indexes data in Algolia
 - Handles document size limits and field truncation
 
-### 🔄 Data Flow
+### ➡️ Data Flow
 ```
 Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
 ```
