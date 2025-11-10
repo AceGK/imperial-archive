@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './styles.module.scss';
+import Logo from '../../../public/imperial-archive-logo.svg';
 
 export default function PasswordPage() {
   const [password, setPassword] = useState('');
@@ -45,6 +46,7 @@ export default function PasswordPage() {
     <div className={styles.container}>
       <div className={styles.card}>
         <div className={styles.header}>
+          <Logo />
           <h1 className={styles.title}>
             🔒 Site Access Required
           </h1>

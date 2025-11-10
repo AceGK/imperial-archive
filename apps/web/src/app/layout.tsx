@@ -34,6 +34,9 @@ export default async function RootLayout({
   const initialLayout =
     layoutCookie === "full" || layoutCookie === "boxed" ? layoutCookie : "full";
 
+  // Check if user has access
+  const hasAccess = cookieStore.get("site-access")?.value === "granted";
+
   return (
     <html lang="en" data-layout={initialLayout} suppressHydrationWarning>
       <body
@@ -41,14 +44,14 @@ export default async function RootLayout({
       >
         <ThemeProvider
           attribute="data-theme"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
           <ConvextClientProvider>
-            <Nav />
+            {hasAccess && <Nav />}
             {children}
-            <Footer />
+            {hasAccess && <Footer />}
           </ConvextClientProvider>
         </ThemeProvider>
       </body>
