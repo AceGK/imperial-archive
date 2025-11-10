@@ -4,9 +4,13 @@ A comprehensive web application for browsing [Games Workshop's Warhammer 40,000]
 
 <!-- ![Black Library](https://black-library.vercel.app/images/black-library-books.jpg) -->
 
+Visit the site at [ImperialArchive.com](https://imperialarchive.com)
+
 ## 🚧 Work in Progress
 
 This project is actively being developed! You can access the site with the password **emperorprotects**
+
+
 
 Here's what's currently in the works:
 
