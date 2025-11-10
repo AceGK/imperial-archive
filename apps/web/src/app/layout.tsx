@@ -32,7 +32,7 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const layoutCookie = cookieStore.get("site-layout")?.value;
   const initialLayout =
-    layoutCookie === "full" || layoutCookie === "boxed" ? layoutCookie : "full";
+    layoutCookie === "full" || layoutCookie === "boxed" ? layoutCookie : "boxed";
 
   // Check if user has access
   const hasAccess = cookieStore.get("site-access")?.value === "granted";
