@@ -11,21 +11,22 @@ Visit the site at [ImperialArchive.com](https://imperialarchive.com)
 - [The Imperial Archive](#the-imperial-archive)
   - [📑 Table of Contents](#-table-of-contents)
   - [🚧 Work in Progress](#-work-in-progress)
-    - [Upcoming Features](#upcoming-features)
+    - [🎯 Upcoming Features](#-upcoming-features)
   - [❓ Why](#-why)
-    - [Learning Goals \& Technical Challenges](#learning-goals--technical-challenges)
-      - [Data Complexity](#data-complexity)
-      - [Technical Learnings](#technical-learnings)
-  - [🚀 Tech Stack](#-tech-stack)
+  - [🎓 Learning Goals \& Technical Challenges](#-learning-goals--technical-challenges)
+    - [📊 Data Complexity](#-data-complexity)
+    - [💡 Technical Learnings](#-technical-learnings)
+  - [⚙️ Tech Stack](#️-tech-stack)
   - [✨ Features](#-features)
   - [🏗️ Architecture](#️-architecture)
-    - [Content Management](#content-management)
-    - [Search \& Discovery](#search--discovery)
-    - [Frontend](#frontend)
-  - [📦 Key Integrations](#-key-integrations)
+    - [📝Content Management](#content-management)
+    - [🔍 Search \& Discovery](#-search--discovery)
+    - [🖼️ Frontend](#️-frontend)
+  - [🔑 Key Integrations](#-key-integrations)
     - [Sanity → Algolia Sync](#sanity--algolia-sync)
-    - [Data Flow](#data-flow)
+    - [🔄 Data Flow](#-data-flow)
   - [🌐 Live Site](#-live-site)
+  - [🤖 AI Development Notice](#-ai-development-notice)
   - [📝 License](#-license)
 
 ## 🚧 Work in Progress
@@ -34,7 +35,7 @@ This project is actively being developed! You can access the site with the passw
 
 Here's what's currently in the works:
 
-### Upcoming Features
+### 🎯 Upcoming Features
 - **Enhanced UI/UX** - Continued improvements to the interfacea and user experience for both mobile and desktop devices
 - **Advanced Algolia Features** - Including Algolia instantsearch on needed pages
 - **User Authentication** - Sign in to access personalized features
@@ -53,10 +54,10 @@ The official [Black Library](https://www.blacklibrary.com/) website and existing
 - **Better Discovery** - Find books by faction, era, or author
 - **Modern UX** - A clean, fast interface built with modern web technologies
 
-### Learning Goals & Technical Challenges
+## 🎓 Learning Goals & Technical Challenges
 I started this app to gain deeper experience with **TypeScript**, **Algolia v5**, **Sanity v4**, and **Next.js 15**. I chose to use the Black Library catalog as the dataset because I'm a fan of these books, and the catalog presents several interesting technical challenges that make it ideal for learning:
 
-#### Data Complexity
+### 📊 Data Complexity
 
 **1. No Official API**
 - Games Workshop does not provide an official API 
@@ -82,7 +83,7 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 - Author metadata (biographies, photos, external links, social profiles)
 - Faction metadata (SVG icons, descriptions, color schemes)
 
-#### Technical Learnings
+### 💡 Technical Learnings
 
 - Complex Sanity schemas with references and conditional fields
 - Algolia indexing for nested relationships and faceted search
@@ -91,7 +92,7 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 - Type-safe TypeScript interfaces mirroring CMS schemas
 - Next.js SSR/SSG optimization patterns
 
-## 🚀 Tech Stack
+## ⚙️ Tech Stack
 
 - **[Next.js](https://nextjs.org/)** - React framework for production
 - **[Sanity CMS](https://www.sanity.io/)** - Headless CMS for content management
@@ -108,7 +109,7 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 
 ## 🏗️ Architecture
 
-### Content Management
+### 📝Content Management
 The site uses **Sanity CMS** as a headless content management system to manage:
 - Book catalog (title, descriptions, publication date, format, editions, series, included factions, external links)
 - Author information
@@ -116,14 +117,14 @@ The site uses **Sanity CMS** as a headless content management system to manage:
 - Era classifications
 - Series organization
 
-### Search & Discovery
+### 🔍 Search & Discovery
 **Algolia** powers the search functionality with:
 - Real-time indexing via Sanity Functions
 - Automatic sync when content is created, updated, or deleted
 - Fast, typo-tolerant search
 - Faceted filtering by author, faction, era, and format
 
-### Frontend
+### 🖼️ Frontend
 Built with **Next.js** for:
 - Server-side rendering (SSR)
 - Static site generation (SSG)
@@ -131,7 +132,7 @@ Built with **Next.js** for:
 - Fast page transitions
 - SEO optimization
 
-## 📦 Key Integrations
+## 🔑 Key Integrations
 
 ### Sanity → Algolia Sync
 The project includes a Sanity Function that automatically syncs book data to Algolia:
@@ -140,7 +141,7 @@ The project includes a Sanity Function that automatically syncs book data to Alg
 - Formats and indexes data in Algolia
 - Handles document size limits and field truncation
 
-### Data Flow
+### 🔄 Data Flow
 ```
 Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
 ```
@@ -148,6 +149,17 @@ Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
 ## 🌐 Live Site
 
 Visit the site at [imperialarchive.com](https://imperialarchive.com)
+
+## 🤖 AI Development Notice
+
+This project was developed with assistance from AI (Claude, ChatGPT) for:
+- **Rapid prototyping** - Quickly scaffolding components, boilerplates, and testing ideas
+- **Debugging & troubleshooting** - Diagnosing functional and styling issues
+- **Documentation** - Helping structure and write this README
+
+**Important:** While AI assisted in development, all AI-generated code is thoroughly reviewed, tested, and refactored to fit the project's specific needs and coding standards. AI serves as a productivity tool, not a replacement for hands-on development and critical thinking.
+
+**Important:** All catalog data is collected via OpenLibrary, GoogleBooks, and/or manually curated and verified. The AI served as a development tool, not a content creator.
 
 ## 📝 License
 
