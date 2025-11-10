@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import { client } from "@/lib/sanity/sanity.client";
-import { single40kEraQuery, booksByEraSlug40kQuery } from "@/lib/sanity/queries";
+import { single40kEraQuery } from "@/lib/sanity/queries";
 import type { Era40k } from "@/types/sanity";
 import PageHeader from "@/components/modules/PageHeader";
-import { type BookCardData } from "@/components/modules/Cards/BookCard";
-import BookGrid from "@/components/modules/BookGrid";
+import BooksContent from "@/components/modules/BooksContent";
 
 export const revalidate = 60;
 
@@ -23,12 +22,6 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
   const era = await client.fetch<Era40k | null>(single40kEraQuery, { slug });
   if (!era) notFound();
 
-  const books = await client.fetch<BookCardData[]>(
-    booksByEraSlug40kQuery,
-    { slug },
-    { perspective: "published" }
-  );
-
   return (
     <main>
       <PageHeader
@@ -45,9 +38,11 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
         {era.period && <p style={{ textWrap: "balance" }}>{era.period}</p>}
       </PageHeader>
 
-      <section className="container">
-        <BookGrid books={books} />
-      </section>
+      <BooksContent
+        filterByEra={era.title}
+        placeholder={`Search books from ${era.title}...`}
+        noResultsText={`No books from ${era.title} match your search.`}
+      />
     </main>
   );
 }

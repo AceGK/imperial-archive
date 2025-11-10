@@ -7,14 +7,14 @@ import styles from "./styles.module.scss";
 
 type ClampProps = {
   children: React.ReactNode;
-  maxLines?: number; // default 5
+  maxLines?: number; // default 3
   labelMore?: string;
   labelLess?: string;
 };
 
 export default function Clamp({
   children,
-  maxLines = 5,
+  maxLines = 3,
   labelMore = "Read more",
   labelLess = "Show less",
 }: ClampProps) {

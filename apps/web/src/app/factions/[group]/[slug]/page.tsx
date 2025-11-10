@@ -3,7 +3,6 @@ import { client } from "@/lib/sanity/sanity.client";
 import { factionPairs40kQuery, singleFaction40kBySlugsQuery } from "@/lib/sanity/queries";
 import type { Faction40kDoc } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
-import TwoPane from "@/components/layouts/TwoPane";
 import BooksContent from "@/components/modules/BooksContent";
 import FactionDetails from "@/components/modules/Details/Faction";
 
@@ -27,8 +26,8 @@ export default async function FactionPage({ params }: { params: Promise<{ group:
   return (
     <main>
       <div className="container">
-      <Breadcrumb />
-      <FactionDetails faction={faction} />
+        <Breadcrumb />
+        <FactionDetails faction={faction} />
       </div>
       <BooksContent 
         filterByFaction={faction.title}

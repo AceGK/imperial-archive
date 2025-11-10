@@ -77,9 +77,10 @@ function convertToBookCardData(hit: BookHit): BookCardData {
 interface FilterControlsProps {
   showAuthorFilter?: boolean;
   showFactionFilter?: boolean;
+  showEraFilter?: boolean;
 }
 
-function FilterControls({ showAuthorFilter = true, showFactionFilter = true }: FilterControlsProps) {
+function FilterControls({ showAuthorFilter = true, showFactionFilter = true, showEraFilter = true }: FilterControlsProps) {
   const formatFilter = useRefinementList({
     attribute: "format",
     sortBy: ["name:asc"],
@@ -116,7 +117,7 @@ function FilterControls({ showAuthorFilter = true, showFactionFilter = true }: F
     formatFilter.items.some((item) => item.isRefined) ||
     (showAuthorFilter && authorFilter.items.some((item) => item.isRefined)) ||
     (showFactionFilter && factionFilter.items.some((item) => item.isRefined)) ||
-    eraFilter.items.some((item) => item.isRefined) ||
+    (showEraFilter && eraFilter.items.some((item) => item.isRefined)) ||
     seriesFilter.items.some((item) => item.isRefined);
 
   const filterSections: FilterSection[] = [
@@ -138,12 +139,12 @@ function FilterControls({ showAuthorFilter = true, showFactionFilter = true }: F
       refine: factionFilter.refine,
       searchable: true,
     }] : []),
-    {
+    ...(showEraFilter ? [{
       label: "Era",
       items: eraFilter.items,
       refine: eraFilter.refine,
       searchable: false,
-    },
+    }] : []),
     {
       label: "Series",
       items: seriesFilter.items,
@@ -189,7 +190,9 @@ function FilterControls({ showAuthorFilter = true, showFactionFilter = true }: F
             limit={50}
           />
         )}
-        <RefinementList attribute="era.name" title="Era" />
+        {showEraFilter && (
+          <RefinementList attribute="era.name" title="Era" />
+        )}
       </div>
     </>
   );
@@ -209,7 +212,8 @@ function Results({ noResultsText = "No books match your search." }: ResultsProps
 interface BooksContentProps {
   filterByAuthor?: string;
   filterByFaction?: string;
-  filterByFactionGroup?: string[];  // Array of faction names in the group
+  filterByFactionGroup?: string[];
+  filterByEra?: string;
   placeholder?: string;
   noResultsText?: string;
 }
@@ -218,6 +222,7 @@ export default function BooksContent({
   filterByAuthor,
   filterByFaction,
   filterByFactionGroup,
+  filterByEra,
   placeholder = "Search books...",
   noResultsText = "No books match your search."
 }: BooksContentProps) {
@@ -233,11 +238,12 @@ export default function BooksContent({
     []
   );
 
-  // Build filters string (and filter factions by group if provided)
+  // Build filters string
   const filters = React.useMemo(() => {
     const filterParts = [];
     if (filterByAuthor) filterParts.push(`authors.name:"${filterByAuthor}"`);
     if (filterByFaction) filterParts.push(`factions.name:"${filterByFaction}"`);
+    if (filterByEra) filterParts.push(`era.name:"${filterByEra}"`);
     if (filterByFactionGroup && filterByFactionGroup.length > 0) {
       // OR filter: show books that have ANY of these factions
       const factionFilters = filterByFactionGroup
@@ -246,7 +252,7 @@ export default function BooksContent({
       filterParts.push(`(${factionFilters})`);
     }
     return filterParts.length > 0 ? filterParts.join(' AND ') : undefined;
-  }, [filterByAuthor, filterByFaction, filterByFactionGroup]);
+  }, [filterByAuthor, filterByFaction, filterByFactionGroup, filterByEra]);
 
   // Track scroll direction
   React.useEffect(() => {
@@ -307,6 +313,7 @@ export default function BooksContent({
               <FilterControls 
                 showAuthorFilter={!filterByAuthor} 
                 showFactionFilter={!filterByFaction && !filterByFactionGroup}
+                showEraFilter={!filterByEra}
               />
               <SortBy items={SORT_OPTIONS} />
             </div>

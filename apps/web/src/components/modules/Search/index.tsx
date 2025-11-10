@@ -147,7 +147,7 @@ function CustomSearchBox() {
     if (query) {
       saveRecentSearch(query);
     }
-    router.push(`/search?q=${encodeURIComponent(query)}`);
+    router.push(`/books?q=${encodeURIComponent(query)}`);
   }
 
   function handleRecentSearchClick(searchTerm: string) {
