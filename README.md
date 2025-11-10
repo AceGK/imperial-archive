@@ -163,6 +163,8 @@ This project was developed with assistance from AI (Claude, ChatGPT) for:
 
 ## 📝 License
 
-© Games Workshop - All Warhammer 40,000 content and imagery is property of Games Workshop.
+**© Games Workshop** - All Warhammer 40,000 content and imagery is property of Games Workshop.
+
+**Imperial Archive** is an unofficial, fan-made database and reading guide for the Warhammer universe. This site is not affiliated with or endorsed by Games Workshop. All Warhammer® and Warhammer 40,000® trademarks, logos, names, and images are the property of Games Workshop Limited.
 
 ---
