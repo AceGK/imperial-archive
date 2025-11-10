@@ -6,6 +6,28 @@ A comprehensive web application for browsing [Games Workshop's Warhammer 40,000]
 
 Visit the site at [ImperialArchive.com](https://imperialarchive.com)
 
+## 📑 Table of Contents
+
+- [The Imperial Archive](#the-imperial-archive)
+  - [📑 Table of Contents](#-table-of-contents)
+  - [🚧 Work in Progress](#-work-in-progress)
+    - [Upcoming Features](#upcoming-features)
+  - [❓ Why](#-why)
+    - [Learning Goals \& Technical Challenges](#learning-goals--technical-challenges)
+      - [Data Complexity](#data-complexity)
+      - [Technical Learnings](#technical-learnings)
+  - [🚀 Tech Stack](#-tech-stack)
+  - [✨ Features](#-features)
+  - [🏗️ Architecture](#️-architecture)
+    - [Content Management](#content-management)
+    - [Search \& Discovery](#search--discovery)
+    - [Frontend](#frontend)
+  - [📦 Key Integrations](#-key-integrations)
+    - [Sanity → Algolia Sync](#sanity--algolia-sync)
+    - [Data Flow](#data-flow)
+  - [🌐 Live Site](#-live-site)
+  - [📝 License](#-license)
+
 ## 🚧 Work in Progress
 
 This project is actively being developed! You can access the site with the password **emperorprotects**
@@ -13,7 +35,7 @@ This project is actively being developed! You can access the site with the passw
 Here's what's currently in the works:
 
 ### Upcoming Features
-- **Enhanced UI/UX** - Continued improvements to the interface and user experience
+- **Enhanced UI/UX** - Continued improvements to the interfacea and user experience for both mobile and desktop devices
 - **Advanced Algolia Features** - Including Algolia instantsearch on needed pages
 - **User Authentication** - Sign in to access personalized features
 - **Personal Library Management** - Track books you've read and own
@@ -23,14 +45,13 @@ Here's what's currently in the works:
 
 ## ❓ Why
 
-The official [Black Library](https://www.blacklibrary.com/) website and existing third-party Warhammer 40,000 book sites like [Lexicanum](https://lexicanum.com/) and the [Warhammer 40k Wiki](https://warhammer40k.fandom.com/) lack robust search and filtering capabilities, making it difficult to discover books across the extensive catalog. This project was created to provide:
+The official [Black Library](https://www.blacklibrary.com/) website and existing third-party Warhammer 40,000 wikis like [Lexicanum](https://lexicanum.com/) and the [Warhammer 40k Wiki](https://warhammer40k.fandom.com/) lack robust search and filtering capabilities, making it difficult to discover books across the extensive catalog. This project was created to provide:
 
 - **Better Search** - Fast, typo-tolerant search powered by Algolia
-- **Advanced Filtering** - Filter by multiple criteria simultaneously (author, faction, era, series, format, etc)
+- **Advanced Filtering** - Filter by multiple criteria simultaneously (author, faction, era, series, format)
 - **Complete Catalog** - A comprehensive view of the entire Black Library collection in one place
-- **Better Discovery** - Find books by the factions you play, eras you're interested in, or authors you love
+- **Better Discovery** - Find books by faction, era, or author
 - **Modern UX** - A clean, fast interface built with modern web technologies
-
 
 ### Learning Goals & Technical Challenges
 I started this app to gain deeper experience with **TypeScript**, **Algolia v5**, **Sanity v4**, and **Next.js 15**. I chose to use the Black Library catalog as the dataset because I'm a fan of these books, and the catalog presents several interesting technical challenges that make it ideal for learning:
@@ -38,32 +59,35 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 #### Data Complexity
 
 **1. No Official API**
+- Games Workshop does not provide an official API 
 - Open APIs (OpenLibrary, Google Books) lack complete Black Library coverage
+- No official resource for data like author image/bio and faction svg icon/description
 
 **2. Multi-Format Publications**
-- Novels released as standalones, then in Omnibus collections or Anthologies
-- Short stories appear across multiple Anthologies, Omnibus collections, and standalone releases
+- Stories may released as standalones, and then in Omnibus collections and/or Anthologies
 
 **3. Multiple Content Formats**
-- Traditional print (novels, novellas, graphic novels)
+- Traditional print (novels, novellas, graphic novels, omnibus, anthologies)
 - Stories may be traditional print and/or audio
 - Each format has different metadata requirements
 
 **4. Complex Relationships**
 - Stories may belong to multiple series simultaneously
 - Series can be nested (sub-series within larger series)
-- Many relationships between books, factions, and eras
+- Relationships between books, factions, and eras
 
 **5. Rich Metadata**
-- Multiple factions per book with iconography
-- Timeline-based era classifications
+- Book meta data (author, descriptions, era, series, included factions, external links)
+  - Publication details (ISBNs, page counts, release dates, multiple editions)
+- Author metadata (biographies, photos, external links, social profiles)
+- Faction metadata (SVG icons, descriptions, color schemes)
 
 #### Technical Learnings
 
 - Complex Sanity schemas with references and conditional fields
 - Algolia indexing for nested relationships and faceted search
 - Real-time sync using Sanity Functions
-- Document size optimization near Algolia's 10KB limit
+- Document size optimization near Algolia's free 10KB limit
 - Type-safe TypeScript interfaces mirroring CMS schemas
 - Next.js SSR/SSG optimization patterns
 
@@ -128,6 +152,5 @@ Visit the site at [imperialarchive.com](https://imperialarchive.com)
 ## 📝 License
 
 © Games Workshop - All Warhammer 40,000 content and imagery is property of Games Workshop.
-
 
 ---
