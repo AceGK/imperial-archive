@@ -10,8 +10,6 @@ Visit the site at [ImperialArchive.com](https://imperialarchive.com)
 
 This project is actively being developed! You can access the site with the password **emperorprotects**
 
-
-
 Here's what's currently in the works:
 
 ### Upcoming Features
@@ -23,17 +21,51 @@ Here's what's currently in the works:
 - **User Reviews & Ratings** - Share your thoughts on books with the community
 - **Real-time Database** - Powered by [Convex](https://www.convex.dev/) for instant synchronization
 
-
-## ❓ Why?
+## ❓ Why
 
 The official [Black Library](https://www.blacklibrary.com/) website and existing third-party Warhammer 40,000 book sites like [Lexicanum](https://lexicanum.com/) and the [Warhammer 40k Wiki](https://warhammer40k.fandom.com/) lack robust search and filtering capabilities, making it difficult to discover books across the extensive catalog. This project was created to provide:
-
 
 - **Better Search** - Fast, typo-tolerant search powered by Algolia
 - **Advanced Filtering** - Filter by multiple criteria simultaneously (author, faction, era, series, format, etc)
 - **Complete Catalog** - A comprehensive view of the entire Black Library collection in one place
 - **Better Discovery** - Find books by the factions you play, eras you're interested in, or authors you love
 - **Modern UX** - A clean, fast interface built with modern web technologies
+
+
+### Learning Goals & Technical Challenges
+I started this app to gain deeper experience with **TypeScript**, **Algolia v5**, **Sanity v4**, and **Next.js 15**. I chose to use the Black Library catalog as the dataset because I'm a fan of these books, and the catalog presents several interesting technical challenges that make it ideal for learning:
+
+#### Data Complexity
+
+**1. No Official API**
+- Open APIs (OpenLibrary, Google Books) lack complete Black Library coverage
+
+**2. Multi-Format Publications**
+- Novels released as standalones, then in Omnibus collections or Anthologies
+- Short stories appear across multiple Anthologies, Omnibus collections, and standalone releases
+
+**3. Multiple Content Formats**
+- Traditional print (novels, novellas, graphic novels)
+- Stories may be traditional print and/or audio
+- Each format has different metadata requirements
+
+**4. Complex Relationships**
+- Stories may belong to multiple series simultaneously
+- Series can be nested (sub-series within larger series)
+- Many relationships between books, factions, and eras
+
+**5. Rich Metadata**
+- Multiple factions per book with iconography
+- Timeline-based era classifications
+
+#### Technical Learnings
+
+- Complex Sanity schemas with references and conditional fields
+- Algolia indexing for nested relationships and faceted search
+- Real-time sync using Sanity Functions
+- Document size optimization near Algolia's 10KB limit
+- Type-safe TypeScript interfaces mirroring CMS schemas
+- Next.js SSR/SSG optimization patterns
 
 ## 🚀 Tech Stack
 
