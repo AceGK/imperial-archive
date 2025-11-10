@@ -20,7 +20,7 @@ Here's what's currently in the works:
 - **Real-time Database** - Powered by [Convex](https://www.convex.dev/) for instant synchronization
 
 
-## Why?
+## ❓ Why?
 
 The official [Black Library](https://www.blacklibrary.com/) website and existing third-party Warhammer 40,000 book sites like [Lexicanum](https://lexicanum.com/) and the [Warhammer 40k Wiki](https://warhammer40k.fandom.com/) lack robust search and filtering capabilities, making it difficult to discover books across the extensive catalog. This project was created to provide:
 
@@ -87,7 +87,7 @@ Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
 
 ## 🌐 Live Site
 
-Visit the site at [black-library.vercel.app](https://black-library.vercel.app)
+Visit the site at [imperialarchive.com](https://imperialarchive.com)
 
 ## 📝 License
 
