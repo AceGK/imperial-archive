@@ -51,8 +51,8 @@
   padding: 0.875rem 1rem;
   font-size: 1rem;
   color: #ffffff;
-  background-color: #1f2937;
-  border: 1px solid #374151;
+  background-color: #121212;
+  border: 1px solid rgb(53, 53, 53);
   border-radius: 0.5rem;
   outline: none;
   transition: all 0.2s ease;
@@ -64,7 +64,7 @@
 }
 
 .input:focus {
-  border-color: #3b82f6;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
