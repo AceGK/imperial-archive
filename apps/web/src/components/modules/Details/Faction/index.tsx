@@ -31,7 +31,7 @@ export default function FactionDetailCard({ faction }: { faction: Faction40kDoc 
   return (
     <DetailCard
       media={media}
-      overline={overline}
+      // overline={overline}
       title={<h1>{faction.title}</h1>}
       description={
         faction.description ? (

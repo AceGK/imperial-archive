@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import { client } from "@/lib/sanity/sanity.client";
-import { factionPairs40kQuery, singleFaction40kBySlugsQuery, booksByFactionId40kQuery } from "@/lib/sanity/queries";
-import type { Faction40kDoc, Book40k } from "@/types/sanity";
+import { factionPairs40kQuery, singleFaction40kBySlugsQuery } from "@/lib/sanity/queries";
+import type { Faction40kDoc } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import TwoPane from "@/components/layouts/TwoPane";
-import BookGrid from "@/components/modules/BookGrid";
+import BooksContent from "@/components/modules/BooksContent";
 import FactionDetails from "@/components/modules/Details/Faction";
 
 export const revalidate = 60;
@@ -24,21 +24,17 @@ export default async function FactionPage({ params }: { params: Promise<{ group:
   );
   if (!faction) notFound();
 
-  const books = await client.fetch<Book40k[]>(
-    booksByFactionId40kQuery,
-    { factionId: faction._id },
-    { perspective: "published" }
-  );
-
   return (
-    <main className="container">
+    <main>
+      <div className="container">
       <Breadcrumb />
-      <TwoPane sidebar={<FactionDetails faction={faction} />}>
-        <h2>
-          Books featuring {faction.title} <span className="clr-subtle">({books.length})</span>
-        </h2>
-        <BookGrid books={books} noResultsText="No books linked to this faction yet." />
-      </TwoPane>
+      <FactionDetails faction={faction} />
+      </div>
+      <BooksContent 
+        filterByFaction={faction.title}
+        placeholder={`Search books featuring ${faction.title}...`}
+        noResultsText={`No books featuring ${faction.title} match your search.`}
+      />
     </main>
   );
 }

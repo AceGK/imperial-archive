@@ -6,15 +6,22 @@ import type { Series40k } from "@/types/sanity";
 /** Minimal Book type for the card (matches bookCardFields) */
 type CardAuthor = { name: string; slug?: string };
 type CardImageAsset = { _id: string; url: string; metadata?: any };
-type CardImage = { alt?: string | null; credit?: string | null; asset?: CardImageAsset | null } | null | undefined;
+type CardImage =
+  | {
+      alt?: string | null;
+      credit?: string | null;
+      asset?: CardImageAsset | null;
+    }
+  | null
+  | undefined;
 
 export type BookCardData = {
   _id: string;
   title: string;
   slug: string;
   authors?: CardAuthor[];
-  format?: string | null;       // pretty label from projection
-  formatValue?: string | null;  // raw, if needed
+  format?: string | null; // pretty label from projection
+  formatValue?: string | null; // raw, if needed
   publication_date?: string | null;
   factions?: string[];
   image?: CardImage;
@@ -52,7 +59,12 @@ export default function BookCard({ book, href, compact, className }: Props) {
       <span>Unknown</span>
     ) : authors.length === 1 ? (
       authors[0].slug ? (
-        <Link className={styles.authorLink} href={`/authors/${authors[0].slug}`}>{authors[0].name}</Link>
+        <Link
+          className={styles.authorLink}
+          href={`/authors/${authors[0].slug}`}
+        >
+          {authors[0].name}
+        </Link>
       ) : (
         <span>{authors[0].name}</span>
       )
@@ -61,7 +73,9 @@ export default function BookCard({ book, href, compact, className }: Props) {
     );
 
   return (
-    <div className={`${styles.card} ${className ?? ""} ${compact ? styles.compact : ""}`}>
+    <div
+      className={`${styles.card} ${className ?? ""} ${compact ? styles.compact : ""}`}
+    >
       <Link
         href={link}
         className={styles.image}
@@ -90,11 +104,24 @@ export default function BookCard({ book, href, compact, className }: Props) {
 
         <div className={styles.meta}>
           <div className={styles.chips}>
-            {book.format && <div className={styles.chip}>{book.format}</div>}
+            {book.format && (
+              <Link
+                href={`/books?format=${book.format}`}
+                className={styles.chip}
+              >
+                {book.format}
+              </Link>
+            )}
             {year && <div className={styles.year}>{year}</div>}
             {book.series?.map((s) => (
-              <Link href={`/series/${s.slug}`} className={styles.chip} key={`${book._id}-${s.slug}`}>
-                {typeof s.number === "number" && Number.isFinite(s.number) ? `${s.name} #${s.number}` : s.name}
+              <Link
+                href={`/series/${s.slug}`}
+                className={styles.chip}
+                key={`${book._id}-${s.slug}`}
+              >
+                {typeof s.number === "number" && Number.isFinite(s.number)
+                  ? `${s.name} #${s.number}`
+                  : s.name}
               </Link>
             ))}
           </div>

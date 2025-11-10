@@ -2,17 +2,29 @@
 
 .card {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 3rem;
+  background: color-mix(in oklab, var(--bg), var(--subtle) 10%);
+  padding:3rem;
+  border-radius: var(--radius);
+  margin-bottom:1rem;
+  .content {
+    display:flex;
+    flex-direction: column;
+  }
+  @include max(md){
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
 }
 
 .authorImage,
 .factionImage {
   display: grid;
   place-items: center;
-  width: 160px;
-  height: 160px;
-  margin-bottom: 1rem;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
   overflow: hidden;
@@ -24,19 +36,18 @@
   place-items: center;
   background: var(--accent);
   color: var(--on-accent);
-  // border:1px solid var(--subtle);
   img {
     background: var(--accent);
     color: var(--on-accent);
-    width: 160px;
-    height: 160px;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
     border-radius: 50%;
   }
 }
 
 .authorInitials {
-  font-size: 3rem; /* tweak as desired */
+  font-size: 3rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -63,7 +74,9 @@
 
 .actions {
   display: flex;
-  justify-content: center;
+  @include max(md){
+    justify-content: center;
+  }
 }
 .footer {
   margin-top: 0.75rem;
@@ -72,11 +85,13 @@
 .links {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem;
   list-style: none;
-  padding: 1rem 0;
-  justify-content: center;
+  padding-left:0;
+  padding-top:1rem;
 }
+
 .icon {
   width: 32px;
   height: 32px;

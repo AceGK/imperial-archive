@@ -1,19 +1,20 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { client } from "@/lib/sanity/sanity.client";
-import { groupedFactions40kQuery, booksByFactionGroupSlug40kQuery } from "@/lib/sanity/queries";
+import { groupedFactions40kQuery } from "@/lib/sanity/queries";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
 import FactionCard from "@/components/modules/Cards/FactionCard";
-import BookGrid from "@/components/modules/BookGrid";
+import BooksContent from "@/components/modules/BooksContent";
 import type { FactionGroupWithItems } from "@/types/sanity";
-import type { BookCardData } from "@/components/modules/Cards/BookCard";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 
 export const revalidate = 60;
 
 // Generate static params for all groups
 export async function generateStaticParams() {
-  const groups = await client.fetch<FactionGroupWithItems[]>(groupedFactions40kQuery);
+  const groups = await client.fetch<FactionGroupWithItems[]>(
+    groupedFactions40kQuery
+  );
   return groups.map((g) => ({ group: g.slug }));
 }
 
@@ -25,7 +26,9 @@ export default async function GroupPage({
   const { group } = await params;
 
   // Fetch all groups + their factions
-  const groups = await client.fetch<FactionGroupWithItems[]>(groupedFactions40kQuery);
+  const groups = await client.fetch<FactionGroupWithItems[]>(
+    groupedFactions40kQuery
+  );
   const bucket = groups.find((g) => g.slug === group);
 
   if (!bucket) notFound();
@@ -33,90 +36,88 @@ export default async function GroupPage({
   const { title, description, iconId, links, items } = bucket;
   const Icon = resolveGroupIcon(iconId);
 
-  // Books that reference any faction in this group
-  const books = await client.fetch<BookCardData[]>(
-    booksByFactionGroupSlug40kQuery,
-    { group },
-    { perspective: "published" }
-  );
+  // Extract all faction names from this group for filtering
+  const factionNames = items?.map((f) => f.title).filter(Boolean) || [];
 
   const lexicanumLink = links?.find((l) => l.type === "lexicanum")?.url ?? null;
 
   return (
-    <main className="container">
-      <Breadcrumb />
-      <section>
-        <header
-          style={{
-            display: "flex",
-            gap: 16,
-            alignItems: "center",
-            marginBottom: 24,
-          }}
-        >
-          {Icon && <Icon width={100} height={100} />}
-          <div>
-            <h1 style={{ margin: 0 }}>{title}</h1>
+    <main>
+      <div className="container">
+        <Breadcrumb />
+        <section>
+          <header
+            style={{
+              display: "flex",
+              gap: 16,
+              alignItems: "center",
+              marginBottom: 24,
+            }}
+          >
+            {Icon && <Icon width={100} height={100} />}
+            <div>
+              <h1 style={{ margin: 0 }}>{title}</h1>
 
-            {lexicanumLink && (
-              <p style={{ margin: "6px 0 8px" }}>
-                <a
-                  href={lexicanumLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "inline-flex",
-                    gap: 6,
-                    alignItems: "center",
-                    textDecoration: "underline",
-                  }}
-                  aria-label={`Open ${title} on Lexicanum (opens in a new tab)`}
-                >
-                  View on Lexicanum →
-                </a>
-              </p>
+              {lexicanumLink && (
+                <p style={{ margin: "6px 0 8px" }}>
+                  <a
+                    href={lexicanumLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "inline-flex",
+                      gap: 6,
+                      alignItems: "center",
+                      textDecoration: "underline",
+                    }}
+                    aria-label={`Open ${title} on Lexicanum (opens in a new tab)`}
+                  >
+                    View on Lexicanum →
+                  </a>
+                </p>
+              )}
+
+              {description && <p style={{ opacity: 0.8 }}>{description}</p>}
+            </div>
+          </header>
+
+          {/* Faction list */}
+          <section>
+            {items?.length > 0 ? (
+              <ul
+                style={{
+                  display: "grid",
+                  gap: 16,
+                  listStyle: "none",
+                  padding: 0,
+                  gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
+                }}
+              >
+                {items.map((f) => (
+                  <li key={f._id}>
+                    <FactionCard
+                      title={f.title}
+                      slug={`/factions/${group}/${f.slug}`}
+                      iconId={f.iconId}
+                      group={group}
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p style={{ opacity: 0.8 }}>No factions found.</p>
             )}
-
-            {description && <p style={{ opacity: 0.8 }}>{description}</p>}
-          </div>
-        </header>
-
-        {/* Faction list */}
-        <section>
-          {items?.length > 0 ? (
-            <ul
-              style={{
-                display: "grid",
-                gap: 16,
-                listStyle: "none",
-                padding: 0,
-                gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))",
-              }}
-            >
-              {items.map((f) => (
-                <li key={f._id}>
-                  <FactionCard
-                    title={f.title}
-                    slug={`/factions/${group}/${f.slug}`}
-                    iconId={f.iconId}
-                    group={group}
-                  />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p style={{ opacity: 0.8 }}>No factions found.</p>
-          )}
+          </section>
         </section>
+      </div>
 
-        {/* Books grid */}
-        <section>
-          <h2>
-            Books featuring {title}{" "}
-            <span className="clr-subtle">({books.length})</span>
-          </h2>
-          <BookGrid books={books} noResultsText="No books yet." />
-        </section>
+      {/* Books filtered by faction group */}
+      <section>
+        <BooksContent
+          filterByFactionGroup={factionNames}
+          placeholder={`Search books featuring ${title}...`}
+          noResultsText={`No books featuring ${title} match your search.`}
+        />
       </section>
     </main>
   );

@@ -105,7 +105,7 @@ I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and 
 ## ✨ Features
 
 - **Fast Search** - Powered by Algolia for instant results
-- **[Browse all books](https://black-library.vercel.app/books)** - Browse the full catalog of Warhammer 40,000 stories across every age of the Imperium.
+- **[Browse all books](https://black-library.vercel.app/books)** - Browse the full catalog of Warhammer 40,000 stories
 - **[Browse by Author](https://black-library.vercel.app/authors)** - Explore books from your favorite Black Library authors
 - **[Browse by Faction](https://black-library.vercel.app/factions)** - Find books about specific armies, legions, chapters, and factions
 - **[Browse by Era](https://black-library.vercel.app/eras)** - Discover books from different Warhammer 40,000 eras

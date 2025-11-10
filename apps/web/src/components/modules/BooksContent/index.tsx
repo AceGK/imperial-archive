@@ -27,7 +27,14 @@ const algoliaAppId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
 const algoliaApiKey = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY!;
 
 const searchClient = algoliasearch(algoliaAppId, algoliaApiKey);
-const routing = createAlgoliaRouting("books40k");
+
+const SORT_OPTIONS = [
+  { label: "Most Recent", value: "books40k" },
+  { label: "Title A-Z", value: "books40k_title_asc" },
+  { label: "Title Z-A", value: "books40k_title_desc" },
+  { label: "Publication Date ↓", value: "books40k_date_desc" },
+  { label: "Publication Date ↑", value: "books40k_date_asc" },
+];
 
 function convertToBookCardData(hit: BookHit): BookCardData {
   return {
@@ -67,15 +74,12 @@ function convertToBookCardData(hit: BookHit): BookCardData {
   };
 }
 
-const SORT_OPTIONS = [
-  { label: "Most Recent", value: "books40k" },
-  { label: "Title A-Z", value: "books40k_title_asc" },
-  { label: "Title Z-A", value: "books40k_title_desc" },
-  { label: "Publication Date ↓", value: "books40k_date_desc" },
-  { label: "Publication Date ↑", value: "books40k_date_asc" },
-];
+interface FilterControlsProps {
+  showAuthorFilter?: boolean;
+  showFactionFilter?: boolean;
+}
 
-function FilterControls() {
+function FilterControls({ showAuthorFilter = true, showFactionFilter = true }: FilterControlsProps) {
   const formatFilter = useRefinementList({
     attribute: "format",
     sortBy: ["name:asc"],
@@ -110,8 +114,8 @@ function FilterControls() {
 
   const hasActiveFilters =
     formatFilter.items.some((item) => item.isRefined) ||
-    authorFilter.items.some((item) => item.isRefined) ||
-    factionFilter.items.some((item) => item.isRefined) ||
+    (showAuthorFilter && authorFilter.items.some((item) => item.isRefined)) ||
+    (showFactionFilter && factionFilter.items.some((item) => item.isRefined)) ||
     eraFilter.items.some((item) => item.isRefined) ||
     seriesFilter.items.some((item) => item.isRefined);
 
@@ -122,18 +126,18 @@ function FilterControls() {
       refine: formatFilter.refine,
       searchable: false,
     },
-    {
+    ...(showAuthorFilter ? [{
       label: "Author",
       items: authorFilter.items,
       refine: authorFilter.refine,
       searchable: true,
-    },
-    {
+    }] : []),
+    ...(showFactionFilter ? [{
       label: "Faction",
       items: factionFilter.items,
       refine: factionFilter.refine,
       searchable: true,
-    },
+    }] : []),
     {
       label: "Era",
       items: eraFilter.items,
@@ -159,14 +163,16 @@ function FilterControls() {
 
       <div className={styles.desktopFilters}>
         <RefinementList attribute="format" title="Format" />
-        <RefinementList
-          attribute="authors.name"
-          title="Author"
-          searchable
-          limit={100}
-          showMore
-          showMoreLimit={200}
-        />
+        {showAuthorFilter && (
+          <RefinementList
+            attribute="authors.name"
+            title="Author"
+            searchable
+            limit={100}
+            showMore
+            showMoreLimit={200}
+          />
+        )}
         <RefinementList
           attribute="series.title"
           title="Series"
@@ -175,33 +181,72 @@ function FilterControls() {
           showMore
           showMoreLimit={200}
         />
-        <RefinementList
-          attribute="factions.name"
-          title="Faction"
-          searchable
-          limit={50}
-        />
+        {showFactionFilter && (
+          <RefinementList
+            attribute="factions.name"
+            title="Faction"
+            searchable
+            limit={50}
+          />
+        )}
         <RefinementList attribute="era.name" title="Era" />
       </div>
     </>
   );
 }
 
-function Results() {
+interface ResultsProps {
+  noResultsText?: string;
+}
+
+function Results({ noResultsText = "No books match your search." }: ResultsProps) {
   const { hits } = useHits() as { hits: BookHit[] };
   const books = hits.map(convertToBookCardData);
 
-  return <BookGrid books={books} noResultsText="No books match your search." />;
+  return <BookGrid books={books} noResultsText={noResultsText} />;
 }
 
-// components/modules/BooksContent/index.tsx
-export default function BooksContent() {
+interface BooksContentProps {
+  filterByAuthor?: string;
+  filterByFaction?: string;
+  filterByFactionGroup?: string[];  // Array of faction names in the group
+  placeholder?: string;
+  noResultsText?: string;
+}
+
+export default function BooksContent({ 
+  filterByAuthor,
+  filterByFaction,
+  filterByFactionGroup,
+  placeholder = "Search books...",
+  noResultsText = "No books match your search."
+}: BooksContentProps) {
   const isNavVisible = useScrollVisibility();
   const [isSticky, setIsSticky] = React.useState(false);
   const [isScrollingDown, setIsScrollingDown] = React.useState(true);
   const controlsRef = React.useRef<HTMLDivElement>(null);
   const sentinelRef = React.useRef<HTMLDivElement>(null);
   const lastScrollY = React.useRef(0);
+
+  const routing = React.useMemo(
+    () => createAlgoliaRouting("books40k"),
+    []
+  );
+
+  // Build filters string (and filter factions by group if provided)
+  const filters = React.useMemo(() => {
+    const filterParts = [];
+    if (filterByAuthor) filterParts.push(`authors.name:"${filterByAuthor}"`);
+    if (filterByFaction) filterParts.push(`factions.name:"${filterByFaction}"`);
+    if (filterByFactionGroup && filterByFactionGroup.length > 0) {
+      // OR filter: show books that have ANY of these factions
+      const factionFilters = filterByFactionGroup
+        .map(name => `factions.name:"${name}"`)
+        .join(' OR ');
+      filterParts.push(`(${factionFilters})`);
+    }
+    return filterParts.length > 0 ? filterParts.join(' AND ') : undefined;
+  }, [filterByAuthor, filterByFaction, filterByFactionGroup]);
 
   // Track scroll direction
   React.useEffect(() => {
@@ -233,10 +278,7 @@ export default function BooksContent() {
     return () => observer.disconnect();
   }, []);
 
-  // Apply translation when:
-  // - Controls are sticky AND nav is visible
-  // - BUT when scrolling up, wait until NOT sticky to remove translation
-const shouldTranslate = isSticky && isNavVisible && (isScrollingDown || isSticky);
+  const shouldTranslate = isSticky && isNavVisible && (isScrollingDown || isSticky);
 
   return (
     <InstantSearchNext
@@ -245,7 +287,10 @@ const shouldTranslate = isSticky && isNavVisible && (isScrollingDown || isSticky
       routing={routing}
       future={{ preserveSharedStateOnUnmount: true }}
     >
-      <Configure hitsPerPage={25} />
+      <Configure 
+        hitsPerPage={25}
+        {...(filters && { filters })}
+      />
 
       <div className={styles.contentWrapper}>
         {/* Invisible sentinel element */}
@@ -258,8 +303,11 @@ const shouldTranslate = isSticky && isNavVisible && (isScrollingDown || isSticky
         >
           <div className="container">
             <div className={styles.controlsInner}>
-              <SearchBox placeholder="Search books..." />
-              <FilterControls />
+              <SearchBox placeholder={placeholder} />
+              <FilterControls 
+                showAuthorFilter={!filterByAuthor} 
+                showFactionFilter={!filterByFaction && !filterByFactionGroup}
+              />
               <SortBy items={SORT_OPTIONS} />
             </div>
           </div>
@@ -270,7 +318,7 @@ const shouldTranslate = isSticky && isNavVisible && (isScrollingDown || isSticky
           <div className={styles.mainContent}>
             <Stats singularLabel="book" pluralLabel="books" />
             <CurrentRefinements />
-            <Results />
+            <Results noResultsText={noResultsText} />
             <Pagination />
           </div>
         </section>
