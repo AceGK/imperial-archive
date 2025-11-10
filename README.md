@@ -49,6 +49,7 @@ This project is actively being developed! Here's what's currently in the works:
 - **Favorites & Wishlists** - Save books you want to read
 - **User Reviews & Ratings** - Share your thoughts on books with the community
 - **Real-time Database** - Powered by [Convex](https://www.convex.dev/) for instant synchronization
+- **Missing or Incomplete Book Data** - Ongoing manual curation to fill catalog gaps, with potential community submissions in the future
 
 ## ❓ Why
 
@@ -200,10 +201,10 @@ Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
 
 ## 🤖 AI Development Notice
 
-This project was developed with assistance from AI (Claude) for:
-- **Rapid prototyping** - Quickly scaffolding components, boilerplates, and testing ideas
-- **Debugging & troubleshooting** - Diagnosing functional and styling issues
-- **Documentation** - Helping structure and write this README
+This project was developed with assistance from AI tools including:
+- **[Claude](https://claude.ai/)** - Rapid prototyping, troubleshooting, and documentation
+- **[GitHub Copilot](https://github.com/features/copilot)** - Code completion and suggestions within VS Code
+- **[VS Code IntelliSense](https://code.visualstudio.com/docs/editor/intellisense)** - Type-aware code completions and parameter hints
 
 **Important:** While AI assisted in development, all AI-generated code is thoroughly reviewed, tested, and refactored to fit the project's specific needs and coding standards. AI serves as a productivity tool, not a replacement for hands-on development and critical thinking.
 
