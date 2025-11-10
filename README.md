@@ -65,7 +65,7 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 - No official resource for data like author image/bio and faction svg icon/description
 
 **2. Multi-Format Publications**
-- Stories may released as standalones, and then in Omnibus collections and/or Anthologies
+- Stories may be released as standalones, and then in Omnibus collections and/or Anthologies
 
 **3. Multiple Content Formats**
 - Traditional print (novels, novellas, graphic novels, omnibus, anthologies)
