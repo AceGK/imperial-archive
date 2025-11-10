@@ -94,9 +94,12 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 
 ## ⚙️ Tech Stack
 
-- **[Next.js](https://nextjs.org/)** - React framework for production
+- **[Next.js](https://nextjs.org/)** - Full-stack React framework with server-side rendering, static generation, and API routes
+   - **[Swiper](https://swiperjs.com/)** - Touch-enabled carousels and sliders for book browsing
+   - **[dnd kit](https://dndkit.com/)** - Drag and drop toolkit for sortable lists and interactive UI
 - **[Sanity CMS](https://www.sanity.io/)** - Headless CMS for content management
-- **[Algolia](https://www.algolia.com/)** - Search and discovery API for fast, relevant search
+- **[Algolia](https://www.algolia.com/)** - Search and discovery API for fast, relevant search and filtering
+- **[Convex](https://www.convex.dev/)** - Real-time backend for user data, favorites, and library tracking
 
 ## ✨ Features
 
