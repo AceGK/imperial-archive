@@ -8,7 +8,7 @@ type Props = {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   initialGroupKey?: string;   // eg "space-marines"
-  basePath?: string;          // keep for future, default "/factions"
+  basePath?: string; // defaults to "/factions"
   className?: string;
 };
 

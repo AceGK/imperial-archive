@@ -44,7 +44,10 @@ samp {
 section {
   padding-block: 2rem;
   &.row {
-    padding-block: 6rem;
+    padding-block: 4rem;
+    &__lg {
+      padding-block: 6rem;
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Carousel from "@/components/modules/Carousel";
+import Carousel from "@/components/modules/Carousel/base";
 import type { SwiperOptions } from "swiper/types";
 import AuthorCard from "@/components/modules/Cards/AuthorCard";
 import type { Author40k } from "@/types/sanity";

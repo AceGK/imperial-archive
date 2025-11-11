@@ -318,7 +318,44 @@ export const bookBySlug40kQuery = groq`
     credit,
     asset->{ _id, url, metadata{ dimensions } }
   },
-
+  
+  "contents": coalesce(
+    contents[]{
+      "book": work->{
+        _id,
+        title,
+        "slug": slug.current,
+        "authors": coalesce(
+          authors[]->{
+            "name": coalesce(name, title),
+            "slug": slug.current
+          },
+          []
+        )
+      }
+    }.book,
+    []
+  ),
+  
+  "seriesNavigation": *[_type == "series40k" && references(^._id)]{
+    "seriesSlug": slug.current,
+    "seriesName": title,
+    "lists": lists[]{
+      "listName": name,
+      "allBooks": items[]{
+        "bookData": work->{
+          _id,
+          title,
+          "slug": slug.current,
+          image {
+            asset-> { url },
+            alt
+          }
+        }
+      }.bookData
+    }
+  },
+  
   "series": coalesce(
     *[_type == "series40k" && references(^._id)]{
       "name": title,
@@ -333,9 +370,9 @@ export const bookBySlug40kQuery = groq`
 export const booksByAuthorSlug40kQuery = groq`
 *[
   _type == "book40k" &&
-  references(*[_type == "author40k" && slug.current == $slug]._id)
+  references(*[_type == "author40k" && slug.current == $authorSlug]._id)
 ]
-| order(title asc){
+| order(publicationDate desc, title asc)[0...12]{
   ${bookCardFields}
 }
 `;
@@ -385,6 +422,19 @@ export const allSeries40kQuery = groq`
     }
   },
   links
+}
+`;
+
+export const booksBySeriesSlug40kQuery = groq`
+*[
+  _type == "series40k" && 
+  slug.current == $seriesSlug
+][0]{
+  title,
+  "slug": slug.current,
+  "books": lists[].items[].work->{
+    ${bookCardFields}
+  }
 }
 `;
 

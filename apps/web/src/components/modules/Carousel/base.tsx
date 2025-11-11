@@ -12,6 +12,7 @@ import Button from "@/components/ui/Button";
 type CarouselProps = {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
+  headerSlot?: React.ReactNode; // NEW: Content to render after subtitle
   /** Slides to render (each item becomes a SwiperSlide) */
   items: React.ReactNode[];
   /** Generic Swiper options you can override/preset */
@@ -31,6 +32,7 @@ type CarouselProps = {
 export default function Carousel({
   title,
   subtitle,
+  headerSlot,
   items,
   slidesPerView = 1.2,
   spaceBetween = 12,
@@ -48,10 +50,16 @@ export default function Carousel({
     <div className={`${styles.wrap} ${className || ""}`}>
       {(title || subtitle) && (
         <header className={styles.header}>
-          {title && <h2 className={styles.title}>{title}</h2>}
+          {title && (
+            <h2 className={`${styles.title} ${subtitle ? styles.hasSubtitle : ''}`}>
+              {title}
+            </h2>
+          )}
           {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
         </header>
       )}
+      
+      {headerSlot}
 
       <Swiper
         modules={[Navigation, Pagination, A11y, Keyboard, Autoplay]}

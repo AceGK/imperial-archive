@@ -20,12 +20,12 @@
   font-size: clamp(1.25rem, 5vw, 2rem);
   text-transform: uppercase;
   margin: 0;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--foreground);
   width: fit-content;
   text-align: center;
   position: relative;
-  &::after {
+  &.hasSubtitle::after {
     content: "";
     position: absolute;
     bottom: -0.75rem;

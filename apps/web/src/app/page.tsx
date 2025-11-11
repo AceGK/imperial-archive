@@ -84,7 +84,7 @@ export default async function Home() {
         <Search />
       </Hero>
 
-      <section className="container row">
+      <section className="container row__lg">
         <BooksCarousel
           title="Featured Books"
           subtitle="A glimpse into the Black Library archives"
@@ -93,7 +93,7 @@ export default async function Home() {
         />
       </section>
 
-      <section className="container row">
+      <section className="container row__lg">
         <AuthorsCarousel
           title="Featured Authors"
           subtitle="Browse the authors of the Black Library"
@@ -101,7 +101,7 @@ export default async function Home() {
         />
       </section>
 
-      <section className="container row">
+      <section className="container row__lg">
         <FactionCarousel
           title="Browse by Faction"
           subtitle="Find books on specific armies, legions, chapters, and factions"
@@ -110,7 +110,7 @@ export default async function Home() {
         />
       </section>
 
-      <section className="container row">
+      <section className="container row__lg">
         <EraCarousel
           title="Browse by Era"
           subtitle="Find books from specific eras"
