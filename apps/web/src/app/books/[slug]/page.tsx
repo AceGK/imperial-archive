@@ -6,6 +6,13 @@ import { bookSlugs40kQuery, bookBySlug40kQuery } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import styles from "./styles.module.scss";
 import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/Accordion";
 
 export const revalidate = 60;
 
@@ -159,50 +166,52 @@ export default async function BookPage({
             </div>
           )}
 
-          {factions.length > 0 && (
-            <div className={styles.meta}>
-              <div className={styles.label}>Factions</div>
-              <div className={styles.value}>
-                {factions.map((f: any, i: number) => {
-                  const href = f?.groupSlug
-                    ? `/factions/${encodeURIComponent(f.groupSlug)}/${encodeURIComponent(f.slug)}`
-                    : f?.slug
-                      ? `/factions/${encodeURIComponent(f.slug)}`
-                      : "";
-                  const label = f?.title ?? f?.slug ?? "Unknown";
-                  const node = href ? (
-                    <Link
-                      key={`${f?.groupSlug ?? "nogroup"}-${f?.slug ?? i}`}
-                      href={href}
-                    >
-                      {label}
-                    </Link>
-                  ) : (
-                    <span key={`${label}-${i}`}>{label}</span>
-                  );
-                  return (
-                    <span key={`f-${f?.slug ?? i}`}>
-                      {node}
-                      {i < factions.length - 1 ? ", " : ""}
-                    </span>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+          {(book.description || book.story || book.faction) && (
+            <Accordion type="multiple" defaultValue={["description"]}>
+              {book.description && (
+                <AccordionItem value="description">
+                  <AccordionTrigger>Description</AccordionTrigger>
+                  <AccordionContent>{book.description}</AccordionContent>
+                </AccordionItem>
+              )}
+              {book.story && (
+                <AccordionItem value="short-story">
+                  <AccordionTrigger>Story</AccordionTrigger>
+                  <AccordionContent>{book.story}</AccordionContent>
+                </AccordionItem>
+              )}
+              {factions.length > 0 && (
+                <AccordionItem value="factions">
+                  <AccordionTrigger>
+                    Factions{" "}
+                    <Badge variant="secondary" size="sm">May Contain Spoilers</Badge>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className={styles.value}>
+                      {factions.map((f: any, i: number) => {
+                        const href =
+                          f?.groupSlug && f?.slug
+                            ? `/factions/${f.groupSlug}/${f.slug}`
+                            : null;
 
-          {book.description && (
-            <section className={styles.block}>
-              <h2>Description</h2>
-              <p>{book.description}</p>
-            </section>
-          )}
+                        const label = f?.title ?? f?.slug ?? "Unknown";
 
-          {book.story && (
-            <section className={styles.block}>
-              <h2>Story</h2>
-              <p>{book.story}</p>
-            </section>
+                        return (
+                          <span key={f?.slug ?? i}>
+                            {href ? (
+                              <Link href={href}>{label}</Link>
+                            ) : (
+                              <span>{label}</span>
+                            )}
+                            {i < factions.length - 1 && ", "}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+            </Accordion>
           )}
         </div>
       </article>

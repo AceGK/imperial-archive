@@ -1,4 +1,4 @@
-@import "@/styles/variables"; // exposes CSS vars via your theme mixin
+@use "@/styles/breakpoints" as *;
 
 .badge {
   --pad-x: 10px;
@@ -7,7 +7,7 @@
   align-items: center;
   gap: 6px;
   padding: var(--pad-y) var(--pad-x);
-  border-radius: 999px; /* pill */
+  border-radius: 999px;
   font-size: 12px;
   line-height: 1.2;
   border: 1px solid transparent;
@@ -15,11 +15,9 @@
   user-select: none;
 }
 
-/* sizes */
 .sm { --pad-x: 8px; font-size: 11px; }
 .md { --pad-x: 10px; font-size: 12px; }
 
-/* variants (using your color variables) */
 .default {
   background: var(--accent);
   color: var(--on-accent);
