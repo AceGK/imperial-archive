@@ -193,7 +193,7 @@ export default function BookDetails({ book }: BookDetailProps) {
             book.series ||
             book.contents) && (
             <Accordion type="multiple" defaultValue={["description", "series"]}>
-              {book.series && (
+              {series.length > 0 && (
                 <AccordionItem value="series">
                   <AccordionTrigger>Series</AccordionTrigger>
                   <AccordionContent>

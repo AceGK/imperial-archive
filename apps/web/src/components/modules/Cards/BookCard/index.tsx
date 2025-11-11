@@ -69,7 +69,7 @@ export default function BookCard({ book, href, compact, className }: Props) {
         <span>{authors[0].name}</span>
       )
     ) : (
-      "Various"
+      "Various Authors"
     );
 
   return (
