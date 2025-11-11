@@ -114,7 +114,7 @@ export default async function BookPage({
           {book.format && (
             <div className={styles.meta}>
               <div className={styles.label}>Format</div>
-              <div className={styles.format}>{book.format}</div>
+              <Link href={`/books?format=${book.format}`} className={styles.format}>{book.format}</Link>
             </div>
           )}
 
