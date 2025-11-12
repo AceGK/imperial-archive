@@ -50,7 +50,7 @@ export default async function SeriesPage({
         subtitle={data.description || `Stories from the ${data.title} series.`}
         align="center"
         strongOverlay
-        height="xs"
+        height="sm"
         priority
         image={hero}
         alt={hero?.alt}

@@ -22,7 +22,7 @@ export default async function FactionsPage() {
         subtitle="Browse Warhammer 40,000 stories organized by the Imperium’s armies, traitor legions, xenos empires, and heretical factions."
         align="center"
         strongOverlay
-        height="xs"
+        height="sm"
         priority
         image="/images/astra-militarum-lewis-jones.jpg"
         credit="Astra Militarum by Lewis Jones"

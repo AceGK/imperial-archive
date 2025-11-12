@@ -2,8 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import {useEffect, useState} from "react";
-import {usePathname} from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import styles from "./styles.module.scss";
 import ThemeToggle from "@/components/modules/ThemeToggle";
@@ -28,15 +28,19 @@ export default function Nav() {
   useEffect(() => {
     if (open) document.documentElement.style.overflow = "hidden";
     else document.documentElement.style.overflow = "";
-    return () => { document.documentElement.style.overflow = ""; };
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
   }, [open]);
 
   // close on route change
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
-    <nav 
-      className={`${styles.navWrapper} ${!isVisible ? styles.hidden : ""}`} 
+    <nav
+      className={`${styles.navWrapper} ${!isVisible ? styles.hidden : ""}`}
       aria-label="Primary"
     >
       <div className="container">
@@ -66,8 +70,12 @@ export default function Nav() {
 
           {/* desktop right controls */}
           <div className={styles.secondary}>
-            <Button href="/login" variant="secondary" size="sm">Login</Button>
-            <Button href="/signup" variant="primary" size="sm">Signup</Button>
+            <Button href="/signup" variant="secondary" size="sm">
+              Signup
+            </Button>
+            <Button href="/login" variant="primary" size="sm">
+              Login
+            </Button>
             <SiteWidthToggle />
             <ThemeToggle />
           </div>
@@ -107,8 +115,12 @@ export default function Nav() {
         </ul>
 
         <div className={styles.mobileActions}>
-          <Button href="/login" variant="secondary" size="sm">Login</Button>
-          <Button href="/signup" variant="primary" size="sm">Signup</Button>
+          <Button href="/signup" variant="secondary" size="sm">
+            Signup
+          </Button>
+          <Button href="/login" variant="primary" size="sm">
+            Login
+          </Button>
           <SiteWidthToggle />
           <ThemeToggle />
         </div>

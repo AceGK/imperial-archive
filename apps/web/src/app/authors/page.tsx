@@ -33,7 +33,7 @@ export default async function AuthorsPage() {
         subtitle="Discover the writers who bring the grim darkness of the far future to life across the Black Library."
         align="center"
         strongOverlay
-        height="xs"
+        height="sm"
         priority
         image="/images/imperial-library-erik-nykvist.jpg"
         credit="Imperial Library by Erik Nykvist"

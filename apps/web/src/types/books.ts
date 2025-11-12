@@ -49,4 +49,5 @@ export type BookDetailData = {
   description?: string | null;
   story?: string | null;
   contents?: BookContent[]; 
+  page_count?: number | null;
 };

@@ -12,10 +12,10 @@ export default async function BrowsePage() {
         subtitle="Browse the full catalog of Warhammer 40,000 stories across every age of the Imperium."
         align="center"
         strongOverlay
-        height="xs"
+        height="sm"
         priority
         image="/images/black-library-books.jpg"
-        alt="Black Library © Games Workshop"
+        credit="Black Library © Games Workshop"
       />
 
       <BooksContent />

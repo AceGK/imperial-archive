@@ -75,6 +75,13 @@ export default defineType({
               rows: 2,
             }),
             defineField({
+              name: "ordered",
+              title: "Ordered List",
+              type: "boolean",
+              description: "Enable to show 'Preceded by' / 'Followed by' navigation links for books in this list.",
+              initialValue: true,
+            }),
+            defineField({
               name: "items",
               title: "Books in Order",
               type: "array",

@@ -32,7 +32,7 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
         alt={era.image?.alt}
         align="center"
         strongOverlay
-        height="xs"
+        height="sm"
         priority
       >
         {era.period && <p style={{ textWrap: "balance" }}>{era.period}</p>}

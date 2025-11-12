@@ -20,7 +20,7 @@ export default async function EraListPage() {
         subtitle="Discover the defining ages of the Imperium, from the Great Crusade to the Indomitus Crusade."
         align="center"
         strongOverlay
-        height="xs"
+        height="sm"
         priority
         image="/images/the-holy-war-begins-eddy-gonz.jpg"
         credit="The War Begins by Eduardo González Dávila"

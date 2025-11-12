@@ -1,0 +1,23 @@
+.seriesNav {
+  // margin-top: 1rem;
+  padding-top: 1rem;
+  // border-top: 1px solid var(--border, #eee);
+}
+
+.seriesNavLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.navLink {
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.listTitle {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary, #666);
+}

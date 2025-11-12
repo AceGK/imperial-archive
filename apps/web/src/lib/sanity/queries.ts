@@ -318,7 +318,7 @@ export const bookBySlug40kQuery = groq`
     credit,
     asset->{ _id, url, metadata{ dimensions } }
   },
-  
+
   "contents": coalesce(
     contents[]{
       "book": work->{
@@ -341,14 +341,18 @@ export const bookBySlug40kQuery = groq`
     "seriesSlug": slug.current,
     "seriesName": title,
     "lists": lists[]{
-      "listName": name,
+      "listName": title,
+      "ordered": select(
+        defined(ordered) => ordered,
+        true
+      ),
       "allBooks": items[]{
         "bookData": work->{
           _id,
           title,
           "slug": slug.current,
-          image {
-            asset-> { url },
+          image{
+            asset->{ url },
             alt
           }
         }
