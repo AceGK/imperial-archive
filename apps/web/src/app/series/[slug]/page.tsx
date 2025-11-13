@@ -76,9 +76,9 @@ export default async function SeriesPage({
                     <h2 style={{ fontSize: "1.125rem", fontWeight: 700, margin: 0 }}>
                       {list.title}
                     </h2>
-                    {list.subtitle && (
+                    {list.description && (
                       <p style={{ margin: "0.25rem 0 0", color: "var(--subtle)" }}>
-                        {list.subtitle}
+                        {list.description}
                       </p>
                     )}
                   </header>

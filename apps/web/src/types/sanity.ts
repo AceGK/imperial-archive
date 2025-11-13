@@ -131,7 +131,7 @@ export type SeriesContentItem = {
 export type SeriesList40k = {
   title: string;
   key?: string | null;               // from slug.current
-  subtitle?: string | null;
+  description?: string | null; 
   items?: SeriesContentItem[] | null;
 };
 
