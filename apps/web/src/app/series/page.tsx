@@ -44,7 +44,6 @@ export default async function SeriesIndexPage() {
                 key={s._id}
                 title={s.title}
                 slug={s.slug}
-                description={s.description ?? undefined}
                 image={s.image}
                 countLabel={
                   count ? `${count} book${count > 1 ? "s" : ""}` : undefined

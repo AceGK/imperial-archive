@@ -447,7 +447,8 @@ export const series40kBySlugQuery = groq`
   _id,
   title,
   "slug": slug.current,
-  description,
+  subtitle, 
+  description,  
   image{
     alt,
     credit,

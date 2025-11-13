@@ -131,7 +131,7 @@ export type SeriesContentItem = {
 export type SeriesList40k = {
   title: string;
   key?: string | null;               // from slug.current
-  description?: string | null;
+  subtitle?: string | null;
   items?: SeriesContentItem[] | null;
 };
 
@@ -141,7 +141,7 @@ export type Series40kDoc = {
   _type: 'series40k';
   title: string;
   slug: string;                      // projected as slug.current
-  description?: string | null;
+  subtitle?: string | null;
   image?: SanityImageField;
   lists?: SeriesList40k[] | null;
   totalCount?: number;

@@ -47,7 +47,7 @@ export default async function SeriesPage({
     <>
       <PageHeader
         title={data.title}
-        subtitle={data.description || `Stories from the ${data.title} series.`}
+        subtitle={data.subtitle || `Stories from the ${data.title} series.`}
         align="center"
         strongOverlay
         height="sm"
@@ -76,9 +76,9 @@ export default async function SeriesPage({
                     <h2 style={{ fontSize: "1.125rem", fontWeight: 700, margin: 0 }}>
                       {list.title}
                     </h2>
-                    {list.description && (
+                    {list.subtitle && (
                       <p style={{ margin: "0.25rem 0 0", color: "var(--subtle)" }}>
-                        {list.description}
+                        {list.subtitle}
                       </p>
                     )}
                   </header>
