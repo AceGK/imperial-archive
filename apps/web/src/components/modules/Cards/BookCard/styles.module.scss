@@ -7,7 +7,7 @@
   text-decoration: none;
   color: inherit;
   border: 1px solid var(--border);
-  background:var(--bg);
+  background:var(--bg-accent);
   border-radius: 8px;
   transition:
     box-shadow 0.2s ease,
@@ -17,7 +17,7 @@
 
   &:hover {
     border: 1px solid var(--primary);
-    background: color-mix(in srgb, var(--bg) 98%, var(--subtle));
+    background: color-mix(in srgb, var(--bg-accent) 98%, var(--subtle));
   }
 }
 

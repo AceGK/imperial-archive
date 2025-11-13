@@ -28,10 +28,17 @@ export default defineType({
     }),
 
     defineField({
-      name: "description",
-      title: "Description",
+      name: "subtitle",
+      title: "Subtitle",
       type: "text",
       rows: 3,
+    }),
+
+    defineField({
+      name: "description",
+      title: "Description",
+      type: "array",
+      of: [{ type: "block" }],
     }),
 
     defineField({
