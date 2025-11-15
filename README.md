@@ -14,21 +14,20 @@ A comprehensive web application for browsing [Games Workshop's Warhammer 40,000]
     - [🎯 Upcoming Features](#-upcoming-features)
   - [❓ Why](#-why)
   - [🎓 Learning Goals \& Technical Challenges](#-learning-goals--technical-challenges)
-    - [📊 Data Complexity](#-data-complexity)
-    - [💡 Technical Learnings](#-technical-learnings)
+    - [Data Complexity](#data-complexity)
+    - [Technical Learnings](#technical-learnings)
   - [✨ Features](#-features)
   - [⚙️ Tech Stack](#️-tech-stack)
   - [🏗️ Architecture](#️-architecture)
-    - [📂 Project Structure](#-project-structure)
-    - [🧩Component Organization](#component-organization)
-    - [📝Content Management](#content-management)
-    - [🔍 Search \& Discovery](#-search--discovery)
-    - [🖼️ Frontend](#️-frontend)
-    - [🎨 Why Not Use Pre-built Component Libraries or Design Systems?](#-why-not-use-pre-built-component-libraries-or-design-systems)
+    - [Project Structure](#project-structure)
+    - [Component Organization](#component-organization)
+    - [Content Management](#content-management)
+    - [Search \& Discovery](#search--discovery)
+    - [Frontend](#frontend)
+    - [Why Not Use Pre-built Component Libraries or Design Systems?](#why-not-use-pre-built-component-libraries-or-design-systems)
   - [🔑 Key Integrations](#-key-integrations)
-    - [🔄 Sanity → Algolia Sync](#-sanity--algolia-sync)
-    - [➡️ Data Flow](#️-data-flow)
-  - [🤖 AI Development Notice](#-ai-development-notice)
+    - [Sanity → Algolia Sync](#sanity--algolia-sync)
+    - [Data Flow](#data-flow)
   - [📝 License](#-license)
 
 
@@ -66,7 +65,7 @@ I started this app to gain deeper experience with **TypeScript**, **Algolia v5**
 
 I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and the catalog presents several interesting technical challenges that make it ideal for learning:
 
-### 📊 Data Complexity
+### Data Complexity
 
 **1. No Official API**
 - Games Workshop does not provide an official API 
@@ -93,7 +92,7 @@ I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and 
 - Author metadata (biographies, photos, external links, social profiles)
 - Faction metadata (SVG icons, descriptions, color schemes)
 
-### 💡 Technical Learnings
+### Technical Learnings
 
 - Complex Sanity schemas with references and conditional fields
 - Algolia indexing for nested relationships and faceted search
@@ -124,7 +123,7 @@ I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and 
 - **[Convex](https://www.convex.dev/)** - Real-time backend for user data, favorites, and library tracking
 
 ## 🏗️ Architecture
-### 📂 Project Structure
+### Project Structure
 
 This is a monorepo containing both the CMS and web application:
 ```
@@ -141,7 +140,7 @@ This is a monorepo containing both the CMS and web application:
 │               └── ui/         # Atomic UI comps
 ```
 
-### 🧩Component Organization
+### Component Organization
 
 - **`/algolia`** - Search UI components that integrate with Algolia's API
 - **`/icons`** - Faction icons, UI icons, and custom SVG components
@@ -149,7 +148,7 @@ This is a monorepo containing both the CMS and web application:
 - **`/modules`** - Feature-rich components built from multiple smaller pieces
 - **`/ui`** - Simple, reusable building blocks following atomic design principles
 
-### 📝Content Management
+### Content Management
 The site uses **Sanity CMS** as a headless content management system to manage:
 - Book catalog
 - Author information
@@ -157,14 +156,14 @@ The site uses **Sanity CMS** as a headless content management system to manage:
 - Era classifications
 - Series organization
 
-### 🔍 Search & Discovery
+### Search & Discovery
 **Algolia** powers the search functionality with:
 - Real-time indexing via Sanity Functions
 - Automatic sync when content is created, updated, or deleted
 - Fast, typo-tolerant search
 - Faceted filtering by author, faction, era, and format
 
-### 🖼️ Frontend
+### Frontend
 Built with **Next.js** for:
 - Server-side rendering (SSR)
 - Static site generation (SSG)
@@ -173,7 +172,7 @@ Built with **Next.js** for:
 - SEO optimization
 
 
-### 🎨 Why Not Use Pre-built Component Libraries or Design Systems?
+### Why Not Use Pre-built Component Libraries or Design Systems?
 
 Since this is a solo project intended for learning, I wanted to avoid prebuilt component libraries and design systems like [Tailwind](https://tailwindcss.com/), [Shadcn](https://ui.shadcn.com/), or [Radix Primitives](https://www.radix-ui.com/). While more time-consuming and arguably reinventing the wheel, building components from scratch provides valuable opportunities to:
 
@@ -187,28 +186,17 @@ This approach isn't practical for production work with tight deadlines, but it's
 
 ## 🔑 Key Integrations
 
-### 🔄 Sanity → Algolia Sync
+### Sanity → Algolia Sync
 The project includes a Sanity Function that automatically syncs book data to Algolia:
 - Listens for document create/update/delete events
 - Fetches related references (authors, factions, eras, series)
 - Formats and indexes data in Algolia
 - Handles document size limits and field truncation
 
-### ➡️ Data Flow
+### Data Flow
 ```
 Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
 ```
-
-## 🤖 AI Development Notice
-
-This project was developed with assistance from AI tools including:
-- **[Claude](https://claude.ai/)** - Rapid prototyping, troubleshooting, and documentation
-- **[GitHub Copilot](https://github.com/features/copilot)** - Code completion and suggestions within VS Code
-- **[VS Code IntelliSense](https://code.visualstudio.com/docs/editor/intellisense)** - Type-aware code completions and parameter hints
-
-**Important:** While AI assisted in development, all AI-generated code is thoroughly reviewed, tested, and refactored to fit the project's specific needs and coding standards. AI serves as a productivity tool, not a replacement for hands-on development and critical thinking.
-
-**Important:** All catalog data is collected via OpenLibrary, GoogleBooks, and/or manually curated and verified. The AI served as a development tool, not a content creator.
 
 ## 📝 License
 
