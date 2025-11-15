@@ -11,7 +11,7 @@ A comprehensive web application for browsing [Games Workshop's Warhammer 40,000]
   - [📑 Table of Contents](#-table-of-contents)
   - [🌐 Live Site](#-live-site)
   - [🚧 Work in Progress](#-work-in-progress)
-    - [🎯 Upcoming Features](#-upcoming-features)
+    - [Upcoming Features](#upcoming-features)
   - [❓ Why](#-why)
   - [🎓 Learning Goals \& Technical Challenges](#-learning-goals--technical-challenges)
     - [Data Complexity](#data-complexity)
@@ -40,7 +40,7 @@ Visit the site at [ImperialArchive.com](https://imperialarchive.com). This site 
 
 This project is actively being developed! Here's what's currently in the works:
 
-### 🎯 Upcoming Features
+### Upcoming Features
 - **Enhanced UI/UX** - Continued improvements to the interfacea and user experience for both mobile and desktop devices
 - **Advanced Algolia Features** - Including Algolia instantsearch on needed pages
 - **User Authentication** - Sign in to access personalized features
