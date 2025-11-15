@@ -1,4 +1,4 @@
-# The Imperial Archive 
+<h1>The Imperial Archive</h1>
 
 A comprehensive web application for browsing [Games Workshop's Warhammer 40,000](https://www.warhammer.com/) books from the [Black Library](https://www.blacklibrary.com/). Browse the extensive catalog by author, faction, era, and series.
 
@@ -7,29 +7,27 @@ Visit the site at [ImperialArchive.com](https://imperialarchive.com). This site 
 <!-- ![Black Library](https://black-library.vercel.app/images/black-library-books.jpg) -->
 
 
-## 📑 Contents
+<h2>Contents</h2>
 
-- [The Imperial Archive](#the-imperial-archive)
-  - [📑 Contents](#-contents)
-  - [🚧 Work in Progress](#-work-in-progress)
-    - [Upcoming Features](#upcoming-features)
-  - [Why](#why)
-  - [Learning Goals \& Technical Challenges](#learning-goals--technical-challenges)
-    - [Data Complexity](#data-complexity)
-    - [Technical Learnings](#technical-learnings)
-  - [Features](#features)
-  - [Tech Stack](#tech-stack)
-  - [Architecture](#architecture)
-    - [Project Structure](#project-structure)
-    - [Component Organization](#component-organization)
-    - [Content Management](#content-management)
-    - [Search \& Discovery](#search--discovery)
-    - [Frontend](#frontend)
-    - [Why Not Use Pre-built Component Libraries or Design Systems?](#why-not-use-pre-built-component-libraries-or-design-systems)
-  - [Key Integrations](#key-integrations)
-    - [Sanity → Algolia Sync](#sanity--algolia-sync)
-    - [Data Flow](#data-flow)
-  - [License](#license)
+- [🚧 Work in Progress](#-work-in-progress)
+  - [Upcoming Features](#upcoming-features)
+- [Why](#why)
+- [Learning Goals \& Technical Challenges](#learning-goals--technical-challenges)
+  - [Data Complexity](#data-complexity)
+  - [Technical Learnings](#technical-learnings)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+  - [Project Structure](#project-structure)
+  - [Component Organization](#component-organization)
+  - [Content Management](#content-management)
+  - [Search \& Discovery](#search--discovery)
+  - [Frontend](#frontend)
+  - [Why Not Use Pre-built Component Libraries or Design Systems?](#why-not-use-pre-built-component-libraries-or-design-systems)
+- [Key Integrations](#key-integrations)
+  - [Sanity → Algolia Sync](#sanity--algolia-sync)
+  - [Data Flow](#data-flow)
+- [License](#license)
 
 
 ## 🚧 Work in Progress
