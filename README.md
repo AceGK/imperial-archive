@@ -1,6 +1,13 @@
 <h1>The Imperial Archive</h1>
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Sanity-F03E2F?style=for-the-badge&logo=sanity&logoColor=white" alt="Sanity" />
+  <img src="https://img.shields.io/badge/Algolia-5468FF?style=for-the-badge&logo=algolia&logoColor=white" alt="Algolia" />
+  <img src="https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white" alt="SCSS" />
+</p>
 
-A comprehensive web application for browsing [Games Workshop's Warhammer 40,000](https://www.warhammer.com/) books from the [Black Library](https://www.blacklibrary.com/). Browse the extensive catalog by author, faction, era, and series.
+A comprehensive web application for browsing [Games Workshop's Warhammer 40,000](https://www.warhammer.com/) books from the [Black Library](https://www.blacklibrary.com/). Browse the extensive catalog by format, author, series, faction, and era.
 
 Visit the site at [ImperialArchive.com](https://imperialarchive.com). This site is currently in development, but you can access the site using the password **emperorprotects**
 
@@ -12,18 +19,11 @@ Visit the site at [ImperialArchive.com](https://imperialarchive.com). This site 
 - [🚧 Work in Progress](#-work-in-progress)
   - [Upcoming Features](#upcoming-features)
 - [Why](#why)
-- [Learning Goals \& Technical Challenges](#learning-goals--technical-challenges)
-  - [Data Complexity](#data-complexity)
-  - [Technical Learnings](#technical-learnings)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
   - [Project Structure](#project-structure)
   - [Component Organization](#component-organization)
-  - [Content Management](#content-management)
-  - [Search \& Discovery](#search--discovery)
-  - [Frontend](#frontend)
-  - [Why Not Use Pre-built Component Libraries or Design Systems?](#why-not-use-pre-built-component-libraries-or-design-systems)
 - [Key Integrations](#key-integrations)
   - [Sanity → Algolia Sync](#sanity--algolia-sync)
   - [Data Flow](#data-flow)
@@ -54,7 +54,7 @@ The official [Black Library](https://www.blacklibrary.com/) website and existing
 - **Better Discovery** - Find books by faction, era, or author
 - **Modern UX** - A clean, fast interface built with modern web technologies
 
-## Learning Goals & Technical Challenges
+<!-- ## Learning Goals & Technical Challenges
 I started this app to gain deeper experience with **TypeScript**, **Algolia v5**, **Sanity v4**, and **Next.js 15**. I have built e-commerce applications with this stack professionally, but they are in private repositories. This project serves as a public demonstration. 
 
 I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and the catalog presents several interesting technical challenges that make it ideal for learning:
@@ -93,11 +93,11 @@ I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and 
 - Real-time sync using Sanity Functions
 - Document size optimization near Algolia's free 10KB limit
 - Type-safe TypeScript interfaces mirroring CMS schemas
-- Next.js SSR/SSG optimization patterns
+- Next.js SSR/SSG optimization patterns -->
 
 ## Features
 
-- **Fast Search** - Powered by Algolia for instant results
+- **Fast Search & Filtering** - Powered by Algolia for instant results
 - **[Browse all books](https://black-library.vercel.app/books)** - Browse the full catalog of Warhammer 40,000 stories
 - **[Browse by Author](https://black-library.vercel.app/authors)** - Explore books from your favorite Black Library authors
 - **[Browse by Faction](https://black-library.vercel.app/factions)** - Find books about specific armies, legions, chapters, and factions
@@ -106,7 +106,6 @@ I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and 
 
 
 ## Tech Stack
-
 - **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript for better developer experience and code quality
 - **[Next.js](https://nextjs.org/)** - Full-stack React framework with server-side rendering, static generation, and API routes
   - **[SCSS](https://sass-lang.com/)** - CSS preprocessor with variables, nesting, and mixins
@@ -142,7 +141,7 @@ This is a monorepo containing both the CMS and web application:
 - **`/modules`** - Feature-rich components built from multiple smaller pieces
 - **`/ui`** - Simple, reusable building blocks following atomic design principles
 
-### Content Management
+<!-- ### Content Management
 The site uses **Sanity CMS** as a headless content management system to manage:
 - Book catalog
 - Author information
@@ -163,10 +162,10 @@ Built with **Next.js** for:
 - Static site generation (SSG)
 - Optimized image loading
 - Fast page transitions
-- SEO optimization
+- SEO optimization -->
 
 
-### Why Not Use Pre-built Component Libraries or Design Systems?
+<!-- ### Why Not Use Pre-built Component Libraries or Design Systems?
 
 Since this is a solo project intended for learning, I wanted to avoid prebuilt component libraries and design systems like [Tailwind](https://tailwindcss.com/), [Shadcn](https://ui.shadcn.com/), or [Radix Primitives](https://www.radix-ui.com/). While more time-consuming and arguably reinventing the wheel, building components from scratch provides valuable opportunities to:
 
@@ -176,7 +175,7 @@ Since this is a solo project intended for learning, I wanted to avoid prebuilt c
 - **Practice design patterns** - Build reusable, composable components following atomic design principles
 - **Full creative control** - Customize every aspect without fighting against framework opinions
 
-This approach isn't practical for production work with tight deadlines, but it's ideal for a learning project where the journey matters as much as the destination.
+This approach isn't practical for production work with tight deadlines, but it's ideal for a learning project where the journey matters as much as the destination. -->
 
 ## Key Integrations
 
@@ -193,6 +192,8 @@ Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
 ```
 
 ## License
+
+MIT License
 
 **© Games Workshop** - All Warhammer 40,000 content and imagery is property of Games Workshop.
 
