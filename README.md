@@ -2,38 +2,34 @@
 
 A comprehensive web application for browsing [Games Workshop's Warhammer 40,000](https://www.warhammer.com/) books from the [Black Library](https://www.blacklibrary.com/). Browse the extensive catalog by author, faction, era, and series.
 
+Visit the site at [ImperialArchive.com](https://imperialarchive.com). This site is currently in development, but you can access the site using the password **emperorprotects**
+
 <!-- ![Black Library](https://black-library.vercel.app/images/black-library-books.jpg) -->
 
 
-## 📑 Table of Contents
+## 📑 Contents
 
 - [The Imperial Archive](#the-imperial-archive)
-  - [📑 Table of Contents](#-table-of-contents)
-  - [🌐 Live Site](#-live-site)
+  - [📑 Contents](#-contents)
   - [🚧 Work in Progress](#-work-in-progress)
     - [Upcoming Features](#upcoming-features)
-  - [❓ Why](#-why)
-  - [🎓 Learning Goals \& Technical Challenges](#-learning-goals--technical-challenges)
+  - [Why](#why)
+  - [Learning Goals \& Technical Challenges](#learning-goals--technical-challenges)
     - [Data Complexity](#data-complexity)
     - [Technical Learnings](#technical-learnings)
-  - [✨ Features](#-features)
-  - [⚙️ Tech Stack](#️-tech-stack)
-  - [🏗️ Architecture](#️-architecture)
+  - [Features](#features)
+  - [Tech Stack](#tech-stack)
+  - [Architecture](#architecture)
     - [Project Structure](#project-structure)
     - [Component Organization](#component-organization)
     - [Content Management](#content-management)
     - [Search \& Discovery](#search--discovery)
     - [Frontend](#frontend)
     - [Why Not Use Pre-built Component Libraries or Design Systems?](#why-not-use-pre-built-component-libraries-or-design-systems)
-  - [🔑 Key Integrations](#-key-integrations)
+  - [Key Integrations](#key-integrations)
     - [Sanity → Algolia Sync](#sanity--algolia-sync)
     - [Data Flow](#data-flow)
-  - [📝 License](#-license)
-
-
-## 🌐 Live Site
-
-Visit the site at [ImperialArchive.com](https://imperialarchive.com). This site is currently in development, but you can access the site using the password **emperorprotects**
+  - [License](#license)
 
 
 ## 🚧 Work in Progress
@@ -50,7 +46,7 @@ This project is actively being developed! Here's what's currently in the works:
 - **Real-time Database** - Powered by [Convex](https://www.convex.dev/) for instant synchronization
 - **Missing or Incomplete Book Data** - Ongoing manual curation to fill catalog gaps, with potential community submissions in the future
 
-## ❓ Why
+## Why
 
 The official [Black Library](https://www.blacklibrary.com/) website and existing third-party Warhammer 40,000 wikis like [Lexicanum](https://lexicanum.com/) and the [Warhammer 40k Wiki](https://warhammer40k.fandom.com/) lack robust search and filtering capabilities, making it difficult to discover books across the extensive catalog. This project was created to provide:
 
@@ -60,7 +56,7 @@ The official [Black Library](https://www.blacklibrary.com/) website and existing
 - **Better Discovery** - Find books by faction, era, or author
 - **Modern UX** - A clean, fast interface built with modern web technologies
 
-## 🎓 Learning Goals & Technical Challenges
+## Learning Goals & Technical Challenges
 I started this app to gain deeper experience with **TypeScript**, **Algolia v5**, **Sanity v4**, and **Next.js 15**. I have built e-commerce applications with this stack professionally, but they are in private repositories. This project serves as a public demonstration. 
 
 I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and the catalog presents several interesting technical challenges that make it ideal for learning:
@@ -101,7 +97,7 @@ I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and 
 - Type-safe TypeScript interfaces mirroring CMS schemas
 - Next.js SSR/SSG optimization patterns
 
-## ✨ Features
+## Features
 
 - **Fast Search** - Powered by Algolia for instant results
 - **[Browse all books](https://black-library.vercel.app/books)** - Browse the full catalog of Warhammer 40,000 stories
@@ -111,7 +107,7 @@ I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and 
 - **[Browse by Series](https://black-library.vercel.app/eras)** - Follow complete book series in order
 
 
-## ⚙️ Tech Stack
+## Tech Stack
 
 - **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript for better developer experience and code quality
 - **[Next.js](https://nextjs.org/)** - Full-stack React framework with server-side rendering, static generation, and API routes
@@ -122,7 +118,7 @@ I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and 
 - **[Algolia](https://www.algolia.com/)** - Search and discovery API for fast, relevant search and filtering
 - **[Convex](https://www.convex.dev/)** - Real-time backend for user data, favorites, and library tracking
 
-## 🏗️ Architecture
+## Architecture
 ### Project Structure
 
 This is a monorepo containing both the CMS and web application:
@@ -184,7 +180,7 @@ Since this is a solo project intended for learning, I wanted to avoid prebuilt c
 
 This approach isn't practical for production work with tight deadlines, but it's ideal for a learning project where the journey matters as much as the destination.
 
-## 🔑 Key Integrations
+## Key Integrations
 
 ### Sanity → Algolia Sync
 The project includes a Sanity Function that automatically syncs book data to Algolia:
@@ -198,7 +194,7 @@ The project includes a Sanity Function that automatically syncs book data to Alg
 Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
 ```
 
-## 📝 License
+## License
 
 **© Games Workshop** - All Warhammer 40,000 content and imagery is property of Games Workshop.
 
