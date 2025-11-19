@@ -143,6 +143,7 @@ export type Series40kDoc = {
   slug: string;                      // projected as slug.current
   subtitle?: string | null;
   image?: SanityImageField;
+  description?: any[] | null;
   lists?: SeriesList40k[] | null;
   totalCount?: number;
   links?: SeriesLink[] | null;

@@ -1,5 +1,6 @@
 // /app/series/[slug]/page.tsx
 import { notFound } from "next/navigation";
+import { PortableText } from "@portabletext/react";
 import PageHeader from "@/components/modules/PageHeader";
 import { client } from "@/lib/sanity/sanity.client";
 import { series40kBySlugQuery } from "@/lib/sanity/queries";
@@ -58,10 +59,15 @@ export default async function SeriesPage({
       />
 
       <main className="container" style={{ marginTop: "2rem" }}>
+        {data.description && (
+          <div className="prose prose-lg max-w-none mb-8">
+            <PortableText value={data.description} />
+          </div>
+        )}
+
         {data.lists?.length ? (
           <div style={{ display: "grid", gap: "1.75rem" }}>
             {data.lists.map((list, li) => {
-              // Convert [{ work: Book }] -> Book[]
               const books: BookCardData[] =
                 (list.items ?? [])
                   .map((it: any) => it?.work)

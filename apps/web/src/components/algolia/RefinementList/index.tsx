@@ -65,7 +65,6 @@ export function RefinementList({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={styles.searchInput}
-              onMouseDown={(e) => e.preventDefault()}
             />
           </div>
         )}
@@ -75,7 +74,7 @@ export function RefinementList({
               <label 
                 key={item.value} 
                 className={styles.checkbox}
-                onMouseDown={(e) => {
+                onClick={(e) => {
                   e.preventDefault();
                   refine(item.value);
                 }}

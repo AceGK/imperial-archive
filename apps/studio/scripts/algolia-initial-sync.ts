@@ -115,7 +115,7 @@ async function initialSync() {
         "alt": image.alt
       },
       "series": *[
-        _type == "series40k" && references(^._id)
+        _type == "series40k" && ^._id in lists[].items[].work._ref
       ]{ "title": title, "slug": slug.current }[0],
       _createdAt,
       _updatedAt

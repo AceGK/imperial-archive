@@ -91,7 +91,11 @@ export default function BookCard({ book, href, compact, className }: Props) {
             unoptimized
           />
         ) : (
-          <div className={styles.placeholderImage} aria-hidden="true" />
+          <div className={styles.placeholderImage} aria-hidden="true">
+            <div className={styles.placeholderText}>
+              <span>{book.title}</span>
+            </div>
+          </div>
         )}
       </Link>
 
