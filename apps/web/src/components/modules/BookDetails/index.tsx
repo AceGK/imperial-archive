@@ -83,7 +83,8 @@ export default function BookDetails({ book }: BookDetailProps) {
             book.story ||
             book.factions ||
             book.series ||
-            book.contents) && (
+            book.contents ||
+            book.authors) && (
             <Accordion
               type="multiple"
               defaultValue={["description", "details", "series"]}
@@ -173,6 +174,29 @@ export default function BookDetails({ book }: BookDetailProps) {
                   </AccordionContent>
                 </AccordionItem>
               )}
+              {book.authors &&
+                book.authors.length === 1 &&
+                book.authors[0].bio && (
+                  <AccordionItem value="about-author">
+                    <AccordionTrigger>About the Author</AccordionTrigger>
+                    <AccordionContent>
+                      <div className={styles.authorBios}>
+                        <div className={styles.authorBio}>
+                          <h3 className={styles.authorName}>
+                            <Link href={`/authors/${book.authors[0].slug}`}>
+                              {book.authors[0].name}
+                            </Link>
+                          </h3>
+                          {book.authors[0].bio && (
+                            <div className={styles.bio}>
+                              {book.authors[0].bio}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
               {factions.length > 0 && (
                 <AccordionItem value="factions">
                   <AccordionTrigger>

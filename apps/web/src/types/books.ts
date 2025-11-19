@@ -4,6 +4,7 @@ import type { SanityImageField } from './sanity';
 export type BookAuthor = {
   name?: string;
   slug?: string;
+  bio?: string;
 };
 
 // Minimal series shape for display

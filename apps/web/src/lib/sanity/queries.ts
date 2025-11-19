@@ -279,8 +279,10 @@ export const bookBySlug40kQuery = groq`
 
   "authors": coalesce(
     authors[]->{
+      _id,
       "name": coalesce(name, title),
-      "slug": slug.current
+      "slug": slug.current,
+      "bio": pt::text(bio)
     },
     []
   ),
