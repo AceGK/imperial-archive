@@ -1,4 +1,5 @@
 // functions/algolia-document-sync/index.ts
+// npx sanity blueprints deploy
 import { env } from "node:process";
 import { documentEventHandler } from "@sanity/functions";
 import { algoliasearch } from "algoliasearch";
@@ -120,12 +121,10 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       const authorIds = Array.isArray(authors)
         ? authors.map((a: any) => a._ref).filter(Boolean)
         : [];
-      const eraId = era?._ref || null; // ✅ Change to null instead of undefined
+      const eraId = era?._ref || null;
       const factionIds = Array.isArray(factions)
         ? factions.map((f: any) => f._ref).filter(Boolean)
         : [];
-
-      // ... later in the query parameters ...
 
       const bookData = await sanityClient.fetch(
         `{
@@ -158,7 +157,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
             defined($imageAssetId) => *[_id == $imageAssetId][0].url,
             null
           ),
-          "series": *[_type == "series40k" && references($bookId)][0]{
+          "series": *[_type == "series40k" && $bookId in lists[].items[].work._ref][0]{
             _id,
             title,
             slug
@@ -250,7 +249,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       const document: AlgoliaBook = {
         title: limitedTitle,
         slug: slug || "",
-        format: formatBookType(format), // ✨ Format transformation
+        format: formatBookType(format),
         publicationDate: publicationDate ?? null,
         image: processedImage,
         description: limitedDescription,
