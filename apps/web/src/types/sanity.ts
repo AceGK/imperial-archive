@@ -82,14 +82,23 @@ export type SanityImageAsset = {
   };
 };
 
-export type SanityImageField =
-  | {
-      alt?: string | null;
-      credit?: string | null;
-      asset?: SanityImageAsset | null;
-    }
-  | null
-  | undefined;
+export type SanityImageField = {
+  alt?: string | null;
+  credit?: string | null;
+  asset?: SanityImageAsset | null;
+  crop?: {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+  } | null;
+  hotspot?: {
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+  } | null;
+} | null | undefined;
 
 export type Series40k = {
   name: string;

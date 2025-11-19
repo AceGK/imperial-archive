@@ -27,22 +27,23 @@ export default async function SeriesPage({
 }) {
   const { slug } = await params;
 
-  const data = await client.fetch<Series40kDoc | null>(series40kBySlugQuery, { slug });
+  const data = await client.fetch<Series40kDoc | null>(series40kBySlugQuery, {
+    slug,
+  });
   if (!data) notFound();
 
-  const hero = data.image?.asset
-    ? {
-        url: urlFor(data.image)
-          .width(1600)
-          .height(900)
-          .fit("crop")
-          .auto("format")
-          .url(),
-        lqip: data.image.asset.metadata?.lqip,
-        alt: data.image.alt ?? "",
-        credit: data.image.credit ?? undefined,
-      }
-    : null;
+const hero = data.image?.asset
+  ? {
+      url: urlFor(data.image)
+        .width(1600)
+        .auto("format")
+        .url(),
+      lqip: data.image.asset.metadata?.lqip,
+      alt: data.image.alt ?? "",
+      credit: data.image.credit ?? undefined,
+      hotspot: data.image.hotspot, // Add this
+    }
+  : null;
 
   return (
     <>
@@ -68,10 +69,9 @@ export default async function SeriesPage({
         {data.lists?.length ? (
           <div style={{ display: "grid", gap: "1.75rem" }}>
             {data.lists.map((list, li) => {
-              const books: BookCardData[] =
-                (list.items ?? [])
-                  .map((it: any) => it?.work)
-                  .filter(Boolean) as BookCardData[];
+              const books: BookCardData[] = (list.items ?? [])
+                .map((it: any) => it?.work)
+                .filter(Boolean) as BookCardData[];
 
               return (
                 <section
@@ -79,17 +79,31 @@ export default async function SeriesPage({
                   style={{ display: "grid", gap: "0.75rem" }}
                 >
                   <header>
-                    <h2 style={{ fontSize: "1.125rem", fontWeight: 700, margin: 0 }}>
+                    <h2
+                      style={{
+                        fontSize: "1.125rem",
+                        fontWeight: 700,
+                        margin: 0,
+                      }}
+                    >
                       {list.title}
                     </h2>
                     {list.description && (
-                      <p style={{ margin: "0.25rem 0 0", color: "var(--subtle)" }}>
+                      <p
+                        style={{
+                          margin: "0.25rem 0 0",
+                          color: "var(--subtle)",
+                        }}
+                      >
                         {list.description}
                       </p>
                     )}
                   </header>
 
-                  <BookGrid books={books} noResultsText="No books in this list yet." />
+                  <BookGrid
+                    books={books}
+                    noResultsText="No books in this list yet."
+                  />
                 </section>
               );
             })}

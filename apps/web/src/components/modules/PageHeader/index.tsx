@@ -8,14 +8,20 @@ export type PageHeaderImage = {
   aspect?: number;
   alt?: string;
   credit?: string;
+  hotspot?: {
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+  } | null;
 };
 
 export type PageHeaderProps = {
   title: string;
   subtitle?: string;
   image?: PageHeaderImage | string | null;
-  alt?: string;  
-  credit?: string;       
+  alt?: string;
+  credit?: string;
   children?: React.ReactNode;
   align?: "left" | "center";
   height?: "xs" | "sm" | "md" | "lg";
@@ -29,7 +35,7 @@ export default function PageHeader({
   subtitle,
   image,
   alt,
-  credit,     
+  credit,
   children,
   align = "left",
   height = "md",
@@ -37,19 +43,31 @@ export default function PageHeader({
   priority = false,
   className,
 }: PageHeaderProps) {
-
-  const rootClass = [styles.wrapper, styles[height], className].filter(Boolean).join(" ");
-
-  const innerClass = ["container", styles.inner, styles[align]].filter(Boolean).join(" ");
-
-  const overlayClass = [styles.overlay, strongOverlay ? styles.overlayStrong : ""].filter(Boolean).join(" ");
+  const rootClass = [styles.wrapper, styles[height], className]
+    .filter(Boolean)
+    .join(" ");
+  const innerClass = ["container", styles.inner, styles[align]]
+    .filter(Boolean)
+    .join(" ");
+  const overlayClass = [
+    styles.overlay,
+    strongOverlay ? styles.overlayStrong : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const resolvedUrl = typeof image === "string" ? image : image?.url;
   const blur = typeof image === "string" ? undefined : image?.lqip;
+  const imageAlt =
+    typeof image === "string" ? alt || "" : image?.alt || alt || "";
+  const imageCredit =
+    credit ?? (typeof image === "string" ? undefined : image?.credit);
 
-  const imageAlt = typeof image === "string" ? alt || "" : image?.alt || alt || "";
-
-  const imageCredit = credit ?? (typeof image === "string" ? undefined : image?.credit);
+  // Calculate object position from hotspot
+  const hotspot = typeof image === "string" ? undefined : image?.hotspot;
+  const objectPosition = hotspot
+    ? `${hotspot.x * 100}% ${hotspot.y * 100}%`
+    : "center";
 
   return (
     <section className={rootClass}>
@@ -63,7 +81,10 @@ export default function PageHeader({
             priority={priority}
             placeholder={blur ? "blur" : undefined}
             blurDataURL={blur}
-            style={{ objectFit: "cover" }}
+            style={{
+              objectFit: "cover",
+              objectPosition, // Use hotspot-based position
+            }}
           />
         ) : (
           <div className={styles.mediaFallback} />
