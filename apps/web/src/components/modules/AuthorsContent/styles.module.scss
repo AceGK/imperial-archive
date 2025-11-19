@@ -1,0 +1,70 @@
+// components/modules/AuthorsContent/styles.module.scss
+@use "@/styles/breakpoints" as *;
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.mainContent {
+  min-width: 0;
+}
+
+.controls {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in oklab, var(--bg), transparent 5%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border, rgba(0, 0, 0, 1));
+  padding: 1rem 0;
+  transition: transform 200ms ease;
+  
+  &.navVisible {
+    transform: translateY(61px);
+  }
+}
+
+.controlsInner {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  @include max(filter-breakpoint) {
+    align-items: stretch;
+  }
+}
+
+.controlsRight {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+
+  @include max(filter-breakpoint) {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.mobileFilters {
+  display: flex;
+  
+  @include min(filter-breakpoint) {
+    display: none;
+  }
+  @include max(sm) {
+    flex: 1;
+  }
+}
+
+.desktopFilters {
+  display: none;
+  gap: 0.5rem;
+  
+  @include min(filter-breakpoint) {
+    display: flex;
+  }
+}

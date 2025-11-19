@@ -44,8 +44,10 @@ export default function AuthorCard({
             height={240}
             style={{ objectFit: "cover" }}
             sizes="(max-width: 768px) 33vw, 240px"
-            placeholder="blur"
-            blurDataURL={image.lqip || undefined}
+            {...(image.lqip && {
+              placeholder: "blur" as const,
+              blurDataURL: image.lqip,
+            })}
             unoptimized
           />
         ) : (

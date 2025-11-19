@@ -21,6 +21,7 @@ if (typeof SANITY_STUDIO_PROJECT_ID !== "string" || typeof SANITY_STUDIO_DATASET
 
 export default defineBlueprint({
   resources: [
+    // Books sync
     defineDocumentFunction({
       type: "sanity.function.document",
       name: "algolia-document-sync",
@@ -41,6 +42,37 @@ export default defineBlueprint({
           authors,
           era,
           factions,
+          image,
+          _createdAt,
+          _updatedAt,
+          "operation": delta::operation()
+        }`,
+      },
+      env: {
+        COMMENT:
+          "ALGOLIA_APP_ID and ALGOLIA_WRITE_API_KEY env variables are required to sync documents to Algolia",
+        ALGOLIA_APP_ID,
+        ALGOLIA_WRITE_API_KEY,
+        SANITY_STUDIO_PROJECT_ID,
+        SANITY_STUDIO_DATASET,
+      },
+    }),
+
+    // Authors sync
+    defineDocumentFunction({
+      type: "sanity.function.document",
+      name: "algolia-document-sync-authors",
+      memory: 1,
+      timeout: 10,
+      src: "./functions/algolia-document-sync-authors",
+      event: {
+        on: ["create", "update", "delete"],
+        filter: '_type == "author40k"',
+        projection: `{
+          _id,
+          name,
+          "slug": slug.current,
+          bio,
           image,
           _createdAt,
           _updatedAt,

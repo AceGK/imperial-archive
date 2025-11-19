@@ -1,0 +1,159 @@
+// scripts/authors/algolia-setup-replicas-authors.ts
+// Run: npx tsx scripts/authors/algolia-setup-replicas-authors.ts
+
+import { env } from "node:process";
+import path from "node:path";
+import dotenv from "dotenv";
+import { algoliasearch } from "algoliasearch";
+
+dotenv.config({ path: path.resolve(__dirname, "../../.env.local") });
+
+const { ALGOLIA_APP_ID = "", ALGOLIA_WRITE_API_KEY = "" } = env;
+const ALGOLIA_INDEX_NAME = "authors40k";
+
+async function setupReplicas() {
+  console.log("🔧 Setting up Algolia index replicas for authors sorting...");
+
+  if (!ALGOLIA_APP_ID || !ALGOLIA_WRITE_API_KEY) {
+    console.error(
+      "Missing required env: ALGOLIA_APP_ID / ALGOLIA_WRITE_API_KEY"
+    );
+    process.exit(1);
+  }
+
+  const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_API_KEY);
+
+  try {
+    // Configure the main index with default lastName A-Z sorting
+    await client.setSettings({
+      indexName: ALGOLIA_INDEX_NAME,
+      indexSettings: {
+        searchableAttributes: [
+          "name",
+          "lastName",
+          "seriesTitles",
+          "factionNames",
+          "eraNames",
+        ],
+        attributesForFaceting: [
+          "searchable(bookFormats)",
+          "searchable(seriesTitles)",
+          "searchable(factionNames)",
+          "searchable(eraNames)",
+          "bookCount",
+        ],
+        ranking: [
+          "asc(lastName)",
+          "asc(name)",
+          "typo",
+          "geo",
+          "words",
+          "filters",
+          "proximity",
+          "attribute",
+          "exact",
+          "custom",
+        ],
+        replicas: [
+          "authors40k_name_desc",
+          "authors40k_bookcount_desc",
+          "authors40k_bookcount_asc",
+        ],
+      },
+    });
+
+    console.log("✅ Main index configured");
+
+    // Configure replica: Name Z-A
+    await client.setSettings({
+      indexName: "authors40k_name_desc",
+      indexSettings: {
+        attributesForFaceting: [
+          "searchable(bookFormats)",
+          "searchable(seriesTitles)",
+          "searchable(factionNames)",
+          "searchable(eraNames)",
+          "bookCount",
+        ],
+        ranking: [
+          "desc(lastName)",
+          "desc(name)",
+          "typo",
+          "geo",
+          "words",
+          "filters",
+          "proximity",
+          "attribute",
+          "exact",
+          "custom",
+        ],
+      },
+    });
+
+    // Configure replica: Book Count (Most Works)
+    await client.setSettings({
+      indexName: "authors40k_bookcount_desc",
+      indexSettings: {
+        attributesForFaceting: [
+          "searchable(bookFormats)",
+          "searchable(seriesTitles)",
+          "searchable(factionNames)",
+          "searchable(eraNames)",
+          "bookCount",
+        ],
+        ranking: [
+          "desc(bookCount)",
+          "asc(lastName)",
+          "asc(name)",
+          "typo",
+          "geo",
+          "words",
+          "filters",
+          "proximity",
+          "attribute",
+          "exact",
+          "custom",
+        ],
+      },
+    });
+
+    // Configure replica: Book Count (Fewest Works)
+    await client.setSettings({
+      indexName: "authors40k_bookcount_asc",
+      indexSettings: {
+        attributesForFaceting: [
+          "searchable(bookFormats)",
+          "searchable(seriesTitles)",
+          "searchable(factionNames)",
+          "searchable(eraNames)",
+          "bookCount",
+        ],
+        ranking: [
+          "asc(bookCount)",
+          "asc(lastName)",
+          "asc(name)",
+          "typo",
+          "geo",
+          "words",
+          "filters",
+          "proximity",
+          "attribute",
+          "exact",
+          "custom",
+        ],
+      },
+    });
+
+    console.log("\n🎉 All replicas configured successfully!");
+    console.log("\nAvailable sort options:");
+    console.log("  - authors40k (default: Last Name A-Z)");
+    console.log("  - authors40k_name_desc (Last Name Z-A)");
+    console.log("  - authors40k_bookcount_desc (Most Works)");
+    console.log("  - authors40k_bookcount_asc (Fewest Works)");
+  } catch (error) {
+    console.error("❌ Error setting up replicas:", error);
+    process.exit(1);
+  }
+}
+
+setupReplicas();
