@@ -162,37 +162,39 @@ export default function BookDetails({ book }: BookDetailProps) {
                           >
                             {content.title}
                           </Link>
-                          {content.authors && content.authors.length > 0 && (
+                          {content.format && ` (${content.format})`}
+                          {/* {content.authors && content.authors.length > 0 && (
                             <>
                               {" by "}
                               <Authors authors={content.authors} inline />
                             </>
-                          )}
+                          )} */}
                         </li>
                       ))}
                     </ul>
                   </AccordionContent>
                 </AccordionItem>
               )}
-              {book.authors &&
-                book.authors.length === 1 &&
-                book.authors[0].bio && (
+                      {book.authors &&
+                book.authors.some((author) => author.bio) && (
                   <AccordionItem value="about-author">
-                    <AccordionTrigger>About the Author</AccordionTrigger>
+                    <AccordionTrigger>
+                      About the Author{book.authors.filter((a) => a.bio).length > 1 ? "s" : ""}
+                    </AccordionTrigger>
                     <AccordionContent>
                       <div className={styles.authorBios}>
-                        <div className={styles.authorBio}>
-                          <h3 className={styles.authorName}>
-                            <Link href={`/authors/${book.authors[0].slug}`}>
-                              {book.authors[0].name}
-                            </Link>
-                          </h3>
-                          {book.authors[0].bio && (
-                            <div className={styles.bio}>
-                              {book.authors[0].bio}
+                        {book.authors
+                          .filter((author) => author.bio)
+                          .map((author) => (
+                            <div key={author.slug} className={styles.authorBio}>
+                              <h3 className={styles.authorName}>
+                                <Link href={`/authors/${author.slug}`}>
+                                  {author.name}
+                                </Link>
+                              </h3>
+                              <div className={styles.bio}>{author.bio}</div>
                             </div>
-                          )}
-                        </div>
+                          ))}
                       </div>
                     </AccordionContent>
                   </AccordionItem>

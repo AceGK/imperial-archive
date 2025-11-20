@@ -105,6 +105,7 @@ export default function BookCard({ book, href, compact, className }: Props) {
         </Link>
 
         <div className={styles.author}>{showAuthors}</div>
+        {year && <div className={styles.year}>{year}</div>} 
 
         <div className={styles.meta}>
           <div className={styles.chips}>
@@ -116,7 +117,6 @@ export default function BookCard({ book, href, compact, className }: Props) {
                 {book.format}
               </Link>
             )}
-            {year && <div className={styles.year}>{year}</div>}
             {book.series?.map((s) => (
               <Link
                 href={`/series/${s.slug}`}

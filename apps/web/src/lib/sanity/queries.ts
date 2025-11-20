@@ -327,6 +327,7 @@ export const bookBySlug40kQuery = groq`
         _id,
         title,
         "slug": slug.current,
+        ${formatProjection},
         "authors": coalesce(
           authors[]->{
             "name": coalesce(name, title),
