@@ -1,4 +1,4 @@
-// components/modules/BooksContent/index.tsx
+// components/modules/SearchContent/Books.tsx
 "use client";
 
 import React from "react";

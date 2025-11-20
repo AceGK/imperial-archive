@@ -1,6 +1,6 @@
 // app/authors/page.tsx
 import PageHeader from "@/components/modules/PageHeader";
-import AuthorsContent from "@/components/modules/AuthorsContent";
+import Authors from "@/components/modules/SearchContent/Authors";
 
 export const revalidate = 60;
 
@@ -18,7 +18,7 @@ export default async function AuthorsPage() {
         credit="Imperial Library by Erik Nykvist"
       />
 
-      <AuthorsContent />
+      <Authors />
     </main>
   );
 }

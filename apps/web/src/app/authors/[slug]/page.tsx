@@ -4,7 +4,7 @@ import { single40kAuthorQuery } from "@/lib/sanity/queries";
 import type { Author40k } from "@/types/sanity";
 import TwoPane from "@/components/layouts/TwoPane";
 import AuthorDetails from "@/components/modules/Details/Author";
-import BooksContent from "@/components/modules/BooksContent";
+import Books from "@/components/modules/SearchContent/Books";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 
 export const revalidate = 60;
@@ -39,7 +39,7 @@ export default async function AuthorPage({
         <Breadcrumb />
         <AuthorDetails author={profile} />
       </div>
-      <BooksContent
+      <Books
         filterByAuthor={profile.name}
         placeholder="Search this author's books..."
         noResultsText="No books by this author match your search."

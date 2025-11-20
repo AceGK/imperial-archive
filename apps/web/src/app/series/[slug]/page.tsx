@@ -41,7 +41,7 @@ const hero = data.image?.asset
       lqip: data.image.asset.metadata?.lqip,
       alt: data.image.alt ?? "",
       credit: data.image.credit ?? undefined,
-      hotspot: data.image.hotspot, // Add this
+      hotspot: data.image.hotspot,
     }
   : null;
 
@@ -61,9 +61,7 @@ const hero = data.image?.asset
 
       <main className="container" style={{ marginTop: "2rem" }}>
         {data.description && (
-          <div className="prose prose-lg max-w-none mb-8">
             <PortableText value={data.description} />
-          </div>
         )}
 
         {data.lists?.length ? (

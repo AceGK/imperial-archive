@@ -1,4 +1,4 @@
-// components/modules/AuthorsContent/index.tsx
+// components/modules/SearchContent/Authors.tsx
 "use client";
 
 import React from "react";
@@ -39,7 +39,7 @@ const transformAuthorLabel = (attribute: string): string => {
     factionNames: "Faction",
     eraNames: "Era",
   };
-  
+
   return labelMap[attribute] || attribute;
 };
 

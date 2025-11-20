@@ -3,7 +3,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import { factionPairs40kQuery, singleFaction40kBySlugsQuery } from "@/lib/sanity/queries";
 import type { Faction40kDoc } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
-import BooksContent from "@/components/modules/BooksContent";
+import Books from "@/components/modules/SearchContent/Books";
 import FactionDetails from "@/components/modules/Details/Faction";
 
 export const revalidate = 60;
@@ -29,7 +29,7 @@ export default async function FactionPage({ params }: { params: Promise<{ group:
         <Breadcrumb />
         <FactionDetails faction={faction} />
       </div>
-      <BooksContent 
+      <Books
         filterByFaction={faction.title}
         placeholder={`Search books featuring ${faction.title}...`}
         noResultsText={`No books featuring ${faction.title} match your search.`}

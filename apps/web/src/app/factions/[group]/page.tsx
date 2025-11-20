@@ -4,7 +4,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import { groupedFactions40kQuery } from "@/lib/sanity/queries";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
 import FactionCard from "@/components/modules/Cards/FactionCard";
-import BooksContent from "@/components/modules/BooksContent";
+import Books from "@/components/modules/SearchContent/Books";
 import type { FactionGroupWithItems } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 
@@ -113,7 +113,7 @@ export default async function GroupPage({
 
       {/* Books filtered by faction group */}
       <section>
-        <BooksContent
+        <Books
           filterByFactionGroup={factionNames}
           placeholder={`Search books featuring ${title}...`}
           noResultsText={`No books featuring ${title} match your search.`}

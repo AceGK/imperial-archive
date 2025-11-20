@@ -88,5 +88,36 @@ export default defineBlueprint({
         SANITY_STUDIO_DATASET,
       },
     }),
+
+    // Series sync
+    defineDocumentFunction({
+      type: "sanity.function.document",
+      name: "algolia-document-sync-series",
+      memory: 1,
+      timeout: 10,
+      src: "./functions/algolia-document-sync-series",
+      event: {
+        on: ["create", "update", "delete"],
+        filter: '_type == "series40k"',
+        projection: `{
+          _id,
+          title,
+          "slug": slug.current,
+          subtitle,
+          image,
+          _createdAt,
+          _updatedAt,
+          "operation": delta::operation()
+        }`,
+      },
+      env: {
+        COMMENT:
+          "ALGOLIA_APP_ID and ALGOLIA_WRITE_API_KEY env variables are required to sync documents to Algolia",
+        ALGOLIA_APP_ID,
+        ALGOLIA_WRITE_API_KEY,
+        SANITY_STUDIO_PROJECT_ID,
+        SANITY_STUDIO_DATASET,
+      },
+    }),
   ],
 });

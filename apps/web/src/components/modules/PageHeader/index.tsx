@@ -95,7 +95,7 @@ export default function PageHeader({
       <div className={innerClass}>
         <div className={styles.textBlock}>
           <h1 className={styles.title}>{title}</h1>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+          {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
           {children && <div className={styles.children}>{children}</div>}
         </div>
       </div>

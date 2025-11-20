@@ -3,7 +3,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import { single40kEraQuery } from "@/lib/sanity/queries";
 import type { Era40k } from "@/types/sanity";
 import PageHeader from "@/components/modules/PageHeader";
-import BooksContent from "@/components/modules/BooksContent";
+import Books from "@/components/modules/SearchContent/Books";
 
 export const revalidate = 60;
 
@@ -38,7 +38,7 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
         {era.period && <p style={{ textWrap: "balance" }}>{era.period}</p>}
       </PageHeader>
 
-      <BooksContent
+      <Books
         filterByEra={era.title}
         placeholder={`Search books from ${era.title}...`}
         noResultsText={`No books from ${era.title} match your search.`}

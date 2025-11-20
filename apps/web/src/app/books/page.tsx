@@ -1,6 +1,6 @@
 // app/books/page.tsx
 import PageHeader from "@/components/modules/PageHeader";
-import BooksContent from "@/components/modules/BooksContent";
+import Books from "@/components/modules/SearchContent/Books";
 
 export const revalidate = 60;
 
@@ -18,7 +18,7 @@ export default async function BrowsePage() {
         credit="Black Library © Games Workshop"
       />
 
-      <BooksContent />
+      <Books />
     </main>
   );
 }

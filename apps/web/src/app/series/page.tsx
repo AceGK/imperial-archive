@@ -1,14 +1,10 @@
+// app/series/page.tsx
 import PageHeader from "@/components/modules/PageHeader";
-import SeriesCard from "@/components/modules/Cards/SeriesCard";
-import { client } from "@/lib/sanity/sanity.client";
-import { allSeries40kQuery } from "@/lib/sanity/queries";
-import type { Series40kDoc } from "@/types/sanity";
+import Series from "@/components/modules/SearchContent/Series";
 
 export const revalidate = 60;
 
 export default async function SeriesIndexPage() {
-  const series = await client.fetch<Series40kDoc[]>(allSeries40kQuery);
-
   return (
     <main>
       <PageHeader
@@ -22,38 +18,7 @@ export default async function SeriesIndexPage() {
         credit="Eisenhorn by Alexander Ovchinnikov"
       />
 
-      <section className="container mb-3">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-            gap: "1rem",
-          }}
-        >
-          {series.map((s) => {
-            const count =
-              typeof s.totalCount === "number"
-                ? s.totalCount
-                : (s.lists ?? []).reduce(
-                    (acc, list) => acc + (list.items?.length ?? 0),
-                    0
-                  );
-
-            return (
-              <SeriesCard
-                key={s._id}
-                title={s.title}
-                slug={s.slug}
-                image={s.image}
-                countLabel={
-                  count ? `${count} book${count > 1 ? "s" : ""}` : undefined
-                }
-                compact
-              />
-            );
-          })}
-        </div>
-      </section>
+      <Series />
     </main>
   );
 }

@@ -122,10 +122,6 @@ function MyFilters() {
 }
 ```
 
-## Example: Full Implementation
-
-See `app/books/BooksContent.tsx` for a complete example using all components together.
-
 ## Creating New Index Pages
 
 When creating a new index page (e.g., authors, series, factions):
