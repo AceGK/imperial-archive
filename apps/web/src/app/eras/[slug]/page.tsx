@@ -3,7 +3,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import { single40kEraQuery } from "@/lib/sanity/queries";
 import type { Era40k } from "@/types/sanity";
 import PageHeader from "@/components/modules/PageHeader";
-import Books from "@/components/modules/SearchContent/Books";
+import Books from "@/components/modules/Catalog/Books";
 
 export const revalidate = 60;
 

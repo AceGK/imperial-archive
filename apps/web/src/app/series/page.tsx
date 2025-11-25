@@ -1,6 +1,6 @@
 // app/series/page.tsx
 import PageHeader from "@/components/modules/PageHeader";
-import Series from "@/components/modules/SearchContent/Series";
+import Series from "@/components/modules/Catalog/Series";
 
 export const revalidate = 60;
 

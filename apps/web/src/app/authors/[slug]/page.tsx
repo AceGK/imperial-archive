@@ -4,7 +4,7 @@ import { single40kAuthorQuery } from "@/lib/sanity/queries";
 import type { Author40k } from "@/types/sanity";
 import TwoPane from "@/components/layouts/TwoPane";
 import AuthorDetails from "@/components/modules/Details/Author";
-import Books from "@/components/modules/SearchContent/Books";
+import Books from "@/components/modules/Catalog/Books";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 
 export const revalidate = 60;

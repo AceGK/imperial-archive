@@ -1,6 +1,6 @@
 // app/books/page.tsx
 import PageHeader from "@/components/modules/PageHeader";
-import Books from "@/components/modules/SearchContent/Books";
+import Books from "@/components/modules/Catalog/Books";
 
 export const revalidate = 60;
 

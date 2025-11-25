@@ -1,33 +1,28 @@
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./styles.module.scss";
-import type { Series40k } from "@/types/sanity";
 
-/** Minimal Book type for the card (matches bookCardFields) */
 type CardAuthor = { name: string; slug?: string };
-type CardImageAsset = { _id: string; url: string; metadata?: any };
+type CardSeries = { name?: string; title?: string; slug?: string; number?: number | null };
+
+// Flexible image type that accepts both Sanity and Algolia shapes
 type CardImage =
-  | {
-      alt?: string | null;
-      credit?: string | null;
-      asset?: CardImageAsset | null;
-    }
+  | { url: string | null; alt?: string | null } // Algolia shape
+  | { asset?: { url: string } | null; alt?: string | null } // Sanity shape
   | null
   | undefined;
 
 export type BookCardData = {
-  _id: string;
+  _id?: string;
+  objectID?: string;
   title: string;
   slug: string;
   authors?: CardAuthor[];
-  format?: string | null; // pretty label from projection
-  formatValue?: string | null; // raw, if needed
+  format?: string | null;
   publication_date?: string | null;
-  factions?: string[];
+  publicationDate?: string | null;
   image?: CardImage;
-  description?: string | null;
-  story?: string | null;
-  series?: Series40k[];
+  series?: CardSeries[] | CardSeries | null;
 };
 
 type Props = {
@@ -43,26 +38,39 @@ function yearFromDate(d?: string | null) {
   return /^\d{4}$/.test(y) ? y : undefined;
 }
 
-export default function BookCard({ book, href, compact, className }: Props) {
-  const link = href ?? `/books/${book.slug}`;
-  const year = yearFromDate(book.publication_date);
+function getImageUrl(image: CardImage): string | null {
+  if (!image) return null;
+  if ("url" in image) return image.url;
+  if ("asset" in image) return image.asset?.url ?? null;
+  return null;
+}
 
-  const hasImage = Boolean(book.image?.asset?.url);
-  const imgUrl = book.image?.asset?.url ?? "";
-  const imgAlt =
-    (book.image?.alt && book.image.alt.trim()) ||
-    (book.title ? `${book.title} cover` : "Book cover");
+function normalizeSeriesArray(series: CardSeries[] | CardSeries | null | undefined): CardSeries[] {
+  if (!series) return [];
+  const arr = Array.isArray(series) ? series : [series];
+  return arr.map((s) => ({
+    ...s,
+    name: s.name ?? s.title,
+  }));
+}
+
+export default function BookCard({ book, href, compact, className }: Props) {
+  const id = book._id ?? book.objectID ?? book.slug;
+  const link = href ?? `/books/${book.slug}`;
+  const year = yearFromDate(book.publication_date ?? book.publicationDate);
+
+  const imgUrl = getImageUrl(book.image);
+  const imgAlt = book.image?.alt?.trim() || `${book.title} cover`;
 
   const authors = book.authors ?? [];
+  const seriesList = normalizeSeriesArray(book.series);
+
   const showAuthors =
     authors.length === 0 ? (
       <span>Unknown</span>
     ) : authors.length === 1 ? (
       authors[0].slug ? (
-        <Link
-          className={styles.authorLink}
-          href={`/authors/${authors[0].slug}`}
-        >
+        <Link className={styles.authorLink} href={`/authors/${authors[0].slug}`}>
           {authors[0].name}
         </Link>
       ) : (
@@ -73,15 +81,13 @@ export default function BookCard({ book, href, compact, className }: Props) {
     );
 
   return (
-    <div
-      className={`${styles.card} ${className ?? ""} ${compact ? styles.compact : ""}`}
-    >
+    <div className={`${styles.card} ${className ?? ""} ${compact ? styles.compact : ""}`}>
       <Link
         href={link}
         className={styles.image}
-        aria-label={book.title ? `${book.title} cover` : "No cover image"}
+        aria-label={`${book.title} cover`}
       >
-        {hasImage ? (
+        {imgUrl ? (
           <Image
             src={imgUrl}
             alt={imgAlt}
@@ -105,23 +111,20 @@ export default function BookCard({ book, href, compact, className }: Props) {
         </Link>
 
         <div className={styles.author}>{showAuthors}</div>
-        {year && <div className={styles.year}>{year}</div>} 
+        {year && <div className={styles.year}>{year}</div>}
 
         <div className={styles.meta}>
           <div className={styles.chips}>
             {book.format && (
-              <Link
-                href={`/books?format=${book.format}`}
-                className={styles.chip}
-              >
+              <Link href={`/books?format=${book.format}`} className={styles.chip}>
                 {book.format}
               </Link>
             )}
-            {book.series?.map((s) => (
+            {seriesList.map((s) => (
               <Link
                 href={`/series/${s.slug}`}
                 className={styles.chip}
-                key={`${book._id}-${s.slug}`}
+                key={`${id}-${s.slug}`}
               >
                 {typeof s.number === "number" && Number.isFinite(s.number)
                   ? `${s.name} #${s.number}`

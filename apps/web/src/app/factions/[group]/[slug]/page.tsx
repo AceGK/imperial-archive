@@ -3,7 +3,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import { factionPairs40kQuery, singleFaction40kBySlugsQuery } from "@/lib/sanity/queries";
 import type { Faction40kDoc } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
-import Books from "@/components/modules/SearchContent/Books";
+import Books from "@/components/modules/Catalog/Books";
 import FactionDetails from "@/components/modules/Details/Faction";
 
 export const revalidate = 60;

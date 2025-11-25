@@ -4,7 +4,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import { groupedFactions40kQuery } from "@/lib/sanity/queries";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
 import FactionCard from "@/components/modules/Cards/FactionCard";
-import Books from "@/components/modules/SearchContent/Books";
+import Books from "@/components/modules/Catalog/Books";
 import type { FactionGroupWithItems } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 

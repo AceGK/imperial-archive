@@ -11,14 +11,23 @@ type CurrentRefinementsProps = {
   transformLabel?: (attribute: string) => string;
 };
 
-// Default label transformer - converts "authors.name" to "Author"
 const defaultTransformLabel = (attribute: string): string => {
-  // Handle nested attributes like "authors.name" -> "Author"
-  const base = attribute.split('.')[0];
-  
-  // Remove trailing 's' and capitalize
-  const singular = base.endsWith('s') ? base.slice(0, -1) : base;
-  return singular.charAt(0).toUpperCase() + singular.slice(1);
+  const labelMap: Record<string, string> = {
+    // Books index
+    'format': 'Format',
+    'authors.name': 'Author',
+    'series.title': 'Series',
+    'factions.name': 'Faction',
+    'era.name': 'Era',
+    // Authors/Series indices
+    'bookFormats': 'Format',
+    'authorNames': 'Author',
+    'seriesTitles': 'Series',
+    'factionNames': 'Faction',
+    'eraNames': 'Era',
+  };
+
+  return labelMap[attribute] ?? attribute;
 };
 
 export function CurrentRefinements({
@@ -35,36 +44,43 @@ export function CurrentRefinements({
 
   if (items.length === 0) return null;
 
-  // Count total refinements
-  const totalRefinements = items.reduce(
-    (sum, item) => sum + item.refinements.length,
-    0
-  );
+  // Flatten and sort refinements for stable order
+  const sortedRefinements = items
+    .flatMap((item) =>
+      item.refinements.map((refinement) => ({
+        item,
+        refinement,
+      }))
+    )
+    .sort((a, b) => {
+      // Sort by attribute first, then by value
+      const attrCompare = a.item.attribute.localeCompare(b.item.attribute);
+      if (attrCompare !== 0) return attrCompare;
+      return String(a.refinement.value).localeCompare(String(b.refinement.value));
+    });
 
   return (
     <div className={styles.refinements}>
-      {items.map((item) =>
-        item.refinements.map((refinement) => (
-          <button
-            key={`${item.attribute}-${refinement.value}`}
-            className={styles.pill}
-            onClick={() => refine(refinement)}
-            type="button"
-          >
-            <span className={styles.attribute}>
-              {transformLabel(item.attribute)}:
-            </span>
-            <span className={styles.value}>
-              {refinement.label || String(refinement.value)}
-            </span>
-            <span className={styles.remove}>
-              <Xmark />
-            </span>
-          </button>
-        ))
-      )}
+      {sortedRefinements.map(({ item, refinement }) => (
+        <button
+          key={`${item.attribute}-${refinement.value}`}
+          className={styles.pill}
+          onClick={() => refine(refinement)}
+          type="button"
+        >
+          <span className={styles.attribute}>
+            {transformLabel(item.attribute)}:
+          </span>
+          <span className={styles.value}>
+            {refinement.label || String(refinement.value)}
+          </span>
+          <span className={styles.remove}>
+            <Xmark />
+          </span>
+        </button>
+      ))}
 
-      {showClearAll && canClearAll && totalRefinements > 1 && (
+      {showClearAll && canClearAll && sortedRefinements.length > 1 && (
         <button
           className={styles.clearAll}
           onClick={() => clearAll()}

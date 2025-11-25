@@ -68,3 +68,32 @@
     display: flex;
   }
 }
+
+.noResults {
+  text-align: center;
+  padding: 3rem 0;
+  opacity: 0.7;
+}
+
+.bookGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.5rem 1rem;
+  margin-top: 2rem;
+
+  @include min(sm) {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  @include min(md) {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+.authorGrid,
+.seriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}

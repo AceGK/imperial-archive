@@ -1,6 +1,6 @@
 // app/authors/page.tsx
 import PageHeader from "@/components/modules/PageHeader";
-import Authors from "@/components/modules/SearchContent/Authors";
+import Authors from "@/components/modules/Catalog/Authors";
 
 export const revalidate = 60;
 

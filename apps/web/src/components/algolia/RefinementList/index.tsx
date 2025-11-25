@@ -12,8 +12,6 @@ export type RefinementListProps = {
   title: string;
   searchable?: boolean;
   limit?: number;
-  showMore?: boolean;
-  showMoreLimit?: number;
   sortBy?: UseRefinementListProps["sortBy"];
 };
 
@@ -21,17 +19,13 @@ export function RefinementList({
   attribute,
   title,
   searchable = false,
-  limit,
-  showMore,
-  showMoreLimit,
+  limit = 200,
   sortBy = ["name:asc"],
 }: RefinementListProps) {
   const { items, refine } = useRefinementList({
     attribute,
     sortBy,
     limit,
-    showMore,
-    showMoreLimit,
   });
 
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -39,7 +33,6 @@ export function RefinementList({
 
   if (items.length === 0) return null;
 
-  // Filter items based on search query
   const filteredItems = searchQuery
     ? items.filter((item) =>
         item.label.toLowerCase().includes(searchQuery.toLowerCase())
@@ -71,8 +64,8 @@ export function RefinementList({
         <div className={styles.items}>
           {filteredItems.length > 0 ? (
             filteredItems.map((item) => (
-              <label 
-                key={item.value} 
+              <label
+                key={item.value}
                 className={styles.checkbox}
                 onClick={(e) => {
                   e.preventDefault();
@@ -82,7 +75,7 @@ export function RefinementList({
                 <input
                   type="checkbox"
                   checked={item.isRefined}
-                  onChange={() => {}} // Keep it controlled
+                  onChange={() => {}}
                   tabIndex={-1}
                 />
                 <span className={styles.label}>
