@@ -30,7 +30,7 @@ export default async function FactionPage({ params }: { params: Promise<{ group:
         <FactionDetails faction={faction} />
       </div>
       <Books
-        filterByFaction={faction.title}
+        filters={`factions.name:"${faction.title}"`}
         placeholder={`Search books featuring ${faction.title}...`}
         noResultsText={`No books featuring ${faction.title} match your search.`}
       />

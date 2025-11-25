@@ -36,8 +36,14 @@ export default async function GroupPage({
   const { title, description, iconId, links, items } = bucket;
   const Icon = resolveGroupIcon(iconId);
 
-  // Extract all faction names from this group for filtering
-  const factionNames = items?.map((f) => f.title).filter(Boolean) || [];
+// Extract all faction names from this group for filtering
+const factionNames = items?.map((f) => f.title).filter(Boolean) || [];
+
+// Build OR filter for multiple factions
+const factionFilter = factionNames.length > 0
+  ? factionNames.map((name) => `factions.name:"${name}"`).join(" OR ")
+  : undefined;
+
 
   const lexicanumLink = links?.find((l) => l.type === "lexicanum")?.url ?? null;
 
@@ -114,7 +120,7 @@ export default async function GroupPage({
       {/* Books filtered by faction group */}
       <section>
         <Books
-          filterByFactionGroup={factionNames}
+          filters={factionFilter}
           placeholder={`Search books featuring ${title}...`}
           noResultsText={`No books featuring ${title} match your search.`}
         />

@@ -39,7 +39,7 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
       </PageHeader>
 
       <Books
-        filterByEra={era.title}
+        filters={`era.name:"${era.title}"`}
         placeholder={`Search books from ${era.title}...`}
         noResultsText={`No books from ${era.title} match your search.`}
       />

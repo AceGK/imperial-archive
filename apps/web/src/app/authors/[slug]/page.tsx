@@ -40,7 +40,7 @@ export default async function AuthorPage({
         <AuthorDetails author={profile} />
       </div>
       <Books
-        filterByAuthor={profile.name}
+        filters={`authors.name:"${profile.name}"`}
         placeholder="Search this author's books..."
         noResultsText="No books by this author match your search."
       />
