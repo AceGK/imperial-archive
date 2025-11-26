@@ -23,6 +23,7 @@ export default function AuthorsPage() {
       <Catalog<AuthorHit>
         indexName="authors40k"
         renderHit={(hit) => (
+          //TODO make AuthorCard accept hit directly
           <AuthorCard
             name={hit.name}
             slug={hit.slug}

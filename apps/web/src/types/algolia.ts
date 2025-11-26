@@ -82,9 +82,21 @@ export type SeriesHit = {
   objectID: string;
   title: string;
   slug: string;
-  description?: string | null;
-  image: AlgoliaImage;
-  bookCount?: number;
+  subtitle: string;
+  image: {
+    asset?: { _ref: string } | null;
+    hotspot?: { x: number; y: number; width: number; height: number } | null;
+    crop?: { top: number; bottom: number; left: number; right: number } | null;
+    alt?: string | null;
+  };
+  format: string[];
+  "authors.name": string[];
+  "authors.slug": string[];
+  "factions.name": string[];
+  "factions.slug": string[];
+  "era.name": string[];
+  "era.slug": string[];
+  bookCount: number;
   _createdAt: string;
   _updatedAt: string;
 };

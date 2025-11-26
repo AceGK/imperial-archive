@@ -37,7 +37,12 @@ function formatBookType(format: string | null): string {
 }
 
 /* --------------------------- Algolia types ---------------------------- */
-type ImageRef = { url: string | null; alt: string | null };
+type ImageRef = {
+  asset?: { _ref: string } | null;
+  hotspot?: { x: number; y: number; width: number; height: number } | null;
+  crop?: { top: number; bottom: number; left: number; right: number } | null;
+  alt?: string | null;
+};
 
 type AlgoliaSeries = {
   objectID: string;
@@ -46,14 +51,14 @@ type AlgoliaSeries = {
   subtitle: string;
   image: ImageRef;
 
-  // Denormalized book data for filtering
-  bookFormats: string[];
-  authorSlugs: string[];
-  authorNames: string[];
-  factionSlugs: string[];
-  factionNames: string[];
-  eraSlugs: string[];
-  eraNames: string[];
+  // Denormalized book data for filtering (consistent naming with books/authors)
+  format: string[];
+  "authors.slug": string[];
+  "authors.name": string[];
+  "factions.slug": string[];
+  "factions.name": string[];
+  "era.slug": string[];
+  "era.name": string[];
   bookCount: number;
 
   // meta
@@ -72,21 +77,26 @@ async function initialSync() {
 
   const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_API_KEY);
 
-  // Fetch all series with their basic info
-  const seriesList = await sanity.fetch<any[]>(`
-    *[_type == "series40k" && !(_id in path("drafts.**"))]{
-      _id,
-      title,
-      "slug": slug.current,
-      subtitle,
-      "image": {
-        "url": image.asset->url,
+  // Fetch all series with their basic info - include full image data for urlFor()
+const seriesList = await sanity.fetch<any[]>(`
+  *[_type == "series40k" && !(_id in path("drafts.**"))]{
+    _id,
+    title,
+    "slug": slug.current,
+    subtitle,
+    "image": select(
+      defined(image.asset._ref) => {
+        "asset": { "_ref": image.asset._ref },
+        "hotspot": image.hotspot,
+        "crop": image.crop,
         "alt": image.alt
       },
-      _createdAt,
-      _updatedAt
-    }
-  `);
+      null
+    ),
+    _createdAt,
+    _updatedAt
+  }
+`);
 
   console.log(`Found ${seriesList.length} series to sync`);
   if (!seriesList.length) return;
@@ -114,7 +124,7 @@ async function initialSync() {
       );
 
       // Aggregate unique values
-      const bookFormats = new Set<string>();
+      const formats = new Set<string>();
       const authorSlugs = new Set<string>();
       const authorNames = new Set<string>();
       const factionSlugs = new Set<string>();
@@ -124,7 +134,7 @@ async function initialSync() {
 
       books.forEach((book) => {
         if (book.format) {
-          bookFormats.add(formatBookType(book.format));
+          formats.add(formatBookType(book.format));
         }
 
         if (Array.isArray(book.authors)) {
@@ -151,10 +161,18 @@ async function initialSync() {
         }
       });
 
-      const image: ImageRef = {
-        url: series?.image?.url ?? null,
-        alt: series?.image?.alt ?? null,
-      };
+    // Keep full Sanity image structure for urlFor() to work with hotspot/crop
+    const image: ImageRef = series?.image ? {
+      asset: series.image.asset ?? null,
+      hotspot: series.image.hotspot ?? null,
+      crop: series.image.crop ?? null,
+      alt: series.image.alt ?? null,
+    } : {
+      asset: null,
+      hotspot: null,
+      crop: null,
+      alt: null,
+    };
 
       const doc: AlgoliaSeries = {
         objectID: series._id,
@@ -163,14 +181,14 @@ async function initialSync() {
         subtitle: hardTrim(series.subtitle, 500),
         image,
 
-        // Denormalized arrays for faceting
-        bookFormats: Array.from(bookFormats),
-        authorSlugs: Array.from(authorSlugs),
-        authorNames: Array.from(authorNames),
-        factionSlugs: Array.from(factionSlugs),
-        factionNames: Array.from(factionNames),
-        eraSlugs: Array.from(eraSlugs),
-        eraNames: Array.from(eraNames),
+        // Consistent field names with books/authors indices
+        format: Array.from(formats),
+        "authors.slug": Array.from(authorSlugs),
+        "authors.name": Array.from(authorNames),
+        "factions.slug": Array.from(factionSlugs),
+        "factions.name": Array.from(factionNames),
+        "era.slug": Array.from(eraSlugs),
+        "era.name": Array.from(eraNames),
         bookCount: books.length,
 
         _createdAt: series._createdAt,

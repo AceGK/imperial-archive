@@ -37,7 +37,12 @@ function formatBookType(format: string | null): string {
 }
 
 /* --------------------------- Algolia types ---------------------------- */
-type ImageRef = { url: string | null; alt: string | null };
+type ImageRef = {
+  asset?: { _ref: string } | null;
+  hotspot?: { x: number; y: number; width: number; height: number } | null;
+  crop?: { top: number; bottom: number; left: number; right: number } | null;
+  alt?: string | null;
+};
 
 type AlgoliaSeries = {
   title: string;
@@ -45,14 +50,14 @@ type AlgoliaSeries = {
   subtitle: string;
   image: ImageRef;
 
-  // Denormalized book data for filtering
-  bookFormats: string[];
-  authorSlugs: string[];
-  authorNames: string[];
-  factionSlugs: string[];
-  factionNames: string[];
-  eraSlugs: string[];
-  eraNames: string[];
+  // Denormalized book data for filtering (consistent naming)
+  format: string[];
+  "authors.slug": string[];
+  "authors.name": string[];
+  "factions.slug": string[];
+  "factions.name": string[];
+  "era.slug": string[];
+  "era.name": string[];
   bookCount: number;
 
   _createdAt: string;
@@ -109,22 +114,15 @@ export const handler = documentEventHandler(async ({ event, context }) => {
               "name": coalesce(title, name),
               "slug": slug.current
             }
-          },
-          "imageUrl": select(
-            defined($imageAssetId) => *[_id == $imageAssetId][0].url,
-            null
-          )
+          }
         }`,
-        {
-          seriesId: _id,
-          imageAssetId: image?.asset?._ref || null,
-        }
+        { seriesId: _id }
       );
 
       console.log("  ✓ Found books:", seriesData?.books?.length || 0);
 
       // Aggregate unique values from books
-      const bookFormats = new Set<string>();
+      const formats = new Set<string>();
       const authorSlugs = new Set<string>();
       const authorNames = new Set<string>();
       const factionSlugs = new Set<string>();
@@ -135,7 +133,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       const books = seriesData?.books || [];
       books.forEach((book: any) => {
         if (book.format) {
-          bookFormats.add(formatBookType(book.format));
+          formats.add(formatBookType(book.format));
         }
 
         if (Array.isArray(book.authors)) {
@@ -163,18 +161,20 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       });
 
       console.log("  ✓ Aggregated data:");
-      console.log("    - Formats:", Array.from(bookFormats).join(", ") || "none");
+      console.log("    - Formats:", Array.from(formats).join(", ") || "none");
       console.log("    - Authors:", Array.from(authorNames).join(", ") || "none");
       console.log("    - Factions:", Array.from(factionNames).join(", ") || "none");
       console.log("    - Eras:", Array.from(eraNames).join(", ") || "none");
 
-      // Process image
+      // Keep full Sanity image structure for urlFor() to work with hotspot/crop
       const processedImage: ImageRef = {
-        url: seriesData?.imageUrl ?? image?.asset?.url ?? null,
+        asset: image?.asset ?? null,
+        hotspot: image?.hotspot ?? null,
+        crop: image?.crop ?? null,
         alt: image?.alt ?? null,
       };
 
-      console.log("  ✓ Processed image:", processedImage.url ? "✓" : "✗");
+      console.log("  ✓ Processed image:", processedImage.asset?._ref ? "✓" : "✗");
 
       // Build Algolia document
       const document: AlgoliaSeries = {
@@ -183,14 +183,14 @@ export const handler = documentEventHandler(async ({ event, context }) => {
         subtitle: hardTrim(subtitle || "", 500),
         image: processedImage,
 
-        // Denormalized arrays for faceting
-        bookFormats: Array.from(bookFormats),
-        authorSlugs: Array.from(authorSlugs),
-        authorNames: Array.from(authorNames),
-        factionSlugs: Array.from(factionSlugs),
-        factionNames: Array.from(factionNames),
-        eraSlugs: Array.from(eraSlugs),
-        eraNames: Array.from(eraNames),
+        // Consistent field names with books/authors indices
+        format: Array.from(formats),
+        "authors.slug": Array.from(authorSlugs),
+        "authors.name": Array.from(authorNames),
+        "factions.slug": Array.from(factionSlugs),
+        "factions.name": Array.from(factionNames),
+        "era.slug": Array.from(eraSlugs),
+        "era.name": Array.from(eraNames),
         bookCount: books.length,
 
         _createdAt,
@@ -210,11 +210,11 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       console.log("  - Title:", document.title);
       console.log("  - Slug:", document.slug);
       console.log("  - Book count:", document.bookCount);
-      console.log("  - Formats:", document.bookFormats.join(", ") || "none");
-      console.log("  - Authors:", document.authorNames.join(", ") || "none");
-      console.log("  - Factions:", document.factionNames.join(", ") || "none");
-      console.log("  - Eras:", document.eraNames.join(", ") || "none");
-      console.log("  - Image:", processedImage.url ? "✓" : "✗");
+      console.log("  - Formats:", document.format.join(", ") || "none");
+      console.log("  - Authors:", document["authors.name"].join(", ") || "none");
+      console.log("  - Factions:", document["factions.name"].join(", ") || "none");
+      console.log("  - Eras:", document["era.name"].join(", ") || "none");
+      console.log("  - Image:", processedImage.asset?._ref ? "✓" : "✗");
 
       await algolia.addOrUpdateObject({
         indexName: ALGOLIA_INDEX_NAME,

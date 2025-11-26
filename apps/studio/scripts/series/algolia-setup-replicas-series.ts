@@ -31,15 +31,15 @@ async function setupReplicas() {
         searchableAttributes: [
           "title",
           "subtitle",
-          "authorNames",
-          "factionNames",
-          "eraNames",
+          "authors.name",
+          "factions.name",
+          "era.name",
         ],
         attributesForFaceting: [
-          "searchable(bookFormats)",
-          "searchable(authorNames)",
-          "searchable(factionNames)",
-          "searchable(eraNames)",
+          "searchable(format)",
+          "searchable(authors.name)",
+          "searchable(factions.name)",
+          "searchable(era.name)",
           "bookCount",
         ],
         ranking: [
@@ -66,10 +66,10 @@ async function setupReplicas() {
       indexName: "series40k_title_desc",
       indexSettings: {
         attributesForFaceting: [
-          "searchable(bookFormats)",
-          "searchable(authorNames)",
-          "searchable(factionNames)",
-          "searchable(eraNames)",
+          "searchable(format)",
+          "searchable(authors.name)",
+          "searchable(factions.name)",
+          "searchable(era.name)",
           "bookCount",
         ],
         ranking: [
