@@ -4,7 +4,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import { groupedFactions40kQuery } from "@/lib/sanity/queries";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
 import FactionCard from "@/components/modules/Cards/FactionCard";
-import Books from "@/components/modules/Catalog/Books";
+import BooksCatalog from "@/components/modules/Catalog/Books";
 import type { FactionGroupWithItems } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 
@@ -36,14 +36,14 @@ export default async function GroupPage({
   const { title, description, iconId, links, items } = bucket;
   const Icon = resolveGroupIcon(iconId);
 
-// Extract all faction names from this group for filtering
-const factionNames = items?.map((f) => f.title).filter(Boolean) || [];
+  // Extract all faction names from this group for filtering
+  const factionNames = items?.map((f) => f.title).filter(Boolean) || [];
 
-// Build OR filter for multiple factions
-const factionFilter = factionNames.length > 0
-  ? factionNames.map((name) => `factions.name:"${name}"`).join(" OR ")
-  : undefined;
-
+  // Build OR filter for multiple factions
+  const factionFilter =
+    factionNames.length > 0
+      ? factionNames.map((name) => `factions.name:"${name}"`).join(" OR ")
+      : undefined;
 
   const lexicanumLink = links?.find((l) => l.type === "lexicanum")?.url ?? null;
 
@@ -118,13 +118,23 @@ const factionFilter = factionNames.length > 0
       </div>
 
       {/* Books filtered by faction group */}
-      <section>
-        <Books
-          filters={factionFilter}
-          placeholder={`Search books featuring ${title}...`}
-          noResultsText={`No books featuring ${title} match your search.`}
-        />
-      </section>
+      {factionFilter && (
+        <section>
+          <BooksCatalog
+            cacheKey={`faction-group-${group}`}
+            baseFilters={factionFilter} 
+            placeholder={`Search books featuring ${title}...`}
+            noResultsText={`No books featuring ${title} match your search.`}
+            hitsPerPage={36}
+            filters={[
+              { attribute: "format", label: "Format" },
+              { attribute: "authors.name", label: "Author", searchable: true },
+              { attribute: "series.title", label: "Series", searchable: true },
+              { attribute: "era.name", label: "Era" },
+            ]}
+          />
+        </section>
+      )}
     </main>
   );
 }

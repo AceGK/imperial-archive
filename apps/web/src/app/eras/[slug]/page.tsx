@@ -1,9 +1,10 @@
+// app/eras/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import { client } from "@/lib/sanity/sanity.client";
 import { single40kEraQuery } from "@/lib/sanity/queries";
 import type { Era40k } from "@/types/sanity";
 import PageHeader from "@/components/modules/PageHeader";
-import Books from "@/components/modules/Catalog/Books";
+import BooksCatalog from "@/components/modules/Catalog/Books";
 
 export const revalidate = 60;
 
@@ -38,10 +39,17 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
         {era.period && <p style={{ textWrap: "balance" }}>{era.period}</p>}
       </PageHeader>
 
-      <Books
-        filters={`era.name:"${era.title}"`}
+      <BooksCatalog
+        cacheKey={`era-${slug}`}
+        baseFilters={`era.name:"${era.title}"`}
         placeholder={`Search books from ${era.title}...`}
         noResultsText={`No books from ${era.title} match your search.`}
+        filters={[
+          { attribute: "format", label: "Format" },
+          { attribute: "authors.name", label: "Author", searchable: true },
+          { attribute: "series.title", label: "Series", searchable: true },
+          { attribute: "factions.name", label: "Faction", searchable: true },
+        ]}
       />
     </main>
   );
