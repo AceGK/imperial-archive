@@ -114,7 +114,7 @@ export default async function BookPage({
 
       {/* Series carousels - one for each series */}
       {validSeries.map((s: any) => (
-        <section className="container row">
+        <section key={s.slug} className="container row">
           <SeriesBooksCarousel
             seriesSlug={s.slug}
             seriesName={s.name}

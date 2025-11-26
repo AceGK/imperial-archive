@@ -52,14 +52,14 @@ type AlgoliaAuthor = {
   bio: string;
   image: ImageRef;
 
-  // Denormalized book data for filtering
-  bookFormats: string[];
-  seriesSlugs: string[];
-  seriesTitles: string[];
-  factionSlugs: string[];
-  factionNames: string[];
-  eraSlugs: string[];
-  eraNames: string[];
+  // Consistent field names with books index
+  format: string[];
+  "series.title": string[];
+  "series.slug": string[];
+  "factions.name": string[];
+  "factions.slug": string[];
+  "era.name": string[];
+  "era.slug": string[];
   bookCount: number;
 
   _createdAt: string;
@@ -91,7 +91,6 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       console.log("📦 Processing author:", _id);
       console.log("  - Name:", name);
 
-      // Create Sanity client
       const sanityClient = createClient({
         projectId: SANITY_STUDIO_PROJECT_ID,
         dataset: SANITY_STUDIO_DATASET,
@@ -102,7 +101,6 @@ export const handler = documentEventHandler(async ({ event, context }) => {
 
       console.log("🔍 Fetching author's books and aggregating data...");
 
-      // Fetch all books by this author with denormalized data
       const authorData = await sanityClient.fetch(
         `{
           "books": *[_type == "book40k" && !(_id in path("drafts.**")) && references($authorId)]{
@@ -135,7 +133,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       console.log("  ✓ Found books:", authorData?.books?.length || 0);
 
       // Aggregate unique values from books
-      const bookFormats = new Set<string>();
+      const formats = new Set<string>();
       const seriesSlugs = new Set<string>();
       const seriesTitles = new Set<string>();
       const factionSlugs = new Set<string>();
@@ -146,7 +144,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       const books = authorData?.books || [];
       books.forEach((book: any) => {
         if (book.format) {
-          bookFormats.add(formatBookType(book.format));
+          formats.add(formatBookType(book.format));
         }
 
         if (book.series?.slug && book.series?.title) {
@@ -170,12 +168,11 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       });
 
       console.log("  ✓ Aggregated data:");
-      console.log("    - Formats:", Array.from(bookFormats).join(", ") || "none");
+      console.log("    - Formats:", Array.from(formats).join(", ") || "none");
       console.log("    - Series:", Array.from(seriesTitles).join(", ") || "none");
       console.log("    - Factions:", Array.from(factionNames).join(", ") || "none");
       console.log("    - Eras:", Array.from(eraNames).join(", ") || "none");
 
-      // Process image
       const processedImage: ImageRef = {
         url: authorData?.imageUrl ?? image?.asset?.url ?? null,
         alt: image?.alt ?? null,
@@ -183,33 +180,29 @@ export const handler = documentEventHandler(async ({ event, context }) => {
 
       console.log("  ✓ Processed image:", processedImage.url ? "✓" : "✗");
 
-      // Process bio
       const processedBio = hardTrim(authorData?.bioText || "", 6000);
 
-      // Build Algolia document
       const document: AlgoliaAuthor = {
         name: name || "",
         lastName: extractLastName(name || ""),
-        slug:
-          typeof slug === "object" ? slug?.current || "" : slug || "",
+        slug: typeof slug === "object" ? slug?.current || "" : slug || "",
         bio: processedBio,
         image: processedImage,
 
-        // Denormalized arrays for faceting
-        bookFormats: Array.from(bookFormats),
-        seriesSlugs: Array.from(seriesSlugs),
-        seriesTitles: Array.from(seriesTitles),
-        factionSlugs: Array.from(factionSlugs),
-        factionNames: Array.from(factionNames),
-        eraSlugs: Array.from(eraSlugs),
-        eraNames: Array.from(eraNames),
+        // Consistent field names with books index
+        format: Array.from(formats),
+        "series.title": Array.from(seriesTitles),
+        "series.slug": Array.from(seriesSlugs),
+        "factions.name": Array.from(factionNames),
+        "factions.slug": Array.from(factionSlugs),
+        "era.name": Array.from(eraNames),
+        "era.slug": Array.from(eraSlugs),
         bookCount: books.length,
 
         _createdAt,
         _updatedAt,
       };
 
-      // Check document size
       const documentSize = JSON.stringify(document).length;
       if (documentSize > 9000) {
         console.warn(
@@ -217,16 +210,15 @@ export const handler = documentEventHandler(async ({ event, context }) => {
         );
       }
 
-      // Log what we're sending
       console.log("\n📤 Sending to Algolia:");
       console.log("  - Name:", document.name);
       console.log("  - Last Name:", document.lastName);
       console.log("  - Slug:", document.slug);
       console.log("  - Book count:", document.bookCount);
-      console.log("  - Formats:", document.bookFormats.join(", ") || "none");
-      console.log("  - Series:", document.seriesTitles.join(", ") || "none");
-      console.log("  - Factions:", document.factionNames.join(", ") || "none");
-      console.log("  - Eras:", document.eraNames.join(", ") || "none");
+      console.log("  - Formats:", document.format.join(", ") || "none");
+      console.log("  - Series:", document["series.title"].join(", ") || "none");
+      console.log("  - Factions:", document["factions.name"].join(", ") || "none");
+      console.log("  - Eras:", document["era.name"].join(", ") || "none");
       console.log("  - Image:", processedImage.url ? "✓" : "✗");
       console.log("  - Bio length:", processedBio.length, "chars");
 

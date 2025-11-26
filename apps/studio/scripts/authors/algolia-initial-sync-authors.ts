@@ -21,12 +21,12 @@ const hardTrim = (str: unknown, max = 8000): string =>
 function extractLastName(fullName: string): string {
   if (!fullName) return "";
   const parts = fullName.trim().split(/\s+/);
-  return parts[parts.length - 1]; // Gets the last word as last name
+  return parts[parts.length - 1];
 }
 
 function formatBookType(format: string | null): string {
   if (!format) return "Book";
-  
+
   const formatMap: Record<string, string> = {
     novel: "Novel",
     novella: "Novella",
@@ -38,13 +38,14 @@ function formatBookType(format: string | null): string {
     audio_anthology: "Audio Anthology",
     other: "Other",
   };
-  
+
   return formatMap[format] || format;
 }
 
 /* --------------------------- Algolia types ---------------------------- */
 type ImageRef = { url: string | null; alt: string | null };
 
+// Using consistent nested structure matching books index
 type AlgoliaAuthor = {
   objectID: string;
   name: string;
@@ -53,14 +54,14 @@ type AlgoliaAuthor = {
   bio: string;
   image: ImageRef;
 
-  // Denormalized book data for filtering
-  bookFormats: string[];
-  seriesSlugs: string[];
-  seriesTitles: string[];
-  factionSlugs: string[];
-  factionNames: string[];
-  eraSlugs: string[];
-  eraNames: string[];
+  // Denormalized book data for filtering - consistent with books index
+  format: string[]; // was bookFormats
+  "series.title": string[]; // was seriesTitles
+  "series.slug": string[]; // was seriesSlugs
+  "factions.name": string[]; // was factionNames
+  "factions.slug": string[]; // was factionSlugs
+  "era.name": string[]; // was eraNames
+  "era.slug": string[]; // was eraSlugs
   bookCount: number;
 
   // meta
@@ -120,7 +121,7 @@ async function initialSync() {
       );
 
       // Aggregate unique values
-      const bookFormats = new Set<string>();
+      const formats = new Set<string>();
       const seriesSlugs = new Set<string>();
       const seriesTitles = new Set<string>();
       const factionSlugs = new Set<string>();
@@ -130,7 +131,7 @@ async function initialSync() {
 
       books.forEach((book) => {
         if (book.format) {
-          bookFormats.add(formatBookType(book.format));
+          formats.add(formatBookType(book.format));
         }
 
         if (book.series?.slug && book.series?.title) {
@@ -166,14 +167,14 @@ async function initialSync() {
         bio: hardTrim(author.bio, 6000),
         image,
 
-        // Denormalized arrays for faceting
-        bookFormats: Array.from(bookFormats),
-        seriesSlugs: Array.from(seriesSlugs),
-        seriesTitles: Array.from(seriesTitles),
-        factionSlugs: Array.from(factionSlugs),
-        factionNames: Array.from(factionNames),
-        eraSlugs: Array.from(eraSlugs),
-        eraNames: Array.from(eraNames),
+        // Consistent field names with books index
+        format: Array.from(formats),
+        "series.title": Array.from(seriesTitles),
+        "series.slug": Array.from(seriesSlugs),
+        "factions.name": Array.from(factionNames),
+        "factions.slug": Array.from(factionSlugs),
+        "era.name": Array.from(eraNames),
+        "era.slug": Array.from(eraSlugs),
         bookCount: books.length,
 
         _createdAt: author._createdAt,

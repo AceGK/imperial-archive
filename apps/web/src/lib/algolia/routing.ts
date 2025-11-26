@@ -1,6 +1,6 @@
+// lib/algolia/routing.ts
 import type { UiState } from "instantsearch.js";
 
-// URL encoding/decoding utilities
 export const encodeValue = (value: string): string => {
   return value.replace(/ /g, "+").replace(/&/g, "and");
 };
@@ -19,62 +19,97 @@ export const decodeArray = (encodedString?: string): string[] | undefined => {
   return encodedString.split(",").map(decodeValue);
 };
 
-// Sort mapping utilities
-const SORT_TO_ROUTE_MAP: Record<string, string> = {
-  "books40k_title_asc": "title-asc",
-  "books40k_title_desc": "title-desc",
-  "books40k_date_desc": "date-desc",
-  "books40k_date_asc": "date-asc",
+// Bidirectional mapping between URL keys and Algolia attributes
+const ATTRIBUTE_TO_URL_KEY: Record<string, string> = {
+  "format": "format",
+  "authors.name": "author",
+  "series.title": "series",
+  "factions.name": "faction",
+  "era.name": "era",
 };
 
-const ROUTE_TO_SORT_MAP: Record<string, string> = {
-  "title-asc": "books40k_title_asc",
-  "title-desc": "books40k_title_desc",
-  "date-desc": "books40k_date_desc",
-  "date-asc": "books40k_date_asc",
-};
+// Generate reverse mapping
+const URL_KEY_TO_ATTRIBUTE: Record<string, string> = Object.fromEntries(
+  Object.entries(ATTRIBUTE_TO_URL_KEY).map(([attr, key]) => [key, attr])
+);
 
-export const sortToRoute = (sortBy?: string): string | undefined => {
-  if (!sortBy || sortBy === "books40k") return undefined;
-  return SORT_TO_ROUTE_MAP[sortBy];
-};
+// Generic sort mapping - builds maps from index name
+function createSortMaps(indexName: string) {
+  const suffixes = [
+    "title_asc", "title_desc",
+    "name_asc", "name_desc",
+    "date_asc", "date_desc",
+    "books_desc", "books_asc",
+  ];
 
-export const routeToSort = (route?: string): string | undefined => {
-  if (!route) return undefined;
-  return ROUTE_TO_SORT_MAP[route];
-};
+  const toRoute: Record<string, string> = {};
+  const fromRoute: Record<string, string> = {};
 
-// Main routing configuration factory
-export function createAlgoliaRouting(indexName: string = "books40k") {
+  suffixes.forEach((suffix) => {
+    const indexValue = `${indexName}_${suffix}`;
+    const routeValue = suffix.replace("_", "-");
+    toRoute[indexValue] = routeValue;
+    fromRoute[routeValue] = indexValue;
+  });
+
+  return { toRoute, fromRoute };
+}
+
+export function createAlgoliaRouting(indexName: string) {
+  const { toRoute, fromRoute } = createSortMaps(indexName);
+
+  const sortToRoute = (sortBy?: string): string | undefined => {
+    if (!sortBy || sortBy === indexName) return undefined;
+    return toRoute[sortBy];
+  };
+
+  const routeToSort = (route?: string): string | undefined => {
+    if (!route) return undefined;
+    return fromRoute[route];
+  };
+
   return {
     stateMapping: {
       stateToRoute(uiState: UiState) {
         const indexUiState = uiState[indexName] || {};
-        
-        return {
-          q: indexUiState.query,
-          format: encodeArray(indexUiState.refinementList?.format),
-          author: encodeArray(indexUiState.refinementList?.["authors.name"]),
-          faction: encodeArray(indexUiState.refinementList?.["factions.name"]),
-          era: encodeArray(indexUiState.refinementList?.["era.name"]),
-          series: encodeArray(indexUiState.refinementList?.["series.title"]),
+        const refinements = indexUiState.refinementList || {};
+
+        const routeState: Record<string, string | undefined> = {
+          q: indexUiState.query || undefined,
           sort: sortToRoute(indexUiState.sortBy),
-          page: indexUiState.page && indexUiState.page > 1 ? indexUiState.page : undefined,
         };
+
+        // Convert attributes to URL keys using the mapping
+        Object.entries(refinements).forEach(([attr, values]) => {
+          if (values && values.length > 0) {
+            const urlKey = ATTRIBUTE_TO_URL_KEY[attr] || attr;
+            routeState[urlKey] = encodeArray(values);
+          }
+        });
+
+        return routeState;
       },
-      routeToState(routeState: any) {
+
+      routeToState(routeState: Record<string, string | undefined>): UiState {
+        const { q, sort, ...refinementParams } = routeState;
+
+        const refinementList: Record<string, string[]> = {};
+
+        Object.entries(refinementParams).forEach(([urlKey, value]) => {
+          if (value) {
+            const attribute = URL_KEY_TO_ATTRIBUTE[urlKey] || urlKey;
+            const decoded = decodeArray(value);
+            if (decoded) {
+              refinementList[attribute] = decoded;
+            }
+          }
+        });
+
         return {
           [indexName]: {
-            query: routeState.q,
-            refinementList: {
-              ...(routeState.format && { format: decodeArray(routeState.format) }),
-              ...(routeState.author && { "authors.name": decodeArray(routeState.author) }),
-              ...(routeState.faction && { "factions.name": decodeArray(routeState.faction) }),
-              ...(routeState.era && { "era.name": decodeArray(routeState.era) }),
-              ...(routeState.series && { "series.title": decodeArray(routeState.series) }),
-            },
-            ...(routeState.sort && { sortBy: routeToSort(routeState.sort) }),
-            ...(routeState.page && { page: parseInt(routeState.page, 10) }),
+            query: q || "",
+            refinementList,
+            ...(sort && { sortBy: routeToSort(sort) }),
           },
         };
       },

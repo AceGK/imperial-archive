@@ -157,3 +157,33 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+// In BookCard.module.scss
+.skeletonCover {
+  aspect-ratio: 2/3;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeletonTitle {
+  height: 1rem;
+  width: 80%;
+  margin-top: 0.5rem;
+  background: #e0e0e0;
+  border-radius: 4px;
+}
+
+.skeletonAuthor {
+  height: 0.875rem;
+  width: 60%;
+  margin-top: 0.25rem;
+  background: #e0e0e0;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}

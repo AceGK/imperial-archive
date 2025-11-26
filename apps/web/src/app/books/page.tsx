@@ -1,10 +1,12 @@
 // app/books/page.tsx
+"use client";
+
 import PageHeader from "@/components/modules/PageHeader";
-import Books from "@/components/modules/Catalog/Books";
+import Catalog from "@/components/modules/Catalog";
+import BookCard from "@/components/modules/Cards/BookCard";
+import type { BookHit } from "@/types/algolia";
 
-export const revalidate = 60;
-
-export default async function BrowsePage() {
+export default function BooksPage() {
   return (
     <main>
       <PageHeader
@@ -18,7 +20,29 @@ export default async function BrowsePage() {
         credit="Black Library © Games Workshop"
       />
 
-      <Books />
+      <Catalog<BookHit>
+        indexName="books40k"
+        renderHit={(hit) => <BookCard book={hit} />}
+        gridVariant="book"
+        placeholder="Search books..."
+        noResultsText="No books match your search."
+        stats={{ singular: "Publication", plural: "Publications" }}
+        hitsPerPage={36}
+        sortOptions={[
+          { label: "Most Recent", value: "books40k" },
+          { label: "Title A-Z", value: "books40k_title_asc" },
+          { label: "Title Z-A", value: "books40k_title_desc" },
+          { label: "Publication Date ↓", value: "books40k_date_desc" },
+          { label: "Publication Date ↑", value: "books40k_date_asc" },
+        ]}
+        filters={[
+          { attribute: "format", label: "Format" },
+          { attribute: "authors.name", label: "Author", searchable: true },
+          { attribute: "series.title", label: "Series", searchable: true },
+          { attribute: "factions.name", label: "Faction", searchable: true },
+          { attribute: "era.name", label: "Era" },
+        ]}
+      />
     </main>
   );
 }

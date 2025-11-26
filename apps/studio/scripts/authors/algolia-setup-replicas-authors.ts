@@ -24,22 +24,22 @@ async function setupReplicas() {
   const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_API_KEY);
 
   try {
-    // Configure the main index with default lastName A-Z sorting
+    // Configure the main index with consistent field names
     await client.setSettings({
       indexName: ALGOLIA_INDEX_NAME,
       indexSettings: {
         searchableAttributes: [
           "name",
           "lastName",
-          "seriesTitles",
-          "factionNames",
-          "eraNames",
+          "series.title",
+          "factions.name",
+          "era.name",
         ],
         attributesForFaceting: [
-          "searchable(bookFormats)",
-          "searchable(seriesTitles)",
-          "searchable(factionNames)",
-          "searchable(eraNames)",
+          "searchable(format)",
+          "searchable(series.title)",
+          "searchable(factions.name)",
+          "searchable(era.name)",
           "bookCount",
         ],
         ranking: [
@@ -69,10 +69,10 @@ async function setupReplicas() {
       indexName: "authors40k_name_desc",
       indexSettings: {
         attributesForFaceting: [
-          "searchable(bookFormats)",
-          "searchable(seriesTitles)",
-          "searchable(factionNames)",
-          "searchable(eraNames)",
+          "searchable(format)",
+          "searchable(series.title)",
+          "searchable(factions.name)",
+          "searchable(era.name)",
           "bookCount",
         ],
         ranking: [
@@ -95,10 +95,10 @@ async function setupReplicas() {
       indexName: "authors40k_bookcount_desc",
       indexSettings: {
         attributesForFaceting: [
-          "searchable(bookFormats)",
-          "searchable(seriesTitles)",
-          "searchable(factionNames)",
-          "searchable(eraNames)",
+          "searchable(format)",
+          "searchable(series.title)",
+          "searchable(factions.name)",
+          "searchable(era.name)",
           "bookCount",
         ],
         ranking: [
@@ -122,10 +122,10 @@ async function setupReplicas() {
       indexName: "authors40k_bookcount_asc",
       indexSettings: {
         attributesForFaceting: [
-          "searchable(bookFormats)",
-          "searchable(seriesTitles)",
-          "searchable(factionNames)",
-          "searchable(eraNames)",
+          "searchable(format)",
+          "searchable(series.title)",
+          "searchable(factions.name)",
+          "searchable(era.name)",
           "bookCount",
         ],
         ranking: [

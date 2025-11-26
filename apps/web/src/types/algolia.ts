@@ -50,6 +50,54 @@ export type BookHit = {
   _updatedAt: string;
 };
 
-// export type AuthorHit = { ... };
-// export type SeriesHit = { ... };
-// export type FactionHit = { ... };
+// Author hit from authors40k index
+export type AuthorHit = {
+  objectID: string;
+  name: string;
+  lastName: string;
+  slug: string;
+  bio?: string;
+  image?: {
+    url?: string;
+    lqip?: string;
+    aspect?: number;
+  };
+  
+  // Consistent with books index
+  format: string[];
+  "series.title": string[];
+  "series.slug": string[];
+  "factions.name": string[];
+  "factions.slug": string[];
+  "era.name": string[];
+  "era.slug": string[];
+  bookCount: number;
+  
+  _createdAt: string;
+  _updatedAt: string;
+};
+
+// Series hit from series40k index
+export type SeriesHit = {
+  objectID: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+  image: AlgoliaImage;
+  bookCount?: number;
+  _createdAt: string;
+  _updatedAt: string;
+};
+
+// Faction hit from factions40k index
+export type FactionHit = {
+  objectID: string;
+  name: string;
+  slug: string;
+  description?: string | null;
+  iconId?: string | null;
+  image: AlgoliaImage;
+  bookCount?: number;
+  _createdAt: string;
+  _updatedAt: string;
+};
