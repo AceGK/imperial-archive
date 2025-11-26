@@ -1,16 +1,20 @@
+// components/modules/Cards/EraCard/index.tsx
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./styles.module.scss";
-import type { Era40k } from "@/types/sanity";
 
 type EraCardProps = {
   title: string;
   slug: string;
   period?: string;
   description?: string;
-  image?: any;
-  href?: string; // optional override
-  compact?: boolean; // hide description in tight grids
+  image?: {
+    url: string;
+    lqip?: string;
+    alt?: string;
+  };
+  href?: string;
+  compact?: boolean;
   className?: string;
 };
 

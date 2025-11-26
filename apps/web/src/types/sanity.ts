@@ -71,6 +71,9 @@ export type Era40k = {
     credit?: string   // <- NEW
   }
   description?: string
+  href?: string; // optional override
+  compact?: boolean; // hide description in tight grids
+  className?: string;
 }
 
 export type SanityImageAsset = {

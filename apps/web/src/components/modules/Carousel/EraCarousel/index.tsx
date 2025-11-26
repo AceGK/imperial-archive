@@ -1,6 +1,6 @@
-import {client} from '@/lib/sanity/sanity.client'
-import {all40kErasQuery} from '@/lib/sanity/queries'
-import type {Era40k} from '@/types/sanity'
+import { client } from '@/lib/sanity/sanity.client'
+import { all40kErasQuery } from '@/lib/sanity/queries'
+import type { Era40k } from '@/types/sanity'
 import EraCarouselClient from './client'
 
 type Props = {

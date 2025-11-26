@@ -1,6 +1,5 @@
 // /components/modules/FactionCard/index.tsx
 import Link from "next/link";
-import Image from "next/image";
 import styles from "./styles.module.scss";
 import { resolveIcon } from "@/components/icons/factions/resolve";
 import FactionTheme from "@/components/modules/FactionTheme";

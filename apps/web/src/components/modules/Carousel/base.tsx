@@ -1,3 +1,4 @@
+// components/modules/Carousel/base/index.tsx
 'use client';
 
 import React from "react";
@@ -12,10 +13,8 @@ import Button from "@/components/ui/Button";
 type CarouselProps = {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
-  headerSlot?: React.ReactNode; // NEW: Content to render after subtitle
-  /** Slides to render (each item becomes a SwiperSlide) */
+  headerSlot?: React.ReactNode;
   items: React.ReactNode[];
-  /** Generic Swiper options you can override/preset */
   slidesPerView?: number;
   spaceBetween?: number;
   breakpoints?: SwiperOptions["breakpoints"];
@@ -26,7 +25,8 @@ type CarouselProps = {
   className?: string;
   viewAllLink?: string;
   viewAllLabel?: string;
-  lastSlideTitle?: string; // defaults to "View All"
+  lastSlideTitle?: string;
+  showLastSlide?: boolean; // NEW: controls the "View All" slide separately
 };
 
 export default function Carousel({
@@ -45,6 +45,7 @@ export default function Carousel({
   viewAllLink,
   viewAllLabel,
   lastSlideTitle = "View All",
+  showLastSlide = true, // default to true for backwards compatibility
 }: CarouselProps) {
   return (
     <div className={`${styles.wrap} ${className || ""}`}>
@@ -79,7 +80,7 @@ export default function Carousel({
             {node}
           </SwiperSlide>
         ))}
-         {viewAllLink && (
+        {viewAllLink && showLastSlide && (
           <SwiperSlide className={`${styles.slide} ${styles.viewAllSlide}`}>
             <Link href={viewAllLink} className={styles.viewAllCard} aria-label={lastSlideTitle}>
               <span className={styles.viewAllTitle}>{lastSlideTitle}</span>
@@ -90,7 +91,7 @@ export default function Carousel({
       {viewAllLink && (
         <div className={styles.viewAll}>
           <Button href={viewAllLink} variant="primary" size="sm">
-          {viewAllLabel ? viewAllLabel : "View All"}
+            {viewAllLabel ? viewAllLabel : "View All"}
           </Button>
         </div>
       )}

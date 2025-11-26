@@ -20,7 +20,7 @@ const breakpoints: SwiperOptions['breakpoints'] = {
   480:  {slidesPerView: 2.1, spaceBetween: 12},
   640:  {slidesPerView: 3,   spaceBetween: 14},
   900:  {slidesPerView: 4,   spaceBetween: 16},
-  1200: {slidesPerView: 5,   spaceBetween: 18},
+  1200: {slidesPerView: 4,   spaceBetween: 18},
 }
 
 export default function EraCarouselClient({
@@ -49,7 +49,7 @@ export default function EraCarouselClient({
       title={title}
       subtitle={subtitle}
       items={items}
-      slidesPerView={1.2}
+      slidesPerView={4}
       spaceBetween={12}
       breakpoints={breakpoints}
       loop={false}
@@ -59,6 +59,7 @@ export default function EraCarouselClient({
       className={className}
       viewAllLink={viewAllLink}
       viewAllLabel={viewAllLabel}
+      showLastSlide={false} 
     />
   )
 }
