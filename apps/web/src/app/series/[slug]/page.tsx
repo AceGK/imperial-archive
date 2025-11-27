@@ -8,6 +8,7 @@ import type { Series40kDoc } from "@/types/sanity";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import BookGrid from "@/components/modules/BookGrid";
 import type { BookCardData } from "@/components/modules/Cards/BookCard";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 
 export const revalidate = 60;
 
@@ -60,6 +61,7 @@ const hero = data.image?.asset
       />
 
       <main className="container" style={{ marginTop: "2rem" }}>
+        <Breadcrumb />
         {data.description && (
             <PortableText value={data.description} />
         )}
@@ -79,7 +81,7 @@ const hero = data.image?.asset
                   <header>
                     <h2
                       style={{
-                        fontSize: "1.125rem",
+                        fontSize: "2rem",
                         fontWeight: 700,
                         margin: 0,
                       }}

@@ -1,3 +1,4 @@
+// styles.module.scss
 @use "@/styles/breakpoints" as *;
 
 .wrap {
@@ -25,12 +26,13 @@
   width: fit-content;
   text-align: center;
   position: relative;
+
   &.hasSubtitle::after {
     content: "";
     position: absolute;
     bottom: -0.75rem;
-    left: 50%;               
-    transform: translateX(-50%); 
+    left: 50%;
+    transform: translateX(-50%);
     width: 30%;
     height: 3px;
     background-color: var(--primary);
@@ -43,49 +45,93 @@
   color: var(--subtle);
 }
 
-.swiper {
-  padding:0 1px;
-  // Pre-size slides to reduce CLS
-  :global(.swiper-slide) {
-    flex-shrink: 0;
-    // Mobile: 1.2 slides, 12px gap
-    width: calc((100% - 0.2 * 12px) / 1.2);
-    
-    @media (min-width: 480px) {
-      // 2.1 slides, 12px gap
-      width: calc((100% - 1.1 * 12px) / 2.1);
-    }
-    
-    @media (min-width: 640px) {
-      // 3 slides, 14px gap
-      width: calc((100% - 2 * 14px) / 3);
-    }
-    
-    @media (min-width: 900px) {
-      // 4 slides, 16px gap
-      width: calc((100% - 3 * 16px) / 4);
-    }
-    
-    @media (min-width: 1200px) {
-      // 5 slides, 18px gap
-      width: calc((100% - 4 * 18px) / 5);
-    }
+/* Carousel container with external navigation */
+.carouselContainer {
+  position: relative;
+  padding-inline: 3rem;
+
+  @include max(md) {
+    padding-inline: 0;
   }
 }
 
-/* Swiper overrides */
-.swiper :global(.swiper-button-prev),
-.swiper :global(.swiper-button-next) {
-  color: var(--foreground);
+/* Custom navigation buttons */
+.navPrev,
+.navNext {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  fill:var(--text);
+  background:transparent;
+  border:transparent;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &:hover:not(:disabled) {
+    fill:var(--text);
+    background: var(--accent);
+  }
+
+  &:global(.swiper-button-disabled) {
+    display:none;
+  }
+
   @include max(md) {
     display: none;
   }
 }
 
-.swiper :global(.swiper-button-disabled) {
-  display: none;
+.navPrev {
+  left: 0;
 }
 
+.navNext {
+  right: 0;
+}
+
+.swiper {
+  padding: 0 1px;
+
+  /* Hide default Swiper navigation */
+  :global(.swiper-button-prev),
+  :global(.swiper-button-next) {
+    display: none;
+  }
+
+  /* Pre-size slides to reduce CLS */
+  :global(.swiper-slide) {
+    flex-shrink: 0;
+    width: calc((100% - 0.2 * 12px) / 1.2);
+
+    @media (min-width: 480px) {
+      width: calc((100% - 1.1 * 12px) / 2.1);
+    }
+
+    @media (min-width: 640px) {
+      width: calc((100% - 2 * 14px) / 3);
+    }
+
+    @media (min-width: 900px) {
+      width: calc((100% - 3 * 16px) / 4);
+    }
+
+    @media (min-width: 1200px) {
+      width: calc((100% - 4 * 18px) / 5);
+    }
+  }
+}
+
+/* Pagination overrides */
 .swiper :global(.swiper-pagination-bullet) {
   background: color-mix(in oklab, var(--foreground), transparent 40%);
   opacity: 1;
@@ -96,7 +142,7 @@
 }
 
 .slide {
-  height: auto; /* let card define its height */
+  height: auto;
 }
 
 .viewAll {

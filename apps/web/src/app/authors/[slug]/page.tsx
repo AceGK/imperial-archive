@@ -35,10 +35,10 @@ export default async function AuthorPage({
 
   return (
     <main>
-      <div className="container">
-        <Breadcrumb />
+
+        {/* <Breadcrumb /> */}
         <AuthorDetails author={profile} />
-      </div>
+  
       <BooksCatalog
         cacheKey={`author-${profile.slug}`}
         baseFilters={`authors.name:"${profile.name}"`}

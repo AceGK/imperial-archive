@@ -69,7 +69,7 @@ export default function FactionCarouselClient({
         title={title}
         subtitle={subtitle}
         items={items}
-        slidesPerView={1.2}
+        slidesPerView={2.1}
         spaceBetween={12}
         breakpoints={breakpoints}
         loop={false}

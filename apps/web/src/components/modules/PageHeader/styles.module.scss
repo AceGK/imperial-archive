@@ -3,7 +3,8 @@
   width: 100%;
   // overflow: clip;
   color: #fff;
-  background: #0b0d10;
+  background: transparent;
+  // border-bottom: 1px solid var(--border);
 }
 
 .xs { min-height: 20vh; }

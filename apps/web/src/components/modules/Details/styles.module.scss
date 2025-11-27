@@ -1,18 +1,28 @@
 @use "@/styles/breakpoints" as *;
 
+.wrapper {
+  background: color-mix(in oklab, var(--bg), var(--subtle) 5%);
+  border-bottom: 1px solid var(--border);
+  min-height: calc(30vh + 4rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .card {
   display: flex;
   align-items: center;
   gap: 3rem;
-  background: color-mix(in oklab, var(--bg), var(--subtle) 10%);
-  padding:3rem;
+  /* Remove vertical padding since wrapper handles it now */
+  padding: 0;
   border-radius: var(--radius);
-  margin-bottom:1rem;
+
   .content {
-    display:flex;
+    display: flex;
     flex-direction: column;
   }
-  @include max(md){
+
+  @include max(md) {
     flex-direction: column;
     padding: 1rem;
     gap: 1rem;
@@ -117,7 +127,7 @@ a:hover .icon {
     height: 3rem;
     background: linear-gradient(
       to top,
-      color-mix(in oklab, var(--bg), var(--subtle) 10%),
+      color-mix(in oklab, var(--bg), var(--subtle) 5%),
       transparent
     );
     pointer-events: none;

@@ -30,10 +30,8 @@ export default async function FactionPage({
 
   return (
     <main>
-      <div className="container">
-        <Breadcrumb />
+        {/* <Breadcrumb /> */}
         <FactionDetails faction={faction} />
-      </div>
       <BooksCatalog
         cacheKey={`faction-${group}-${slug}`}
         baseFilters={`factions.name:"${faction.title}"`}

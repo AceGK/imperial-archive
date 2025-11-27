@@ -18,6 +18,7 @@ type Props = {
 };
 
 const breakpoints: SwiperOptions["breakpoints"] = {
+  320:  { slidesPerView: 1.5, spaceBetween: 12 },
   480:  { slidesPerView: 2.1, spaceBetween: 12 },
   640:  { slidesPerView: 3,   spaceBetween: 14 },
   900:  { slidesPerView: 4,   spaceBetween: 16 },

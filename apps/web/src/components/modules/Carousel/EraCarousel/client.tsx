@@ -49,7 +49,7 @@ export default function EraCarouselClient({
       title={title}
       subtitle={subtitle}
       items={items}
-      slidesPerView={4}
+      slidesPerView={1.2}
       spaceBetween={12}
       breakpoints={breakpoints}
       loop={false}

@@ -11,7 +11,7 @@ type BaseProps = {
   className?: string;
 };
 
-export default function ProfileBase({
+export default function DetailsBase({
   media,
   overline,
   title,
@@ -21,15 +21,21 @@ export default function ProfileBase({
   className,
 }: BaseProps) {
   return (
-    <div className={`${styles.card} ${className ?? ""}`}>
-      {media && <div className={styles.media}>{media}</div>}
-      <div className={styles.content}>
-        {overline && <div className={styles.overline}>{overline}</div>}
-        <div className={styles.title}>{title}</div>
-        {description && <div className={styles.description}>{description}</div>}
-        {actions && <div className={styles.actions}>{actions}</div>}
-        {footer && <div className={styles.footer}>{footer}</div>}
+    <section className={styles.wrapper}>  
+      <div className="container">
+        <div className={`${styles.card} ${className ?? ""}`}>
+          {media && <div className={styles.media}>{media}</div>}
+          <div className={styles.content}>
+            {overline && <div className={styles.overline}>{overline}</div>}
+            <div className={styles.title}>{title}</div>
+            {description && (
+              <div className={styles.description}>{description}</div>
+            )}
+            {actions && <div className={styles.actions}>{actions}</div>}
+            {footer && <div className={styles.footer}>{footer}</div>}
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
