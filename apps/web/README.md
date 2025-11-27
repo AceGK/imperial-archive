@@ -7,6 +7,7 @@
 
 - https://wh40k.lexicanum.com/wiki/List_of_Novels
 - https://wh40k.lexicanum.com/wiki/Portal:Publications
+- scythes reading guide https://www.the-scythes.com/the-scythes-essential-reading/
 
 - unique structure: https://wh40k.lexicanum.com/wiki/The_Sabbat_Worlds_Crusade_(Background_Book)
   
@@ -48,3 +49,4 @@
 - The Uriel Ventris Chronicles:An Ultramarines omnibus
 - There Is Only War (anthology)
 - Sons of Corax (anthology)
+
