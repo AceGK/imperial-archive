@@ -1,7 +1,9 @@
-export default function Login() {
+import AuthForm from "@/components/modules/AuthForm";
+
+export default function LoginPage() {
   return (
-    <div className="container">
-      <h1>Login</h1>
-    </div>
+    <section className="container">
+      <AuthForm />
+    </section>
   );
 }

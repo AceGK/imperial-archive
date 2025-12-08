@@ -7,7 +7,8 @@ import "@/styles/globals.scss";
 import "@/styles/utils.scss";
 import Nav from "@/components/modules/Nav";
 import Footer from "@/components/modules/Footer";
-import ConvextClientProvider from "@/context/convex-client-provider";
+import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
+import { ConvexClientProvider } from "@/context/ConvexClientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,29 +33,32 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const layoutCookie = cookieStore.get("site-layout")?.value;
   const initialLayout =
-    layoutCookie === "full" || layoutCookie === "boxed" ? layoutCookie : "boxed";
+    layoutCookie === "full" || layoutCookie === "boxed"
+      ? layoutCookie
+      : "boxed";
 
-  // Check if user has access
   const hasAccess = cookieStore.get("site-access")?.value === "granted";
 
   return (
-    <html lang="en" data-layout={initialLayout} suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
+    <ConvexAuthNextjsServerProvider>
+      <html lang="en" data-layout={initialLayout} suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <ConvextClientProvider>
-            {hasAccess && <Nav />}
-            {children}
-            {hasAccess && <Footer />}
-          </ConvextClientProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+          <ThemeProvider
+            attribute="data-theme"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ConvexClientProvider>
+              {hasAccess && <Nav />}
+              {children}
+              {hasAccess && <Footer />}
+            </ConvexClientProvider>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ConvexAuthNextjsServerProvider>
   );
 }
