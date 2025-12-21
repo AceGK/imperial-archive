@@ -36,7 +36,7 @@
     width: 30%;
     height: 3px;
     background-color: var(--primary);
-    border-radius: 2px;
+    border-radius: var(--radius-full);
   }
 }
 
@@ -65,7 +65,7 @@
   fill:var(--text);
   background:transparent;
   border:transparent;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   width: 2.5rem;
   height: 2.5rem;
   display: grid;
@@ -165,7 +165,7 @@
   width: 100%;
   min-height: 100%;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
   text-align: center;
   background: color-mix(in oklab, var(--accent), transparent 40%);
   color: var(--foreground);

@@ -5,7 +5,7 @@
   text-decoration: none;
   color: inherit;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   transition: border-color 0.2s ease;
   background: var(--bg-card);

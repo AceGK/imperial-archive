@@ -16,7 +16,7 @@
   min-width: 180px;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--secondary);
   color: var(--on-secondary, var(--text));
 
@@ -50,7 +50,7 @@
   overflow: auto;
   padding: 0.25rem;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--secondary);
   color: var(--on-secondary, var(--text));
   box-shadow:
@@ -88,7 +88,7 @@
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.5rem 0.5rem;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: transparent;
   border: 0;
   font: inherit;

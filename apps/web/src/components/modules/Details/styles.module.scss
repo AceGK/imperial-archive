@@ -35,7 +35,7 @@
   place-items: center;
   width: 200px;
   height: 200px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   object-fit: cover;
   overflow: hidden;
     margin-inline: auto;
@@ -52,7 +52,7 @@
     width: 200px;
     height: 200px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
   }
 }
 

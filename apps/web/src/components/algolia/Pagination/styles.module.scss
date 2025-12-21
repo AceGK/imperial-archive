@@ -28,7 +28,7 @@
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   background: color-mix(in oklab, var(--bg), black 2%);
   color: var(--foreground);
   cursor: pointer;

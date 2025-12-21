@@ -17,7 +17,7 @@
   font-weight: 500;
   height: 48px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: color-mix(in oklab, var(--bg), black 2%);
   color: var(--foreground);
   cursor: pointer;
@@ -52,7 +52,7 @@
   width: 8px;
   height: 8px;
   background: var(--primary);
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   border: 2px solid var(--bg);
 }
 
@@ -103,7 +103,6 @@
   color: var(--foreground);
   font-size: 1.5rem;
   cursor: pointer;
-  border-radius: 6px;
   transition: background-color 0.15s ease;
 
   &:hover {
@@ -134,7 +133,7 @@
   padding: 0 6px;
   background: var(--primary);
   color: white;
-  border-radius: 10px;
+  border-radius: var(--radius);
   font-size: 0.75rem;
   font-weight: 600;
 }
@@ -152,7 +151,7 @@
   padding: 6px 10px;
   font-size: 0.85rem;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   background: color-mix(in oklab, var(--bg), black 2%);
   color: var(--foreground);
   outline: none;
@@ -180,7 +179,6 @@
   cursor: pointer;
   font-size: 0.9rem;
   padding: 4px;
-  border-radius: 4px;
   transition: background-color 0.15s ease;
 
   &:hover {
@@ -229,7 +227,7 @@
   font-size: 0.95rem;
   font-weight: 500;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--foreground);
   cursor: pointer;
@@ -247,7 +245,7 @@
   font-size: 0.95rem;
   font-weight: 500;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--accent);
   color: white;
   cursor: pointer;

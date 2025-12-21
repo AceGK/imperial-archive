@@ -118,7 +118,7 @@
   right: 0;
   height: var(--bar-h);
   background: var(--foreground);
-  border-radius: 2px;
+  border-radius: var(--radius-full);
   transform-origin: 50% 50%;
   transition:
     transform 180ms ease,
@@ -188,7 +188,7 @@
   display: block;
   width: 100%;
   padding: 0.675rem 0.5rem;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   text-decoration: none;
   color: var(--foreground);
 
