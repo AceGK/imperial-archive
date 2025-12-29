@@ -60,7 +60,8 @@ const hero = data.image?.asset
         credit={hero?.credit}
       />
 
-      <main className="container" style={{ marginTop: "2rem" }}>
+      <main>
+        <div className="container">
         <Breadcrumb />
         {data.description && (
             <PortableText value={data.description} />
@@ -113,6 +114,7 @@ const hero = data.image?.asset
             <em>No books linked yet.</em>
           </div>
         )}
+        </div>
       </main>
     </>
   );
