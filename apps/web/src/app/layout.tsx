@@ -37,7 +37,7 @@ export default async function RootLayout({
       ? layoutCookie
       : "boxed";
 
-  const hasAccess = cookieStore.get("site-access")?.value === "granted";
+  // const hasAccess = cookieStore.get("site-access")?.value === "granted";
 
   return (
     <ConvexAuthNextjsServerProvider>
@@ -52,9 +52,9 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <ConvexClientProvider>
-              {hasAccess && <Nav />}
+              <Nav />
               {children}
-              {hasAccess && <Footer />}
+              <Footer />
             </ConvexClientProvider>
           </ThemeProvider>
         </body>
