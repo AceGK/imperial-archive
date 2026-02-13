@@ -25,7 +25,8 @@ $light: (
 
 $dark: (
   bg: #0b0b0c,
-  bg-gradient: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 50%, #000000 100%),
+  // bg-gradient: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 50%, #000000 100%),
+  bg-gradient: linear-gradient(135deg, #0e0e0e 0%, #0d0d0d 50%, #000000 100%),
   bg-accent: #101011,
   bg-card: #0d0d0e,
   text: #f5f5f5,

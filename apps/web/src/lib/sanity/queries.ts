@@ -506,3 +506,59 @@ export const factionPairs40kQuery = groq`
   "slug": slug.current
 }
 `;
+
+
+// Blog 
+
+export const getAllBlogPosts = () => `
+  *[_type == "post" && "Blog" in categories[]->title] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    metaDescription,
+    publishedAt,
+    mainImage,
+    author->{name, slug},
+    categories[]->{_id, title, slug}
+  }
+`;
+
+export const getPostBySlug = () => `
+  *[_type == "post" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    metaTitle,
+    metaDescription,
+    publishedAt,
+    mainImage,
+    body,
+    author->{_id, name, "slug": slug.current, image},
+    categories[]->{_id, title, "slug": slug.current}
+  }
+`;
+
+export const getPostByCategory = groq`
+*[_type == "post" && references(*[_type == "category" && slug.current == $categorySlug]._id)] | order(publishedAt desc) {
+  _id,
+  title,
+  "slug": slug.current,
+  metaDescription,
+  publishedAt,
+  mainImage,
+  author->{name}
+}`
+
+export const getPostsWithPagination = groq`
+{
+  "posts": *[_type == "post"] | order(publishedAt desc)[$start...$end] {
+    _id,
+    title,
+    "slug": slug.current,
+    metaDescription,
+    publishedAt,
+    mainImage,
+    author->{name}
+  },
+  "total": count(*[_type == "post"])
+}`

@@ -160,3 +160,22 @@ export type Series40kDoc = {
   totalCount?: number;
   links?: SeriesLink[] | null;
 };
+
+
+export interface BlogPost {
+  _id: string;
+  title: string;
+  slug: string;
+  metaDescription: string;
+  publishedAt: string;
+  mainImage: SanityImageAsset;
+  author?: {
+    name: string;
+    slug: string;
+  };
+  categories: {
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
+}
