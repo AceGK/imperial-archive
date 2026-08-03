@@ -8,10 +8,9 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "baseUrl": ".",
     "paths": {
-      "@ac/schemas/*": ["packages/schemas/src/*"],
-      "@ac/sanity/*": ["packages/sanity/src/*"]
+      "@ac/schemas/*": ["./packages/schemas/src/*"],
+      "@ac/sanity/*": ["./packages/sanity/src/*"]
     }
   }
 }
