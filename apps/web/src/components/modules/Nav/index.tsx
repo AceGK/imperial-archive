@@ -9,7 +9,7 @@ import styles from "./styles.module.scss";
 import ThemeToggle from "@/components/modules/ThemeToggle";
 import SiteWidthToggle from "@/components/modules/SiteWidthToggle";
 import Button from "@/components/ui/Button";
-import Logo from "public/imperial-archive-logo.svg";
+import Logo from "../../../../public/imperial-archive-logo.svg";
 
 const links = [
   { href: "/books", label: "Books" },

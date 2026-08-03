@@ -1,7 +1,7 @@
 // /components/modules/Footer/index.tsx
 import Link from "next/link";
 import styles from "./styles.module.scss";
-import Logo from "public/imperial-archive-logo.svg";
+import Logo from "../../../../public/imperial-archive-logo.svg";
 import Button from "@/components/ui/Button";
 
 type FooterLink = { href: string; label: string };
