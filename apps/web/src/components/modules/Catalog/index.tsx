@@ -130,7 +130,7 @@ function Results<THit extends BaseHit>({
 
       {!isLastPage && (
         <div className={styles.loadMoreContainer}>
-          <Button onClick={showMore} className={styles.loadMoreButton}>
+          <Button onClick={showMore} className={styles.loadMoreButton} variant="bracket" size="lg">
             Load More
           </Button>
         </div>

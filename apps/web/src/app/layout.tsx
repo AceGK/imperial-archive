@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Barlow, Geist_Mono, Barlow_Condensed } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { cookies } from "next/headers";
 import "@/styles/reset.scss";
@@ -10,14 +10,21 @@ import Footer from "@/components/modules/Footer";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/context/ConvexClientProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const barlow = Barlow({
+  variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["400", "600"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const barlowCondensed = Barlow_Condensed({
+  variable: "--font-condensed",
+  subsets: ["latin"],
+  weight: ["500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -43,7 +50,7 @@ export default async function RootLayout({
     <ConvexAuthNextjsServerProvider>
       <html lang="en" data-layout={initialLayout} suppressHydrationWarning>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${barlow.variable} ${geistMono.variable} ${barlowCondensed.variable} antialiased`}
         >
           <ThemeProvider
             attribute="data-theme"

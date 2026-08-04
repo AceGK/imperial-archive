@@ -10,13 +10,15 @@ export type Author = {
   id: string | number;
   name: string;
   slug: string;
-  booksCount?: number; 
+  booksCount?: number;
   count?: number;
   image?: {
-    url: string;
-    lqip?: string;
-    aspect?: number;
-  }
+    asset?: { _ref?: string; _id?: string; url?: string } | null;
+    crop?: { top: number; bottom: number; left: number; right: number } | null;
+    hotspot?: { x: number; y: number; height: number; width: number } | null;
+    alt?: string | null;
+    lqip?: string | null;
+  } | null;
 };
 
 type Props = {

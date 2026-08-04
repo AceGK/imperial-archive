@@ -1,0 +1,88 @@
+// Reusable style mixins
+
+$_corner-positions: (
+  top-left: top left,
+  top-right: top right,
+  bottom-left: bottom left,
+  bottom-right: bottom right,
+);
+
+// Small L-shaped accent marks in the corners of an element, HUD/terminal style.
+// Uses a single ::before pseudo-element with 2 stacked background-image layers
+// per corner (a short horizontal + vertical line) since an element only has
+// one ::before to spend. Pass $corners to draw a subset, e.g. (top-left, bottom-right).
+// If the target already has `overflow: hidden`, keep $offset at 0 (default) —
+// a positive offset pushes the marks outside the box and they'll get clipped.
+// $z-index lets the marks sit above other absolutely/relatively positioned
+// content in the same element (e.g. a cover image) without extra markup.
+@mixin corner-brackets(
+  $size: 12px,
+  $thickness: 1px,
+  $color: var(--primary),
+  $offset: 0px,
+  $z-index: 2,
+  $hover-only: false,
+  $corners: (top-left, top-right, bottom-left, bottom-right)
+) {
+  position: relative;
+
+  $images: ();
+  $positions: ();
+  $sizes: ();
+
+  @each $corner in $corners {
+    $pos: map-get($_corner-positions, $corner);
+    // vertical line
+    $images: append($images, linear-gradient(#{$color}, #{$color}), comma);
+    $positions: append($positions, $pos, comma);
+    $sizes: append($sizes, #{$thickness} #{$size}, comma);
+    // horizontal line
+    $images: append($images, linear-gradient(#{$color}, #{$color}), comma);
+    $positions: append($positions, $pos, comma);
+    $sizes: append($sizes, #{$size} #{$thickness}, comma);
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -#{$offset};
+    z-index: $z-index;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-image: $images;
+    background-position: $positions;
+    background-size: $sizes;
+
+    @if $hover-only {
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+  }
+
+  @if $hover-only {
+    &:hover::before,
+    &:focus-visible::before {
+      opacity: 1;
+    }
+  }
+}
+
+// Thin repeating diagonal lines over a flat base color — used as a
+// placeholder background (e.g. a book/series card missing a cover image)
+// instead of a plain solid fill.
+@mixin diagonal-stripes(
+  $bg: var(--bg-card),
+  $line-color: var(--bg),
+  $spacing: 20px,
+  $line-width: 10px,
+  $angle: 135deg
+) {
+  background-color: $bg;
+  background-image: repeating-linear-gradient(
+    #{$angle},
+    #{$line-color} 0,
+    #{$line-color} #{$line-width},
+    transparent #{$line-width},
+    transparent #{$spacing}
+  );
+}

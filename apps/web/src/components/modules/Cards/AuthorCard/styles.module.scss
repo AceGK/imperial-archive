@@ -1,4 +1,7 @@
+@use "@/styles/mixins" as *;
+
 .card {
+  @include corner-brackets($size: 12px, $thickness: 1px, $offset: 1px, $hover-only: true);
   height: 100%;
   display: flex;
   justify-content: center;
@@ -10,12 +13,11 @@
   color: inherit;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    border:1px solid var(--primary);
-    background: color-mix(in srgb, var(--bg) 98%, var(--subtle));
+    background: color-mix(in srgb, var(--bg-accent) 98%, var(--subtle));
   }
 }
 

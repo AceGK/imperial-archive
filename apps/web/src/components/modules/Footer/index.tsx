@@ -18,8 +18,8 @@ export type FooterProps = {
 
 const defaultPrimary: FooterLink[] = [
   { href: "/books", label: "All Books" },
-  { href: "/series", label: "By Series" },
   { href: "/authors", label: "By Author" },
+  { href: "/series", label: "By Series" },
   { href: "/factions", label: "By Faction" },
   { href: "/eras", label: "By Era" },
 ];

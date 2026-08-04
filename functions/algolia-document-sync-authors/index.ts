@@ -43,7 +43,12 @@ function formatBookType(format: string | null): string {
 }
 
 /* --------------------------- Algolia types ---------------------------- */
-type ImageRef = { url: string | null; alt: string | null };
+type ImageRef = {
+  asset?: { _ref: string } | null;
+  hotspot?: { x: number; y: number; width: number; height: number } | null;
+  crop?: { top: number; bottom: number; left: number; right: number } | null;
+  alt?: string | null;
+};
 
 type AlgoliaAuthor = {
   name: string;
@@ -114,10 +119,6 @@ export const handler = documentEventHandler(async ({ event, context }) => {
               "slug": slug.current
             }
           },
-          "imageUrl": select(
-            defined($imageAssetId) => *[_id == $imageAssetId][0].url,
-            null
-          ),
           "bioText": select(
             defined($bio) => pt::text($bio),
             ""
@@ -125,7 +126,6 @@ export const handler = documentEventHandler(async ({ event, context }) => {
         }`,
         {
           authorId: _id,
-          imageAssetId: image?.asset?._ref || null,
           bio: bio || null,
         }
       );
@@ -173,12 +173,15 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       console.log("    - Factions:", Array.from(factionNames).join(", ") || "none");
       console.log("    - Eras:", Array.from(eraNames).join(", ") || "none");
 
+      // Keep full Sanity image structure for urlFor() to work with hotspot/crop
       const processedImage: ImageRef = {
-        url: authorData?.imageUrl ?? image?.asset?.url ?? null,
+        asset: image?.asset ?? null,
+        hotspot: image?.hotspot ?? null,
+        crop: image?.crop ?? null,
         alt: image?.alt ?? null,
       };
 
-      console.log("  ✓ Processed image:", processedImage.url ? "✓" : "✗");
+      console.log("  ✓ Processed image:", processedImage.asset?._ref ? "✓" : "✗");
 
       const processedBio = hardTrim(authorData?.bioText || "", 6000);
 
@@ -219,7 +222,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       console.log("  - Series:", document["series.title"].join(", ") || "none");
       console.log("  - Factions:", document["factions.name"].join(", ") || "none");
       console.log("  - Eras:", document["era.name"].join(", ") || "none");
-      console.log("  - Image:", processedImage.url ? "✓" : "✗");
+      console.log("  - Image:", processedImage.asset?._ref ? "✓" : "✗");
       console.log("  - Bio length:", processedBio.length, "chars");
 
       await algolia.addOrUpdateObject({

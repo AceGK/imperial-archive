@@ -100,7 +100,7 @@ export const all40kAuthorsQuery = groq`
   name,
   "slug": slug.current,
   image{
-    "url": asset->url,
+    ...,
     "lqip": asset->metadata.lqip,
     "aspect": asset->metadata.dimensions.aspectRatio
   },
@@ -131,7 +131,7 @@ export const authors40kForCardsQuery = groq`
   name,
   "slug": slug.current,
   image{
-    "url": asset->url,
+    ...,
     "lqip": asset->metadata.lqip,
     "aspect": asset->metadata.dimensions.aspectRatio
   }
@@ -144,7 +144,7 @@ export const featuredAuthors40kQuery = groq`
   name,
   "slug": slug.current,
   image{
-    "url": asset->url,
+    ...,
     "lqip": asset->metadata.lqip,
     "aspect": asset->metadata.dimensions.aspectRatio
   },
@@ -402,6 +402,26 @@ export const featuredBooks40kQuery = groq`
   title in $titles
 ]{
   ${bookCardFields}
+}
+`;
+
+export const featuredSeries40kQuery = groq`
+*[
+  _type == "series40k" &&
+  !(_id match "drafts.*") &&
+  title in $titles
+]{
+  _id,
+  title,
+  "slug": slug.current,
+  image{
+    alt,
+    credit,
+    crop,
+    hotspot,
+    asset->{ _id, url, metadata{ lqip, dimensions } }
+  },
+  "totalCount": count(lists[].items[])
 }
 `;
 

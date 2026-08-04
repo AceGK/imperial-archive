@@ -123,7 +123,7 @@ export default function BookCard({ book, href, compact, className }: Props) {
             {seriesList.map((s) => (
               <Link
                 href={`/series/${s.slug}`}
-                className={styles.chip}
+                className={`${styles.chip} ${styles.chipMuted}`}
                 key={`${id}-${s.slug}`}
               >
                 {typeof s.number === "number" && Number.isFinite(s.number)

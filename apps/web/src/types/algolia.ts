@@ -58,11 +58,12 @@ export type AuthorHit = {
   slug: string;
   bio?: string;
   image?: {
-    url?: string;
-    lqip?: string;
-    aspect?: number;
+    asset?: { _ref: string } | null;
+    hotspot?: { x: number; y: number; width: number; height: number } | null;
+    crop?: { top: number; bottom: number; left: number; right: number } | null;
+    alt?: string | null;
   };
-  
+
   // Consistent with books index
   format: string[];
   "series.title": string[];

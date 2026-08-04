@@ -13,8 +13,8 @@ import Logo from "../../../../public/imperial-archive-logo.svg";
 
 const links = [
   { href: "/books", label: "Books" },
-  { href: "/series", label: "Series" },
   { href: "/authors", label: "Authors" },
+  { href: "/series", label: "Series" },
   { href: "/factions", label: "Factions" },
   { href: "/eras", label: "Eras" },
 ];
@@ -57,7 +57,8 @@ export default function Nav() {
               {links.map((link) => (
                 <li key={link.href} role="none">
                   <Button
-                    variant="ghost"
+                    variant="bracket-ghost"
+                    size="md"
                     href={link.href}
                     className={pathname === link.href ? styles.active : ""}
                   >
@@ -70,7 +71,7 @@ export default function Nav() {
 
           {/* desktop right controls */}
           <div className={styles.secondary}>
-            <Button href="/signup" variant="secondary" size="sm">
+            <Button href="/signup" variant="secondary-bracket" size="sm">
               Signup
             </Button>
             <Button href="/login" variant="primary" size="sm">

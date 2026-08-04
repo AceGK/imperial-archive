@@ -2,6 +2,7 @@
 import Hero from "@/components/modules/Hero";
 import AuthorsCarousel from "@/components/modules/Carousel/AuthorsCarousel";
 import BooksCarousel from "@/components/modules/Carousel/BooksCarousel";
+import SeriesCarousel from "@/components/modules/Carousel/SeriesCarousel";
 import FactionCarousel from "@/components/modules/Carousel/FactionCarousel";
 import EraCarousel from "@/components/modules/Carousel/EraCarousel";
 
@@ -9,6 +10,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import {
   featuredAuthors40kQuery,
   featuredBooks40kQuery,
+  featuredSeries40kQuery,
 } from "@/lib/sanity/queries";
 
 import Search from "@/components/modules/Search";
@@ -70,6 +72,32 @@ export default async function Home() {
       featuredTitles.indexOf(a.title) - featuredTitles.indexOf(b.title)
   );
 
+  // Must match titles exactly.
+  const featuredSeriesTitles = [
+    "Horus Heresy",
+    "Gaunt's Ghosts",
+    "Ciaphas Cain",
+    "Inquisitor",
+    "Ultramarines",
+    "Blackstone Fortress",
+    "Ahriman",
+    "Blood Angels",
+    "Yarrick",
+    "Dawn of Fire",
+  ];
+
+  const featuredSeriesRaw = await client.fetch(
+    featuredSeries40kQuery,
+    { titles: featuredSeriesTitles },
+    { next: { revalidate } }
+  );
+
+  // Preserve order based on featuredSeriesTitles
+  const featuredSeries = (featuredSeriesRaw as any[]).sort(
+    (a, b) =>
+      featuredSeriesTitles.indexOf(a.title) - featuredSeriesTitles.indexOf(b.title)
+  );
+
   return (
     <main>
       <Hero
@@ -98,6 +126,14 @@ export default async function Home() {
           title="Featured Authors"
           subtitle="Browse the authors of the Black Library"
           authors={featuredAuthors}
+        />
+      </section>
+
+      <section className="container row__lg">
+        <SeriesCarousel
+          title="Featured Series"
+          subtitle="Follow ongoing sagas and campaigns across the Black Library"
+          series={featuredSeries}
         />
       </section>
 

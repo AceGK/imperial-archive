@@ -1,7 +1,9 @@
 /* /components/modules/styles.module.scss */
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
 
 .card {
+  @include corner-brackets($size: 12px, $thickness: 1px, $offset: 1px, $hover-only: true);
   --hover-bg: var(--faction-primary);
   --hover-fg: var(--faction-secondary);
   height:100%;
@@ -10,7 +12,7 @@
   align-content: center;
   justify-items: center;
   padding: 0.875rem 1rem;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: var(--bg-card);
   color: var(--subtle); 
   border: 1px solid var(--border, #2a2a2a);

@@ -43,7 +43,12 @@ function formatBookType(format: string | null): string {
 }
 
 /* --------------------------- Algolia types ---------------------------- */
-type ImageRef = { url: string | null; alt: string | null };
+type ImageRef = {
+  asset?: { _ref: string } | null;
+  hotspot?: { x: number; y: number; width: number; height: number } | null;
+  crop?: { top: number; bottom: number; left: number; right: number } | null;
+  alt?: string | null;
+};
 
 // Using consistent nested structure matching books index
 type AlgoliaAuthor = {
@@ -80,17 +85,22 @@ async function initialSync() {
 
   const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_WRITE_API_KEY);
 
-  // Fetch all authors with their basic info
+  // Fetch all authors with their basic info - include full image data for urlFor()
   const authors = await sanity.fetch<any[]>(`
     *[_type == "author40k" && !(_id in path("drafts.**"))]{
       _id,
       name,
       "slug": slug.current,
       "bio": pt::text(bio),
-      "image": {
-        "url": image.asset->url,
-        "alt": image.alt
-      },
+      "image": select(
+        defined(image.asset._ref) => {
+          "asset": { "_ref": image.asset._ref },
+          "hotspot": image.hotspot,
+          "crop": image.crop,
+          "alt": image.alt
+        },
+        null
+      ),
       _createdAt,
       _updatedAt
     }
@@ -154,10 +164,13 @@ async function initialSync() {
         }
       });
 
-      const image: ImageRef = {
-        url: author?.image?.url ?? null,
-        alt: author?.image?.alt ?? null,
-      };
+      // Keep full Sanity image structure for urlFor() to work with hotspot/crop
+      const image: ImageRef = author?.image ? {
+        asset: author.image.asset ?? null,
+        hotspot: author.image.hotspot ?? null,
+        crop: author.image.crop ?? null,
+        alt: author.image.alt ?? null,
+      } : { asset: null, hotspot: null, crop: null, alt: null };
 
       const doc: AlgoliaAuthor = {
         objectID: author._id,

@@ -5,9 +5,35 @@ import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { useSearchBox, useHits, Configure } from "react-instantsearch";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { SearchResults } from "./SearchResults";
 import styles from "./styles.module.scss";
 import type { BookHit } from "./types";
+
+const SUGGESTED_SEARCHES = [
+  "Dan Abnett",
+  "The Horus Heresy",
+  "Graham McNeill",
+  "Aaron Dembski-Bowden",
+  "Gaunt's Ghosts",
+];
+
+function SuggestedSearches() {
+  return (
+    <div className={styles.suggestions}>
+      <span className={styles.suggestionsLabel}>Popular:</span>
+      {SUGGESTED_SEARCHES.map((term) => (
+        <Link
+          key={term}
+          href={`/books?q=${encodeURIComponent(term)}`}
+          className={styles.suggestionChip}
+        >
+          {term}
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 const algoliaAppId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
 const algoliaApiKey = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY!;
@@ -226,6 +252,7 @@ export default function Search() {
     >
       <Configure hitsPerPage={10} />
       <CustomSearchBox />
+      <SuggestedSearches />
     </InstantSearchNext>
   );
 }
