@@ -64,7 +64,9 @@ const hero = data.image?.asset
         <div className="container">
         <Breadcrumb />
         {data.description && (
-            <PortableText value={data.description} />
+            <div className="rich-text">
+              <PortableText value={data.description} />
+            </div>
         )}
 
         {data.lists?.length ? (

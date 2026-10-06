@@ -75,15 +75,13 @@ export default async function Home() {
   // Must match titles exactly.
   const featuredSeriesTitles = [
     "Horus Heresy",
+    "Inquisitor",
     "Gaunt's Ghosts",
     "Ciaphas Cain",
-    "Inquisitor",
-    "Ultramarines",
-    "Blackstone Fortress",
-    "Ahriman",
-    "Blood Angels",
     "Yarrick",
-    "Dawn of Fire",
+    "Ultramarines",
+    "Night Lords",
+    "Ahriman",
   ];
 
   const featuredSeriesRaw = await client.fetch(

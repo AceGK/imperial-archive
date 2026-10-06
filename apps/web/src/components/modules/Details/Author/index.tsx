@@ -48,7 +48,9 @@ export default function AuthorDetailCard({ author }: { author: Author40k }) {
       description={
         author.bio ? (
           <Clamp>
-            <PortableText value={author.bio as any} />
+            <div className="rich-text">
+              <PortableText value={author.bio as any} />
+            </div>
           </Clamp>
         ) : null
       }

@@ -9,7 +9,7 @@ import {
 // const COOKIE_VALUE = "granted";
 
 // Define auth-protected routes (adjust these to your needs)
-const isSignInPage = createRouteMatcher(["/login", "/signup"]);
+const isSignInPage = createRouteMatcher(["/login"]);
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)", "/profile(.*)"]);
 
 export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {

@@ -34,7 +34,7 @@
     left: 50%;
     transform: translateX(-50%);
     width: 30%;
-    height: 3px;
+    height: 1px;
     background-color: var(--primary);
     border-radius: var(--radius-full);
   }
@@ -62,7 +62,7 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  fill:var(--text);
+  fill:var(--primary);
   background:transparent;
   border:transparent;
   border-radius: var(--radius-full);
@@ -78,7 +78,7 @@
   }
 
   &:hover:not(:disabled) {
-    fill:var(--text);
+    fill:var(--primary);
     background: var(--accent);
   }
 

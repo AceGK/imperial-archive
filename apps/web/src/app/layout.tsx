@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Barlow, Geist_Mono, Barlow_Condensed } from "next/font/google";
+import { Barlow, Geist_Mono, Barlow_Condensed, Archivo_Black } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { cookies } from "next/headers";
 import "@/styles/reset.scss";
@@ -27,6 +27,12 @@ const barlowCondensed = Barlow_Condensed({
   weight: ["500", "600"],
 });
 
+const archivoBlack = Archivo_Black({
+  variable: "--font-heading",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
 export const metadata: Metadata = {
   title: "40k Books",
   description: "A catalog of Warhammer 40,000 books from Black Library.",
@@ -50,7 +56,7 @@ export default async function RootLayout({
     <ConvexAuthNextjsServerProvider>
       <html lang="en" data-layout={initialLayout} suppressHydrationWarning>
         <body
-          className={`${barlow.variable} ${geistMono.variable} ${barlowCondensed.variable} antialiased`}
+          className={`${barlow.variable} ${geistMono.variable} ${barlowCondensed.variable} ${archivoBlack.variable} antialiased`}
         >
           <ThemeProvider
             attribute="data-theme"

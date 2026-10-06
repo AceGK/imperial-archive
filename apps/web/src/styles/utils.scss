@@ -24,6 +24,19 @@
   color: var(--text);
 }
 
+// Plain-text link color — opt-in only, so it never bleeds into buttons,
+// chips, tags, or nav items. Apply .text-link to a one-off inline <a>, or
+// .rich-text to a wrapper around prose/rich-text content (e.g. PortableText
+// output) to style every link inside it.
+.text-link,
+.rich-text a {
+  color: var(--primary);
+
+  &:visited {
+    color: var(--visited);
+  }
+}
+
 .p-0 {
   padding: 0;
 }

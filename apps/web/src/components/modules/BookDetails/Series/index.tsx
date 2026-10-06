@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { BookDetailData } from "@/types/books";
 import styles from "./styles.module.scss";
 
@@ -80,7 +81,7 @@ export default function SeriesSection({
             : (s?.name ?? s?.slug);
         const href = s?.slug ? `/series/${encodeURIComponent(s.slug)}` : "";
         const node = href ? (
-          <Link key={s?.slug ?? i} href={href}>
+          <Link key={s?.slug ?? i} href={href} className={styles.seriesLink}>
             {label}
           </Link>
         ) : (
@@ -102,26 +103,52 @@ export default function SeriesSection({
         >
           <div className={styles.seriesNavLinks}>
             {navData.previousBook && (
-              <div>
-                Preceded by{" "}
-                <Link
-                  href={`/books/${encodeURIComponent(navData.previousBook.slug)}`}
-                  className={styles.navLink}
-                >
-                  {navData.previousBook.title}
-                </Link>
-              </div>
+              <Link
+                href={`/books/${encodeURIComponent(navData.previousBook.slug)}`}
+                className={`${styles.navItem} ${styles.navPrev}`}
+              >
+                <div className={styles.navThumb}>
+                  {navData.previousBook.image?.asset?.url ? (
+                    <Image
+                      src={navData.previousBook.image.asset.url}
+                      alt={navData.previousBook.image.alt || navData.previousBook.title}
+                      fill
+                      sizes="48px"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className={styles.navThumbPlaceholder} />
+                  )}
+                </div>
+                <div className={styles.navText}>
+                  <span className={styles.navLabel}>Preceded by</span>
+                  <span className={styles.navTitle}>{navData.previousBook.title}</span>
+                </div>
+              </Link>
             )}
             {navData.nextBook && (
-              <div>
-                Followed by{" "}
-                <Link
-                  href={`/books/${encodeURIComponent(navData.nextBook.slug)}`}
-                  className={styles.navLink}
-                >
-                  {navData.nextBook.title}
-                </Link>
-              </div>
+              <Link
+                href={`/books/${encodeURIComponent(navData.nextBook.slug)}`}
+                className={`${styles.navItem} ${styles.navNext}`}
+              >
+                <div className={styles.navText}>
+                  <span className={styles.navLabel}>Followed by</span>
+                  <span className={styles.navTitle}>{navData.nextBook.title}</span>
+                </div>
+                <div className={styles.navThumb}>
+                  {navData.nextBook.image?.asset?.url ? (
+                    <Image
+                      src={navData.nextBook.image.asset.url}
+                      alt={navData.nextBook.image.alt || navData.nextBook.title}
+                      fill
+                      sizes="48px"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className={styles.navThumbPlaceholder} />
+                  )}
+                </div>
+              </Link>
             )}
           </div>
         </div>

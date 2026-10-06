@@ -65,7 +65,7 @@ export default function SeriesCard({
       </div>
 
       <div className={styles.content}>
-        <h3 className={styles.title} title={title}>{title}</h3>
+        <div className={styles.title} title={title}>{title}</div>
         {countLabel && <div className={styles.meta}>{countLabel}</div>}
         {!compact && description && <p className={styles.description}>{description}</p>}
       </div>

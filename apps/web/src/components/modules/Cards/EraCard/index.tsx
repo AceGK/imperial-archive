@@ -59,9 +59,9 @@ export default function EraCard({
       </div>
 
       <div className={styles.content}>
-        <h3 className={styles.title} title={title}>
+        <div className={styles.title} title={title}>
           {title}
-        </h3>
+        </div>
         {period && <div className={styles.period}>{period}</div>}
         {!compact && description && (
           <p className={styles.description}>{description}</p>

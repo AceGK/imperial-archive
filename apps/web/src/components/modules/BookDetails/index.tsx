@@ -55,8 +55,8 @@ export default function BookDetails({ book }: BookDetailProps) {
     <div className="container">
       <article className={styles.page}>
         <div className={styles.mediaCol}>
-          {hasImage && (
-            <div className={styles.imageContainer}>
+          <div className={styles.imageContainer}>
+            {hasImage ? (
               <Image
                 src={urlFor(book.image)
                   .width(500)
@@ -70,8 +70,12 @@ export default function BookDetails({ book }: BookDetailProps) {
                 priority
                 unoptimized
               />
-            </div>
-          )}
+            ) : (
+              <div className={styles.placeholderImage} aria-hidden="true">
+                <span className={styles.placeholderText}>{book.title}</span>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className={styles.content}>
@@ -187,11 +191,11 @@ export default function BookDetails({ book }: BookDetailProps) {
                           .filter((author) => author.bio)
                           .map((author) => (
                             <div key={author.slug} className={styles.authorBio}>
-                              <h3 className={styles.authorName}>
+                              <div className={styles.authorName}>
                                 <Link href={`/authors/${author.slug}`}>
                                   {author.name}
                                 </Link>
-                              </h3>
+                              </div>
                               <div className={styles.bio}>{author.bio}</div>
                             </div>
                           ))}

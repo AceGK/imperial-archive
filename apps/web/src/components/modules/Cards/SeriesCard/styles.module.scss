@@ -26,6 +26,26 @@
   display: grid;
   place-items: center;
   overflow: hidden;
+
+  // Darkens the top corners on hover so the corner-bracket accent
+  // (drawn on .card) stays visible against busy cover art.
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at top left, rgba(0, 0, 0, 0.4) 0%, transparent 22%),
+      radial-gradient(circle at top right, rgba(0, 0, 0, 0.4) 0%, transparent 22%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+}
+
+.card:hover .image::after,
+.card:focus-visible .image::after {
+  opacity: 1;
 }
 
 .placeholder {

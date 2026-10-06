@@ -1,4 +1,5 @@
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
 
 .page {
   display: grid;
@@ -30,6 +31,9 @@
   width: 500px;
   height: 600px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   @include max(md) {
     position: relative;
@@ -41,6 +45,30 @@
 
 .image {
   object-fit: contain;
+}
+
+.placeholderImage {
+  @include diagonal-stripes();
+  position: relative;
+  height: 100%;
+  aspect-ratio: 5 / 8;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.placeholderText {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text);
+  opacity: 0.6;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 /* Right column content */
@@ -67,6 +95,13 @@
     font-size: 0.875rem;
   }
   .item {
+    @include corner-brackets(
+      $size: 18px,
+      $thickness: 1px,
+      $color: var(--primary),
+      $offset: 1px,
+      $corners: (top-left, bottom-right, )
+    );
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -76,7 +111,7 @@
     border: 1px solid var(--border);
     padding: 1rem;
     text-align: center;
-    border-radius: var(--radius);
+    border-radius: 0;
     min-width: 150px;
     text-wrap: pretty;
   }
@@ -84,6 +119,13 @@
 
 .format {
   text-transform: capitalize;
+  color: var(--primary);
+}
+
+.value a,
+.authorName a,
+.contentsList a {
+  color: var(--primary);
 }
 
 .block {

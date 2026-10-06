@@ -23,7 +23,40 @@
 }
 
 html {
+  // scrollbar-gutter only reserves space while overflow is non-'visible',
+  // so we need an explicit overflow-y here — otherwise the gutter isn't
+  // actually reserved in the default (unlocked) state, and toggling
+  // overflow:hidden for the mobile menu/modals still shifts the layout.
+  overflow-y: auto;
   scrollbar-gutter: stable;
+}
+
+// Custom scrollbar, themed to match the site's color variables.
+// scrollbar-gutter: stable (above) reserves this space permanently, so
+// toggling overflow:hidden on <html> (mobile menu / modals) never shifts
+// layout — the gutter stays put whether or not a scrollbar is drawn in it.
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: var(--radius-full);
+  transition: background-color 160ms ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary);
 }
 
 body {
@@ -50,6 +83,15 @@ pre,
 kbd,
 samp {
   font-family: var(--font-geist-mono)
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
 }
 
 .container {
