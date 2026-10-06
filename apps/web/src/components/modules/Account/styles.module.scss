@@ -16,9 +16,14 @@
   }
 }
 
+// Sticky offset follows the nav: below it when shown, near the top when it hides on scroll
+$nav-height: 60px;
+$sidebar-gap: 1.5rem;
+
 .sidebar {
   position: sticky;
-  top: 6rem;
+  top: $sidebar-gap;
+  transition: top 200ms ease; // matches the nav's slide timing
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -27,6 +32,10 @@
     position: static;
     gap: 1rem;
   }
+}
+
+.sidebar.navVisible {
+  top: calc(#{$nav-height} + #{$sidebar-gap});
 }
 
 .identity {

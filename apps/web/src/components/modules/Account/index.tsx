@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 import { api } from "@convex/_generated/api";
+import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import Avatar from "@/components/ui/Avatar";
 import SignOutIcon from "@/components/icons/account/sign-out.svg";
 import { accountNav } from "./nav";
@@ -17,6 +18,7 @@ export default function AccountShell({ children }: { children: ReactNode }) {
   const router = useRouter();
   const viewer = useQuery(api.users.viewer);
   const { signOut } = useAuthActions();
+  const isNavVisible = useScrollVisibility();
 
   const isActive = (href: string) =>
     href === "/account" ? pathname === href : pathname.startsWith(href);
@@ -28,7 +30,7 @@ export default function AccountShell({ children }: { children: ReactNode }) {
 
   return (
     <div className={styles.shell}>
-      <aside className={styles.sidebar}>
+      <aside className={`${styles.sidebar} ${isNavVisible ? styles.navVisible : ""}`}>
         <div className={styles.identity}>
           <Avatar name={viewer?.email} image={viewer?.image} />
           <div className={styles.identityText}>
