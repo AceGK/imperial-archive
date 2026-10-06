@@ -334,9 +334,9 @@ export default function Nav() {
             <ThemeToggle />
           </div>
 
-          {/* mobile: account avatar beside the hamburger */}
+          {/* mobile: account avatar (or Login when signed out) beside the hamburger */}
           <div className={styles.mobileAccount}>
-            <AccountMenu />
+            <MobileBarAuth />
           </div>
 
           {/* mobile hamburger */}
@@ -520,6 +520,19 @@ function AuthButtons({ signupVariant }: { signupVariant: "secondary" | "secondar
         Login
       </Button>
     </>
+  );
+}
+
+/** Mobile top bar: avatar menu when signed in, a Login button when signed out */
+function MobileBarAuth() {
+  const { isAuthenticated, isLoading } = useConvexAuth();
+  if (isLoading) return null;
+  if (isAuthenticated) return <AccountMenu />;
+
+  return (
+    <Button href="/login" variant="primary" size="sm">
+      Login
+    </Button>
   );
 }
 
