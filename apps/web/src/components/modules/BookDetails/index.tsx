@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/Accordion";
 import Authors from "./Authors";
 import styles from "./styles.module.scss";
+import FavoriteButton from "@/components/modules/FavoriteButton";
 import type { BookDetailData } from "@/types/books";
 import Series from "./Series";
 import Factions from "./Factions";
@@ -78,6 +79,10 @@ export default function BookDetails({ book }: BookDetailProps) {
           <h1 className={styles.title}>{book.title}</h1>
 
           {book.authors && <Authors authors={book.authors} />}
+
+          <div className={styles.favorite}>
+            <FavoriteButton kind="book" itemId={book._id} />
+          </div>
 
           {(book.description ||
             book.story ||

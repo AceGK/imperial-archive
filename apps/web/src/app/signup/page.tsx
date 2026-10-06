@@ -1,7 +1,9 @@
-export default function Signup() {
+import AuthForm from "@/components/modules/AuthForm";
+
+export default function SignupPage() {
   return (
-    <div className="container">
-      <h1>Signup</h1>
-    </div>
+    <section className="container">
+      <AuthForm mode="signUp" />
+    </section>
   );
 }

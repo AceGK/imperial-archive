@@ -3,6 +3,9 @@ import { Barlow, Geist_Mono, Barlow_Condensed } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { cookies } from "next/headers";
 import "@/styles/reset.scss";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import "@/styles/globals.scss";
 import "@/styles/utils.scss";
 import Nav from "@/components/modules/Nav";
@@ -43,8 +46,6 @@ export default async function RootLayout({
     layoutCookie === "full" || layoutCookie === "boxed"
       ? layoutCookie
       : "boxed";
-
-  // const hasAccess = cookieStore.get("site-access")?.value === "granted";
 
   return (
     <ConvexAuthNextjsServerProvider>

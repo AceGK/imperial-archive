@@ -4,11 +4,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useConvexAuth } from "convex/react";
 import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import styles from "./styles.module.scss";
 import ThemeToggle from "@/components/modules/ThemeToggle";
 import SiteWidthToggle from "@/components/modules/SiteWidthToggle";
 import Button from "@/components/ui/Button";
+import AccountMenu from "./AccountMenu";
 import Logo from "../../../../public/imperial-archive-logo.svg";
 
 const links = [
@@ -71,14 +73,14 @@ export default function Nav() {
 
           {/* desktop right controls */}
           <div className={styles.secondary}>
-            <Button href="/signup" variant="secondary-bracket" size="sm">
-              Signup
-            </Button>
-            <Button href="/login" variant="primary" size="sm">
-              Login
-            </Button>
+            <AuthButtons signupVariant="secondary-bracket" />
             <SiteWidthToggle />
             <ThemeToggle />
+          </div>
+
+          {/* mobile: account avatar beside the hamburger */}
+          <div className={styles.mobileAccount}>
+            <AccountMenu />
           </div>
 
           {/* mobile hamburger */}
@@ -116,12 +118,7 @@ export default function Nav() {
         </ul>
 
         <div className={styles.mobileActions}>
-          <Button href="/signup" variant="secondary" size="sm">
-            Signup
-          </Button>
-          <Button href="/login" variant="primary" size="sm">
-            Login
-          </Button>
+          <AuthButtons signupVariant="secondary" inMobilePanel />
           <SiteWidthToggle />
           <ThemeToggle />
         </div>
@@ -134,5 +131,33 @@ export default function Nav() {
         aria-hidden="true"
       />
     </nav>
+  );
+}
+
+
+function AuthButtons({
+  signupVariant,
+  inMobilePanel = false,
+}: {
+  signupVariant: "secondary" | "secondary-bracket";
+  /** On mobile the avatar lives in the top bar instead of the menu panel */
+  inMobilePanel?: boolean;
+}) {
+  const { isAuthenticated, isLoading } = useConvexAuth();
+
+  // Avoid flashing Login/Signup while the session loads
+  if (isLoading) return null;
+
+  if (isAuthenticated) return inMobilePanel ? null : <AccountMenu />;
+
+  return (
+    <>
+      <Button href="/signup" variant={signupVariant} size="sm">
+        Signup
+      </Button>
+      <Button href="/login" variant="primary" size="sm">
+        Login
+      </Button>
+    </>
   );
 }
