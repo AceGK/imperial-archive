@@ -1,6 +1,7 @@
 import Link from "next/link";
 import FactionTheme from "@/components/modules/FactionTheme";
 import { resolveGroupIcon, resolveIcon } from "@/components/icons/factions/resolve";
+import FavoriteButton from "@/components/modules/FavoriteButton";
 import DetailCard from "../base";
 import Clamp from "../clamp";
 import DetailLinks from "../links";
@@ -41,6 +42,7 @@ export default function FactionDetailCard({ faction }: { faction: Faction40kDoc 
         ) : null
       }
       actions={<DetailLinks items={links as any} />}
+      footer={<FavoriteButton kind="faction" itemId={faction._id} />}
     />
   );
 }

@@ -5,34 +5,13 @@ import {
   nextjsMiddlewareRedirect,
 } from "@convex-dev/auth/nextjs/server";
 
-// const COOKIE_NAME = "site-access";
-// const COOKIE_VALUE = "granted";
-
-// Define auth-protected routes (adjust these to your needs)
-const isSignInPage = createRouteMatcher(["/login"]);
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)", "/profile(.*)"]);
+const isSignInPage = createRouteMatcher(["/login", "/signup"]);
+const isProtectedRoute = createRouteMatcher(["/account(.*)"]);
 
 export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
-  // --- Password protection (disabled) ---
-  // const accessCookie = request.cookies.get(COOKIE_NAME);
-
-  // // Allow password page and verify API
-  // if (
-  //   request.nextUrl.pathname === "/password" ||
-  //   request.nextUrl.pathname === "/api/verify-password"
-  // ) {
-  //   return NextResponse.next();
-  // }
-
-  // // If no site access cookie, redirect to password page
-  // if (accessCookie?.value !== COOKIE_VALUE) {
-  //   return NextResponse.redirect(new URL("/password", request.url));
-  // }
-
-  // --- Convex Auth logic ---
   // Redirect authenticated users away from sign-in pages
   if (isSignInPage(request) && (await convexAuth.isAuthenticated())) {
-    return nextjsMiddlewareRedirect(request, "/");
+    return nextjsMiddlewareRedirect(request, "/account");
   }
 
   // Redirect unauthenticated users to login for protected routes

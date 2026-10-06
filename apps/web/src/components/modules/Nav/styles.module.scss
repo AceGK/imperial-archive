@@ -165,9 +165,25 @@
 
 .secondary {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
 
   @include max(md, 110) {
+    display: none;
+  }
+}
+
+/* account avatar beside the hamburger (mobile only) */
+.mobileAccount {
+  display: none;
+  margin-left: auto;
+  margin-right: 1rem;
+
+  @include max(md, 110) {
+    display: flex;
+  }
+
+  &:empty {
     display: none;
   }
 }

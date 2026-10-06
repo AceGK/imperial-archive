@@ -582,3 +582,44 @@ export const getPostsWithPagination = groq`
   },
   "total": count(*[_type == "post"])
 }`
+/* -------------------------------------------------------------
+   FAVORITES: card data for a mixed list of document ids
+-------------------------------------------------------------- */
+export const favoriteItems40kQuery = groq`
+*[_id in $ids && !(_id match "drafts.*")]{
+  _type,
+  _type == "book40k" => {
+    ${bookCardFields}
+  },
+  _type == "series40k" => {
+    _id,
+    title,
+    "slug": slug.current,
+    image{ alt, credit, crop, hotspot, asset->{ _id, url, metadata{ lqip, dimensions } } },
+    // Series keep books in items or in grouped lists[].items
+    "totalCount": coalesce(count(items), 0) + coalesce(count(lists[].items[]), 0)
+  },
+  _type == "author40k" => {
+    _id,
+    name,
+    "slug": slug.current,
+    image{ ..., "lqip": asset->metadata.lqip },
+    "count": count(*[_type == "book40k" && references(^._id)])
+  },
+  _type == "faction40k" => {
+    _id,
+    title,
+    "slug": slug.current,
+    iconId,
+    "groupKey": group->slug.current
+  },
+  _type == "era40k" => {
+    _id,
+    title,
+    "slug": slug.current,
+    period,
+    description,
+    image{ alt, "url": asset->url, "lqip": asset->metadata.lqip }
+  }
+}
+`;

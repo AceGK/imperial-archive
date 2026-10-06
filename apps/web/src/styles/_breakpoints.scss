@@ -1,4 +1,5 @@
 // styles/_breakpoints.scss
+@use "sass:map";
 
 $breakpoints: (
   sm: 576px,
@@ -11,7 +12,7 @@ $breakpoints: (
 
 // Helper: get value from map
 @function bp($size) {
-  @return map-get($breakpoints, $size);
+  @return map.get($breakpoints, $size);
 }
 
 // Ensure offsets have units (default 0px)
