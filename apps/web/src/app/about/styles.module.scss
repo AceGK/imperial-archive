@@ -1,8 +1,24 @@
 @use "@/styles/breakpoints" as *;
 
+.layout {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 760px);
+  justify-content: center;
+  gap: 3.5rem;
+
+  @include max(lg) {
+    grid-template-columns: minmax(0, 760px);
+  }
+}
+
+.aside {
+  @include max(lg) {
+    display: none;
+  }
+}
+
 .content {
-  max-width: 760px;
-  margin-inline: auto;
+  min-width: 0;
 }
 
 .header {
@@ -35,15 +51,174 @@
 .sections {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2.5rem;
+}
+
+.anchor {
+  scroll-margin-top: 5rem;
+}
+
+/* card eyebrow with a rule fading out to the card's edge */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.eyebrowIndex {
+  color: var(--primary);
+}
+
+.indexRule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
+}
+
+/* contents rail */
+// Sticky offset follows the nav: below it when shown, near the top when it hides on scroll
+$nav-height: 60px;
+$toc-gap: 1.5rem;
+
+.toc {
+  position: sticky;
+  top: $toc-gap;
+  transition: top 200ms ease; // matches the nav's slide timing
+}
+
+.toc.navVisible {
+  top: calc(#{$nav-height} + #{$toc-gap});
+}
+
+.tocHeading {
+  font-family: var(--font-condensed);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  color: var(--subtle);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.tocList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tocLink {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.6rem 0 0.6rem 0.75rem;
+  border-left: 1px solid var(--border);
+  font-family: var(--font-condensed);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  color: var(--subtle);
+  text-decoration: none;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease;
+
+  &:hover {
+    color: var(--text);
+  }
+}
+
+.tocIndex {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+.tocActive {
+  color: var(--primary);
+  border-left-color: var(--primary);
+
+  &:hover {
+    color: var(--primary);
+  }
 }
 
 .linkGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem 1.5rem;
 
   @include max(sm) {
     grid-template-columns: 1fr;
   }
+}
+
+/* term / value rows, read like a cogitator printout */
+.readout {
+  margin: 0 0 1.25rem;
+  border-top: 1px solid var(--border);
+
+  > div {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+
+    @include max(sm) {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+
+  dt {
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.8125rem;
+    color: var(--text);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--subtle);
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+/* a coming-soon note set off at the foot of a card */
+.upcoming {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border);
+
+  p {
+    padding-bottom: 0;
+  }
+
+  strong {
+    color: var(--text);
+  }
+}
+
+.badge {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid color-mix(in oklab, var(--primary), transparent 50%);
+  font-family: var(--font-condensed);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.6875rem;
+  color: var(--primary);
 }

@@ -9,6 +9,7 @@ export type CardProps = {
   align?: "left" | "center";
   as?: ElementType;
   className?: string;
+  id?: string;
 };
 
 export default function Card({
@@ -18,10 +19,12 @@ export default function Card({
   align = "left",
   as = "div",
   className,
+  id,
 }: CardProps) {
   const Comp = as;
   return (
     <Comp
+      id={id}
       className={`${styles.card} ${align === "center" ? styles.center : ""} ${className ?? ""}`}
     >
       {eyebrow && <div className={styles.eyebrow}>{eyebrow}</div>}
