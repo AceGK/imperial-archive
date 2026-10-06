@@ -2,7 +2,7 @@
 import Link from "next/link";
 import styles from "./styles.module.scss";
 import Logo from "../../../../public/imperial-archive-logo.svg";
-import Button from "@/components/ui/Button";
+import ThemeSwitch from "@/components/modules/ThemeSwitch";
 
 type FooterLink = { href: string; label: string };
 
@@ -90,15 +90,7 @@ export default function Footer({
               </small>
 
               <div className={styles.bottomLinks}>
-                <Button 
-                  href="#top" 
-                  variant="ghost"
-                  size="sm"
-                  aria-label="Back to top"
-                  title="Back to top"
-                >
-                  Back to top ↑
-                </Button>
+                <ThemeSwitch />
               </div>
             </div>
           </div>

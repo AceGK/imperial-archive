@@ -60,6 +60,13 @@ body {
   background: var(--bg);
   position: relative;
 
+  // Sticky footer: on short pages the footer (margin-top: auto) is pushed to
+  // the bottom of the screen instead of floating under the content
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+
   // Full-page grain texture. Self-contained SVG fractal-noise data URI (no
   // image asset). No background-size set on purpose — the SVG has only a
   // viewBox (no width/height), so it stretches to fill this fixed, full-

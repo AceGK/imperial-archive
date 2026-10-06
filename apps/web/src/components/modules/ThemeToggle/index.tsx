@@ -2,23 +2,30 @@
 
 import { useTheme } from "next-themes";
 import Button from "@/components/ui/Button";
-import ThemeIcon from "@/components/icons/half-circle.svg";
+import SunIcon from "@/components/icons/sun.svg";
+import MoonIcon from "@/components/icons/moon.svg";
+import styles from "./styles.module.scss";
 
+/**
+ * Icon button that flips between light and dark mode.
+ * Shows the sun in dark mode (click for light) and the moon in light mode.
+ * Which icon is visible is decided in CSS from `data-theme`, so the server
+ * render matches the client and nothing flashes on load.
+ */
 export default function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-
-  const isDark = resolvedTheme === "dark";
-  const next = isDark ? "light" : "dark";
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      title="switch theme"
-      aria-pressed={isDark}
-      onClick={() => setTheme(next)}
+      title="Switch theme"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >
-      <ThemeIcon aria-hidden style={{fontSize:'1.25rem'}}/>
+      <span className={styles.icon} aria-hidden="true">
+        <SunIcon className={styles.sun} />
+        <MoonIcon className={styles.moon} />
+      </span>
     </Button>
   );
 }

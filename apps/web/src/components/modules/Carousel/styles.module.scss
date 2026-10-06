@@ -100,7 +100,9 @@
 }
 
 .swiper {
-  padding: 0 1px;
+  // Swiper clips overflow, and card corner brackets sit 1px outside the card
+  // ($offset: 1px), so leave 1px of room on every side or they get cut off
+  padding: 1px;
 
   /* Hide default Swiper navigation */
   :global(.swiper-button-prev),

@@ -551,6 +551,39 @@
   width: 100%;
 }
 
+// sign-out is a <button> styled like the account links around it
+button.mobileLink {
+  background: none;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mobileSoon {
+  margin-left: auto;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+}
+
+.mobileTheme {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.625rem;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.9375rem;
+  color: var(--text);
+}
+
 /* backdrop */
 .backdrop {
   position: fixed;

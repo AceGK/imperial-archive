@@ -1,4 +1,5 @@
 .footer {
+  margin-top: auto; // pairs with body's flex column to sit at the bottom of short pages
   border-top: 1px solid var(--border);
   background: var(--bg);
   color: var(--text);
@@ -126,5 +127,6 @@
 }
 .bottomLinks {
   display: inline-flex;
+  align-items: center;
   gap: 1rem;
 }

@@ -1,0 +1,23 @@
+.icon {
+  display: inline-flex;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+/* light mode shows the moon (go dark); dark mode shows the sun (go light) */
+.sun {
+  display: none;
+}
+
+:global([data-theme="dark"]) {
+  .sun {
+    display: inline;
+  }
+
+  .moon {
+    display: none;
+  }
+}
