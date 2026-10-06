@@ -7,12 +7,12 @@
   grid-template-columns: 260px minmax(0, 1fr);
   gap: 2.5rem;
   align-items: start;
-  padding-block: 2rem 4rem;
+  padding-bottom: 4rem;
 
   @include max(md) {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
-    padding-block: 1.5rem 3rem;
+    padding-bottom: 3rem;
   }
 }
 
@@ -83,12 +83,38 @@ $sidebar-gap: 1.5rem;
     gap: 0.25rem;
     overflow-x: auto;
     scrollbar-width: none;
-    padding-bottom: 0.25rem;
+    padding-bottom: 0;
     border-bottom: 1px solid var(--border);
+
+    &::-webkit-scrollbar {
+      display: none; // older iOS Safari ignores scrollbar-width
+    }
+
+    // Full-bleed: pull the row out to the screen edges (cancelling the page
+    // container's 1rem padding) so tabs scroll edge to edge, then pad the start
+    // back in so at rest the first tab still lines up with the page content
+    margin-inline: -1rem;
+    padding-left: 1rem;
+    scroll-padding-inline: 1rem;
+
+    // matching space after the last tab — Safari drops padding-right at the
+    // end of a scrolling flex row, so use a spacer (1rem minus the row gap)
+    &::after {
+      content: "";
+      flex: 0 0 0.75rem;
+    }
 
     ul {
       flex-direction: row;
       gap: 0.25rem;
+    }
+
+    // Safari shrinks flex items in a scrolling row to fit the screen, which
+    // squeezed the tabs and let their text spill out; keep every level at its
+    // natural width so the row scrolls instead
+    > *,
+    li {
+      flex-shrink: 0;
     }
   }
 }
@@ -105,6 +131,7 @@ $sidebar-gap: 1.5rem;
 
   @include max(md) {
     flex-direction: row;
+    gap: 0.25rem; // match the spacing between tabs within a group
 
     & + & {
       padding-top: 0;
@@ -159,6 +186,10 @@ $sidebar-gap: 1.5rem;
 
   // Mobile tabs: bottom border instead of left
   @include max(md) {
+    // width: 100% has nothing fixed to resolve against in a content-sized row
+    // (Safari makes the tab narrower than its text); size to the label instead
+    width: auto;
+    gap: 0.5rem;
     padding: 0.5rem 0.75rem;
     border-left: none;
     border-bottom: 2px solid transparent;
