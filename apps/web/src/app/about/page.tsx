@@ -61,17 +61,21 @@ export default function AboutPage() {
 
             <Card eyebrow="§ II · Archivist" title="The Creator">
               <p>
-                <em>
-                  [Add a short bio here — who you are, how long you&apos;ve
-                  been reading the Black Library, and what got you into 40K
-                  fiction.]
-                </em>
+                The Imperial Archive is built and maintained by a single
+                developer and longtime reader of the <BlackLibrary />. Like
+                many who wander into the grim darkness of the far future, I
+                started with one book and soon found myself lost in a library
+                spanning thousands of stories, dozens of series, and ten
+                thousand years of lore.
               </p>
               <p>
-                <em>
-                  [Optional: favorite series, current read, or what inspired
-                  you to build Imperial Archive.]
-                </em>
+                This is a passion side project, built as a resource for the
+                community. The official Black Library website doesn&apos;t
+                list every publication, and detailed book information can be
+                hard to find, so the Archive aims to gather it all in one
+                place. It&apos;s still incomplete and very much a work in
+                progress, with new books, details, and features added over
+                time.
               </p>
             </Card>
 
