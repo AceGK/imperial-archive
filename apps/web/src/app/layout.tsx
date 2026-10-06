@@ -12,6 +12,7 @@ import Nav from "@/components/modules/Nav";
 import Footer from "@/components/modules/Footer";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/context/ConvexClientProvider";
+import { isProduction } from "@/lib/env";
 
 const barlow = Barlow({
   variable: "--font-sans",
@@ -39,6 +40,8 @@ const archivoBlack = Archivo_Black({
 export const metadata: Metadata = {
   title: "40k Books",
   description: "A catalog of Warhammer 40,000 books from Black Library.",
+  // non-production deployments are also noindexed via robots.ts and an X-Robots-Tag header
+  robots: isProduction ? undefined : { index: false, follow: false },
 };
 
 export default async function RootLayout({
