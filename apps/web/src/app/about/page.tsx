@@ -184,7 +184,7 @@ export default function AboutPage() {
               >
                 <p>
                   The Archive&apos;s machine spirit is bound together from the
-                  following technologies, each tending to its own rite:
+                  following technologies:
                 </p>
                 <dl className={styles.readout}>
                   {STACK.map(({ name, href, role }) => (
