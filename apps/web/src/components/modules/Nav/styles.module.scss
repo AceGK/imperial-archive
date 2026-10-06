@@ -416,8 +416,14 @@
 
   position: fixed;
   inset: 60px 0 auto 0; /* below the nav bar */
+  // 100vh on mobile is the height with the browser toolbars hidden, so the
+  // bottom of the panel ended up behind them. dvh tracks the toolbars as they
+  // show/hide; svh (always assumes they're showing) is the fallback.
   max-height: calc(100vh - 60px);
+  max-height: calc(100svh - 60px);
+  max-height: calc(100dvh - 60px);
   overflow-y: auto;
+  overscroll-behavior: contain; // scrolling the panel never scrolls the page behind it
   background: var(--bg);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
