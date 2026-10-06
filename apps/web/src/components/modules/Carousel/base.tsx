@@ -28,6 +28,8 @@ type CarouselProps = {
   viewAllLink?: string;
   viewAllLabel?: string;
   lastSlideTitle?: string;
+  /** Icon on the "View All" last slide, e.g. the nav icon for this content type */
+  viewAllIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   showLastSlide?: boolean;
 };
 
@@ -47,6 +49,7 @@ export default function Carousel({
   viewAllLink,
   viewAllLabel,
   lastSlideTitle = "View All",
+  viewAllIcon: ViewAllIcon,
   showLastSlide = true,
 }: CarouselProps) {
   const prevRef = useRef<HTMLButtonElement>(null);
@@ -117,6 +120,7 @@ export default function Carousel({
           {viewAllLink && showLastSlide && (
             <SwiperSlide className={`${styles.slide} ${styles.viewAllSlide}`}>
               <Link href={viewAllLink} className={styles.viewAllCard} aria-label={lastSlideTitle}>
+                {ViewAllIcon && <ViewAllIcon className={styles.viewAllIcon} aria-hidden="true" />}
                 <span className={styles.viewAllTitle}>{lastSlideTitle}</span>
               </Link>
             </SwiperSlide>

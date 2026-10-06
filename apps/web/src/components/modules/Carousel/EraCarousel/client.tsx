@@ -5,6 +5,7 @@ import Carousel from '@/components/modules/Carousel/base'
 import EraCard from '@/components/modules/Cards/EraCard'
 import type {SwiperOptions} from 'swiper/types'
 import type {Era40k} from '@/types/sanity'
+import HourglassIcon from '@/components/icons/hourglass.svg'
 
 type Props = {
   title?: React.ReactNode
@@ -58,6 +59,7 @@ export default function EraCarouselClient({
       pagination={false}
       className={className}
       viewAllLink={viewAllLink}
+      viewAllIcon={HourglassIcon}
       viewAllLabel={viewAllLabel}
       showLastSlide={false} 
     />

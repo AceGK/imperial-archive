@@ -27,7 +27,7 @@ import Logo from "../../../../public/imperial-archive-logo.svg";
 type NavIcon = ComponentType<SVGProps<SVGSVGElement>>;
 type NavLink = { href: string; label: string; description?: string; icon?: NavIcon };
 type NavGroup = { label: string; links: NavLink[]; columns?: number };
-type NavPlain = { href: string; label: string };
+type NavPlain = { href: string; label: string; comingSoon?: boolean };
 type NavItem = NavGroup | NavPlain;
 
 const NAV_ITEMS: NavItem[] = [
@@ -42,7 +42,7 @@ const NAV_ITEMS: NavItem[] = [
       { href: "/eras", label: "Eras", description: "Epochs of the 41st millennium", icon: HourglassIcon },
     ],
   },
-  { href: "/track", label: "Track" },
+  { href: "/track", label: "Track", comingSoon: true },
   {
     label: "Info",
     links: [
@@ -448,6 +448,7 @@ export default function Nav() {
                   className={`${styles.mobileLink} ${isLinkActive(item.href) ? styles.active : ""}`}
                 >
                   {item.label}
+                  {item.comingSoon && <span className={styles.mobileSoon}>Soon</span>}
                 </Link>
               </li>
             ) : (

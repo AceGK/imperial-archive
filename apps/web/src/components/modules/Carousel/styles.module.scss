@@ -162,8 +162,9 @@
 
 .viewAllCard {
   display: grid;
-  place-items: center;
-  gap: 0.35rem;
+  place-content: center;
+  justify-items: center;
+  gap: 0.75rem;
   width: 100%;
   min-height: 100%;
   border: 1px solid var(--border);
@@ -180,6 +181,17 @@
   &:hover {
     background: color-mix(in oklab, var(--accent), transparent 25%);
     border-color: var(--primary);
+  }
+}
+
+.viewAllIcon {
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--primary);
+  transition: transform 160ms ease;
+
+  .viewAllCard:hover & {
+    transform: scale(1.08);
   }
 }
 

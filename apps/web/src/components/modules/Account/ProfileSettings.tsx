@@ -11,6 +11,7 @@ import Button from "@/components/ui/Button";
 import SectionHeader from "./SectionHeader";
 import { formatDate, getErrorMessage, type FormStatus } from "./utils";
 import styles from "./styles.module.scss";
+import PasswordInput from "@/components/ui/PasswordInput";
 
 export default function ProfileSettings() {
   const viewer = useQuery(api.users.viewer);
@@ -168,10 +169,9 @@ function UpdateEmailForm() {
             </div>
             <div className={styles.inputGroup}>
               <label htmlFor="currentPassword">Current Password</label>
-              <input
+              <PasswordInput
                 id="currentPassword"
                 name="currentPassword"
-                type="password"
                 autoComplete="current-password"
                 required
                 disabled={loading}
@@ -318,10 +318,9 @@ function UpdatePhoneForm({ currentPhone }: { currentPhone: string | null }) {
         </div>
         <div className={styles.inputGroup}>
           <label htmlFor="phoneCurrentPassword">Current Password</label>
-          <input
+          <PasswordInput
             id="phoneCurrentPassword"
             name="currentPassword"
-            type="password"
             autoComplete="current-password"
             required
             disabled={loading}

@@ -6,6 +6,7 @@ import Carousel from "@/components/modules/Carousel/base";
 import type { SwiperOptions } from "swiper/types";
 import BookCard from "@/components/modules/Cards/BookCard";
 import type { Book40k } from "@/types/sanity";
+import BookIcon from "@/components/icons/book.svg";
 
 type Props = {
   title?: React.ReactNode;
@@ -52,6 +53,7 @@ export default function BooksCarousel({
       pagination={false}
       className={className}
       viewAllLink={viewAllLink}
+      viewAllIcon={BookIcon}
       viewAllLabel={viewAllLabel}
     />
   );

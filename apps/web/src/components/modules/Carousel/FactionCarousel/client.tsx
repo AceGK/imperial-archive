@@ -7,6 +7,7 @@ import type { SwiperOptions } from "swiper/types";
 import FactionCard from "@/components/modules/Cards/FactionCard";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
 import styles from "./styles.module.scss";
+import ShieldIcon from "@/components/icons/shield.svg";
 
 type GroupMeta = { title: string; iconId?: string; description?: string };
 type AdaptedGroup = {
@@ -78,6 +79,7 @@ export default function FactionCarouselClient({
         pagination={false}
         className={styles.carousel}
         viewAllLink={viewAllLink}
+        viewAllIcon={ShieldIcon}
         viewAllLabel={viewAllLabel}
         headerSlot={
           <div className={styles.tabs} role="tablist" aria-label="Faction groups">

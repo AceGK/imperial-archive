@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "./styles.module.scss";
+import PasswordInput from "@/components/ui/PasswordInput";
 
 export default function ResetPasswordForm() {
   const { signIn } = useAuthActions();
@@ -108,11 +109,10 @@ export default function ResetPasswordForm() {
 
           <div className={styles.inputGroup}>
             <label htmlFor="newPassword">New Password</label>
-            <input
+            <PasswordInput
               id="newPassword"
               name="newPassword"
               placeholder="At least 8 characters"
-              type="password"
               autoComplete="new-password"
               minLength={8}
               required
@@ -122,11 +122,10 @@ export default function ResetPasswordForm() {
 
           <div className={styles.inputGroup}>
             <label htmlFor="confirmPassword">Confirm New Password</label>
-            <input
+            <PasswordInput
               id="confirmPassword"
               name="confirmPassword"
               placeholder="Re-enter your new password"
-              type="password"
               autoComplete="new-password"
               minLength={8}
               required

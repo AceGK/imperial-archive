@@ -5,6 +5,7 @@ import Carousel from "@/components/modules/Carousel/base";
 import type { SwiperOptions } from "swiper/types";
 import AuthorCard from "@/components/modules/Cards/AuthorCard";
 import type { Author40k } from "@/types/sanity";
+import UserIcon from "@/components/icons/user.svg";
 
 export type Author = {
   id: string | number;
@@ -61,6 +62,7 @@ export default function AuthorCarousel({
         pagination={false}
         className={className}
         viewAllLink="/authors"
+        viewAllIcon={UserIcon}
         lastSlideTitle="All Authors"
         viewAllLabel="View All Authors" 
       />

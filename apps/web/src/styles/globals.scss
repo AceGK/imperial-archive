@@ -81,6 +81,30 @@ body {
   }
 }
 
+// Browser autofill: Chromium/Safari force a blue background with !important,
+// so it can't be overridden directly — instead delay the background change
+// indefinitely so each input keeps its own themed background, and keep the
+// text in the theme's color
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  transition:
+    background-color 600000s 0s,
+    color 600000s 0s;
+}
+
+// Firefox tints autofilled fields with a filter instead (kept in its own rule:
+// an unknown pseudo-class would invalidate the whole selector list above)
+input:autofill,
+textarea:autofill,
+select:autofill {
+  filter: none;
+}
+
 code,
 pre,
 kbd,

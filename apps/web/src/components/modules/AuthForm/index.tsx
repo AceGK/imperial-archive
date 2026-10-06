@@ -7,6 +7,7 @@ import { useState } from "react";
 import OAuthButtons from "./OAuthButtons";
 import VerifyEmailStep from "./VerifyEmailStep";
 import styles from "./styles.module.scss";
+import PasswordInput from "@/components/ui/PasswordInput";
 
 type AuthFormProps = {
   mode: "signIn" | "signUp";
@@ -117,11 +118,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
               </Link>
             )}
           </div>
-          <input
+          <PasswordInput
             id="password"
             name="password"
             placeholder={isSignIn ? "Enter your password" : "At least 8 characters"}
-            type="password"
             autoComplete={isSignIn ? "current-password" : "new-password"}
             minLength={isSignIn ? undefined : 8}
             required
@@ -132,11 +132,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
         {!isSignIn && (
           <div className={styles.inputGroup}>
             <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
+            <PasswordInput
               id="confirmPassword"
               name="confirmPassword"
               placeholder="Re-enter your password"
-              type="password"
               autoComplete="new-password"
               minLength={8}
               required

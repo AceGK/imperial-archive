@@ -9,6 +9,7 @@ import Button from "@/components/ui/Button";
 import SectionHeader from "./SectionHeader";
 import { getErrorMessage, type FormStatus } from "./utils";
 import styles from "./styles.module.scss";
+import PasswordInput from "@/components/ui/PasswordInput";
 
 export default function SecuritySettings() {
   const viewer = useQuery(api.users.viewer);
@@ -104,10 +105,9 @@ function SetPasswordForm() {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.inputGroup}>
           <label htmlFor="newPassword">New Password</label>
-          <input
+          <PasswordInput
             id="newPassword"
             name="newPassword"
-            type="password"
             placeholder="At least 8 characters"
             autoComplete="new-password"
             minLength={8}
@@ -117,10 +117,9 @@ function SetPasswordForm() {
         </div>
         <div className={styles.inputGroup}>
           <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
+          <PasswordInput
             id="confirmPassword"
             name="confirmPassword"
-            type="password"
             autoComplete="new-password"
             minLength={8}
             required
@@ -183,10 +182,9 @@ function UpdatePasswordForm() {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.inputGroup}>
           <label htmlFor="currentPassword">Current Password</label>
-          <input
+          <PasswordInput
             id="currentPassword"
             name="currentPassword"
-            type="password"
             autoComplete="current-password"
             required
             disabled={loading}
@@ -194,10 +192,9 @@ function UpdatePasswordForm() {
         </div>
         <div className={styles.inputGroup}>
           <label htmlFor="newPassword">New Password</label>
-          <input
+          <PasswordInput
             id="newPassword"
             name="newPassword"
-            type="password"
             placeholder="At least 8 characters"
             autoComplete="new-password"
             minLength={8}
@@ -207,10 +204,9 @@ function UpdatePasswordForm() {
         </div>
         <div className={styles.inputGroup}>
           <label htmlFor="confirmPassword">Confirm New Password</label>
-          <input
+          <PasswordInput
             id="confirmPassword"
             name="confirmPassword"
-            type="password"
             autoComplete="new-password"
             minLength={8}
             required
