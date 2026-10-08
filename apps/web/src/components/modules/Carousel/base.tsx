@@ -6,7 +6,7 @@ import styles from "./styles.module.scss";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, A11y, Keyboard, Autoplay } from "swiper/modules";
-import type { SwiperOptions } from "swiper/types";
+import type { Swiper as SwiperInstance } from "swiper/types";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import ChevronLeft from "@/components/icons/chevron-left.svg";
@@ -17,9 +17,8 @@ type CarouselProps = {
   subtitle?: React.ReactNode;
   headerSlot?: React.ReactNode;
   items: React.ReactNode[];
-  slidesPerView?: number;
-  spaceBetween?: number;
-  breakpoints?: SwiperOptions["breakpoints"];
+  /** Slides in view per breakpoint, defined in styles.module.scss */
+  layout: "books" | "series" | "authors" | "factions" | "eras";
   loop?: boolean;
   autoplay?: false | { delay?: number; pauseOnMouseEnter?: boolean; disableOnInteraction?: boolean };
   navigation?: boolean;
@@ -38,9 +37,7 @@ export default function Carousel({
   subtitle,
   headerSlot,
   items,
-  slidesPerView = 1.2,
-  spaceBetween = 12,
-  breakpoints,
+  layout,
   loop = false,
   autoplay = false,
   navigation = true,
@@ -54,9 +51,10 @@ export default function Carousel({
 }: CarouselProps) {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+  const swiperRef = useRef<SwiperInstance | null>(null);
 
   return (
-    <div className={`${styles.wrap} ${className || ""}`}>
+    <div className={`${styles.wrap} ${styles[layout]} ${className || ""}`}>
       {(title || subtitle) && (
         <header className={styles.header}>
           {title && (
@@ -70,7 +68,18 @@ export default function Carousel({
       
       {headerSlot}
 
-      <div className={styles.carouselContainer}>
+      {/* Swiper's keyboard control listens page-wide and would move every
+          carousel on screen at once, so it's only on while focus is inside
+          this one (e.g. after tabbing to a card or an arrow button) */}
+      <div
+        className={styles.carouselContainer}
+        onFocus={() => swiperRef.current?.keyboard.enable()}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+            swiperRef.current?.keyboard.disable();
+          }
+        }}
+      >
         {navigation && (
           <>
             <button 
@@ -92,9 +101,8 @@ export default function Carousel({
 
         <Swiper
           modules={[Navigation, Pagination, A11y, Keyboard, Autoplay]}
-          slidesPerView={slidesPerView}
-          spaceBetween={spaceBetween}
-          breakpoints={breakpoints}
+          // slide widths and gaps come from CSS (see styles.module.scss)
+          slidesPerView="auto"
           loop={loop}
           autoplay={autoplay || undefined}
           navigation={navigation ? {
@@ -108,7 +116,10 @@ export default function Carousel({
             }
           }}
           pagination={pagination ? { clickable: true } : false}
-          keyboard={{ enabled: true }}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          keyboard={{ enabled: false }}
           a11y={{ enabled: true }}
           className={styles.swiper}
         >

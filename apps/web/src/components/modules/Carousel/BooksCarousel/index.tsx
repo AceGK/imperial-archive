@@ -3,7 +3,6 @@
 
 import React from "react";
 import Carousel from "@/components/modules/Carousel/base";
-import type { SwiperOptions } from "swiper/types";
 import BookCard from "@/components/modules/Cards/BookCard";
 import type { Book40k } from "@/types/sanity";
 import BookIcon from "@/components/icons/book.svg";
@@ -16,14 +15,6 @@ type Props = {
   compact?: boolean;
   viewAllLink?: string; 
   viewAllLabel?: string;
-};
-
-const breakpoints: SwiperOptions["breakpoints"] = {
-  320:  { slidesPerView: 1.5, spaceBetween: 12 },
-  480:  { slidesPerView: 2.1, spaceBetween: 12 },
-  640:  { slidesPerView: 3,   spaceBetween: 14 },
-  900:  { slidesPerView: 4,   spaceBetween: 16 },
-  1200: { slidesPerView: 5,   spaceBetween: 18 },
 };
 
 export default function BooksCarousel({
@@ -44,9 +35,7 @@ export default function BooksCarousel({
       title={title}
       subtitle={subtitle}
       items={items}
-      slidesPerView={1.2}
-      spaceBetween={12}
-      breakpoints={breakpoints}
+      layout="books"
       loop={false}
       autoplay={false}
       navigation

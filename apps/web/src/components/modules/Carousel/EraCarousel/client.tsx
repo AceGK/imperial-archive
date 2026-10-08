@@ -3,7 +3,6 @@
 import React from 'react'
 import Carousel from '@/components/modules/Carousel/base'
 import EraCard from '@/components/modules/Cards/EraCard'
-import type {SwiperOptions} from 'swiper/types'
 import type {Era40k} from '@/types/sanity'
 import HourglassIcon from '@/components/icons/hourglass.svg'
 
@@ -15,13 +14,6 @@ type Props = {
   viewAllLink?: string
   viewAllLabel?: string
   compact?: boolean
-}
-
-const breakpoints: SwiperOptions['breakpoints'] = {
-  480:  {slidesPerView: 2.1, spaceBetween: 12},
-  640:  {slidesPerView: 3,   spaceBetween: 14},
-  900:  {slidesPerView: 4,   spaceBetween: 16},
-  1200: {slidesPerView: 4,   spaceBetween: 18},
 }
 
 export default function EraCarouselClient({
@@ -50,9 +42,7 @@ export default function EraCarouselClient({
       title={title}
       subtitle={subtitle}
       items={items}
-      slidesPerView={1.2}
-      spaceBetween={12}
-      breakpoints={breakpoints}
+      layout="eras"
       loop={false}
       autoplay={false}
       navigation
