@@ -23,14 +23,15 @@ import {
   SITE_URL,
 } from "@/lib/seo";
 
-// display "optional": the fonts are preloaded, so they're nearly always ready
-// for first paint; if one isn't, the size-matched fallback is kept for that
-// page instead of visibly swapping fonts mid-load
+// display "block": text stays invisible for the moment until the real font
+// arrives instead of flashing the fallback (Arial looks nothing like these).
+// The fonts are preloaded, so the wait is brief and only on a first visit;
+// browsers fall back after ~3s if a font never arrives.
 const barlow = Barlow({
   variable: "--font-sans",
   subsets: ["latin"],
   weight: ["400", "600"],
-  display: "optional",
+  display: "block",
 });
 
 // only used for <code>; not worth preloading on every page
@@ -44,14 +45,14 @@ const barlowCondensed = Barlow_Condensed({
   variable: "--font-condensed",
   subsets: ["latin"],
   weight: ["500", "600"],
-  display: "optional",
+  display: "block",
 });
 
 const archivoBlack = Archivo_Black({
   variable: "--font-heading",
   subsets: ["latin"],
   weight: ["400"],
-  display: "optional",
+  display: "block",
 });
 
 export const metadata: Metadata = {
