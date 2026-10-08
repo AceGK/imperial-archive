@@ -13,6 +13,7 @@ import Footer from "@/components/modules/Footer";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/context/ConvexClientProvider";
 import { isProduction } from "@/lib/env";
+import { authHintScript } from "@/components/modules/Nav/authHint";
 import {
   DEFAULT_OG_IMAGE,
   DEFAULT_TITLE,
@@ -81,6 +82,10 @@ export default async function RootLayout({
   return (
     <ConvexAuthNextjsServerProvider>
       <html lang="en" data-layout={initialLayout} suppressHydrationWarning>
+        <head>
+          {/* sets data-auth before first paint so the nav's auth controls don't shift */}
+          <script dangerouslySetInnerHTML={{ __html: authHintScript }} />
+        </head>
         <body
           className={`${barlow.variable} ${geistMono.variable} ${barlowCondensed.variable} ${archivoBlack.variable} antialiased`}
         >

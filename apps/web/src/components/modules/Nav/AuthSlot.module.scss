@@ -1,0 +1,42 @@
+// Both variants share one grid cell, so the slot keeps the width of the wider
+// one (Login/Signup) whichever is showing
+.slot {
+  display: grid;
+  align-items: center;
+  justify-items: end;
+
+  > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.out {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.in {
+  display: flex;
+  visibility: hidden;
+}
+
+// visibility (not display) so the hidden variant still holds its space and
+// drops out of the tab order and accessibility tree
+:global(html[data-auth="in"]) {
+  .out {
+    visibility: hidden;
+  }
+
+  .in {
+    visibility: visible;
+  }
+}
+
+// same footprint as the AccountMenu trigger: sm avatar + 2px padding + 1px border
+.placeholder {
+  width: calc(2rem + 6px);
+  height: calc(2rem + 6px);
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--text), transparent 88%);
+}
