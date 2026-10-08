@@ -1,10 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import ComingSoon from "@/components/modules/ComingSoon";
 
-export const metadata: Metadata = {
-  title: "Support | Imperial Archive",
-  description: "Ways to support Imperial Archive.",
-};
+export const metadata = pageMetadata({
+  title: "Support",
+  description:
+    "Ways to support Imperial Archive, the fan-made Warhammer 40k book catalog and reading tracker.",
+  path: "/support",
+  // placeholder until the page has real content
+  noindex: true,
+});
 
 export default function SupportPage() {
   return (

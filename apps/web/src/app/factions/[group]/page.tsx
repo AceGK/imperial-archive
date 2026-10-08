@@ -7,6 +7,9 @@ import FactionCard from "@/components/modules/Cards/FactionCard";
 import BooksCatalog from "@/components/modules/Catalog/Books";
 import type { FactionGroupWithItems } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import type { Metadata } from "next";
+import JsonLd from "@/components/seo/JsonLd";
+import { absoluteUrl, breadcrumbJsonLd, pageMetadata, truncate } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -16,6 +19,29 @@ export async function generateStaticParams() {
     groupedFactions40kQuery
   );
   return groups.map((g) => ({ group: g.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ group: string }>;
+}): Promise<Metadata> {
+  const { group } = await params;
+  const groups = await client.fetch<FactionGroupWithItems[]>(groupedFactions40kQuery);
+  const bucket = groups.find((g) => g.slug === group);
+  if (!bucket) return { title: "Faction Not Found" };
+
+  const factionNames = (bucket.items ?? []).map((f) => f.title).filter(Boolean);
+  return pageMetadata({
+    title: `${bucket.title} Books`,
+    description: truncate(
+      bucket.description ||
+        `Warhammer 40,000 ${bucket.title} books from Black Library${
+          factionNames.length ? `, including ${factionNames.slice(0, 5).join(", ")}` : ""
+        }.`
+    ),
+    path: `/factions/${group}`,
+  });
 }
 
 export default async function GroupPage({
@@ -49,6 +75,22 @@ export default async function GroupPage({
 
   return (
     <main>
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: `${title} Books`,
+            url: absoluteUrl(`/factions/${group}`),
+            description: description || undefined,
+            about: { "@type": "Thing", name: title },
+          },
+          breadcrumbJsonLd([
+            { name: "Factions", path: "/factions" },
+            { name: title, path: `/factions/${group}` },
+          ]),
+        ]}
+      />
       <div className="container">
         <Breadcrumb />
         <section>

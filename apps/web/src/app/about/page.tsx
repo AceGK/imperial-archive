@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import type { ReactNode } from "react";
 import Card from "@/components/ui/Card";
 import Toc, { type TocItem } from "./Toc";
 import styles from "./styles.module.scss";
 
-export const metadata: Metadata = {
-  title: "About | Imperial Archive",
+export const metadata = pageMetadata({
+  title: "About",
   description:
-    "About Imperial Archive — a fan-made catalog of Warhammer 40,000 fiction from Black Library.",
-};
+    "About Imperial Archive: a fan-made catalog and reading tracker for Warhammer 40,000 fiction from Black Library, where the data comes from, and how it's built.",
+  path: "/about",
+});
 
 function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
   return (

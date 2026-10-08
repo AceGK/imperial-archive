@@ -3,8 +3,16 @@ import { all40kErasQuery } from "@/lib/sanity/queries";
 import type { Era40k } from "@/types/sanity";
 import EraCard from "@/components/modules/Cards/EraCard";
 import PageHeader from "@/components/modules/PageHeader";
+import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
+
+export const metadata = pageMetadata({
+  title: "Warhammer 40k Eras & Timeline",
+  description:
+    "Explore Warhammer 40,000 fiction by era, from the Horus Heresy to the 41st millennium and beyond, and find the Black Library books set in each period of the timeline.",
+  path: "/eras",
+});
 
 export default async function EraListPage() {
   const eras = await client.fetch<Era40k[]>(

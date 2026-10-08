@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import { getAllBlogPosts } from "@/lib/sanity/queries";
 import { client } from "@/lib/sanity/sanity.client"
 import type { BlogPost } from "@/types/sanity";
 import PageHeader from "@/components/modules/PageHeader"
+
+// private / placeholder page: keep out of search results
+export const metadata: Metadata = {
+  title: "Blog",
+  alternates: { canonical: "/blog" },
+  robots: { index: false, follow: false },
+};
 
 export default async function BlogPage() {
 	const posts = await client.fetch<BlogPost[]>(getAllBlogPosts());
