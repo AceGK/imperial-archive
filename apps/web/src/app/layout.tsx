@@ -23,27 +23,35 @@ import {
   SITE_URL,
 } from "@/lib/seo";
 
+// display "optional": the fonts are preloaded, so they're nearly always ready
+// for first paint; if one isn't, the size-matched fallback is kept for that
+// page instead of visibly swapping fonts mid-load
 const barlow = Barlow({
   variable: "--font-sans",
   subsets: ["latin"],
   weight: ["400", "600"],
+  display: "optional",
 });
 
+// only used for <code>; not worth preloading on every page
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  preload: false,
 });
 
 const barlowCondensed = Barlow_Condensed({
   variable: "--font-condensed",
   subsets: ["latin"],
   weight: ["500", "600"],
+  display: "optional",
 });
 
 const archivoBlack = Archivo_Black({
   variable: "--font-heading",
   subsets: ["latin"],
   weight: ["400"],
+  display: "optional",
 });
 
 export const metadata: Metadata = {
