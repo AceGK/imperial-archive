@@ -1,4 +1,6 @@
 // Reusable style mixins
+@use "sass:list";
+@use "sass:map";
 
 $_corner-positions: (
   top-left: top left,
@@ -31,15 +33,15 @@ $_corner-positions: (
   $sizes: ();
 
   @each $corner in $corners {
-    $pos: map-get($_corner-positions, $corner);
+    $pos: map.get($_corner-positions, $corner);
     // vertical line
-    $images: append($images, linear-gradient(#{$color}, #{$color}), comma);
-    $positions: append($positions, $pos, comma);
-    $sizes: append($sizes, #{$thickness} #{$size}, comma);
+    $images: list.append($images, linear-gradient(#{$color}, #{$color}), comma);
+    $positions: list.append($positions, $pos, comma);
+    $sizes: list.append($sizes, #{$thickness} #{$size}, comma);
     // horizontal line
-    $images: append($images, linear-gradient(#{$color}, #{$color}), comma);
-    $positions: append($positions, $pos, comma);
-    $sizes: append($sizes, #{$size} #{$thickness}, comma);
+    $images: list.append($images, linear-gradient(#{$color}, #{$color}), comma);
+    $positions: list.append($positions, $pos, comma);
+    $sizes: list.append($sizes, #{$size} #{$thickness}, comma);
   }
 
   &::before {

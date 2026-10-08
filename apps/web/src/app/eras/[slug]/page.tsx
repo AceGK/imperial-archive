@@ -4,6 +4,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import { single40kEraQuery } from "@/lib/sanity/queries";
 import type { Era40k } from "@/types/sanity";
 import PageHeader from "@/components/modules/PageHeader";
+import FavoriteButton from "@/components/modules/FavoriteButton";
 import BooksCatalog from "@/components/modules/Catalog/Books";
 
 export const revalidate = 60;
@@ -37,6 +38,7 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
         priority
       >
         {era.period && <p style={{ textWrap: "balance" }}>{era.period}</p>}
+        <FavoriteButton kind="era" itemId={era._id} variant="overlay" />
       </PageHeader>
 
       <BooksCatalog

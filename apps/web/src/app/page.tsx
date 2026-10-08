@@ -113,7 +113,7 @@ export default async function Home() {
       <section className="container row__lg">
         <BooksCarousel
           title="Featured Books"
-          subtitle="A glimpse into the Black Library archives"
+          subtitle="Popular books from the Black Library"
           books={featuredBooks}
           viewAllLink="/books"
         />

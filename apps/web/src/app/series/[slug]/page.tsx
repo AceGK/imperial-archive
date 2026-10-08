@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
 import PageHeader from "@/components/modules/PageHeader";
+import FavoriteButton from "@/components/modules/FavoriteButton";
 import { client } from "@/lib/sanity/sanity.client";
 import { series40kBySlugQuery } from "@/lib/sanity/queries";
 import type { Series40kDoc } from "@/types/sanity";
@@ -58,7 +59,9 @@ const hero = data.image?.asset
         image={hero}
         alt={hero?.alt}
         credit={hero?.credit}
-      />
+      >
+        <FavoriteButton kind="series" itemId={data._id} variant="overlay" />
+      </PageHeader>
 
       <main>
         <div className="container">

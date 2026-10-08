@@ -2,7 +2,8 @@
 import Link from "next/link";
 import styles from "./styles.module.scss";
 import Logo from "../../../../public/imperial-archive-logo.svg";
-import Button from "@/components/ui/Button";
+import ThemeSwitch from "@/components/modules/ThemeSwitch";
+import { accountNav } from "@/components/modules/Account/nav";
 
 type FooterLink = { href: string; label: string };
 
@@ -26,10 +27,13 @@ const defaultPrimary: FooterLink[] = [
 
 const defaultSecondary: FooterLink[] = [
   { href: "/about", label: "About" },
+  { href: "/resources", label: "Resources" },
+  { href: "/faq", label: "FAQ" },
   { href: "/support", label: "Support" },
-  { href: "/attribution", label: "Attribution" },
-  { href: "/privacy", label: "Privacy" },
+  { href: "/about#attribution", label: "Attribution" },
 ];
+
+const accountLinks = accountNav.flatMap((group) => group.items);
 
 export default function Footer({
   links = defaultPrimary,
@@ -78,6 +82,21 @@ export default function Footer({
               ))}
             </ul>
           </nav>
+
+          {/* Account */}
+          <nav className={styles.utility} aria-label="Account links">
+            <h2 className={styles.heading}>Account</h2>
+            <ul className={styles.linkList}>
+              {accountLinks.map(({ href, label, comingSoon }) => (
+                <li key={href}>
+                  <Link href={href} className={styles.link}>
+                    {label}
+                  </Link>
+                  {comingSoon && <span className={styles.soon}>Soon</span>}
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </div>
 
@@ -90,15 +109,7 @@ export default function Footer({
               </small>
 
               <div className={styles.bottomLinks}>
-                <Button 
-                  href="#top" 
-                  variant="ghost"
-                  size="sm"
-                  aria-label="Back to top"
-                  title="Back to top"
-                >
-                  Back to top ↑
-                </Button>
+                <ThemeSwitch />
               </div>
             </div>
           </div>

@@ -4,10 +4,15 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ComponentType, MouseEvent, SVGProps } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useConvexAuth } from "convex/react";
+import { useAuthActions } from "@convex-dev/auth/react";
 import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import styles from "./styles.module.scss";
-// import ThemeToggle from "@/components/modules/ThemeToggle"; // temporarily hidden
+import ThemeToggle from "@/components/modules/ThemeToggle";
+import ThemeSwitch from "@/components/modules/ThemeSwitch";
+import { accountNav } from "@/components/modules/Account/nav";
+import SignOutIcon from "@/components/icons/account/sign-out.svg";
 import SiteWidthToggle from "@/components/modules/SiteWidthToggle";
 import Button from "@/components/ui/Button";
 import ChevronDown from "@/components/icons/chevron-down.svg";
@@ -16,12 +21,13 @@ import UserIcon from "@/components/icons/user.svg";
 import LayersIcon from "@/components/icons/layers.svg";
 import ShieldIcon from "@/components/icons/shield.svg";
 import HourglassIcon from "@/components/icons/hourglass.svg";
+import AccountMenu from "./AccountMenu";
 import Logo from "../../../../public/imperial-archive-logo.svg";
 
 type NavIcon = ComponentType<SVGProps<SVGSVGElement>>;
 type NavLink = { href: string; label: string; description?: string; icon?: NavIcon };
 type NavGroup = { label: string; links: NavLink[]; columns?: number };
-type NavPlain = { href: string; label: string };
+type NavPlain = { href: string; label: string; comingSoon?: boolean };
 type NavItem = NavGroup | NavPlain;
 
 const NAV_ITEMS: NavItem[] = [
@@ -36,7 +42,7 @@ const NAV_ITEMS: NavItem[] = [
       { href: "/eras", label: "Eras", description: "Epochs of the 41st millennium", icon: HourglassIcon },
     ],
   },
-  { href: "/track", label: "Track" },
+  { href: "/track", label: "Track", comingSoon: true },
   {
     label: "Info",
     links: [
@@ -323,11 +329,14 @@ export default function Nav() {
 
           {/* desktop right controls */}
           <div className={styles.secondary}>
-            <Button href="/login" variant="primary" size="sm">
-              Login
-            </Button>
+            <AuthButtons signupVariant="secondary-bracket" />
             <SiteWidthToggle />
-            {/* ThemeToggle temporarily hidden */}
+            <ThemeToggle />
+          </div>
+
+          {/* mobile: account avatar (or Login when signed out) beside the hamburger */}
+          <div className={styles.mobileAccount}>
+            <MobileBarAuth />
           </div>
 
           {/* mobile hamburger */}
@@ -439,6 +448,7 @@ export default function Nav() {
                   className={`${styles.mobileLink} ${isLinkActive(item.href) ? styles.active : ""}`}
                 >
                   {item.label}
+                  {item.comingSoon && <span className={styles.mobileSoon}>Soon</span>}
                 </Link>
               </li>
             ) : (
@@ -469,14 +479,16 @@ export default function Nav() {
               </li>
             )
           )}
+          <MobileAccountGroup isLinkActive={isLinkActive} />
         </ul>
 
         <div className={styles.mobileActions}>
-          <Button href="/login" variant="primary" size="lg" className={styles.mobileLoginButton}>
-            Login
-          </Button>
+          <MobileAuthButtons />
           {/* SiteWidthToggle omitted — it's desktop-only (hidden below 1250px) */}
-          {/* ThemeToggle temporarily hidden */}
+          <div className={styles.mobileTheme}>
+            <span>Theme</span>
+            <ThemeSwitch />
+          </div>
         </div>
       </div>
 
@@ -487,5 +499,101 @@ export default function Nav() {
         aria-hidden="true"
       />
     </nav>
+  );
+}
+
+
+function AuthButtons({ signupVariant }: { signupVariant: "secondary" | "secondary-bracket" }) {
+  const { isAuthenticated, isLoading } = useConvexAuth();
+
+  // Avoid flashing Login/Signup while the session loads
+  if (isLoading) return null;
+
+  if (isAuthenticated) return <AccountMenu />;
+
+  return (
+    <>
+      <Button href="/signup" variant={signupVariant} size="sm">
+        Signup
+      </Button>
+      <Button href="/login" variant="primary" size="sm">
+        Login
+      </Button>
+    </>
+  );
+}
+
+/** Mobile top bar: avatar menu when signed in, a Login button when signed out */
+function MobileBarAuth() {
+  const { isAuthenticated, isLoading } = useConvexAuth();
+  if (isLoading) return null;
+  if (isAuthenticated) return <AccountMenu />;
+
+  return (
+    <Button href="/login" variant="primary" size="sm">
+      Login
+    </Button>
+  );
+}
+
+/** Full-width Login / Signup in the mobile panel; signed-in users get the Account group instead */
+function MobileAuthButtons() {
+  const { isAuthenticated, isLoading } = useConvexAuth();
+  if (isLoading || isAuthenticated) return null;
+
+  return (
+    <>
+      <Button href="/login" variant="primary" size="lg" className={styles.mobileLoginButton}>
+        Login
+      </Button>
+      <Button href="/signup" variant="secondary" size="lg" className={styles.mobileLoginButton}>
+        Signup
+      </Button>
+    </>
+  );
+}
+
+function MobileAccountGroup({ isLinkActive }: { isLinkActive: (href: string) => boolean }) {
+  const { isAuthenticated } = useConvexAuth();
+  const { signOut } = useAuthActions();
+  const router = useRouter();
+
+  if (!isAuthenticated) return null;
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/");
+  };
+
+  return (
+    <li className={styles.mobileGroup}>
+      <div className={styles.mobileGroupLabel}>Account</div>
+      <ul className={`${styles.mobileSubLinks} ${styles.mobileTwoCol}`}>
+        {accountNav
+          .flatMap((group) => group.items)
+          .map(({ href, label, icon: Icon, comingSoon }) => (
+            <li key={href}>
+              <Link
+                href={href}
+                className={`${styles.mobileLink} ${isLinkActive(href) ? styles.active : ""}`}
+              >
+                <span className={styles.mobileLinkIcon}>
+                  <Icon aria-hidden="true" />
+                </span>
+                {label}
+                {comingSoon && <span className={styles.mobileSoon}>Soon</span>}
+              </Link>
+            </li>
+          ))}
+        <li>
+          <button type="button" className={styles.mobileLink} onClick={handleSignOut}>
+            <span className={styles.mobileLinkIcon}>
+              <SignOutIcon aria-hidden="true" />
+            </span>
+            Sign Out
+          </button>
+        </li>
+      </ul>
+    </li>
   );
 }

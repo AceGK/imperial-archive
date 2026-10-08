@@ -6,6 +6,7 @@ import Carousel from "@/components/modules/Carousel/base";
 import type { SwiperOptions } from "swiper/types";
 import SeriesCard from "@/components/modules/Cards/SeriesCard";
 import type { Series40kDoc } from "@/types/sanity";
+import LayersIcon from "@/components/icons/layers.svg";
 
 type Props = {
   title?: React.ReactNode;
@@ -60,6 +61,7 @@ export default function SeriesCarousel({
       pagination={false}
       className={className}
       viewAllLink={viewAllLink}
+      viewAllIcon={LayersIcon}
       viewAllLabel={viewAllLabel}
       lastSlideTitle="All Series"
     />

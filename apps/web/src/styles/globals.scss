@@ -1,9 +1,5 @@
 @use "../styles/breakpoints" as *;
 @use "../styles/variables" as *;
-@import "swiper/css";
-@import "swiper/css/navigation";
-@import "swiper/css/pagination";
-
 
 :root {
   @include theme-vars($light);
@@ -64,6 +60,13 @@ body {
   background: var(--bg);
   position: relative;
 
+  // Sticky footer: on short pages the footer (margin-top: auto) is pushed to
+  // the bottom of the screen instead of floating under the content
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+
   // Full-page grain texture. Self-contained SVG fractal-noise data URI (no
   // image asset). No background-size set on purpose — the SVG has only a
   // viewBox (no width/height), so it stretches to fill this fixed, full-
@@ -76,6 +79,30 @@ body {
     pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
   }
+}
+
+// Browser autofill: Chromium/Safari force a blue background with !important,
+// so it can't be overridden directly — instead delay the background change
+// indefinitely so each input keeps its own themed background, and keep the
+// text in the theme's color
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  transition:
+    background-color 600000s 0s,
+    color 600000s 0s;
+}
+
+// Firefox tints autofilled fields with a filter instead (kept in its own rule:
+// an unknown pseudo-class would invalidate the whole selector list above)
+input:autofill,
+textarea:autofill,
+select:autofill {
+  filter: none;
 }
 
 code,
