@@ -3,7 +3,6 @@
 
 import React, { useMemo, useState } from "react";
 import Carousel from "@/components/modules/Carousel/base";
-import type { SwiperOptions } from "swiper/types";
 import FactionCard from "@/components/modules/Cards/FactionCard";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
 import styles from "./styles.module.scss";
@@ -23,13 +22,6 @@ type Props = {
   initialGroupKey?: string;
   basePath?: string;           // not used in links now (we build /factions/{group}/{slug})
   className?: string;
-};
-
-const breakpoints: SwiperOptions["breakpoints"] = {
-  480: { slidesPerView: 2.1, spaceBetween: 12 },
-  640: { slidesPerView: 3, spaceBetween: 14 },
-  900: { slidesPerView: 4, spaceBetween: 16 },
-  1200: { slidesPerView: 5, spaceBetween: 18 },
 };
 
 export default function FactionCarouselClient({
@@ -70,9 +62,7 @@ export default function FactionCarouselClient({
         title={title}
         subtitle={subtitle}
         items={items}
-        slidesPerView={2.1}
-        spaceBetween={12}
-        breakpoints={breakpoints}
+        layout="factions"
         loop={false}
         autoplay={false}
         navigation

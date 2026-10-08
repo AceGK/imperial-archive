@@ -3,7 +3,6 @@
 
 import React from "react";
 import Carousel from "@/components/modules/Carousel/base";
-import type { SwiperOptions } from "swiper/types";
 import SeriesCard from "@/components/modules/Cards/SeriesCard";
 import type { Series40kDoc } from "@/types/sanity";
 import LayersIcon from "@/components/icons/layers.svg";
@@ -15,14 +14,6 @@ type Props = {
   className?: string;
   viewAllLink?: string;
   viewAllLabel?: string;
-};
-
-const breakpoints: SwiperOptions["breakpoints"] = {
-  320: { slidesPerView: 1.3, spaceBetween: 12 },
-  480: { slidesPerView: 1.8, spaceBetween: 12 },
-  640: { slidesPerView: 2.3, spaceBetween: 14 },
-  900: { slidesPerView: 3, spaceBetween: 16 },
-  1200: { slidesPerView: 4, spaceBetween: 18 },
 };
 
 export default function SeriesCarousel({
@@ -52,9 +43,7 @@ export default function SeriesCarousel({
       title={title}
       subtitle={subtitle}
       items={items}
-      slidesPerView={1.3}
-      spaceBetween={12}
-      breakpoints={breakpoints}
+      layout="series"
       loop={false}
       autoplay={false}
       navigation

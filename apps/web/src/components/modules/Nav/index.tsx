@@ -21,7 +21,7 @@ import UserIcon from "@/components/icons/user.svg";
 import LayersIcon from "@/components/icons/layers.svg";
 import ShieldIcon from "@/components/icons/shield.svg";
 import HourglassIcon from "@/components/icons/hourglass.svg";
-import AccountMenu from "./AccountMenu";
+import AuthSlot from "./AuthSlot";
 import Logo from "../../../../public/imperial-archive-logo.svg";
 
 type NavIcon = ComponentType<SVGProps<SVGSVGElement>>;
@@ -329,14 +329,14 @@ export default function Nav() {
 
           {/* desktop right controls */}
           <div className={styles.secondary}>
-            <AuthButtons signupVariant="secondary-bracket" />
+            <AuthSlot signupVariant="secondary-bracket" />
             <SiteWidthToggle />
             <ThemeToggle />
           </div>
 
           {/* mobile: account avatar (or Login when signed out) beside the hamburger */}
           <div className={styles.mobileAccount}>
-            <MobileBarAuth />
+            <AuthSlot />
           </div>
 
           {/* mobile hamburger */}
@@ -502,39 +502,6 @@ export default function Nav() {
   );
 }
 
-
-function AuthButtons({ signupVariant }: { signupVariant: "secondary" | "secondary-bracket" }) {
-  const { isAuthenticated, isLoading } = useConvexAuth();
-
-  // Avoid flashing Login/Signup while the session loads
-  if (isLoading) return null;
-
-  if (isAuthenticated) return <AccountMenu />;
-
-  return (
-    <>
-      <Button href="/signup" variant={signupVariant} size="sm">
-        Signup
-      </Button>
-      <Button href="/login" variant="primary" size="sm">
-        Login
-      </Button>
-    </>
-  );
-}
-
-/** Mobile top bar: avatar menu when signed in, a Login button when signed out */
-function MobileBarAuth() {
-  const { isAuthenticated, isLoading } = useConvexAuth();
-  if (isLoading) return null;
-  if (isAuthenticated) return <AccountMenu />;
-
-  return (
-    <Button href="/login" variant="primary" size="sm">
-      Login
-    </Button>
-  );
-}
 
 /** Full-width Login / Signup in the mobile panel; signed-in users get the Account group instead */
 function MobileAuthButtons() {

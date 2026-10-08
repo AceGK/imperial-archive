@@ -13,6 +13,7 @@ import Footer from "@/components/modules/Footer";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/context/ConvexClientProvider";
 import { isProduction } from "@/lib/env";
+import { authHintScript } from "@/components/modules/Nav/authHint";
 import {
   DEFAULT_OG_IMAGE,
   DEFAULT_TITLE,
@@ -22,27 +23,36 @@ import {
   SITE_URL,
 } from "@/lib/seo";
 
+// display "block": text stays invisible for the moment until the real font
+// arrives instead of flashing the fallback (Arial looks nothing like these).
+// The fonts are preloaded, so the wait is brief and only on a first visit;
+// browsers fall back after ~3s if a font never arrives.
 const barlow = Barlow({
   variable: "--font-sans",
   subsets: ["latin"],
   weight: ["400", "600"],
+  display: "block",
 });
 
+// only used for <code>; not worth preloading on every page
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  preload: false,
 });
 
 const barlowCondensed = Barlow_Condensed({
   variable: "--font-condensed",
   subsets: ["latin"],
   weight: ["500", "600"],
+  display: "block",
 });
 
 const archivoBlack = Archivo_Black({
   variable: "--font-heading",
   subsets: ["latin"],
   weight: ["400"],
+  display: "block",
 });
 
 export const metadata: Metadata = {
@@ -81,6 +91,10 @@ export default async function RootLayout({
   return (
     <ConvexAuthNextjsServerProvider>
       <html lang="en" data-layout={initialLayout} suppressHydrationWarning>
+        <head>
+          {/* sets data-auth before first paint so the nav's auth controls don't shift */}
+          <script dangerouslySetInnerHTML={{ __html: authHintScript }} />
+        </head>
         <body
           className={`${barlow.variable} ${geistMono.variable} ${barlowCondensed.variable} ${archivoBlack.variable} antialiased`}
         >

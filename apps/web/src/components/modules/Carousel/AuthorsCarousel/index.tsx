@@ -2,7 +2,6 @@
 
 import React from "react";
 import Carousel from "@/components/modules/Carousel/base";
-import type { SwiperOptions } from "swiper/types";
 import AuthorCard from "@/components/modules/Cards/AuthorCard";
 import type { Author40k } from "@/types/sanity";
 import UserIcon from "@/components/icons/user.svg";
@@ -29,14 +28,6 @@ type Props = {
   className?: string;
 };
 
-const breakpoints: SwiperOptions["breakpoints"] = {
-  320: { slidesPerView: 2.2, spaceBetween: 8 },
-  480: { slidesPerView: 2.5, spaceBetween: 12 },
-  640: { slidesPerView: 3, spaceBetween: 14 },
-  900: { slidesPerView: 4, spaceBetween: 16 },
-  1200: { slidesPerView: 5, spaceBetween: 18 },
-};
-
 export default function AuthorCarousel({
   title,
   subtitle,
@@ -53,9 +44,7 @@ export default function AuthorCarousel({
         title={title}
         subtitle={subtitle}
         items={items}
-        slidesPerView={1.3}
-        spaceBetween={12}
-        breakpoints={breakpoints}
+        layout="authors"
         loop={false}
         autoplay={false}
         navigation
