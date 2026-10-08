@@ -36,11 +36,11 @@ export default function AuthSlot({
     <div className={styles.slot}>
       <span className={styles.out}>
         {signupVariant && (
-          <Button href="/signup" variant={signupVariant} size="sm">
+          <Button href="/signup" variant={signupVariant} size="sm" className={styles.signup}>
             Signup
           </Button>
         )}
-        <Button href="/login" variant="primary" size="sm">
+        <Button href="/login" variant="primary" size="sm" className={styles.login}>
           Login
         </Button>
       </span>

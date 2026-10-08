@@ -33,6 +33,25 @@
   }
 }
 
+// Fixed widths: while the web font loads, text is laid out with the fallback
+// font's widths, so content-sized buttons resized (and nudged each other) when
+// the real font arrived. Sized with a little room over the real labels.
+// nested under .slot to outrank the Button's own size padding
+.slot {
+  .signup,
+  .login {
+    padding-inline: 0;
+  }
+
+  .signup {
+    width: 4.75rem;
+  }
+
+  .login {
+    width: 4.25rem;
+  }
+}
+
 // same footprint as the AccountMenu trigger: sm avatar + 2px padding + 1px border
 .placeholder {
   width: calc(2rem + 6px);
