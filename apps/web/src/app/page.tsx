@@ -14,8 +14,17 @@ import {
 } from "@/lib/sanity/queries";
 
 import Search from "@/components/modules/Search";
+import JsonLd from "@/components/seo/JsonLd";
+import { DEFAULT_TITLE, SITE_DESCRIPTION, pageMetadata, siteJsonLd } from "@/lib/seo";
 
 export const revalidate = 60;
+
+export const metadata = pageMetadata({
+  title: DEFAULT_TITLE,
+  absoluteTitle: true,
+  description: SITE_DESCRIPTION,
+  path: "/",
+});
 
 export default async function Home() {
   const featuredNames = [
@@ -98,6 +107,7 @@ export default async function Home() {
 
   return (
     <main>
+      <JsonLd data={siteJsonLd()} />
       <Hero
         image="/images/black-library-books.jpg"
         alt="Black Library © Games Workshop"

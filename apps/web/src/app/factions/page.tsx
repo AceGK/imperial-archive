@@ -5,8 +5,16 @@ import type { FactionGroupWithItems } from '@/types/sanity'
 import FactionCard from '@/components/modules/Cards/FactionCard'
 import { resolveGroupIcon } from '@/components/icons/factions/resolve'
 import PageHeader from '@/components/modules/PageHeader'
+import { pageMetadata } from '@/lib/seo'
 
 export const revalidate = 60
+
+export const metadata = pageMetadata({
+  title: 'Warhammer 40k Factions',
+  description:
+    'Find Warhammer 40,000 books by faction: Space Marine chapters, the Imperium, Chaos, Aeldari, Orks, Necrons, T\'au, and more, across the Black Library catalog.',
+  path: '/factions',
+})
 
 export default async function FactionsPage() {
   const groups = await client.fetch<FactionGroupWithItems[]>(

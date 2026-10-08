@@ -1,11 +1,15 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import ComingSoon from "@/components/modules/ComingSoon";
 
-export const metadata: Metadata = {
-  title: "Attribution | Imperial Archive",
-  description: "Credits and sourcing for Imperial Archive.",
-};
+export const metadata = pageMetadata({
+  title: "Attribution",
+  description:
+    "Credits and sourcing for Imperial Archive.",
+  path: "/attribution",
+  // placeholder until the page has real content
+  noindex: true,
+});
 
 export default function AttributionPage() {
   return (

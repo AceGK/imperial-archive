@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { isProduction } from "@/lib/env";
+import { absoluteUrl } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
   // dev/preview deployments: ask every crawler (search engines, AI scrapers) to stay out
@@ -13,5 +14,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/*?",
     },
+    sitemap: absoluteUrl("/sitemap.xml"),
   };
 }

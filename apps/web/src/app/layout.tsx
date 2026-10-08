@@ -13,6 +13,14 @@ import Footer from "@/components/modules/Footer";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/context/ConvexClientProvider";
 import { isProduction } from "@/lib/env";
+import {
+  DEFAULT_OG_IMAGE,
+  DEFAULT_TITLE,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/seo";
 
 const barlow = Barlow({
   variable: "--font-sans",
@@ -38,8 +46,22 @@ const archivoBlack = Archivo_Black({
 });
 
 export const metadata: Metadata = {
-  title: "40k Books",
-  description: "A catalog of Warhammer 40,000 books from Black Library.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: DEFAULT_TITLE,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
+  applicationName: SITE_NAME,
+  category: "books",
+  openGraph: {
+    siteName: SITE_NAME,
+    type: "website",
+    locale: "en_US",
+    images: [DEFAULT_OG_IMAGE],
+  },
+  twitter: { card: "summary_large_image" },
   // non-production deployments are also noindexed via robots.ts and an X-Robots-Tag header
   robots: isProduction ? undefined : { index: false, follow: false },
 };

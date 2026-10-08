@@ -10,6 +10,16 @@ import { urlFor } from "@/lib/sanity/sanity.image";
 import BookGrid from "@/components/modules/BookGrid";
 import type { BookCardData } from "@/components/modules/Cards/BookCard";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import type { Metadata } from "next";
+import { toPlainText } from "@portabletext/react";
+import JsonLd from "@/components/seo/JsonLd";
+import {
+  absoluteUrl,
+  blackLibraryJsonLd,
+  breadcrumbJsonLd,
+  pageMetadata,
+  truncate,
+} from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -22,6 +32,34 @@ export async function generateStaticParams(): Promise<Params[]> {
   return slugs.map((slug) => ({ slug }));
 }
 
+async function getSeries(slug: string) {
+  return client.fetch<Series40kDoc | null>(series40kBySlugQuery, { slug });
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const data = await getSeries(slug);
+  if (!data) return { title: "Series Not Found" };
+
+  const intro = data.description ? toPlainText(data.description) : data.subtitle;
+  return pageMetadata({
+    title: `${data.title} Reading Order`,
+    description: truncate(
+      intro ||
+        `The ${data.title} reading order: every book in the Warhammer 40,000 series from Black Library, in order.`
+    ),
+    path: `/series/${data.slug}`,
+    image: data.image?.asset
+      ? urlFor(data.image).width(1200).height(630).fit("crop").auto("format").url()
+      : undefined,
+    imageAlt: data.image?.alt || data.title,
+  });
+}
+
 export default async function SeriesPage({
   params,
 }: {
@@ -29,10 +67,15 @@ export default async function SeriesPage({
 }) {
   const { slug } = await params;
 
-  const data = await client.fetch<Series40kDoc | null>(series40kBySlugQuery, {
-    slug,
-  });
+  const data = await getSeries(slug);
   if (!data) notFound();
+
+  // every book across the series' lists, in reading order, without repeats
+  const seen = new Set<string>();
+  const seriesBooks = (data.lists ?? [])
+    .flatMap((list) => list.items ?? [])
+    .map((it: any) => it?.work)
+    .filter((w: any) => w?.slug && !seen.has(w.slug) && seen.add(w.slug));
 
 const hero = data.image?.asset
   ? {
@@ -49,6 +92,33 @@ const hero = data.image?.asset
 
   return (
     <>
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "BookSeries",
+            name: data.title,
+            url: absoluteUrl(`/series/${data.slug}`),
+            description: data.description
+              ? truncate(toPlainText(data.description), 500)
+              : data.subtitle || undefined,
+            publisher: blackLibraryJsonLd,
+            ...(seriesBooks.length > 0 && {
+              numberOfItems: seriesBooks.length,
+              hasPart: seriesBooks.map((w: any, i: number) => ({
+                "@type": "Book",
+                name: w.title,
+                url: absoluteUrl(`/books/${w.slug}`),
+                position: i + 1,
+              })),
+            }),
+          },
+          breadcrumbJsonLd([
+            { name: "Series", path: "/series" },
+            { name: data.title, path: `/series/${data.slug}` },
+          ]),
+        ]}
+      />
       <PageHeader
         title={data.title}
         subtitle={data.subtitle || `Stories from the ${data.title} series.`}
