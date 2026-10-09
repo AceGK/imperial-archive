@@ -13,7 +13,7 @@ export const metadata = pageMetadata({
 export default function TrackPage() {
   return (
     <ComingSoon
-      eyebrow="Adeptus Administratum · Logistics"
+      eyebrow="Adeptus Administratum · IA-005 // Logistics"
       title="Track"
       description="Reading trackers, purchase lists, and progress logs are being assembled. Soon you'll be able to chart your journey through the Black Library."
     />

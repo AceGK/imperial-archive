@@ -21,6 +21,7 @@
   color: var(--primary);
   text-transform: uppercase;
   font-size: clamp(2rem, 5vw, 2.75rem);
+  line-height: 1.15; // keeps long titles that wrap from spreading apart
   margin-bottom: 1.5rem;
 }
 
@@ -28,5 +29,4 @@
   height: 1px;
   background: var(--border);
   width: 100%;
-  margin-bottom: 1.5rem;
 }

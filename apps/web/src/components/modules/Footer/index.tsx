@@ -38,7 +38,7 @@ const accountLinks = accountNav.flatMap((group) => group.items);
 export default function Footer({
   links = defaultPrimary,
   secondary = defaultSecondary,
-  note = "Imperial Archive is an unofficial, fan-made resource for the Warhammer 40k universe. This site is not affiliated with Games Workshop. All Warhammer 40,000® logos, names, and images are the property of Games Workshop Limited.",
+  note = "The Imperial Archive is an unofficial, fan-made resource for the Warhammer 40k universe. This site is not affiliated with Games Workshop. All Warhammer 40,000® logos, names, and images are the property of Games Workshop Limited.",
   showBottomBar = true,
 }: FooterProps) {
   const year = new Date().getFullYear();
