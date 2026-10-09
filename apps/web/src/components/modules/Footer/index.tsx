@@ -5,7 +5,7 @@ import Logo from "../../../../public/imperial-archive-logo.svg";
 import ThemeSwitch from "@/components/modules/ThemeSwitch";
 import { accountNav } from "@/components/modules/Account/nav";
 
-type FooterLink = { href: string; label: string };
+type FooterLink = { href: string; label: string; comingSoon?: boolean };
 
 export type FooterProps = {
   /** Primary site nav */
@@ -23,6 +23,7 @@ const defaultPrimary: FooterLink[] = [
   { href: "/series", label: "By Series" },
   { href: "/factions", label: "By Faction" },
   { href: "/eras", label: "By Era" },
+  { href: "/characters", label: "By Character", comingSoon: true },
 ];
 
 const defaultSecondary: FooterLink[] = [
@@ -64,6 +65,7 @@ export default function Footer({
                   <Link href={l.href} className={styles.link}>
                     {l.label}
                   </Link>
+                  {l.comingSoon && <span className={styles.soon}>Soon</span>}
                 </li>
               ))}
             </ul>
@@ -78,6 +80,7 @@ export default function Footer({
                   <Link href={l.href} className={styles.link}>
                     {l.label}
                   </Link>
+                  {l.comingSoon && <span className={styles.soon}>Soon</span>}
                 </li>
               ))}
             </ul>
