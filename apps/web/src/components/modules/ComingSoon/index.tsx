@@ -13,7 +13,7 @@ type ComingSoonProps = {
 export default function ComingSoon({ eyebrow, title, description }: ComingSoonProps) {
   return (
     <main>
-      <section className="container row__lg">
+      <section className="container row__md">
         <div className={styles.content}>
           <header className={styles.header}>
             {eyebrow && <div className={styles.ref}>{eyebrow}</div>}

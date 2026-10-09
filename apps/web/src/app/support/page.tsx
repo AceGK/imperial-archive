@@ -12,6 +12,8 @@ export const metadata = pageMetadata({
 
 const KOFI_USERNAME = "imperialarchive";
 const KOFI_URL = `https://ko-fi.com/${KOFI_USERNAME}`;
+// keep in step with the minimum tip set in Ko-fi's settings
+const KOFI_MIN_TIP = "$3";
 
 const COSTS = [
   { name: "Hosting", detail: "Serving every page, quickly, wherever readers are" },
@@ -42,9 +44,9 @@ function Eyebrow({ code, label }: { code: string; label: string }) {
 export default function SupportPage() {
   return (
     <main>
-      <section className="container row__lg">
+      <section className="container row__md">
         <header className={styles.header}>
-          <div className={styles.ref}>Adeptus Administratum · IA-004 // Exchequer</div>
+          <div className={styles.ref}>Adeptus Administratum · IA-005 // Exchequer</div>
           <h1 className={styles.title}>Support the Archive</h1>
           <div className={styles.divider} />
         </header>
@@ -53,8 +55,9 @@ export default function SupportPage() {
           <aside className={styles.payment} aria-label="Donate">
             <Card eyebrow={<Eyebrow code="EX-01" label="Contribute" />} title="Offer a tithe">
               <p>
-                Tips of any amount are welcome. You&apos;ll choose your amount
-                and payment method on Ko-fi. Payments are handled securely by{" "}
+                Tips start at {KOFI_MIN_TIP}, and every one helps. You&apos;ll
+                choose your amount and payment method on Ko-fi. Payments are
+                handled securely by{" "}
                 <KofiLink />; card details never touch this site.
               </p>
               <div className={styles.action}>

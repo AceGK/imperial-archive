@@ -63,7 +63,7 @@ export default async function FaqPage() {
         }}
       />
 
-      <section className="container row__lg">
+      <section className="container row__md">
         <TocLayout
           items={categories.map((c, i) => ({ id: c.slug, index: faqCategoryCode(i), label: c.title }))}
         >

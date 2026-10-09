@@ -51,7 +51,7 @@ const SAMPLE: FaqCategory[] = [
 export default function FaqTestPage() {
   return (
     <main>
-      <section className="container row__lg">
+      <section className="container row__md">
         <TocLayout
           items={SAMPLE.map((c, i) => ({ id: c.slug, index: faqCategoryCode(i), label: c.title }))}
         >

@@ -86,7 +86,7 @@ function Eyebrow({ id }: { id: string }) {
 export default function AboutPage() {
   return (
     <main>
-      <section className="container row__lg">
+      <section className="container row__md">
         <TocLayout items={SECTIONS}>
           <header className={styles.header}>
             <div className={styles.ref}>Adeptus Administratum · IA-001 // Dossier</div>
