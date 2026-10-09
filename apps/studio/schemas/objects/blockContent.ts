@@ -36,13 +36,19 @@ export default defineType({
                 name: 'href',
                 type: 'url',
                 title: 'URL',
-                validation: (Rule) => Rule.required(),
+                description:
+                  'A full URL for other sites (https://…), or a path for pages on this site (e.g. /support or /series/horus-heresy).',
+                validation: (Rule) =>
+                  Rule.required().uri({allowRelative: true, scheme: ['http', 'https', 'mailto']}),
               },
               {
+                // no longer used: the site opens external links in a new tab and
+                // keeps its own pages in the same tab automatically (RichText in
+                // apps/web); hidden but kept so existing links stay valid
                 name: 'openInNewTab',
                 type: 'boolean',
                 title: 'Open in new tab',
-                initialValue: true,
+                hidden: true,
               },
             ],
           },

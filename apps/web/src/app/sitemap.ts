@@ -16,7 +16,9 @@ const sitemapQuery = groq`{
   "factions": *[_type == "faction40k" && defined(slug.current) && defined(group->slug.current) && !(_id in path("drafts.**"))]{
     "slug": group->slug.current + "/" + slug.current,
     "updatedAt": _updatedAt
-  }
+  },
+  // /faq is only indexable once it has questions (see app/faq/page.tsx)
+  "faqUpdatedAt": *[_type == "faq" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]._updatedAt
 }`;
 
 // Only pages meant to rank: placeholder ("coming soon"), account, and auth
@@ -29,10 +31,13 @@ const STATIC_PAGES: { path: string; priority: number }[] = [
   { path: "/factions", priority: 0.8 },
   { path: "/eras", priority: 0.7 },
   { path: "/about", priority: 0.4 },
+  { path: "/support", priority: 0.3 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const data = await client.fetch<Record<string, Entry[]>>(sitemapQuery);
+  const data = await client.fetch<Record<string, Entry[]> & { faqUpdatedAt?: string | null }>(
+    sitemapQuery
+  );
 
   const section = (prefix: string, entries: Entry[] = [], priority: number) =>
     entries.map((e) => ({
@@ -43,6 +48,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...STATIC_PAGES.map((p) => ({ url: absoluteUrl(p.path), priority: p.priority })),
+    ...(data.faqUpdatedAt
+      ? [{ url: absoluteUrl("/faq"), lastModified: data.faqUpdatedAt, priority: 0.4 }]
+      : []),
     ...section("/series", data.series, 0.8),
     ...section("/books", data.books, 0.7),
     ...section("/authors", data.authors, 0.6),

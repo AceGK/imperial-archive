@@ -583,6 +583,24 @@ export const getPostsWithPagination = groq`
   "total": count(*[_type == "post"])
 }`
 /* -------------------------------------------------------------
+   FAQ: categories in studio order, each with its questions in
+   studio order; categories with no questions are left out
+-------------------------------------------------------------- */
+export const faqPageQuery = groq`
+*[_type == "faqCategory" && !(_id in path("drafts.**"))] | order(orderRank asc){
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  "faqs": *[_type == "faq" && !(_id in path("drafts.**")) && references(^._id)] | order(orderRank asc){
+    _id,
+    question,
+    answer
+  }
+}[count(faqs) > 0]
+`;
+
+/* -------------------------------------------------------------
    FAVORITES: card data for a mixed list of document ids
 -------------------------------------------------------------- */
 export const favoriteItems40kQuery = groq`
