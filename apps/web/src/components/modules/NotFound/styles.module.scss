@@ -1,0 +1,261 @@
+@use "@/styles/breakpoints" as *;
+
+/* The terminal stays dark in both themes, like a real screen */
+$amber: #e0b356;
+$amber-bright: #f0c766;
+$amber-dim: #8a6a2c;
+$fault: #ff5a43;
+
+$stripe-height: 10px;
+$nav-height: 61px; // 60px bar plus its 1px bottom border
+$hazard: repeating-linear-gradient(-45deg, rgba(217, 164, 58, 0.85) 0 14px, rgba(11, 9, 6, 0.85) 14px 28px);
+
+/* the screen runs edge to edge and fills the page between the nav and footer,
+   with a hazard stripe along its top and bottom edges */
+.screen {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - #{$nav-height});
+  min-height: calc(100dvh - #{$nav-height});
+  padding-block: $stripe-height; // also overrides the global main padding so the screen meets the footer
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 40%, #1e0e08 0%, #0f0805 60%, #060403 100%);
+  box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.9);
+  color: $amber;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+
+  // pseudo-elements rather than background layers, so the inset shadow doesn't dim them
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: $stripe-height;
+    background: $hazard;
+  }
+
+  &::before {
+    top: 0;
+  }
+
+  &::after {
+    bottom: 0;
+  }
+}
+
+/* CRT scanlines over the whole screen, text and stripes included */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.28) 0 1px, transparent 1px 3px);
+}
+
+/* auto margins centre the readout vertically in the space above the status bar */
+.readout {
+  width: 100%;
+  max-width: 960px;
+  margin: auto;
+  padding: 3rem 3.5rem 2rem;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  text-shadow:
+    0 0 4px rgba(224, 179, 86, 0.55),
+    0 0 16px rgba(224, 179, 86, 0.18);
+
+  @include max(md) {
+    padding: 2rem 1.25rem 1.5rem;
+    font-size: 0.8125rem;
+  }
+
+  p {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* typing: each line, leader, and character is hidden until its own
+     animation-delay (set inline by the typist), then back to its normal style */
+  > p,
+  .code,
+  .title,
+  .options li,
+  .leader,
+  .char {
+    animation: print 0.01s backwards;
+  }
+
+  .cursor {
+    animation:
+      print 0.01s backwards,
+      blink 1.1s steps(1) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation: none !important;
+    }
+  }
+}
+
+/* a click or keypress shows everything at once */
+.skipped {
+  * {
+    animation: none !important;
+  }
+
+  .cursor {
+    animation: blink 1.1s steps(1) infinite !important;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  user-select: none; // copying the visible letters shouldn't paste this copy too
+}
+
+@keyframes print {
+  from,
+  to {
+    visibility: hidden;
+  }
+}
+
+.dim {
+  color: $amber-dim;
+}
+
+/* dotted run between a label and its result */
+.leader {
+  flex: 1;
+  min-width: 1.5rem;
+  border-bottom: 2px dotted rgba(224, 179, 86, 0.35);
+  transform: translateY(-0.3em);
+}
+
+.path {
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: $amber-bright;
+}
+
+.fault {
+  color: $fault;
+  text-shadow:
+    0 0 6px rgba(255, 90, 67, 0.65),
+    0 0 22px rgba(255, 90, 67, 0.25);
+}
+
+.code {
+  display: inline-block;
+  margin-top: 1.75rem;
+  padding: 0.125rem 0.875rem;
+  border: 2px solid $fault;
+  color: $fault;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-shadow: inherit;
+}
+
+.title {
+  margin: 0.75rem 0 1.25rem;
+  font-family: var(--font-heading), sans-serif;
+  font-size: clamp(2.25rem, 7vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: $fault;
+  text-shadow:
+    0 0 8px rgba(255, 90, 67, 0.6),
+    0 0 30px rgba(255, 90, 67, 0.25);
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.8em;
+  margin-left: 0.15em;
+  vertical-align: -0.05em;
+  background: $fault;
+  box-shadow: 0 0 14px rgba(255, 90, 67, 0.7);
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* .readout p is a flex row; the message wraps as normal text */
+.readout .message {
+  display: block;
+  max-width: 62ch;
+  margin-bottom: 1.5rem;
+  color: $amber;
+}
+
+.options {
+  margin-bottom: 1.75rem;
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.option {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  margin-left: -0.5rem;
+  color: $amber-bright;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    background: $amber;
+    color: #0f0805;
+    text-shadow: none;
+    outline: none;
+
+    .optionKey {
+      color: #0f0805;
+    }
+  }
+}
+
+.optionKey {
+  color: $amber-dim;
+}
+
+/* lines up with the readout's text column (its 960px box minus side padding) */
+.status {
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% - 7rem);
+  max-width: calc(960px - 7rem);
+  margin-inline: auto;
+  padding: 0.875rem 0 1.25rem;
+  border-top: 1px solid rgba(224, 179, 86, 0.12);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6f3a24;
+
+  @include max(md) {
+    width: calc(100% - 2.5rem);
+  }
+}
