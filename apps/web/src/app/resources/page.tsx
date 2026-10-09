@@ -13,7 +13,7 @@ export const metadata = pageMetadata({
 export default function ResourcesPage() {
   return (
     <ComingSoon
-      eyebrow="Adeptus Administratum · Codex"
+      eyebrow="Adeptus Administratum · IA-002 // Librarium"
       title="Resources"
       description="Reading-order guides, community flowcharts, and other resources are being catalogued. Check back soon."
     />

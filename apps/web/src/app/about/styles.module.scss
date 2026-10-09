@@ -1,26 +1,5 @@
 @use "@/styles/breakpoints" as *;
 
-.layout {
-  display: grid;
-  grid-template-columns: 180px minmax(0, 760px);
-  justify-content: center;
-  gap: 3.5rem;
-
-  @include max(lg) {
-    grid-template-columns: minmax(0, 760px);
-  }
-}
-
-.aside {
-  @include max(lg) {
-    display: none;
-  }
-}
-
-.content {
-  min-width: 0;
-}
-
 .header {
   margin-bottom: 3rem;
 }
@@ -73,74 +52,6 @@
   flex: 1;
   height: 1px;
   background: linear-gradient(to right, var(--border), transparent);
-}
-
-/* contents rail */
-// Sticky offset follows the nav: below it when shown, near the top when it hides on scroll
-$nav-height: 60px;
-$toc-gap: 1.5rem;
-
-.toc {
-  position: sticky;
-  top: $toc-gap;
-  transition: top 200ms ease; // matches the nav's slide timing
-}
-
-.toc.navVisible {
-  top: calc(#{$nav-height} + #{$toc-gap});
-}
-
-.tocHeading {
-  font-family: var(--font-condensed);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 0.75rem;
-  color: var(--subtle);
-  padding-bottom: 0.75rem;
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.tocList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.tocLink {
-  display: flex;
-  gap: 0.75rem;
-  padding: 0.6rem 0 0.6rem 0.75rem;
-  border-left: 1px solid var(--border);
-  font-family: var(--font-condensed);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 0.75rem;
-  color: var(--subtle);
-  text-decoration: none;
-  transition:
-    color 160ms ease,
-    border-color 160ms ease;
-
-  &:hover {
-    color: var(--text);
-  }
-}
-
-.tocIndex {
-  flex-shrink: 0;
-  color: var(--primary);
-}
-
-.tocActive {
-  color: var(--primary);
-  border-left-color: var(--primary);
-
-  &:hover {
-    color: var(--primary);
-  }
 }
 
 .linkGrid {

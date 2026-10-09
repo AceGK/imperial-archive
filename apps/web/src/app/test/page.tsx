@@ -7,6 +7,16 @@ const TEST_PAGES = [
     title: "Grain overlay",
     description: "Checks the global grain texture renders above different backgrounds.",
   },
+  {
+    href: "/test/kofi",
+    title: "Ko-fi pop-up",
+    description: "The Support page's Ko-fi button and payment pop-up (add ?open to open it on load).",
+  },
+  {
+    href: "/test/faq",
+    title: "FAQ layout",
+    description: "The FAQ page with sample questions, for previewing before real FAQs are added in Sanity.",
+  },
 ];
 
 export default function TestIndexPage() {

@@ -1,6 +1,6 @@
 // /app/series/[slug]/page.tsx
 import { notFound } from "next/navigation";
-import { PortableText } from "@portabletext/react";
+import RichText from "@/components/ui/RichText";
 import PageHeader from "@/components/modules/PageHeader";
 import FavoriteButton from "@/components/modules/FavoriteButton";
 import { client } from "@/lib/sanity/sanity.client";
@@ -138,7 +138,7 @@ const hero = data.image?.asset
         <Breadcrumb />
         {data.description && (
             <div className="rich-text">
-              <PortableText value={data.description} />
+              <RichText value={data.description} />
             </div>
         )}
 

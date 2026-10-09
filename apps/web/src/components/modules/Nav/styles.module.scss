@@ -333,6 +333,19 @@
   color: var(--text);
 }
 
+// "Soon" tag beside a dropdown link label (matches the mobile menu's tag)
+.soonTag {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.0625rem 0.375rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+  color: var(--primary);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+}
+
 .listItemDesc {
   font-size: 0.8125rem;
   color: var(--subtle);

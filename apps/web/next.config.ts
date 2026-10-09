@@ -19,6 +19,8 @@ const nextConfig: NextConfig = {
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
+      // leave app/icon.svg to Next's metadata loader, which needs the raw file
+      resourceQuery: { not: [/__next_metadata__/] },
       use: [{ loader: "@svgr/webpack", options: { icon: true } }],
     });
 

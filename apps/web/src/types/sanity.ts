@@ -162,20 +162,28 @@ export type Series40kDoc = {
 };
 
 
+/** A blog post as listed on /blog (blogPostsQuery) */
 export interface BlogPost {
   _id: string;
   title: string;
   slug: string;
-  metaDescription: string;
-  publishedAt: string;
-  mainImage: SanityImageAsset;
-  author?: {
-    name: string;
-    slug: string;
-  };
-  categories: {
-    _id: string;
-    title: string;
-    slug: string;
-  }[];
+  metaDescription?: string | null;
+  publishedAt?: string | null;
+  mainImage?: {
+    alt?: string | null;
+    asset?: {
+      _id: string;
+      url: string;
+      metadata?: { lqip?: string; dimensions?: { width: number; height: number; aspectRatio: number } };
+    } | null;
+  } | null;
+  author?: string | null;
+  categories?: string[] | null;
+}
+
+/** A full blog post for its own page (blogPostBySlugQuery) */
+export interface BlogPostDoc extends BlogPost {
+  metaTitle?: string | null;
+  body?: import("@portabletext/types").PortableTextBlock[] | null;
+  _updatedAt: string;
 }

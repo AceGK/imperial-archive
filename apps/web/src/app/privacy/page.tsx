@@ -13,7 +13,7 @@ export const metadata = pageMetadata({
 export default function PrivacyPage() {
   return (
     <ComingSoon
-      eyebrow="Adeptus Administratum · Privacy"
+      eyebrow="Adeptus Administratum · IA-006 // Privacy"
       title="Privacy"
       description="A full privacy policy is being drafted. Check back soon."
     />

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { PortableText } from "@portabletext/react";
+import RichText from "@/components/ui/RichText";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import FavoriteButton from "@/components/modules/FavoriteButton";
 import DetailCard from "../base";
@@ -50,7 +50,7 @@ export default function AuthorDetailCard({ author }: { author: Author40k }) {
         author.bio ? (
           <Clamp>
             <div className="rich-text">
-              <PortableText value={author.bio as any} />
+              <RichText value={author.bio} />
             </div>
           </Clamp>
         ) : null

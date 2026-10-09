@@ -3,6 +3,7 @@ import OverviewIcon from "@/components/icons/account/overview.svg";
 import ProfileIcon from "@/components/icons/account/profile.svg";
 import SecurityIcon from "@/components/icons/account/security.svg";
 import TrackIcon from "@/components/icons/account/track.svg";
+import ReadingListsIcon from "@/components/icons/account/reading-lists.svg";
 import FavoritesIcon from "@/components/icons/account/favorites.svg";
 
 export type AccountNavItem = {
@@ -44,6 +45,13 @@ export const accountNav: { label?: string; items: AccountNavItem[] }[] = [
         label: "Track",
         description: "Log what you've read, are reading, and want to read",
         icon: TrackIcon,
+        comingSoon: true,
+      },
+      {
+        href: "/account/reading-lists",
+        label: "Reading Lists",
+        description: "Curate your own reading lists and orders",
+        icon: ReadingListsIcon,
         comingSoon: true,
       },
       {

@@ -5,7 +5,7 @@ import Logo from "../../../../public/imperial-archive-logo.svg";
 import ThemeSwitch from "@/components/modules/ThemeSwitch";
 import { accountNav } from "@/components/modules/Account/nav";
 
-type FooterLink = { href: string; label: string };
+type FooterLink = { href: string; label: string; comingSoon?: boolean };
 
 export type FooterProps = {
   /** Primary site nav */
@@ -23,12 +23,14 @@ const defaultPrimary: FooterLink[] = [
   { href: "/series", label: "By Series" },
   { href: "/factions", label: "By Faction" },
   { href: "/eras", label: "By Era" },
+  { href: "/characters", label: "By Character", comingSoon: true },
 ];
 
 const defaultSecondary: FooterLink[] = [
   { href: "/about", label: "About" },
   { href: "/resources", label: "Resources" },
   { href: "/faq", label: "FAQ" },
+  { href: "/blog", label: "Blog" },
   { href: "/support", label: "Support" },
   { href: "/about#attribution", label: "Attribution" },
 ];
@@ -38,7 +40,7 @@ const accountLinks = accountNav.flatMap((group) => group.items);
 export default function Footer({
   links = defaultPrimary,
   secondary = defaultSecondary,
-  note = "Imperial Archive is an unofficial, fan-made resource for the Warhammer 40k universe. This site is not affiliated with Games Workshop. All Warhammer 40,000® logos, names, and images are the property of Games Workshop Limited.",
+  note = "The Imperial Archive is an unofficial, fan-made resource for the Warhammer 40k universe. This site is not affiliated with Games Workshop. All Warhammer 40,000® logos, names, and images are the property of Games Workshop Limited.",
   showBottomBar = true,
 }: FooterProps) {
   const year = new Date().getFullYear();
@@ -64,6 +66,7 @@ export default function Footer({
                   <Link href={l.href} className={styles.link}>
                     {l.label}
                   </Link>
+                  {l.comingSoon && <span className={styles.soon}>Soon</span>}
                 </li>
               ))}
             </ul>
@@ -78,6 +81,7 @@ export default function Footer({
                   <Link href={l.href} className={styles.link}>
                     {l.label}
                   </Link>
+                  {l.comingSoon && <span className={styles.soon}>Soon</span>}
                 </li>
               ))}
             </ul>

@@ -530,31 +530,40 @@ export const factionPairs40kQuery = groq`
 
 // Blog 
 
-export const getAllBlogPosts = () => `
-  *[_type == "post" && "Blog" in categories[]->title] | order(publishedAt desc) {
-    _id,
-    title,
-    "slug": slug.current,
-    metaDescription,
-    publishedAt,
-    mainImage,
-    author->{name, slug},
-    categories[]->{_id, title, slug}
+// Only posts in the "Blog" category appear on /blog (other categories, e.g.
+// "Guides", are kept for other pages)
+export const blogPostFilter = `_type == "post" && defined(slug.current) && !(_id in path("drafts.**")) && "Blog" in categories[]->title`;
+
+const blogCardFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  metaDescription,
+  publishedAt,
+  mainImage{
+    alt,
+    asset->{ _id, url, metadata{ lqip, dimensions } }
+  },
+  "author": author->name,
+  "categories": categories[]->title
+`;
+
+export const blogPostsQuery = groq`
+  *[${blogPostFilter}] | order(publishedAt desc){
+    ${blogCardFields}
   }
 `;
 
-export const getPostBySlug = () => `
-  *[_type == "post" && slug.current == $slug][0] {
-    _id,
-    title,
-    "slug": slug.current,
+export const blogPostSlugsQuery = groq`
+  *[${blogPostFilter}].slug.current
+`;
+
+export const blogPostBySlugQuery = groq`
+  *[${blogPostFilter} && slug.current == $slug][0]{
+    ${blogCardFields},
     metaTitle,
-    metaDescription,
-    publishedAt,
-    mainImage,
     body,
-    author->{_id, name, "slug": slug.current, image},
-    categories[]->{_id, title, "slug": slug.current}
+    _updatedAt
   }
 `;
 
@@ -582,6 +591,24 @@ export const getPostsWithPagination = groq`
   },
   "total": count(*[_type == "post"])
 }`
+/* -------------------------------------------------------------
+   FAQ: categories in studio order, each with its questions in
+   studio order; categories with no questions are left out
+-------------------------------------------------------------- */
+export const faqPageQuery = groq`
+*[_type == "faqCategory" && !(_id in path("drafts.**"))] | order(orderRank asc){
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  "faqs": *[_type == "faq" && !(_id in path("drafts.**")) && references(^._id)] | order(orderRank asc){
+    _id,
+    question,
+    answer
+  }
+}[count(faqs) > 0]
+`;
+
 /* -------------------------------------------------------------
    FAVORITES: card data for a mixed list of document ids
 -------------------------------------------------------------- */

@@ -12,6 +12,8 @@ import book40k from './documents/book40k'
 import bookLink from './objects/bookLink'
 import series40k from './documents/series40k'
 import seriesLink from './objects/seriesLink'
+import faq from './documents/faq'
+import faqCategory from './documents/faqCategory'
 
 export const schemaTypes = [
   post,
@@ -28,4 +30,6 @@ export const schemaTypes = [
   bookLink,
   series40k,
   seriesLink,
+  faq,
+  faqCategory,
 ]

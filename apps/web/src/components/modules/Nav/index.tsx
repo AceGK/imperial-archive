@@ -21,11 +21,18 @@ import UserIcon from "@/components/icons/user.svg";
 import LayersIcon from "@/components/icons/layers.svg";
 import ShieldIcon from "@/components/icons/shield.svg";
 import HourglassIcon from "@/components/icons/hourglass.svg";
+import SwordsIcon from "@/components/icons/swords.svg";
 import AuthSlot from "./AuthSlot";
 import Logo from "../../../../public/imperial-archive-logo.svg";
 
 type NavIcon = ComponentType<SVGProps<SVGSVGElement>>;
-type NavLink = { href: string; label: string; description?: string; icon?: NavIcon };
+type NavLink = {
+  href: string;
+  label: string;
+  description?: string;
+  icon?: NavIcon;
+  comingSoon?: boolean;
+};
 type NavGroup = { label: string; links: NavLink[]; columns?: number };
 type NavPlain = { href: string; label: string; comingSoon?: boolean };
 type NavItem = NavGroup | NavPlain;
@@ -40,6 +47,13 @@ const NAV_ITEMS: NavItem[] = [
       { href: "/series", label: "Series", description: "Ongoing sagas and campaigns", icon: LayersIcon },
       { href: "/factions", label: "Factions", description: "Armies, legions, and chapters", icon: ShieldIcon },
       { href: "/eras", label: "Eras", description: "Epochs of the 41st millennium", icon: HourglassIcon },
+      {
+        href: "/characters",
+        label: "Characters",
+        description: "Heroes and villains across the books",
+        icon: SwordsIcon,
+        comingSoon: true,
+      },
     ],
   },
   { href: "/track", label: "Track", comingSoon: true },
@@ -49,12 +63,20 @@ const NAV_ITEMS: NavItem[] = [
       { href: "/about", label: "About", description: "The charter behind this archive" },
       { href: "/resources", label: "Resources", description: "Reading orders and community guides" },
       { href: "/faq", label: "FAQ", description: "Common questions, answered" },
+      { href: "/blog", label: "Blog", description: "News and dispatches from the Archive" },
     ],
   },
   { href: "/support", label: "Support" },
 ];
 
 const dropdownItems = NAV_ITEMS.filter((item): item is NavGroup => !("href" in item));
+
+// The mobile menu lists the sections first, then the single links: Track sits
+// below Info instead of between Browse and Info as on desktop
+const MOBILE_ORDER = ["Browse", "Info", "Track", "Support"];
+const mobileItems = [...NAV_ITEMS].sort(
+  (a, b) => MOBILE_ORDER.indexOf(a.label) - MOBILE_ORDER.indexOf(b.label)
+);
 
 type IndicatorStyle = { opacity: number; width?: number; transform?: string };
 type HighlightStyle = {
@@ -421,7 +443,10 @@ export default function Nav() {
                             </span>
                           )}
                           <span className={styles.listItemText}>
-                            <span className={styles.listItemLabel}>{link.label}</span>
+                            <span className={styles.listItemLabel}>
+                              {link.label}
+                              {link.comingSoon && <span className={styles.soonTag}>Soon</span>}
+                            </span>
                             {link.description && (
                               <span className={styles.listItemDesc}>{link.description}</span>
                             )}
@@ -440,7 +465,7 @@ export default function Nav() {
       {/* mobile panel */}
       <div id="mobile-menu" className={`${styles.mobile} ${mobileOpen ? styles.show : ""}`}>
         <ul className={styles.mobileLinks}>
-          {NAV_ITEMS.map((item) =>
+          {mobileItems.map((item) =>
             "href" in item ? (
               <li key={item.label}>
                 <Link
@@ -471,6 +496,7 @@ export default function Nav() {
                             </span>
                           )}
                           {link.label}
+                          {link.comingSoon && <span className={styles.mobileSoon}>Soon</span>}
                         </Link>
                       </li>
                     );
