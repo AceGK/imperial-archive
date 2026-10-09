@@ -15,11 +15,6 @@
   &::backdrop {
     background: rgba(0, 0, 0, 0.75);
   }
-
-  &[open] {
-    display: flex;
-    flex-direction: column;
-  }
 }
 
 // keep the page behind from scrolling while the pop-up is open
@@ -68,16 +63,18 @@
   }
 }
 
-// Ko-fi's form is light; the matching background avoids a dark flash while it loads
+// Ko-fi's form is light; the matching background avoids a dark flash while it loads.
+// The panel is sized by the iframe's explicit height, not by flex: iOS WebKit
+// collapses a flex: 1 child of a dialog with no set height to zero.
 .panel {
-  flex: 1;
-  min-height: 0;
   background: #f9f9f9;
 }
 
+// leaves room for the header and footer inside the dialog's max-height
 .frame {
   display: block;
   width: 100%;
+  height: min(712px, calc(100vh - 9rem)); // for browsers without dvh
   height: min(712px, calc(100dvh - 9rem));
   border: 0;
 }
