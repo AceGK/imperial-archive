@@ -63,6 +63,7 @@ const NAV_ITEMS: NavItem[] = [
       { href: "/about", label: "About", description: "The charter behind this archive" },
       { href: "/resources", label: "Resources", description: "Reading orders and community guides" },
       { href: "/faq", label: "FAQ", description: "Common questions, answered" },
+      { href: "/blog", label: "Blog", description: "News and dispatches from the Archive" },
     ],
   },
   { href: "/support", label: "Support" },

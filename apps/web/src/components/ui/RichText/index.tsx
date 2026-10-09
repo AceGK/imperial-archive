@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { urlFor } from "@/lib/sanity/sanity.image";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { SITE_URL } from "@/lib/seo";
@@ -37,14 +39,63 @@ export function SmartLink({
   );
 }
 
+// Sanity image refs carry the original size: "image-<id>-<width>x<height>-<ext>"
+function imageSize(ref: string | undefined) {
+  const match = ref?.match(/-(\d+)x(\d+)-[a-z]+$/);
+  return match ? { width: Number(match[1]), height: Number(match[2]) } : null;
+}
+
 export const richTextComponents: PortableTextComponents = {
   marks: {
     link: ({ value, children }) => <SmartLink href={value?.href ?? ""}>{children}</SmartLink>,
   },
+  block: {
+    // the page title is the only h1; an "H1" inside content renders one level down
+    h1: ({ children }) => <h2>{children}</h2>,
+  },
+  types: {
+    image: ({ value }) => {
+      const size = imageSize(value?.asset?._ref);
+      if (!value?.asset || !size) return null;
+      const width = Math.min(size.width, 1200);
+      return (
+        <figure className="rich-text-figure">
+          <Image
+            src={urlFor(value).width(width).auto("format").url()}
+            alt={value.alt || ""}
+            width={width}
+            height={Math.round((size.height / size.width) * width)}
+            sizes="(max-width: 800px) 100vw, 760px"
+          />
+          {value.caption && <figcaption>{value.caption}</figcaption>}
+        </figure>
+      );
+    },
+  },
 };
 
-/** Renders Portable Text from Sanity with the site's shared link handling */
-export default function RichText({ value }: { value: PortableTextBlock[] | undefined | null }) {
+/**
+ * Renders Portable Text from Sanity with the site's shared link handling.
+ * `headingIds` maps a heading block's `_key` to the anchor id it should get.
+ */
+export default function RichText({
+  value,
+  headingIds,
+}: {
+  value: PortableTextBlock[] | undefined | null;
+  headingIds?: Record<string, string>;
+}) {
   if (!value?.length) return null;
-  return <PortableText value={value} components={richTextComponents} />;
+
+  const components: PortableTextComponents = headingIds
+    ? {
+        ...richTextComponents,
+        block: {
+          h1: ({ value, children }) => <h2 id={headingIds[value._key ?? ""]}>{children}</h2>,
+          h2: ({ value, children }) => <h2 id={headingIds[value._key ?? ""]}>{children}</h2>,
+        },
+      }
+    : richTextComponents;
+
+  return <PortableText value={value} components={components} />;
 }

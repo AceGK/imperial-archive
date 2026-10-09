@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { groq } from "next-sanity";
 import { client } from "@/lib/sanity/sanity.client";
+import { blogPostFilter } from "@/lib/sanity/queries";
 import { absoluteUrl } from "@/lib/seo";
 
 export const revalidate = 3600;
@@ -18,7 +19,9 @@ const sitemapQuery = groq`{
     "updatedAt": _updatedAt
   },
   // /faq is only indexable once it has questions (see app/faq/page.tsx)
-  "faqUpdatedAt": *[_type == "faq" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]._updatedAt
+  "faqUpdatedAt": *[_type == "faq" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]._updatedAt,
+  // same rule as /blog itself, which is only indexable once it has posts
+  "blogPosts": *[${blogPostFilter}]{ "slug": slug.current, "updatedAt": _updatedAt }
 }`;
 
 // Only pages meant to rank: placeholder ("coming soon"), account, and auth
@@ -57,5 +60,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...section("/factions", data.factionGroups, 0.6),
     ...section("/factions", data.factions, 0.6),
     ...section("/eras", data.eras, 0.5),
+    ...(data.blogPosts?.length
+      ? [
+          { url: absoluteUrl("/blog"), priority: 0.5 },
+          ...section("/blog", data.blogPosts, 0.5),
+        ]
+      : []),
   ];
 }
