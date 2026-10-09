@@ -1,0 +1,160 @@
+@use "@/styles/breakpoints" as *;
+
+@mixin label {
+  font-family: var(--font-condensed);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+}
+
+// Same overall width as the about page: its 180px contents rail + 3.5rem gap
+// + 760px content column; a single 760px column on smaller screens
+$page-width: calc(180px + 3.5rem + 760px);
+$narrow-width: 760px;
+
+/* header (matches the about page) */
+.header {
+  max-width: $page-width;
+  margin: 0 auto 3rem;
+
+  @include max(lg) {
+    max-width: $narrow-width;
+  }
+}
+
+.ref {
+  @include label;
+  color: var(--subtle);
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  color: var(--primary);
+  text-transform: uppercase;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  margin-bottom: 1.5rem;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+}
+
+/* card eyebrow with a rule fading out to the card's edge (matches the about page) */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+}
+
+// "EX" = Exchequer, matching the page's Adeptus Administratum · Exchequer label
+.eyebrowCode {
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* tithe card on the left, explanation on the right; stacked (tithe first) on small screens */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+  max-width: $page-width;
+  margin-inline: auto;
+
+  @include max(lg) {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: $narrow-width;
+  }
+}
+
+.payment {
+  position: sticky;
+  top: 5rem;
+
+  @include max(lg) {
+    position: static;
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  min-width: 0;
+}
+
+.costs {
+  margin: 0 0 1.25rem;
+  border-top: 1px solid var(--border);
+
+  > div {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+
+    @include max(sm) {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+
+  dt {
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.8125rem;
+    color: var(--text);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--subtle);
+  }
+}
+
+/* full-width Donate button with "Powered by Ko-fi" centred underneath */
+.action {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.kofiButton {
+  width: 100%;
+}
+
+// keep "Ko-fi" from breaking at its hyphen
+.kofiLink {
+  white-space: nowrap;
+}
+
+.poweredBy {
+  font-size: 0.75rem;
+  color: var(--subtle);
+  text-align: center;
+}
+
+.poweredBy {
+  a {
+    color: var(--primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
