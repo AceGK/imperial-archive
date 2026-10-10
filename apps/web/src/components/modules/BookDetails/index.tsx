@@ -11,6 +11,7 @@ import {
 import Authors from "./Authors";
 import styles from "./styles.module.scss";
 import FavoriteButton from "@/components/modules/FavoriteButton";
+import { ShareButton } from "@/components/modules/Share";
 import type { BookDetailData } from "@/types/books";
 import Series from "./Series";
 import Factions from "./Factions";
@@ -52,6 +53,9 @@ export default function BookDetails({ book }: BookDetailProps) {
     (book?.image?.alt && String(book.image.alt).trim()) ||
     (book?.title ? `${book.title} cover` : "Book cover");
 
+  const authorNames = (book.authors ?? []).map((a) => a?.name).filter(Boolean).join(", ");
+  const shareTitle = authorNames ? `${book.title} by ${authorNames}` : book.title;
+
   return (
     <div className="container">
       <article className={styles.page}>
@@ -86,6 +90,7 @@ export default function BookDetails({ book }: BookDetailProps) {
 
           <div className={styles.favorite}>
             <FavoriteButton kind="book" itemId={book._id} />
+            <ShareButton url={`/books/${book.slug}`} title={shareTitle} />
           </div>
 
           {(book.description ||

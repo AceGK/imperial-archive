@@ -81,7 +81,11 @@
   line-height: 1.15;
 }
 
+/* Favorite and Share buttons */
 .favorite {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin: 0.75rem 0 1rem;
 }
 

@@ -148,6 +148,11 @@ $narrow-width: 760px;
   text-align: center;
 }
 
+/* share buttons at the bottom of "Spread the word" */
+.share {
+  margin-top: 1.25rem;
+}
+
 .poweredBy {
   a {
     color: var(--primary);

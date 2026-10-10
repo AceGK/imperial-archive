@@ -44,6 +44,23 @@
   }
 }
 
+/* share row after the post */
+.share {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.shareHeading {
+  margin: 0 0 0.875rem;
+  font-family: var(--font-condensed);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--subtle);
+}
+
 /* article typography */
 .body {
   font-size: 1.0625rem;

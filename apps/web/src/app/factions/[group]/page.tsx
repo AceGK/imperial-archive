@@ -5,6 +5,7 @@ import { groupedFactions40kQuery } from "@/lib/sanity/queries";
 import { resolveGroupIcon } from "@/components/icons/factions/resolve";
 import FactionCard from "@/components/modules/Cards/FactionCard";
 import BooksCatalog from "@/components/modules/Catalog/Books";
+import { ShareButton } from "@/components/modules/Share";
 import type { FactionGroupWithItems } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import type { Metadata } from "next";
@@ -126,6 +127,10 @@ export default async function GroupPage({
               )}
 
               {description && <p style={{ opacity: 0.8 }}>{description}</p>}
+
+              <div style={{ marginTop: 12 }}>
+                <ShareButton url={`/factions/${group}`} title={`${title}: Warhammer 40,000 books`} />
+              </div>
             </div>
           </header>
 

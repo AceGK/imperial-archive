@@ -2,6 +2,7 @@ import Image from "next/image";
 import RichText from "@/components/ui/RichText";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import FavoriteButton from "@/components/modules/FavoriteButton";
+import { ShareButton } from "@/components/modules/Share";
 import DetailCard from "../base";
 import Clamp from "../clamp";
 import DetailLinks from "../links";
@@ -56,7 +57,12 @@ export default function AuthorDetailCard({ author }: { author: Author40k }) {
         ) : null
       }
       actions={<DetailLinks items={(author.links ?? []).filter((l) => l?.url) as any} />}
-      footer={<FavoriteButton kind="author" itemId={author._id} />}
+      footer={
+        <div className={styles.footerActions}>
+          <FavoriteButton kind="author" itemId={author._id} />
+          <ShareButton url={`/authors/${author.slug}`} title={`${author.name}: Warhammer 40,000 books`} />
+        </div>
+      }
     />
   );
 }

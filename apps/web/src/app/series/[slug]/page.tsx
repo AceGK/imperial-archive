@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import RichText from "@/components/ui/RichText";
 import PageHeader from "@/components/modules/PageHeader";
 import FavoriteButton from "@/components/modules/FavoriteButton";
+import { ShareButton } from "@/components/modules/Share";
 import { client } from "@/lib/sanity/sanity.client";
 import { series40kBySlugQuery } from "@/lib/sanity/queries";
 import type { Series40kDoc } from "@/types/sanity";
@@ -130,7 +131,15 @@ const hero = data.image?.asset
         alt={hero?.alt}
         credit={hero?.credit}
       >
-        <FavoriteButton kind="series" itemId={data._id} variant="overlay" />
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.5rem" }}>
+          <FavoriteButton kind="series" itemId={data._id} variant="overlay" />
+          <ShareButton
+            url={`/series/${data.slug}`}
+            title={`${data.title} reading order`}
+            variant="overlay"
+            align="center"
+          />
+        </div>
       </PageHeader>
 
       <main>

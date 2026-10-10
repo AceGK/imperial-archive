@@ -2,6 +2,7 @@ import Link from "next/link";
 import FactionTheme from "@/components/modules/FactionTheme";
 import { resolveGroupIcon, resolveIcon } from "@/components/icons/factions/resolve";
 import FavoriteButton from "@/components/modules/FavoriteButton";
+import { ShareButton } from "@/components/modules/Share";
 import DetailCard from "../base";
 import Clamp from "../clamp";
 import DetailLinks from "../links";
@@ -42,7 +43,17 @@ export default function FactionDetailCard({ faction }: { faction: Faction40kDoc 
         ) : null
       }
       actions={<DetailLinks items={links as any} />}
-      footer={<FavoriteButton kind="faction" itemId={faction._id} />}
+      footer={
+        <div className={styles.footerActions}>
+          <FavoriteButton kind="faction" itemId={faction._id} />
+          {faction.group?.slug && (
+            <ShareButton
+              url={`/factions/${faction.group.slug}/${faction.slug}`}
+              title={`${faction.title}: Warhammer 40,000 books`}
+            />
+          )}
+        </div>
+      }
     />
   );
 }
