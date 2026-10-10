@@ -1,5 +1,6 @@
 import Card from "@/components/ui/Card";
 import KofiButton from "@/components/modules/KofiButton";
+import { ShareLinks } from "@/components/modules/Share";
 import { pageMetadata } from "@/lib/seo";
 import styles from "./styles.module.scss";
 
@@ -98,6 +99,12 @@ export default function SupportPage() {
                 for a friend starting the Horus Heresy or a link in your
                 favorite 40k community.
               </p>
+              <ShareLinks
+                url="/"
+                title="Imperial Archive"
+                text="Imperial Archive: a free, fan-made catalog of Warhammer 40,000 books from Black Library"
+                className={styles.share}
+              />
             </Card>
           </div>
         </div>

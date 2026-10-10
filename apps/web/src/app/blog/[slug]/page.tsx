@@ -10,6 +10,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import { blogPostBySlugQuery, blogPostSlugsQuery } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import TocLayout from "@/components/modules/Toc/TocLayout";
+import { ShareLinks } from "@/components/modules/Share";
 import { formatPostDate, postSections } from "@/lib/blog";
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata, SITE_NAME, truncate } from "@/lib/seo";
 import type { BlogPostDoc } from "@/types/sanity";
@@ -95,6 +96,11 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
       <div className={`${styles.body} rich-text`}>
         <RichText value={post.body} headingIds={sections.headingIds} />
       </div>
+
+      <footer className={styles.share}>
+        <h2 className={styles.shareHeading}>Share this dispatch</h2>
+        <ShareLinks url={path} title={post.title} />
+      </footer>
     </article>
   );
 

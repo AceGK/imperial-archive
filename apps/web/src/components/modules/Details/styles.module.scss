@@ -91,6 +91,16 @@
   margin-top: 0.75rem;
 }
 
+/* Favorite and Share buttons */
+.footerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  @include max(md) {
+    justify-content: center;
+  }
+}
+
 .links {
   display: flex;
   flex-wrap: wrap;

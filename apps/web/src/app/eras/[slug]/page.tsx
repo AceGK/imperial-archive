@@ -5,6 +5,7 @@ import { single40kEraQuery } from "@/lib/sanity/queries";
 import type { Era40k } from "@/types/sanity";
 import PageHeader from "@/components/modules/PageHeader";
 import FavoriteButton from "@/components/modules/FavoriteButton";
+import { ShareButton } from "@/components/modules/Share";
 import BooksCatalog from "@/components/modules/Catalog/Books";
 import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
@@ -78,7 +79,15 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
         priority
       >
         {era.period && <p style={{ textWrap: "balance" }}>{era.period}</p>}
-        <FavoriteButton kind="era" itemId={era._id} variant="overlay" />
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.5rem" }}>
+          <FavoriteButton kind="era" itemId={era._id} variant="overlay" />
+          <ShareButton
+            url={`/eras/${era.slug}`}
+            title={`${era.title}: Warhammer 40,000 books`}
+            variant="overlay"
+            align="center"
+          />
+        </div>
       </PageHeader>
 
       <BooksCatalog
