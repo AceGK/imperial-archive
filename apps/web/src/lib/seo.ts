@@ -25,8 +25,10 @@ export const SITE_KEYWORDS = [
 export const DEFAULT_TITLE = `${SITE_NAME} | Warhammer 40k Book Catalog & Reading Tracker`;
 
 export const DEFAULT_OG_IMAGE = {
-  url: "/images/black-library-books.jpg",
-  alt: "Warhammer 40,000 Black Library books",
+  url: "/images/og-default.jpg",
+  width: 1200,
+  height: 630,
+  alt: "Imperial Archive: Warhammer 40k book archive",
 };
 
 /** Absolute URL for a site path, e.g. absoluteUrl("/books/horus-rising") */
