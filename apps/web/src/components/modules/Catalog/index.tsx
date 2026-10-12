@@ -105,7 +105,7 @@ function Results<THit extends BaseHit>({
 
   // a search still in flight isn't "no results"
   const isLoading = useAwaitingFirstResults() || status === "loading" || status === "stalled";
-  const { minHeight, isRestoring } = useScrollRestoration(
+  const { ref, minHeight, isRestoring } = useScrollRestoration(
     `${cacheKey}-catalog`,
     items.length,
     isLoading
@@ -134,7 +134,7 @@ function Results<THit extends BaseHit>({
   }
 
   return (
-    <div style={{ minHeight: minHeight || undefined }}>
+    <div ref={ref} style={{ minHeight: minHeight || undefined }}>
       <div className={gridClasses[gridVariant]}>
         {items.map((hit) => (
           <React.Fragment key={hit.objectID}>
