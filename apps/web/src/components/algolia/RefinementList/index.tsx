@@ -6,6 +6,8 @@ import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
 import { Dropdown } from "@/components/ui/Dropdown";
 import styles from "./styles.module.scss";
 import ChevronDown from "@/components/icons/chevron-down.svg";
+import { useAwaitingFirstResults } from "@/lib/algolia/useAwaitingFirstResults";
+import { FilterButtonSkeleton } from "./FilterButtonSkeleton";
 
 export type RefinementListProps = {
   attribute: string;
@@ -30,8 +32,12 @@ export function RefinementList({
 
   const [searchQuery, setSearchQuery] = React.useState("");
   const hasActiveFilters = items.some((item) => item.isRefined);
+  const awaitingFirstResults = useAwaitingFirstResults();
 
-  if (items.length === 0) return null;
+  if (items.length === 0) {
+    // filter values come with the first results; hold the button's place until then
+    return awaitingFirstResults ? <FilterButtonSkeleton title={title} /> : null;
+  }
 
   const filteredItems = searchQuery
     ? items.filter((item) =>

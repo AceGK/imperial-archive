@@ -1,42 +1,43 @@
 // hooks/useInfiniteHitsCache.ts
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { createInfiniteHitsSessionStorageCache } from "instantsearch.js/es/lib/infiniteHitsCache";
 import type { InfiniteHitsCache } from "instantsearch.js/es/connectors/infinite-hits/connectInfiniteHits";
 import type { BaseHit } from "instantsearch.js";
 
-// Store caches by key to allow different caches for different indexes
-const cacheStore = new Map<string, InfiniteHitsCache<any>>();
+// Set once the app has hydrated. Until then the cache stays empty, so the
+// first client render matches the server-rendered results.
+let hydrated = false;
 
-function getCache<THit extends BaseHit>(key: string): InfiniteHitsCache<THit> | undefined {
-  if (typeof window === "undefined") {
-    return undefined;
-  }
-  
-  if (!cacheStore.has(key)) {
-    cacheStore.set(
-      key,
-      createInfiniteHitsSessionStorageCache() as unknown as InfiniteHitsCache<THit>
-    );
-  }
-  
-  return cacheStore.get(key) as InfiniteHitsCache<THit>;
+// One cache object per key, created once and never replaced: handing
+// useInfiniteHits a different cache object resets the list and re-runs the
+// search, which blanked the server-rendered results right after hydration
+const cacheStore = new Map<string, InfiniteHitsCache<BaseHit>>();
+
+function createHydrationSafeCache(): InfiniteHitsCache<BaseHit> {
+  let storage: InfiniteHitsCache<BaseHit> | undefined;
+  const active = () => {
+    if (!hydrated || typeof window === "undefined") return undefined;
+    return (storage ??= createInfiniteHitsSessionStorageCache() as unknown as InfiniteHitsCache<BaseHit>);
+  };
+
+  return {
+    read: (args) => active()?.read(args) ?? null,
+    write: (args) => active()?.write(args),
+  };
 }
 
 /**
- * Hook that provides a hydration-safe sessionStorage cache for useInfiniteHits
+ * sessionStorage cache for useInfiniteHits, so "Load more" pages survive
+ * back/forward navigation
  * @param key - Unique key for the cache (typically the index name)
- * @returns Cache object to pass to useInfiniteHits, undefined during SSR/hydration
  */
-export function useInfiniteHitsCache<THit extends BaseHit>(
-  key: string
-): InfiniteHitsCache<THit> | undefined {
-  const [cache, setCache] = useState<InfiniteHitsCache<THit> | undefined>(undefined);
-
+export function useInfiniteHitsCache<THit extends BaseHit>(key: string): InfiniteHitsCache<THit> {
   useEffect(() => {
-    setCache(getCache<THit>(key));
-  }, [key]);
+    hydrated = true;
+  }, []);
 
-  return cache;
+  if (!cacheStore.has(key)) cacheStore.set(key, createHydrationSafeCache());
+  return cacheStore.get(key) as unknown as InfiniteHitsCache<THit>;
 }

@@ -3,11 +3,13 @@
 
 import React from "react";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
-import { useInfiniteHits, Configure } from "react-instantsearch";
+import { useInfiniteHits, useInstantSearch, Configure } from "react-instantsearch";
 import { useInfiniteHitsCache } from "@/hooks/useInfiniteHitsCache";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { createAlgoliaRouting } from "@/lib/algolia/routing";
-import { searchClient } from "@/lib/algolia/search";
+import { forgetServerResults, searchClient } from "@/lib/algolia/search";
+import { useAwaitingFirstResults } from "@/lib/algolia/useAwaitingFirstResults";
+import CatalogSkeleton from "./Skeleton";
 import {
   SearchBox,
   Stats,
@@ -85,6 +87,7 @@ interface ResultsProps<THit extends BaseHit> {
   renderHit: (hit: THit) => React.ReactNode;
   noResultsText: string;
   gridVariant: GridVariant;
+  skeletonCount: number;
 }
 
 function Results<THit extends BaseHit>({
@@ -92,18 +95,35 @@ function Results<THit extends BaseHit>({
   renderHit,
   noResultsText,
   gridVariant,
+  skeletonCount,
 }: ResultsProps<THit>) {
   const cache = useInfiniteHitsCache<THit>(cacheKey);
-  const { items, showMore, isLastPage, results } = useInfiniteHits<THit>({
+  const { items, showMore, isLastPage } = useInfiniteHits<THit>({
     cache,
   });
+  const { status } = useInstantSearch();
 
-  const isLoading = results === undefined;
+  // a search still in flight isn't "no results"
+  const isLoading = useAwaitingFirstResults() || status === "loading" || status === "stalled";
   const { minHeight, isRestoring } = useScrollRestoration(
     `${cacheKey}-catalog`,
     items.length,
     isLoading
   );
+
+  if (items.length === 0 && isLoading) {
+    return (
+      <CatalogSkeleton variant={gridVariant} count={skeletonCount} />
+    );
+  }
+
+  if (items.length === 0 && status === "error") {
+    return (
+      <div className={styles.noResults}>
+        <p>Results couldn&apos;t be loaded. Please try again.</p>
+      </div>
+    );
+  }
 
   if (items.length === 0 && !isRestoring) {
     return (
@@ -158,6 +178,11 @@ export default function Catalog<THit extends BaseHit>({
     [indexName]
   );
 
+  // runs after InstantSearch (a child) has hydrated from this page's results
+  React.useEffect(() => {
+    forgetServerResults();
+  }, []);
+
   return (
     <InstantSearchNext
       indexName={indexName}
@@ -207,6 +232,7 @@ export default function Catalog<THit extends BaseHit>({
               renderHit={renderHit}
               noResultsText={noResultsText}
               gridVariant={gridVariant}
+              skeletonCount={Math.min(hitsPerPage, 12)}
             />
           </div>
         </section>

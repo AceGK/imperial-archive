@@ -131,7 +131,34 @@ function search(input: SearchInput): Promise<SearchResponse> {
   return pending;
 }
 
-export const searchClient = { search } as unknown as SearchClient;
+// InstantSearch hands a server-rendered page's results to the search client by
+// seeding `transporter.responsesCache`, the cache of Algolia's own client.
+// Providing a compatible cache lets the search InstantSearch repeats once the
+// page is interactive be answered from those results instead of the network.
+const hydratedResponses = new Map<string, unknown>();
+const responsesCache = {
+  get(key: unknown, fallback: () => Promise<unknown>) {
+    const id = JSON.stringify(key);
+    return hydratedResponses.has(id) ? Promise.resolve(hydratedResponses.get(id)) : fallback();
+  },
+  set(key: unknown, value: unknown) {
+    hydratedResponses.set(JSON.stringify(key), value);
+    return Promise.resolve(value);
+  },
+};
+
+export const searchClient = { search, transporter: { responsesCache } } as unknown as SearchClient;
+
+/**
+ * react-instantsearch-nextjs puts a server-rendered page's results on `window`
+ * and never removes them, so every InstantSearch page opened later in the tab
+ * would hydrate from the first page's results (wrong filters or hits, which
+ * the infinite-hits cache then keeps). Call once the page using them has
+ * mounted.
+ */
+export function forgetServerResults() {
+  delete (window as unknown as Record<symbol, unknown>)[Symbol.for("InstantSearchInitialResults")];
+}
 
 const emptyResult = (request: SearchRequest) => ({
   hits: [],

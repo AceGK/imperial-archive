@@ -5,4 +5,15 @@
   color: var(--subtle);
   margin-bottom: 2rem;
   padding-left:1px;
+  min-height: 1.5em; // same height whether showing the count or the placeholder
+}
+
+// stands in for "0 results" while the first results load
+.placeholder {
+  display: inline-block;
+  width: 7rem;
+  height: 0.9em;
+  vertical-align: middle;
+  border-radius: var(--radius-xs);
+  background: color-mix(in srgb, var(--subtle) 15%, transparent);
 }
