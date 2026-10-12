@@ -2,12 +2,12 @@
 "use client";
 
 import React from "react";
-import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 import { useInfiniteHits, Configure } from "react-instantsearch";
 import { useInfiniteHitsCache } from "@/hooks/useInfiniteHitsCache";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { createAlgoliaRouting } from "@/lib/algolia/routing";
+import { searchClient } from "@/lib/algolia/search";
 import {
   SearchBox,
   Stats,
@@ -20,11 +20,6 @@ import StickyControls from "./StickyControls";
 import styles from "./styles.module.scss";
 import Button from "@/components/ui/Button";
 import type { BaseHit } from "instantsearch.js";
-
-const searchClient = algoliasearch(
-  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
-  process.env.NEXT_PUBLIC_ALGOLIA_API_KEY!
-);
 
 // ============================================
 // Type Definitions

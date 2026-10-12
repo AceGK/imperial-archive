@@ -24,12 +24,14 @@ export function SearchBox({
     setValue(query);
   }, [query]);
 
+  // refining with an unchanged query would still send a search
   React.useEffect(() => {
+    if (value === query) return;
     const timeoutId = setTimeout(() => {
       refine(value);
     }, debounceMs);
     return () => clearTimeout(timeoutId);
-  }, [value, refine, debounceMs]);
+  }, [value, query, refine, debounceMs]);
 
   // Focus input when opened
   React.useEffect(() => {

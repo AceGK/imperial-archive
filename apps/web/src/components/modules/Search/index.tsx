@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { liteClient as algoliasearch } from "algoliasearch/lite";
 import { useSearchBox, useHits, Configure } from "react-instantsearch";
+import { typedOnlySearchClient } from "@/lib/algolia/search";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -35,10 +35,8 @@ function SuggestedSearches() {
   );
 }
 
-const algoliaAppId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!;
-const algoliaApiKey = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY!;
-
-const searchClient = algoliasearch(algoliaAppId, algoliaApiKey);
+// wait for a pause in typing before searching
+const DEBOUNCE_MS = 250;
 
 function CustomSearchBox() {
   const router = useRouter();
@@ -81,8 +79,10 @@ function CustomSearchBox() {
   }, [query]);
 
   useEffect(() => {
-    refine(value);
-  }, [value, refine]);
+    if (value === query) return;
+    const timer = setTimeout(() => refine(value), DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [value, query, refine]);
 
   useEffect(() => {
     setActive(0);
@@ -105,10 +105,12 @@ function CustomSearchBox() {
     router.push(`/books/${hit.slug}`);
   }
 
+  // uses the typed text, which can be ahead of the debounced query
   function goToSearchPage() {
+    const term = value.trim();
     setOpen(false);
-    if (query) saveRecentSearch(query);
-    router.push(`/books?q=${encodeURIComponent(query)}`);
+    if (term) saveRecentSearch(term);
+    router.push(`/books?q=${encodeURIComponent(term)}`);
   }
 
   function handleRecentSearchClick(searchTerm: string) {
@@ -146,6 +148,13 @@ function CustomSearchBox() {
       } else if (e.key === "Escape") {
         setOpen(false);
       }
+      return;
+    }
+
+    // Enter before the debounced results arrive still searches
+    if (e.key === "Enter" && !totalItems && value.trim()) {
+      e.preventDefault();
+      goToSearchPage();
       return;
     }
 
@@ -247,7 +256,7 @@ export default function Search() {
   return (
     <InstantSearchNext
       indexName="books40k"
-      searchClient={searchClient}
+      searchClient={typedOnlySearchClient}
       future={{ preserveSharedStateOnUnmount: true }}
     >
       <Configure hitsPerPage={10} />
