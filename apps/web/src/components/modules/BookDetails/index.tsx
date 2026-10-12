@@ -38,6 +38,16 @@ interface SeriesNav {
   lists: SeriesList[];
 }
 
+// "Dan Abnett" -> "DA", shown when an author has no photo
+function initials(name?: string) {
+  return (name ?? "")
+    .replace(/[.’']/g, " ")
+    .split(/[\s-]+/)
+    .map((part) => part.match(/\p{L}/u)?.[0] ?? "")
+    .join("")
+    .toUpperCase();
+}
+
 interface BookDetailProps {
   book: BookDetailData & {
     seriesNavigation?: SeriesNav[];
@@ -201,10 +211,35 @@ export default function BookDetails({ book }: BookDetailProps) {
                           .filter((author) => author.bio)
                           .map((author) => (
                             <div key={author.slug} className={styles.authorBio}>
-                              <div className={styles.authorName}>
-                                <Link href={`/authors/${author.slug}`}>
-                                  {author.name}
+                              <div className={styles.authorHeader}>
+                                {/* the name link next to it is the accessible one */}
+                                <Link
+                                  href={`/authors/${author.slug}`}
+                                  className={styles.authorThumb}
+                                  aria-hidden="true"
+                                  tabIndex={-1}
+                                >
+                                  {author.image?.asset ? (
+                                    <Image
+                                      src={urlFor(author.image).width(128).height(128).fit("crop").url()}
+                                      alt=""
+                                      width={64}
+                                      height={64}
+                                      unoptimized
+                                      {...(author.image.lqip && {
+                                        placeholder: "blur" as const,
+                                        blurDataURL: author.image.lqip,
+                                      })}
+                                    />
+                                  ) : (
+                                    initials(author.name)
+                                  )}
                                 </Link>
+                                <div className={styles.authorName}>
+                                  <Link href={`/authors/${author.slug}`}>
+                                    {author.name}
+                                  </Link>
+                                </div>
                               </div>
                               <div className={styles.bio}>{author.bio}</div>
                             </div>

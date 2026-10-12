@@ -282,7 +282,8 @@ export const bookBySlug40kQuery = groq`
       _id,
       "name": coalesce(name, title),
       "slug": slug.current,
-      "bio": pt::text(bio)
+      "bio": pt::text(bio),
+      image{ ..., "lqip": asset->metadata.lqip }
     },
     []
   ),

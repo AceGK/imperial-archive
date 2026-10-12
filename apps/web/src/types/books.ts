@@ -5,6 +5,7 @@ export type BookAuthor = {
   name?: string;
   slug?: string;
   bio?: string;
+  image?: (SanityImageField & { lqip?: string | null }) | null;
 };
 
 // Minimal series shape for display
