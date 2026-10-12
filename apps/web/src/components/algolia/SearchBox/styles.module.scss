@@ -1,5 +1,6 @@
 // components/algolia/SearchBox/styles.module.scss
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
 
 .searchBox {
   display: flex;
@@ -8,6 +9,13 @@
 }
 
 .searchButton {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+
+  // dropdown open: keep the brackets showing
+  &[aria-expanded="true"]::before {
+    opacity: 1;
+  }
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,7 +23,7 @@
   height: 48px;
   padding: 0;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: color-mix(in oklab, var(--bg), black 2%);
   color: var(--foreground);
   cursor: pointer;
@@ -49,7 +57,7 @@
   height: 48px;
   padding: 0 1rem;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: color-mix(in oklab, var(--bg), black 2%);
   transition: all 0.15s ease;
   
