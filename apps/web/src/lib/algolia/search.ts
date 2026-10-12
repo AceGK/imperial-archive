@@ -23,6 +23,11 @@ export const CACHE_SECONDS = 3600;
 const INDEX_PATTERN = /^(books40k|authors40k|series40k)(_[a-z]+)*$/;
 const MAX_REQUESTS = 10;
 const MAX_HITS_PER_PAGE = 50;
+// Every distinct query is a fresh Algolia call, so oversized or deep-paged
+// requests are trimmed rather than rejected (they can arrive from page URLs
+// during server rendering, where an error would break the page)
+const MAX_QUERY_LENGTH = 100;
+const MAX_PAGE = 100;
 
 const toRequests = (input: SearchInput) => (Array.isArray(input) ? input : input.requests);
 
@@ -44,6 +49,18 @@ export function validateRequests(input: unknown): SearchRequest[] | null {
     if (typeof safeParams.hitsPerPage === "number") {
       safeParams.hitsPerPage = Math.min(safeParams.hitsPerPage, MAX_HITS_PER_PAGE);
     }
+    for (const key of ["query", "facetQuery"]) {
+      if (typeof safeParams[key] === "string") {
+        safeParams[key] = (safeParams[key] as string).slice(0, MAX_QUERY_LENGTH);
+      }
+    }
+    if (typeof safeParams.page === "number") {
+      safeParams.page = Math.min(Math.max(0, Math.floor(safeParams.page)), MAX_PAGE);
+    }
+    // offset/length paging would sidestep the page and hitsPerPage caps;
+    // InstantSearch doesn't use them
+    delete safeParams.offset;
+    delete safeParams.length;
     requests.push({ indexName, type, facet, params: safeParams });
   }
   return requests;
