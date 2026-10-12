@@ -33,7 +33,16 @@ export type BookContent = {
   _id: string;
   title: string;
   slug: string;
+  format?: string | null;
   authors?: BookAuthor[];
+};
+
+// An anthology or omnibus that includes a book
+export type BookCollection = {
+  _id: string;
+  title: string;
+  slug: string;
+  format?: string | null;
 };
 
 // Full book detail data structure
@@ -50,6 +59,7 @@ export type BookDetailData = {
   image?: SanityImageField;
   description?: string | null;
   story?: string | null;
-  contents?: BookContent[]; 
+  contents?: BookContent[];
+  collectedIn?: BookCollection[];
   page_count?: number | null;
 };

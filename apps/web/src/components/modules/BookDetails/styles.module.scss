@@ -163,6 +163,12 @@
   }
 }
 
+// "by Author" and "(Format)" after each title in Contents and Collected In
+.contentsBy,
+.contentsFormat {
+  color: var(--subtle);
+}
+
 .authorBios {
   display: flex;
   flex-direction: column;

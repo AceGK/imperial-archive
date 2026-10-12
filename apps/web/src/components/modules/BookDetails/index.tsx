@@ -111,7 +111,7 @@ export default function BookDetails({ book }: BookDetailProps) {
             book.authors) && (
             <Accordion
               type="multiple"
-              defaultValue={["description", "details", "series"]}
+              defaultValue={["description", "details", "collected-in", "series"]}
             >
               {book.description && (
                 <AccordionItem value="description">
@@ -179,20 +179,41 @@ export default function BookDetails({ book }: BookDetailProps) {
                   <AccordionTrigger>Contents</AccordionTrigger>
                   <AccordionContent>
                     <ul className={styles.contentsList}>
-                      {book.contents.map((content: any, i: number) => (
+                      {book.contents.map((content, i) => (
                         <li key={content._id || i}>
                           <Link
                             href={`/books/${encodeURIComponent(content.slug)}`}
                           >
                             {content.title}
                           </Link>
-                          {content.format && ` (${content.format})`}
-                          {/* {content.authors && content.authors.length > 0 && (
-                            <>
+                          {content.authors && content.authors.length > 0 && (
+                            <span className={styles.contentsBy}>
                               {" by "}
                               <Authors authors={content.authors} inline />
-                            </>
-                          )} */}
+                            </span>
+                          )}
+                          {content.format && (
+                            <span className={styles.contentsFormat}> ({content.format})</span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+              {book.collectedIn && book.collectedIn.length > 0 && (
+                <AccordionItem value="collected-in">
+                  <AccordionTrigger>Collected In</AccordionTrigger>
+                  <AccordionContent>
+                    <ul className={styles.contentsList}>
+                      {book.collectedIn.map((collection) => (
+                        <li key={collection._id}>
+                          <Link href={`/books/${encodeURIComponent(collection.slug)}`}>
+                            {collection.title}
+                          </Link>
+                          {collection.format && (
+                            <span className={styles.contentsFormat}> ({collection.format})</span>
+                          )}
                         </li>
                       ))}
                     </ul>
