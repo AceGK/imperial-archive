@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchBox, useHits, Configure } from "react-instantsearch";
-import { typedOnlySearchClient } from "@/lib/algolia/search";
+import { forgetServerResults, typedOnlySearchClient } from "@/lib/algolia/search";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -253,6 +253,11 @@ function CustomSearchBox() {
 }
 
 export default function Search() {
+  // runs after InstantSearch (a child) has hydrated from this page's results
+  useEffect(() => {
+    forgetServerResults();
+  }, []);
+
   return (
     <InstantSearchNext
       indexName="books40k"

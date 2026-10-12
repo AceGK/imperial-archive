@@ -101,13 +101,16 @@
   }
 }
 
+// hover box that slides between the top-level items; its corner brackets
+// follow it, and appear and fade with it
 .highlight {
-  position: absolute;
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary));
+  position: absolute; // after the mixin, which sets position: relative
   top: 0;
   left: 0;
   z-index: 0;
   border-radius: var(--radius-sm);
-  background: color-mix(in oklab, var(--accent), transparent 40%);
+  background: color-mix(in oklab, var(--accent), transparent 60%);
   pointer-events: none;
 }
 
@@ -288,6 +291,7 @@
 }
 
 .listItemLink {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $hover-only: true);
   display: flex;
   align-items: flex-start;
   gap: 0.6rem;

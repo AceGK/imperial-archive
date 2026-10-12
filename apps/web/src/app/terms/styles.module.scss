@@ -1,0 +1,51 @@
+/* single 760px reading column, like the other info pages */
+.content {
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.meta {
+  padding-bottom: 0;
+  font-family: var(--font-condensed);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.8125rem;
+  color: var(--subtle);
+}
+
+.body {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+
+  p {
+    padding-bottom: 1.25rem;
+  }
+
+  h2 {
+    margin: 2.25rem 0 1rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    line-height: 1.25;
+    color: var(--primary);
+  }
+
+  ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+    color: var(--subtle);
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    li::marker {
+      color: var(--primary);
+    }
+  }
+
+  > *:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}

@@ -1,5 +1,6 @@
 // components/algolia/SortBy/styles.module.scss
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
 
 .sortBy {
   display: flex;
@@ -16,6 +17,13 @@
 }
 
 .sortButton {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+
+  // dropdown open: keep the brackets showing
+  &[aria-expanded="true"]::before {
+    opacity: 1;
+  }
+
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -24,7 +32,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: color-mix(in oklab, var(--bg), black 2%);
   color: var(--foreground);
   cursor: pointer;
@@ -101,6 +109,7 @@
 }
 
 .sortOption {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $hover-only: true);
   width: 100%;
   padding: 8px 12px;
   font-size: 0.9rem;

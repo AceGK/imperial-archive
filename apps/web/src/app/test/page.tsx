@@ -17,6 +17,11 @@ const TEST_PAGES = [
     title: "FAQ layout",
     description: "The FAQ page with sample questions, for previewing before real FAQs are added in Sanity.",
   },
+  {
+    href: "/test/loading",
+    title: "Catalog loading states",
+    description: "The skeleton cards, filter buttons and count shown while each catalog's first results load.",
+  },
 ];
 
 export default function TestIndexPage() {

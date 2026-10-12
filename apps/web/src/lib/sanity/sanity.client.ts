@@ -12,4 +12,8 @@ export const client = createClient({
   // Viewer token, needed once the dataset is private; must not be NEXT_PUBLIC_
   token: process.env.SANITY_API_READ_TOKEN,
   perspective: "published",
+  // Next.js only caches fetches that ask to be cached: without this every page
+  // render queried Sanity. Now each query is reused for 60s, however much
+  // traffic (or bot traffic) arrives, matching the pages' revalidate time.
+  fetch: { next: { revalidate: 60 } },
 });

@@ -163,6 +163,12 @@
   }
 }
 
+// "by Author" and "(Format)" after each title in Contents and Collected In
+.contentsBy,
+.contentsFormat {
+  color: var(--subtle);
+}
+
 .authorBios {
   display: flex;
   flex-direction: column;
@@ -173,6 +179,35 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.authorHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+// round author photo (or initials) beside the name
+.authorThumb {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .authorName {

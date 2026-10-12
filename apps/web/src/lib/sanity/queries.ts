@@ -282,7 +282,8 @@ export const bookBySlug40kQuery = groq`
       _id,
       "name": coalesce(name, title),
       "slug": slug.current,
-      "bio": pt::text(bio)
+      "bio": pt::text(bio),
+      image{ ..., "lqip": asset->metadata.lqip }
     },
     []
   ),
@@ -339,7 +340,15 @@ export const bookBySlug40kQuery = groq`
     }.book,
     []
   ),
-  
+
+  // anthologies and omnibuses that list this book in their contents
+  "collectedIn": *[_type == "book40k" && ^._id in contents[].work._ref] | order(publicationDate asc){
+    _id,
+    title,
+    "slug": slug.current,
+    ${formatProjection}
+  },
+
   "seriesNavigation": *[_type == "series40k" && references(^._id)]{
     "seriesSlug": slug.current,
     "seriesName": title,

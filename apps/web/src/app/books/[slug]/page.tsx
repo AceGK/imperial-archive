@@ -7,6 +7,7 @@ import { urlFor } from "@/lib/sanity/sanity.image";
 import BookDetail from "@/components/modules/BookDetails";
 import AuthorBooksCarousel from "@/components/modules/Carousel/AuthorBooksCarousel";
 import SeriesBooksCarousel from "@/components/modules/Carousel/SeriesBooksCarousel";
+import RecentlyViewedCarousel from "@/components/modules/Carousel/RecentlyViewedCarousel";
 import JsonLd from "@/components/seo/JsonLd";
 import { bookJsonLd, breadcrumbJsonLd, pageMetadata, truncate } from "@/lib/seo";
 
@@ -125,6 +126,23 @@ export default async function BookPage({
           />
         </section>
       )}
+
+      <RecentlyViewedCarousel
+        book={{
+          _id: book._id,
+          title: book.title,
+          slug: book.slug,
+          authors: (book.authors ?? [])
+            .filter((a: any) => a?.name)
+            .map((a: any) => ({ name: a.name, slug: a.slug })),
+          format: book.format ?? null,
+          publication_date: book.publication_date ?? null,
+          series: validSeries.map((s: any) => ({ name: s.name, slug: s.slug, number: s.number ?? null })),
+          image: book.image?.asset?.url
+            ? { url: book.image.asset.url, alt: book.image.alt ?? null }
+            : null,
+        }}
+      />
     </>
   );
 }

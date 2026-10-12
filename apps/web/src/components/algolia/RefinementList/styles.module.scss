@@ -1,7 +1,15 @@
 // components/algolia/RefinementList/styles.module.scss
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
 
 .filterButton {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+
+  // dropdown open: keep the brackets showing
+  &[aria-expanded="true"]::before {
+    opacity: 1;
+  }
+
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -10,7 +18,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: color-mix(in oklab, var(--bg), black 2%);
   color: var(--foreground);
   cursor: pointer;
@@ -34,6 +42,39 @@
     .chevron {
       transform: rotate(180deg);
     }
+  }
+}
+
+// placeholder while filter values load: the button's own size (from its
+// label), with the label and chevron hidden behind a shimmer
+.skeleton {
+  pointer-events: none;
+  color: transparent;
+  border-color: transparent;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--subtle) 10%, transparent) 25%,
+    color-mix(in srgb, var(--subtle) 20%, transparent) 50%,
+    color-mix(in srgb, var(--subtle) 10%, transparent) 75%
+  );
+  background-size: 200% 100%;
+  animation: filter-shimmer 1.5s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
+  .chevron {
+    opacity: 0;
+  }
+}
+
+@keyframes filter-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }
 
