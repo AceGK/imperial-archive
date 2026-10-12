@@ -33,6 +33,7 @@ const defaultSecondary: FooterLink[] = [
   { href: "/faq", label: "FAQ" },
   { href: "/support", label: "Support" },
   { href: "/about#attribution", label: "Attribution" },
+  { href: "/terms", label: "Terms of Use" },
 ];
 
 const accountLinks = accountNav.flatMap((group) => group.items);
