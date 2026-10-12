@@ -29,6 +29,7 @@
     "react-instantsearch-nextjs": "^1.0.4",
     "react-phone-number-input": "^3.4.18",
     "sanity-algolia": "^1.1.0",
+    "server-only": "^0.0.1",
     "swiper": "^12.0.2",
     "zod": "^4.1.12"
   },
