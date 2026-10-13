@@ -55,9 +55,19 @@ function createSortMaps(indexName: string) {
   return { toRoute, fromRoute };
 }
 
-export function createAlgoliaRouting(indexName: string) {
-  const { toRoute, fromRoute } = createSortMaps(indexName);
+/**
+ * @param baseIndex the index the sort replicas are named after ("books40k")
+ * @param indexName the index InstantSearch starts on, i.e. the default sort;
+ *   when it's a replica, the base index gets its own `?sort=added` value
+ */
+export function createAlgoliaRouting(baseIndex: string, indexName: string = baseIndex) {
+  const { toRoute, fromRoute } = createSortMaps(baseIndex);
+  if (indexName !== baseIndex) {
+    toRoute[baseIndex] = "added";
+    fromRoute.added = baseIndex;
+  }
 
+  // InstantSearch leaves sortBy out of the state when it equals indexName
   const sortToRoute = (sortBy?: string): string | undefined => {
     if (!sortBy || sortBy === indexName) return undefined;
     return toRoute[sortBy];

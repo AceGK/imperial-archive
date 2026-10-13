@@ -47,7 +47,7 @@ Dropdown for sorting results.
 import { SortBy } from "@/components/algolia";
 
 const sortOptions = [
-  { label: "Most Recent", value: "books40k" },
+  { label: "Recently Added", value: "books40k" },
   { label: "Title A-Z", value: "books40k_title_asc" },
 ];
 

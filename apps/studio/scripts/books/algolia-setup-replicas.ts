@@ -43,6 +43,9 @@ async function setupReplicas() {
           "searchable(era.name)",
           "searchable(series.title)",
         ],
+        // ties after text relevance go to the newest book in Sanity, so the
+        // unfiltered list (no search text) reads as "Recently Added"
+        customRanking: ["desc(_createdAt)"],
         replicas: [
           "books40k_title_asc",
           "books40k_title_desc",
@@ -156,7 +159,7 @@ async function setupReplicas() {
 
     console.log("\n🎉 All replicas configured successfully!");
     console.log("\nAvailable sort options:");
-    console.log("  - books40k (default/relevance)");
+    console.log("  - books40k (default: relevance, then recently added)");
     console.log("  - books40k_title_asc (Title A-Z)");
     console.log("  - books40k_title_desc (Title Z-A)");
     console.log("  - books40k_date_desc (Publication Date - Newest)");

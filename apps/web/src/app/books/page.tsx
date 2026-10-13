@@ -4,6 +4,7 @@
 import PageHeader from "@/components/modules/PageHeader";
 import Catalog from "@/components/modules/Catalog";
 import BookCard from "@/components/modules/Cards/BookCard";
+import { BOOK_DEFAULT_SORT, BOOK_SORT_OPTIONS } from "@/components/modules/Catalog/Books";
 import type { BookHit } from "@/types/algolia";
 
 export default function BooksPage() {
@@ -28,13 +29,8 @@ export default function BooksPage() {
         noResultsText="No books match your search."
         stats={{ singular: "Publication", plural: "Publications" }}
         hitsPerPage={36}
-        sortOptions={[
-          { label: "Most Recent", value: "books40k" },
-          { label: "Title A-Z", value: "books40k_title_asc" },
-          { label: "Title Z-A", value: "books40k_title_desc" },
-          { label: "Publication Date ↓", value: "books40k_date_desc" },
-          { label: "Publication Date ↑", value: "books40k_date_asc" },
-        ]}
+        sortOptions={BOOK_SORT_OPTIONS}
+        defaultSort={BOOK_DEFAULT_SORT}
         filters={[
           { attribute: "format", label: "Format" },
           { attribute: "authors.name", label: "Author", searchable: true },
