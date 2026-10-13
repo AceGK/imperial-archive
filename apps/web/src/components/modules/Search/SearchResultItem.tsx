@@ -26,6 +26,18 @@ function highlight(text: string, query: string): React.ReactNode {
   return parts;
 }
 
+// "Dan Abnett, David Annandale +6 more": names matching the query go first so
+// the highlighted match is never the part that gets cut
+function summarize(names: string[], query: string, max = 2): string {
+  const qn = normalize(query);
+  const ordered = qn
+    ? [...names.filter((n) => normalize(n).includes(qn)), ...names.filter((n) => !normalize(n).includes(qn))]
+    : names;
+  const shown = ordered.slice(0, max).join(", ");
+  const rest = ordered.length - max;
+  return rest > 0 ? `${shown} +${rest} more` : shown;
+}
+
 type Props = {
   hit: BookHit;
   query: string;
@@ -35,8 +47,8 @@ type Props = {
 };
 
 export function SearchResultItem({ hit, query, isActive, onSelect, onHover }: Props) {
-  const authorsLine = hit.authors?.map((a) => a.name).join(", ") || "";
-  const factionsLine = hit.factions?.map((f) => f.name).join(", ") || "";
+  const authorsLine = summarize(hit.authors?.map((a) => a.name) ?? [], query);
+  const factionsLine = summarize(hit.factions?.map((f) => f.name) ?? [], query);
 
   return (
     <li
@@ -50,13 +62,14 @@ export function SearchResultItem({ hit, query, isActive, onSelect, onHover }: Pr
       }}
     >
       <div className={styles.rowTitle}>
-        {highlight(hit.title, query)}
+        {/* one element, so the highlight pieces aren't separate flex items, which drop their edge spaces */}
+        <span>{highlight(hit.title, query)}</span>
         <span className={styles.kind}>{hit.format || "Book"}</span>
       </div>
       <div className={styles.rowMeta}>
-        {authorsLine && <span>{highlight(authorsLine, query)}</span>}
-        {factionsLine && <span className={styles.dot}>·</span>}
-        {factionsLine && <span>{highlight(factionsLine, query)}</span>}
+        {authorsLine && highlight(authorsLine, query)}
+        {authorsLine && factionsLine && <span className={styles.dot}> · </span>}
+        {factionsLine && highlight(factionsLine, query)}
       </div>
     </li>
   );

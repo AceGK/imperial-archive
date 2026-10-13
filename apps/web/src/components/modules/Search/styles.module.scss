@@ -201,6 +201,7 @@
     background: color-mix(in oklab, orange, transparent 70%);
     color: inherit;
     padding: 0 2px;
+    margin: 0 -2px; // highlight box without pushing the letters apart
     border-radius: 3px;
   }
 
@@ -216,12 +217,15 @@
   }
 }
 
+// one left-aligned line (the hero around it centers text); anything still too
+// long ends in an ellipsis rather than wrapping
 .rowMeta {
   font-size: 0.9rem;
   color: var(--subtle);
-  display: flex;
-  gap: .5ch;
-  align-items: baseline;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   .dot { 
     opacity: .6; 
@@ -231,6 +235,7 @@
     background: color-mix(in oklab, orange, transparent 70%);
     color: inherit;
     padding: 0 2px;
+    margin: 0 -2px; // highlight box without pushing the letters apart
     border-radius: 3px;
   }
 }
