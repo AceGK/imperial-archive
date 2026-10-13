@@ -32,7 +32,7 @@ const defaultSecondary: FooterLink[] = [
   { href: "/blog", label: "Blog" },
   { href: "/faq", label: "FAQ" },
   { href: "/support", label: "Support" },
-  { href: "/about#attribution", label: "Attribution" },
+  // { href: "/about#attribution", label: "Attribution" },
   { href: "/terms", label: "Terms of Use" },
 ];
 
