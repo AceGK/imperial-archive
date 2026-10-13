@@ -14,6 +14,7 @@ import series40k from './documents/series40k'
 import seriesLink from './objects/seriesLink'
 import faq from './documents/faq'
 import faqCategory from './documents/faqCategory'
+import redirect from './documents/redirect'
 
 export const schemaTypes = [
   post,
@@ -32,4 +33,5 @@ export const schemaTypes = [
   seriesLink,
   faq,
   faqCategory,
+  redirect,
 ]
