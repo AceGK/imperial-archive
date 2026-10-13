@@ -10,7 +10,10 @@ import { SearchResults } from "./SearchResults";
 import styles from "./styles.module.scss";
 import XmarkIcon from "@/components/icons/xmark.svg";
 import MagnifyingGlassIcon from "@/components/icons/magnifying-glass.svg";
-import type { BookHit } from "./types";
+import { buildRows } from "./rows";
+import type { BookHit, ResultRow, SearchShortcut } from "./types";
+
+export type { SearchShortcut } from "./types";
 
 const SUGGESTED_SEARCHES = [
   "Dan Abnett",
@@ -40,10 +43,12 @@ function SuggestedSearches() {
 // wait for a pause in typing before searching
 const DEBOUNCE_MS = 250;
 
-function CustomSearchBox() {
+function CustomSearchBox({ shortcuts }: { shortcuts: SearchShortcut[] }) {
   const router = useRouter();
   const { query, refine } = useSearchBox();
-  const { hits } = useHits() as { hits: BookHit[] };
+  const { items: hits } = useHits() as unknown as { items: BookHit[] };
+
+  const rows = buildRows(query, hits, shortcuts);
 
   const [value, setValue] = useState(query);
   const [open, setOpen] = useState(false);
@@ -100,12 +105,12 @@ function CustomSearchBox() {
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
-  function goTo(hit: BookHit) {
+  function goTo(row: ResultRow) {
     setOpen(false);
     if (query) saveRecentSearch(query);
     setValue("");
     refine("");
-    router.push(`/books/${hit.slug}`);
+    router.push(row.href);
   }
 
   // uses the typed text, which can be ahead of the debounced query
@@ -136,8 +141,11 @@ function CustomSearchBox() {
   }
 
   const showRecentSearches = open && !query && recentSearches.length > 0;
-  const showResults = open && query && hits.length > 0;
-  const totalItems = showResults ? 1 + hits.length : 0;
+  const showResults = open && query && rows.length > 0;
+  const totalItems = showResults ? 1 + rows.length : 0;
+
+  const scrollToOption = (i: number) =>
+    listRef.current?.querySelectorAll('[role="option"]')[i]?.scrollIntoView({ block: "nearest" });
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (!open && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
@@ -174,22 +182,18 @@ function CustomSearchBox() {
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setActive((i) => Math.min(i + 1, totalItems - 1));
-      listRef.current?.children?.[
-        Math.min(active + 1, totalItems - 1)
-      ]?.scrollIntoView({ block: "nearest" });
+      scrollToOption(Math.min(active + 1, totalItems - 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActive((i) => Math.max(i - 1, 0));
-      listRef.current?.children?.[Math.max(active - 1, 0)]?.scrollIntoView({
-        block: "nearest",
-      });
+      scrollToOption(Math.max(active - 1, 0));
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (active === 0) {
         goToSearchPage();
       } else {
-        const hit = hits[active - 1];
-        if (hit) goTo(hit);
+        const row = rows[active - 1];
+        if (row) goTo(row);
       }
     } else if (e.key === "Escape") {
       setOpen(false);
@@ -264,10 +268,10 @@ function CustomSearchBox() {
       {showResults && (
         <SearchResults
           ref={listRef}
-          hits={hits}
+          rows={rows}
           query={query}
           activeIndex={active}
-          onSelectHit={goTo}
+          onSelectRow={goTo}
           onSelectSeeAll={goToSearchPage}
           onHover={setActive}
         />
@@ -276,7 +280,12 @@ function CustomSearchBox() {
   );
 }
 
-export default function Search() {
+type SearchProps = {
+  /** Authors, series, factions and eras, matched in the browser */
+  shortcuts?: SearchShortcut[];
+};
+
+export default function Search({ shortcuts = [] }: SearchProps) {
   // runs after InstantSearch (a child) has hydrated from this page's results
   useEffect(() => {
     forgetServerResults();
@@ -288,8 +297,8 @@ export default function Search() {
       searchClient={typedOnlySearchClient}
       future={{ preserveSharedStateOnUnmount: true }}
     >
-      <Configure hitsPerPage={10} />
-      <CustomSearchBox />
+      <Configure hitsPerPage={5} />
+      <CustomSearchBox shortcuts={shortcuts} />
       <SuggestedSearches />
     </InstantSearchNext>
   );

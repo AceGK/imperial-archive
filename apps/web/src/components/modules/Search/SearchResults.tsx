@@ -1,19 +1,20 @@
 import { forwardRef } from "react";
 import { SearchResultItem } from "./SearchResultItem";
 import styles from "./styles.module.scss";
-import type { BookHit } from "./types";
+import type { ResultRow } from "./types";
 
 type Props = {
-  hits: BookHit[];
+  rows: ResultRow[];
   query: string;
+  /** 0 is "View all results"; rows count on from 1 */
   activeIndex: number;
-  onSelectHit: (hit: BookHit) => void;
+  onSelectRow: (row: ResultRow) => void;
   onSelectSeeAll: () => void;
   onHover: (index: number) => void;
 };
 
 export const SearchResults = forwardRef<HTMLUListElement, Props>(
-  ({ hits, query, activeIndex, onSelectHit, onSelectSeeAll, onHover }, ref) => {
+  ({ rows, query, activeIndex, onSelectRow, onSelectSeeAll, onHover }, ref) => {
     return (
       <ul
         className={styles.list}
@@ -38,13 +39,13 @@ export const SearchResults = forwardRef<HTMLUListElement, Props>(
           </div>
         </li>
 
-        {hits.map((hit, i) => (
+        {rows.map((row, i) => (
           <SearchResultItem
-            key={hit.objectID}
-            hit={hit}
+            key={row.key}
+            row={row}
             query={query}
             isActive={i + 1 === activeIndex}
-            onSelect={() => onSelectHit(hit)}
+            onSelect={() => onSelectRow(row)}
             onHover={() => onHover(i + 1)}
           />
         ))}

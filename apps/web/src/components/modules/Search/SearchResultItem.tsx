@@ -1,12 +1,6 @@
 import styles from "./styles.module.scss";
-import type { BookHit } from "./types";
-
-function normalize(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
+import { normalize } from "./rows";
+import type { ResultRow } from "./types";
 
 function highlight(text: string, query: string): React.ReactNode {
   if (!query) return text;
@@ -26,30 +20,15 @@ function highlight(text: string, query: string): React.ReactNode {
   return parts;
 }
 
-// "Dan Abnett, David Annandale +6 more": names matching the query go first so
-// the highlighted match is never the part that gets cut
-function summarize(names: string[], query: string, max = 2): string {
-  const qn = normalize(query);
-  const ordered = qn
-    ? [...names.filter((n) => normalize(n).includes(qn)), ...names.filter((n) => !normalize(n).includes(qn))]
-    : names;
-  const shown = ordered.slice(0, max).join(", ");
-  const rest = ordered.length - max;
-  return rest > 0 ? `${shown} +${rest} more` : shown;
-}
-
 type Props = {
-  hit: BookHit;
+  row: ResultRow;
   query: string;
   isActive: boolean;
   onSelect: () => void;
   onHover: () => void;
 };
 
-export function SearchResultItem({ hit, query, isActive, onSelect, onHover }: Props) {
-  const authorsLine = summarize(hit.authors?.map((a) => a.name) ?? [], query);
-  const factionsLine = summarize(hit.factions?.map((f) => f.name) ?? [], query);
-
+export function SearchResultItem({ row, query, isActive, onSelect, onHover }: Props) {
   return (
     <li
       className={`${styles.item} ${isActive ? styles.active : ""}`}
@@ -63,14 +42,10 @@ export function SearchResultItem({ hit, query, isActive, onSelect, onHover }: Pr
     >
       <div className={styles.rowTitle}>
         {/* one element, so the highlight pieces aren't separate flex items, which drop their edge spaces */}
-        <span>{highlight(hit.title, query)}</span>
-        <span className={styles.kind}>{hit.format || "Book"}</span>
+        <span>{highlight(row.title, query)}</span>
+        {row.badge && <span className={styles.kind}>{row.badge}</span>}
       </div>
-      <div className={styles.rowMeta}>
-        {authorsLine && highlight(authorsLine, query)}
-        {authorsLine && factionsLine && <span className={styles.dot}> · </span>}
-        {factionsLine && highlight(factionsLine, query)}
-      </div>
+      {row.meta && <div className={styles.rowMeta}>{highlight(row.meta, query)}</div>}
     </li>
   );
 }
