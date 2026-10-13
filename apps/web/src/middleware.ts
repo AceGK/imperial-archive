@@ -4,11 +4,20 @@ import {
   createRouteMatcher,
   nextjsMiddlewareRedirect,
 } from "@convex-dev/auth/nextjs/server";
+import { findRedirect } from "@/lib/redirects";
 
 const isSignInPage = createRouteMatcher(["/login", "/signup"]);
 const isProtectedRoute = createRouteMatcher(["/account(.*)"]);
 
 export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
+  const redirect = await findRedirect(request.nextUrl.pathname);
+  if (redirect) {
+    const target = new URL(redirect.destination, request.nextUrl.origin);
+    // carry over query strings (?ref=…, utm tags) unless the destination sets its own
+    if (!target.search) target.search = request.nextUrl.search;
+    return NextResponse.redirect(target, redirect.permanent ? 308 : 307);
+  }
+
   // Redirect authenticated users away from sign-in pages
   if (isSignInPage(request) && (await convexAuth.isAuthenticated())) {
     return nextjsMiddlewareRedirect(request, "/account");

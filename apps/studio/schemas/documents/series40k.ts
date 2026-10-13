@@ -122,11 +122,15 @@ export default defineType({
             }),
           ],
           preview: {
-            select: { title: "title", cnt: "items.length" },
-            prepare: ({ title, cnt }) => ({
-              title: title || "Untitled List",
-              subtitle: `${cnt ?? 0} work${(cnt ?? 0) === 1 ? "" : "s"}`,
-            }),
+            // preview selections can't read `.length`, so take the array and count it here
+            select: { title: "title", items: "items" },
+            prepare: ({ title, items }) => {
+              const cnt = Array.isArray(items) ? items.length : 0;
+              return {
+                title: title || "Untitled List",
+                subtitle: `${cnt} work${cnt === 1 ? "" : "s"}`,
+              };
+            },
           },
         },
       ],
@@ -141,11 +145,18 @@ export default defineType({
   ],
 
   preview: {
-    select: { title: "title", media: "image", listCount: "lists.length" },
-    prepare: ({ title, media, listCount }) => ({
-      title: title || "Untitled Series",
-      subtitle: `${listCount ?? 0} list${(listCount ?? 0) === 1 ? "" : "s"}`,
-      media,
-    }),
+    select: { title: "title", media: "image", lists: "lists" },
+    prepare: ({ title, media, lists }) => {
+      const listArr: any[] = Array.isArray(lists) ? lists : [];
+      const works = listArr.reduce(
+        (n, l) => n + (Array.isArray(l?.items) ? l.items.length : 0),
+        0
+      );
+      return {
+        title: title || "Untitled Series",
+        subtitle: `${listArr.length} list${listArr.length === 1 ? "" : "s"} · ${works} work${works === 1 ? "" : "s"}`,
+        media,
+      };
+    },
   },
 });
