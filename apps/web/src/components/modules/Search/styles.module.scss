@@ -23,9 +23,9 @@
 }
 
 .suggestionChip {
-  display:flex;
-  align-items: center;
-  justify-content: center;
+  // block, not flex: text-box only trims block containers
+  display: block;
+  text-align: center;
   font-size: 0.8125rem;
   text-decoration: none;
   color: white;
@@ -33,7 +33,14 @@
   border: 1px solid color-mix(in oklab, white, transparent 65%);
   border-radius: var(--radius-full);
   background: color-mix(in oklab, black, transparent 60%);
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  // trim the line box to the letters themselves (cap height to baseline) so
+  // the text centers optically; the padding grows to keep the pill the same
+  // height. Browsers without text-box keep the plain padding above.
+  @supports (text-box: trim-both cap alphabetic) {
+    text-box: trim-both cap alphabetic;
+    padding-block: 0.625rem;
+  }
 
   &:hover {
     background: var(--primary);
