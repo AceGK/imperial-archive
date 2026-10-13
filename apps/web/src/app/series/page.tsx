@@ -18,6 +18,7 @@ export default function SeriesIndexPage() {
         priority
         image="/images/eisenhorn-alexander-ovchinnikov.jpg"
         credit="Eisenhorn by Alexander Ovchinnikov"
+        warning="Series collections are a work in progress. Some series don't have all of their books added yet, so a few reading orders may be incomplete."
       />
 
       <Catalog<SeriesHit>
