@@ -18,7 +18,7 @@ type CarouselProps = {
   headerSlot?: React.ReactNode;
   items: React.ReactNode[];
   /** Slides in view per breakpoint, defined in styles.module.scss */
-  layout: "books" | "series" | "authors" | "factions" | "eras";
+  layout: "books" | "series" | "authors" | "factions" | "eras" | "blog";
   loop?: boolean;
   autoplay?: false | { delay?: number; pauseOnMouseEnter?: boolean; disableOnInteraction?: boolean };
   navigation?: boolean;

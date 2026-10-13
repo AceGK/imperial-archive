@@ -6,8 +6,16 @@ import { formatPostDate } from "@/lib/blog";
 import styles from "./styles.module.scss";
 
 /** Post preview for the /blog grid: cover, category, title, date, and excerpt */
-export default function BlogCard({ post }: { post: BlogPost }) {
+export default function BlogCard({
+  post,
+  headingLevel = 2,
+}: {
+  post: BlogPost;
+  /** 3 when the card sits under a section heading, e.g. the homepage carousel */
+  headingLevel?: 2 | 3;
+}) {
   const image = post.mainImage?.asset ? post.mainImage : null;
+  const Heading = headingLevel === 3 ? "h3" : "h2";
   const category = post.categories?.find((c) => c !== "Blog") ?? null;
 
   return (
@@ -33,7 +41,7 @@ export default function BlogCard({ post }: { post: BlogPost }) {
           {post.publishedAt && <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>}
           {category && <span className={styles.category}>{category}</span>}
         </div>
-        <h2 className={styles.title}>{post.title}</h2>
+        <Heading className={styles.title}>{post.title}</Heading>
         {post.metaDescription && <p className={styles.excerpt}>{post.metaDescription}</p>}
         <span className={styles.readMore}>Read dispatch →</span>
       </div>
