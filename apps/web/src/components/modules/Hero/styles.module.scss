@@ -87,13 +87,12 @@ $nav-height: 61px; // 60px bar plus its 1px bottom border
   margin: 0;
   font-weight: 800;
   line-height: 1.05;
-  font-size: clamp(2rem, 5vw, 4rem);
-  // tight shadow for crisp edges, wide one to calm the busy covers behind
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  text-transform: uppercase;
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.6),
     0 4px 24px rgba(0, 0, 0, 0.55);
 
-  // trademark marks: small and raised, not the font's full-height glyph
   sup {
     font-size: 0.3em;
     vertical-align: top;
