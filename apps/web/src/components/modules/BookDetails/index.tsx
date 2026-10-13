@@ -63,6 +63,11 @@ export default function BookDetails({ book }: BookDetailProps) {
     (book?.image?.alt && String(book.image.alt).trim()) ||
     (book?.title ? `${book.title} cover` : "Book cover");
 
+  // cover's width/height ratio (falls back to a typical 5:8 book)
+  const dims = book?.image?.asset?.metadata?.dimensions;
+  const coverRatio = dims?.width && dims?.height ? dims.width / dims.height : 5 / 8;
+  const coverHeight = Math.round(500 / coverRatio);
+
   const authorNames = (book.authors ?? []).map((a) => a?.name).filter(Boolean).join(", ");
   const shareTitle = authorNames ? `${book.title} by ${authorNames}` : book.title;
 
@@ -70,7 +75,10 @@ export default function BookDetails({ book }: BookDetailProps) {
     <div className="container">
       <article className={styles.page}>
         <div className={styles.mediaCol}>
-          <div className={styles.imageContainer}>
+          <figure
+            className={styles.media}
+            style={{ "--cover-ratio": coverRatio } as React.CSSProperties}
+          >
             {hasImage ? (
               <Image
                 src={urlFor(book.image)
@@ -79,7 +87,8 @@ export default function BookDetails({ book }: BookDetailProps) {
                   .fit("max")
                   .url()}
                 alt={imgAlt}
-                fill
+                width={500}
+                height={coverHeight}
                 sizes="(max-width: 768px) 80vw, 500px"
                 className={styles.image}
                 priority
@@ -90,7 +99,8 @@ export default function BookDetails({ book }: BookDetailProps) {
                 <span className={styles.placeholderText}>{book.title}</span>
               </div>
             )}
-          </div>
+            <figcaption className={styles.copyright}>© Games Workshop</figcaption>
+          </figure>
         </div>
 
         <div className={styles.content}>

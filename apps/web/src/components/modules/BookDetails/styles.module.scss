@@ -24,35 +24,48 @@
   align-items: center;
 }
 
-.imageContainer {
+// cover + copyright caption, sticky together; shrinks to the cover's
+// rendered width so the caption lines up with the image edge
+.media {
+  --cover-max-w: 500px;
+  --cover-max-h: 600px;
   position: sticky;
   top: 5rem;
   z-index: 0;
-  width: 500px;
-  height: 600px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: fit-content;
+  margin: 0;
 
   @include max(md) {
+    --cover-max-w: min(80vw, 500px);
+    --cover-max-h: 420px;
     position: relative;
     top: auto;
-    width: min(80vw, 500px);
-    height: 420px;
   }
 }
 
+.copyright {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  text-align: right;
+  color: var(--subtle);
+  opacity: 0.7;
+}
+
+// always as big as the max box allows at the cover's ratio, scaling up
+// covers whose source file is smaller than that
 .image {
-  object-fit: contain;
+  display: block;
+  width: min(var(--cover-max-w), var(--cover-max-h) * var(--cover-ratio, 0.625));
+  height: auto;
+  aspect-ratio: var(--cover-ratio, 0.625);
 }
 
 .placeholderImage {
   @include diagonal-stripes();
   position: relative;
-  height: 100%;
+  height: var(--cover-max-h);
   aspect-ratio: 5 / 8;
-  max-width: 100%;
+  max-width: var(--cover-max-w);
   display: flex;
   align-items: center;
   justify-content: center;
