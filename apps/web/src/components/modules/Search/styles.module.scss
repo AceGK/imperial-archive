@@ -324,3 +324,31 @@
     opacity: 1;
   }
 }
+
+// closing "View all": centered gold link under a divider, so it reads as the
+// end of the list rather than another result
+.seeAllFooter {
+  position: relative;
+  margin-top: 6px;
+  padding-block: 12px;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--primary);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -4px 0 auto;
+    border-top: 1px solid var(--border);
+  }
+
+  strong {
+    font-weight: 700;
+  }
+
+  &:hover,
+  &.active {
+    background: color-mix(in oklab, var(--primary), transparent 88%);
+  }
+}

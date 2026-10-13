@@ -142,7 +142,8 @@ function CustomSearchBox({ shortcuts }: { shortcuts: SearchShortcut[] }) {
 
   const showRecentSearches = open && !query && recentSearches.length > 0;
   const showResults = open && query && rows.length > 0;
-  const totalItems = showResults ? 1 + rows.length : 0;
+  // "View all" at the top and again at the bottom, around the rows
+  const totalItems = showResults ? rows.length + 2 : 0;
 
   const scrollToOption = (i: number) =>
     listRef.current?.querySelectorAll('[role="option"]')[i]?.scrollIntoView({ block: "nearest" });
@@ -189,7 +190,7 @@ function CustomSearchBox({ shortcuts }: { shortcuts: SearchShortcut[] }) {
       scrollToOption(Math.max(active - 1, 0));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      if (active === 0) {
+      if (active === 0 || active === rows.length + 1) {
         goToSearchPage();
       } else {
         const row = rows[active - 1];
