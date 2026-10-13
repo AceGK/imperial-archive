@@ -81,6 +81,17 @@
   height: 0.75rem;
 }
 
+// list rows take their layout from ListRow; this just stops them reacting to hover
+.row {
+  pointer-events: none;
+}
+
+// stands in for a row's Track or Favorite button
+.button {
+  width: 6.5rem;
+  height: 2.3125rem;
+}
+
 .chip {
   width: 45%;
   height: 1.25rem;

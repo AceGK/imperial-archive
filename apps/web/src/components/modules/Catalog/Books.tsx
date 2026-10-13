@@ -4,6 +4,7 @@
 
 import Catalog, { type FilterConfig, type SortOption } from "@/components/modules/Catalog";
 import BookCard from "@/components/modules/Cards/BookCard";
+import BookRow from "@/components/modules/Cards/BookRow";
 import type { BookHit } from "@/types/algolia";
 
 export const BOOK_SORT_OPTIONS: SortOption[] = [
@@ -56,7 +57,10 @@ export default function BooksCatalog({
       indexName="books40k"
       cacheKey={cacheKey}
       baseFilters={baseFilters}
-      renderHit={(hit) => <BookCard book={hit} />}
+      renderHit={(hit, view, display) =>
+        view === "list" ? <BookRow book={hit} display={display} /> : <BookCard book={hit} display={display} />
+      }
+      bookDisplay
       gridVariant="book"
       placeholder={placeholder}
       noResultsText={noResultsText}

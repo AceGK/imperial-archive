@@ -61,6 +61,8 @@
 }
 
 .image {
+  // a link is inline by default, and inline boxes ignore width and aspect-ratio
+  display: block;
   position: relative;
   width: 100%;
   aspect-ratio: 5 / 8;
@@ -91,6 +93,386 @@
 .card:hover .image::after,
 .card:focus-visible .image::after {
   opacity: 1;
+}
+
+/* ---- reading state on the cover (CardActions) ---- */
+
+.media {
+  position: relative;
+  width: 100%;
+}
+
+// cover hidden (Display menu): the tags and Track button sit at the end of the body
+.bodyActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+
+  .tagsInline {
+    justify-content: flex-start;
+  }
+}
+
+// Reading status and Owned, top left; always shown, like SALE tags on a
+// product card. Purely informational: clicks pass through to the cover.
+.tags {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  right: 2.75rem; // clear of the favorite heart
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  pointer-events: none;
+}
+
+.tag {
+  padding: 0.1875rem 0.4375rem;
+  font-family: var(--font-condensed);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(10, 10, 12, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  // lifts the tag off busy or light cover art
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55), 0 0 1px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+}
+
+// Reading status, in gold only, filling in as the book progresses:
+// dashed outline (want to read) → solid outline (reading) → filled (read).
+// Owned stays a plain dark tag.
+.tagWant,
+.tagReading {
+  color: var(--primary);
+  background: rgba(10, 10, 12, 0.85);
+  border-color: var(--primary);
+}
+
+.tagWant {
+  border-style: dashed;
+}
+
+.tagRead {
+  color: var(--on-primary);
+  background: var(--primary);
+  border-color: var(--primary);
+  text-shadow: none; // dark text on gold needs none
+}
+
+// a filled gold heart, top right, on favorites
+.favoriteTag {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--primary);
+  background: rgba(10, 10, 12, 0.78);
+  border: 1px solid color-mix(in oklab, var(--primary), transparent 50%);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55), 0 0 1px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+
+  svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+    fill: currentColor;
+  }
+}
+
+// Laid over the bottom of the cover. Clicks on its empty space fall through
+// to the cover link; only the Track button catches them.
+.actions {
+  position: absolute;
+  inset: auto 0 1px; // above the cover's bottom border
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding: 2.5rem 0.5rem 0.5rem;
+  pointer-events: none;
+
+  // darkens the bottom of the cover so the button reads over any artwork
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+}
+
+.trackButton {
+  @include corner-brackets($size: 6px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 2.125rem;
+  padding: 0 0.75rem;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(10, 10, 12, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+
+  // Hidden until revealed, and click-through while hidden so a tap on the
+  // cover opens the book; still reachable by Tab, which reveals it
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(0.625rem) scale(0.85);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+
+  &:disabled {
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  &[aria-expanded="true"] {
+    color: var(--primary);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+.trackIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+// Revealed on hover, keyboard focus, or while its menu is open: the button
+// springs up past its spot and settles back
+.card:hover,
+.card:focus-within,
+.actionsOpen {
+  &.actions::before,
+  .actions::before {
+    opacity: 1;
+  }
+
+  .trackButton {
+    pointer-events: auto;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.2s ease,
+      transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+      color 0.15s ease;
+  }
+}
+
+.actionsOpen .trackButton {
+  pointer-events: auto;
+  opacity: 1;
+  transform: none;
+}
+
+// touch screens can't hover, so the button is always there
+@media (hover: none) {
+  .trackButton {
+    pointer-events: auto;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trackButton,
+  .card:hover .trackButton,
+  .card:focus-within .trackButton {
+    transform: none;
+    transition: opacity 0.15s ease;
+  }
+}
+
+// ---- inline variants, for list rows ----
+
+// an ordinary button, always visible, sized like the site's other buttons
+.trackButtonInline {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4375rem 0.875rem;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  &[aria-expanded="true"] {
+    color: var(--primary);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+.tagsInline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end; // sits right-aligned above the Track button
+  gap: 0.25rem;
+
+  // beside the details, no art to stand out from
+  .tag {
+    box-shadow: none;
+    text-shadow: none;
+    backdrop-filter: none;
+    color: var(--text);
+    background: transparent;
+    border-color: var(--border);
+  }
+
+  .tagWant,
+  .tagReading {
+    color: var(--primary);
+    background: rgba(10, 10, 12, 0.85);
+    border-color: var(--primary);
+  }
+
+  .tagRead {
+    color: var(--on-primary);
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+}
+
+.favoriteTagInline {
+  display: grid;
+  place-items: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  color: var(--primary);
+  border: 1px solid color-mix(in oklab, var(--primary), transparent 50%);
+
+  svg {
+    width: 0.75rem;
+    height: 0.75rem;
+    fill: currentColor;
+  }
+}
+
+// The menu renders at the end of <body>; CardActions sets top/left and keeps
+// it on screen
+.trackMenu {
+  position: fixed;
+  z-index: 50;
+  min-width: 12rem;
+  padding: 0.375rem;
+  color: var(--text);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.menuHeading {
+  margin: 0;
+  padding: 0.375rem 0.625rem 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: color-mix(in oklab, var(--accent), transparent 40%);
+    outline: none;
+  }
+
+  // a tick at the end of whichever options are on
+  &::after {
+    content: "";
+    width: 0.75rem;
+    margin-left: auto;
+    text-align: center;
+  }
+
+  &[aria-checked="true"] {
+    color: var(--primary);
+
+    &::after {
+      content: "✓";
+    }
+  }
+}
+
+.menuIcon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+// the heart fills in once favorited, as on the Favorite button
+.menuFavorite[aria-checked="true"] .menuIcon {
+  fill: currentColor;
+}
+
+.menuDivider {
+  margin: 0.375rem 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.menuError {
+  margin: 0.25rem 0.625rem 0.375rem;
+  font-size: 0.75rem;
+  color: var(--destructive);
 }
 
 .placeholderImage {

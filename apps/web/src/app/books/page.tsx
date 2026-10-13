@@ -4,6 +4,7 @@
 import PageHeader from "@/components/modules/PageHeader";
 import Catalog from "@/components/modules/Catalog";
 import BookCard from "@/components/modules/Cards/BookCard";
+import BookRow from "@/components/modules/Cards/BookRow";
 import { BOOK_DEFAULT_SORT, BOOK_SORT_OPTIONS } from "@/components/modules/Catalog/Books";
 import type { BookHit } from "@/types/algolia";
 
@@ -23,7 +24,10 @@ export default function BooksPage() {
 
       <Catalog<BookHit>
         indexName="books40k"
-        renderHit={(hit) => <BookCard book={hit} />}
+        renderHit={(hit, view, display) =>
+        view === "list" ? <BookRow book={hit} display={display} /> : <BookCard book={hit} display={display} />
+      }
+      bookDisplay
         gridVariant="book"
         placeholder="Search books..."
         noResultsText="No books match your search."

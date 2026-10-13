@@ -19,6 +19,9 @@ import {
   CurrentRefinements,
 } from "@/components/algolia";
 import StickyControls from "./StickyControls";
+import { useCatalogView, ViewToggle, type CatalogView } from "./ViewToggle";
+import { DisplayMenu, useBookDisplay } from "./DisplayMenu";
+import type { BookDisplay } from "@/components/modules/Cards/BookCard/display";
 import styles from "./styles.module.scss";
 import Button from "@/components/ui/Button";
 import type { BaseHit } from "instantsearch.js";
@@ -39,12 +42,15 @@ export interface SortOption {
 }
 
 export type GridVariant = "book" | "author" | "series";
+export type { CatalogView } from "./ViewToggle";
 
 export interface CatalogProps<THit extends BaseHit> {
   /** Algolia index name */
   indexName: string;
-  /** Component to render each hit */
-  renderHit: (hit: THit) => React.ReactNode;
+  /** Component to render each hit, as a grid card or a list row */
+  renderHit: (hit: THit, view: CatalogView, display: BookDisplay) => React.ReactNode;
+  /** Offer the book card Display menu (which parts of each card show) */
+  bookDisplay?: boolean;
   /** Grid layout variant */
   gridVariant?: GridVariant;
   /** Unique key for caching (defaults to indexName) */
@@ -86,7 +92,9 @@ const gridClasses: Record<GridVariant, string> = {
 
 interface ResultsProps<THit extends BaseHit> {
   cacheKey: string;
-  renderHit: (hit: THit) => React.ReactNode;
+  renderHit: (hit: THit, view: CatalogView, display: BookDisplay) => React.ReactNode;
+  view: CatalogView;
+  display: BookDisplay;
   noResultsText: string;
   gridVariant: GridVariant;
   skeletonCount: number;
@@ -95,6 +103,8 @@ interface ResultsProps<THit extends BaseHit> {
 function Results<THit extends BaseHit>({
   cacheKey,
   renderHit,
+  view,
+  display,
   noResultsText,
   gridVariant,
   skeletonCount,
@@ -115,7 +125,7 @@ function Results<THit extends BaseHit>({
 
   if (items.length === 0 && isLoading) {
     return (
-      <CatalogSkeleton variant={gridVariant} count={skeletonCount} />
+      <CatalogSkeleton variant={gridVariant} count={skeletonCount} view={view} />
     );
   }
 
@@ -137,10 +147,10 @@ function Results<THit extends BaseHit>({
 
   return (
     <div ref={ref} style={{ minHeight: minHeight || undefined }}>
-      <div className={gridClasses[gridVariant]}>
+      <div className={view === "list" ? styles.list : gridClasses[gridVariant]}>
         {items.map((hit) => (
           <React.Fragment key={hit.objectID}>
-            {renderHit(hit)}
+            {renderHit(hit, view, display)}
           </React.Fragment>
         ))}
       </div>
@@ -163,6 +173,7 @@ function Results<THit extends BaseHit>({
 export default function Catalog<THit extends BaseHit>({
   indexName,
   renderHit,
+  bookDisplay = false,
   gridVariant = "book",
   cacheKey,
   sortOptions,
@@ -175,6 +186,8 @@ export default function Catalog<THit extends BaseHit>({
   stats = { singular: "Result", plural: "Results" },
 }: CatalogProps<THit>) {
   const resolvedCacheKey = cacheKey ?? indexName;
+  const [view, setView] = useCatalogView();
+  const [display, setDisplay] = useBookDisplay();
 
   const routing = React.useMemo(
     () => createAlgoliaRouting(indexName, defaultSort),
@@ -225,14 +238,23 @@ export default function Catalog<THit extends BaseHit>({
 
         <section className="container">
           <div className={styles.mainContent}>
-            <Stats
-              singularLabel={stats.singular}
-              pluralLabel={stats.plural}
-            />
+            {/* the count, with the grid/list switch on the right */}
+            <div className={styles.resultsHeader}>
+              <Stats
+                singularLabel={stats.singular}
+                pluralLabel={stats.plural}
+              />
+              <div className={styles.resultsTools}>
+                {bookDisplay && <DisplayMenu display={display} onChange={setDisplay} />}
+                <ViewToggle view={view} onChange={setView} />
+              </div>
+            </div>
             <CurrentRefinements />
             <Results<THit>
               cacheKey={resolvedCacheKey}
               renderHit={renderHit}
+              view={view}
+              display={display}
               noResultsText={noResultsText}
               gridVariant={gridVariant}
               skeletonCount={Math.min(hitsPerPage, 12)}
