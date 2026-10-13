@@ -173,14 +173,19 @@ const emptyResult = (request: SearchRequest) => ({
   index: request.indexName,
 });
 
+/** Shorter queries are answered locally: one letter can't usefully match a title */
+const MIN_TYPED_QUERY = 2;
+
 /**
- * A search client that answers empty searches itself, for search boxes that
- * show nothing until the reader types
+ * A search client that answers empty and one-letter searches itself, for
+ * search boxes that show nothing until the reader types
  */
 export const typedOnlySearchClient = {
   search(input: SearchInput) {
     const requests = toRequests(input);
-    const allEmpty = requests.every((r) => r.type !== "facet" && !String(r.params?.query ?? "").trim());
+    const allEmpty = requests.every(
+      (r) => r.type !== "facet" && String(r.params?.query ?? "").trim().length < MIN_TYPED_QUERY
+    );
     if (allEmpty) return Promise.resolve({ results: requests.map(emptyResult) });
     return search(input);
   },

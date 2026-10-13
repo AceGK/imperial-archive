@@ -1,0 +1,114 @@
+@use "@/styles/mixins" as *;
+
+.cue {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1rem, 4svh, 2.25rem);
+  // above the background (0) but under the hero content (2), so the search
+  // results dropdown covers it
+  z-index: 1;
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  // visibility flips only after the fade-out ends, so it fades rather than
+  // vanishing, and a hidden cue can't be clicked or focused
+  transition: opacity 0.35s ease, translate 0.35s ease, visibility 0s;
+
+  &.hidden {
+    opacity: 0;
+    translate: -50% 0.5rem;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s ease, translate 0.35s ease, visibility 0s 0.35s;
+  }
+
+  // the corner marks double as the keyboard focus indicator
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible .box::before {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// small spaced caps, like the nav links
+.label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--text), transparent 35%);
+  transition: color 0.2s ease;
+}
+
+// just the chevron at rest; the site's gold corner marks close in around it
+// on hover or keyboard focus
+.box {
+  @include corner-brackets(
+    $size: 10px,
+    $thickness: 1px,
+    $color: var(--primary)
+  );
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+
+  &::before {
+    opacity: 0;
+    transform: scale(1.2);
+    transition: opacity 0.2s ease, transform 0.25s ease;
+  }
+}
+
+.icon {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+  color: var(--primary);
+  animation: bob 2.2s ease-in-out infinite;
+}
+
+@media (hover: hover) {
+  .cue:hover {
+    .label {
+      color: var(--primary);
+    }
+
+    .box::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(-2px);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(3px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    animation: none;
+  }
+
+  .box::before {
+    transition: opacity 0.2s ease;
+  }
+}

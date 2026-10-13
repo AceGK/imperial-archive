@@ -1,12 +1,6 @@
 import styles from "./styles.module.scss";
-import type { BookHit } from "./types";
-
-function normalize(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
+import { normalize } from "./rows";
+import type { ResultRow } from "./types";
 
 function highlight(text: string, query: string): React.ReactNode {
   if (!query) return text;
@@ -27,17 +21,14 @@ function highlight(text: string, query: string): React.ReactNode {
 }
 
 type Props = {
-  hit: BookHit;
+  row: ResultRow;
   query: string;
   isActive: boolean;
   onSelect: () => void;
   onHover: () => void;
 };
 
-export function SearchResultItem({ hit, query, isActive, onSelect, onHover }: Props) {
-  const authorsLine = hit.authors?.map((a) => a.name).join(", ") || "";
-  const factionsLine = hit.factions?.map((f) => f.name).join(", ") || "";
-
+export function SearchResultItem({ row, query, isActive, onSelect, onHover }: Props) {
   return (
     <li
       className={`${styles.item} ${isActive ? styles.active : ""}`}
@@ -50,14 +41,11 @@ export function SearchResultItem({ hit, query, isActive, onSelect, onHover }: Pr
       }}
     >
       <div className={styles.rowTitle}>
-        {highlight(hit.title, query)}
-        <span className={styles.kind}>{hit.format || "Book"}</span>
+        {/* one element, so the highlight pieces aren't separate flex items, which drop their edge spaces */}
+        <span>{highlight(row.title, query)}</span>
+        {row.badge && <span className={styles.kind}>{row.badge}</span>}
       </div>
-      <div className={styles.rowMeta}>
-        {authorsLine && <span>{highlight(authorsLine, query)}</span>}
-        {factionsLine && <span className={styles.dot}>·</span>}
-        {factionsLine && <span>{highlight(factionsLine, query)}</span>}
-      </div>
+      {row.meta && <div className={styles.rowMeta}>{highlight(row.meta, query)}</div>}
     </li>
   );
 }

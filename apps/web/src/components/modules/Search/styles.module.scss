@@ -23,9 +23,9 @@
 }
 
 .suggestionChip {
-  display:flex;
-  align-items: center;
-  justify-content: center;
+  // block, not flex: text-box only trims block containers
+  display: block;
+  text-align: center;
   font-size: 0.8125rem;
   text-decoration: none;
   color: white;
@@ -33,7 +33,14 @@
   border: 1px solid color-mix(in oklab, white, transparent 65%);
   border-radius: var(--radius-full);
   background: color-mix(in oklab, black, transparent 60%);
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  // trim the line box to the letters themselves (cap height to baseline) so
+  // the text centers optically; the padding grows to keep the pill the same
+  // height. Browsers without text-box keep the plain padding above.
+  @supports (text-box: trim-both cap alphabetic) {
+    text-box: trim-both cap alphabetic;
+    padding-block: 0.625rem;
+  }
 
   &:hover {
     background: var(--primary);
@@ -58,9 +65,73 @@
     color: var(--subtle); 
   }
   
-  &:focus { 
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary), transparent 70%); 
-    border-color: var(--primary); 
+  &:focus {
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary), transparent 70%);
+    border-color: var(--primary);
+  }
+
+  // room for the search icon and the clear button
+  padding-left: 2.75rem;
+  padding-right: 3rem;
+
+  // replaced by .clearInput, which can be styled in every browser
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    display: none;
+    -webkit-appearance: none;
+  }
+}
+
+// sits inside the input on the left; clicks pass through to the input
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  translate: 0 -50%;
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+  color: var(--subtle);
+  pointer-events: none;
+  z-index: 1;
+}
+
+// gold while the box is in use, matching its focus ring
+.searchBox:focus-within .searchIcon {
+  color: var(--primary);
+}
+
+.clearInput {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: currentColor;
+  }
+
+  &:hover {
+    color: var(--destructive);
+    background: color-mix(in oklab, var(--destructive), transparent 85%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
   }
 }
 
@@ -138,6 +209,7 @@
   background: color-mix(in oklab, var(--accent), transparent 50%);
 }
 
+
 .rowTitle {
   font-weight: 600;
   line-height: 1.25;
@@ -150,6 +222,7 @@
     background: color-mix(in oklab, orange, transparent 70%);
     color: inherit;
     padding: 0 2px;
+    margin: 0 -2px; // highlight box without pushing the letters apart
     border-radius: 3px;
   }
 
@@ -165,12 +238,15 @@
   }
 }
 
+// one left-aligned line (the hero around it centers text); anything still too
+// long ends in an ellipsis rather than wrapping
 .rowMeta {
   font-size: 0.9rem;
   color: var(--subtle);
-  display: flex;
-  gap: .5ch;
-  align-items: baseline;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   .dot { 
     opacity: .6; 
@@ -180,6 +256,7 @@
     background: color-mix(in oklab, orange, transparent 70%);
     color: inherit;
     padding: 0 2px;
+    margin: 0 -2px; // highlight box without pushing the letters apart
     border-radius: 3px;
   }
 }
@@ -245,5 +322,33 @@
   .seeAllItem:hover & {
     transform: translateX(2px);
     opacity: 1;
+  }
+}
+
+// closing "View all": centered gold link under a divider, so it reads as the
+// end of the list rather than another result
+.seeAllFooter {
+  position: relative;
+  margin-top: 6px;
+  padding-block: 12px;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--primary);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -4px 0 auto;
+    border-top: 1px solid var(--border);
+  }
+
+  strong {
+    font-weight: 700;
+  }
+
+  &:hover,
+  &.active {
+    background: color-mix(in oklab, var(--primary), transparent 88%);
   }
 }

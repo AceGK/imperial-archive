@@ -87,6 +87,22 @@
   }
 }
 
+// WebKit (Safari, and every browser on iOS) can't blend across the animated
+// wall's GPU layers, so it gets a plain translucent glow instead. Only WebKit
+// supports -webkit-named-image, which makes this a Safari-only block.
+@supports (background: -webkit-named-image(i)) {
+  .shade::before {
+    mix-blend-mode: normal;
+    background: radial-gradient(
+      ellipse 40% 45% at 50% 48%,
+      rgba(255, 150, 120, 0.08) 0%,
+      rgba(185, 25, 35, 0.16) 40%,
+      rgba(120, 10, 20, 0.08) 60%,
+      rgba(0, 0, 0, 0) 75%
+    );
+  }
+}
+
 @keyframes drift {
   from {
     transform: translate3d(0, 0, 0);

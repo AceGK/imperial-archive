@@ -416,6 +416,27 @@ export const featuredBooks40kQuery = groq`
 
 // Covers for the homepage hero's book wall (titles with more than one record
 // come back more than once; the page dedupes them)
+// Everything the hero search matches in the browser rather than through Algolia
+export const searchShortcuts40kQuery = groq`{
+  "authors": *[_type == "author40k" && defined(slug.current) && !(_id in path("drafts.**"))]{
+    "id": _id, "title": coalesce(name, title), "slug": slug.current,
+    "count": count(*[_type == "book40k" && references(^._id) && !(_id in path("drafts.**"))])
+  },
+  "series": *[_type == "series40k" && defined(slug.current) && !(_id in path("drafts.**"))]{
+    "id": _id, title, "slug": slug.current,
+    "count": count(*[_type == "book40k" && !(_id in path("drafts.**")) && _id in ^.lists[].items[].work._ref])
+  },
+  "factions": *[_type == "faction40k" && defined(slug.current) && defined(group->slug.current) && !(_id in path("drafts.**"))]{
+    "id": _id, title, "slug": slug.current, "group": group->{ title, "slug": slug.current }
+  },
+  "groups": *[_type == "factionGroup40k" && defined(slug.current) && !(_id in path("drafts.**"))]{
+    "id": _id, title, "slug": slug.current
+  },
+  "eras": *[_type == "era40k" && defined(slug.current) && !(_id in path("drafts.**"))]{
+    "id": _id, title, "slug": slug.current
+  }
+}`;
+
 export const heroCoversQuery = groq`
 *[
   _type == "book40k" &&

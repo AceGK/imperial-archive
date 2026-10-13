@@ -3,6 +3,7 @@ import Image from "next/image";
 import styles from "./styles.module.scss";
 import type { Image as SanityImage } from "sanity";
 import { urlFor } from "@/lib/sanity/sanity.image";
+import ScrollCue from "./ScrollCue";
 
 type HeroProps = {
   /** Background image path or URL */
@@ -23,6 +24,8 @@ type HeroProps = {
   height?: "sm" | "md" | "lg" | "xl";
   /** Extra class hook */
   className?: string;
+  /** Show a "scroll down" button at the bottom of the hero */
+  scrollCue?: boolean;
   children?: React.ReactNode;
 };
 
@@ -36,13 +39,15 @@ export default function Hero({
   align = "left",
   height = "lg",
   className = "",
+  scrollCue = false,
   children,
 }: HeroProps) {
-  
+
   const sectionClass = [
     styles.hero,
     styles[`align-${align}`],
     styles[`height-${height}`],
+    scrollCue && styles.withCue,
     className,
   ]
     .filter(Boolean)
@@ -57,7 +62,7 @@ export default function Hero({
   return (
     <section
       className={sectionClass}
-      aria-label={typeof title === "string" ? title : undefined}
+      aria-labelledby="hero-title"
     >
       <div className={styles.media}>
         {background ??
@@ -75,10 +80,11 @@ export default function Hero({
       </div>
 
       <div className={`${styles.inner} container`}>
-        <h1 className={styles.title}>{title}</h1>
+        <h1 id="hero-title" className={styles.title}>{title}</h1>
         {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
         {children}
       </div>
+      {scrollCue && <ScrollCue />}
       <div className={styles.altText}>{alt}</div>
     </section>
   );
