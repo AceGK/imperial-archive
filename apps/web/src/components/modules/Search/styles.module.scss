@@ -46,7 +46,7 @@
   width: 100%;
   appearance: none;
   border: 1px solid var(--border);
-  background: color-mix(in oklab, var(--bg), black 4%);
+  background: color-mix(in oklab, var(--bg) 80%, black 4%);
   color: var(--foreground);
   border-radius: var(--radius);
   padding: 0.875rem 1rem;

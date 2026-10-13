@@ -414,6 +414,25 @@ export const featuredBooks40kQuery = groq`
 }
 `;
 
+// Covers for the homepage hero's book wall (titles with more than one record
+// come back more than once; the page dedupes them)
+export const heroCoversQuery = groq`
+*[
+  _type == "book40k" &&
+  !(_id in path("drafts.**")) &&
+  title in $titles &&
+  defined(image.asset)
+]{
+  _id,
+  title,
+  image{
+    crop,
+    hotspot,
+    asset->{ _id, metadata{ lqip } }
+  }
+}
+`;
+
 export const featuredSeries40kQuery = groq`
 *[
   _type == "series40k" &&

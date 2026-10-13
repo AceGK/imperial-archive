@@ -6,7 +6,9 @@ import { urlFor } from "@/lib/sanity/sanity.image";
 
 type HeroProps = {
   /** Background image path or URL */
-  image: string | SanityImage;
+  image?: string | SanityImage;
+  /** Custom background in place of `image`, e.g. the animated BookWall */
+  background?: React.ReactNode;
   /** Alt text (leave empty if decorative) */
   alt?: string;
   /** Main heading */
@@ -26,6 +28,7 @@ type HeroProps = {
 
 export default function Hero({
   image,
+  background,
   alt = "",
   title,
   subtitle,
@@ -47,7 +50,7 @@ export default function Hero({
 
    // Build URL if given a Sanity image object
   const src =
-    typeof image === "string"
+    !image || typeof image === "string"
       ? image
       : urlFor(image).width(2400).auto("format").url();
 
@@ -57,14 +60,17 @@ export default function Hero({
       aria-label={typeof title === "string" ? title : undefined}
     >
       <div className={styles.media}>
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          sizes="100vw"
-          className={styles.image}
-        />
+        {background ??
+          (src && (
+            <Image
+              src={src}
+              alt={alt}
+              fill
+              priority={priority}
+              sizes="100vw"
+              className={styles.image}
+            />
+          ))}
         <div className={styles.scrim} />
       </div>
 
