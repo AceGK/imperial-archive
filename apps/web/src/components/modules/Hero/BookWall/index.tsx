@@ -9,7 +9,12 @@ export type BookWallCover = {
 };
 
 type Props = {
-  covers: BookWallCover[];
+  /** Sanity covers; or pass `images` for plain image URLs */
+  covers?: BookWallCover[];
+  /** Plain cover image URLs (e.g. files in /public), used in place of `covers` */
+  images?: string[];
+  /** Cover width, any CSS length; the default scales with the viewport for the hero */
+  coverWidth?: string;
   /** Columns across the tilted wall; enough to cover ultra-wide screens */
   columns?: number;
   /** Covers per column before the column repeats */
@@ -22,12 +27,13 @@ type Props = {
  * runs on the compositor with no client JS. Each column holds its covers
  * twice and the wall slides up by exactly one set before looping.
  */
-export default function BookWall({ covers, columns = 14, rows = 8 }: Props) {
-  if (covers.length === 0) return null;
-
-  const urls = covers.map((c) =>
-    urlFor(c.image).width(320).height(480).fit("crop").quality(60).auto("format").url()
-  );
+export default function BookWall({ covers = [], images, coverWidth, columns = 14, rows = 8 }: Props) {
+  const urls =
+    images ??
+    covers.map((c) =>
+      urlFor(c.image).width(320).height(480).fit("crop").quality(60).auto("format").url()
+    );
+  if (urls.length === 0) return null;
 
   const grid = Array.from({ length: columns }, (_, col) =>
     Array.from({ length: rows }, (_, row) => urls[(col * rows + row) % urls.length])
@@ -36,7 +42,7 @@ export default function BookWall({ covers, columns = 14, rows = 8 }: Props) {
   return (
     <div
       className={styles.wall}
-      style={{ "--cols": columns, "--rows": rows } as CSSProperties}
+      style={{ "--cols": columns, "--rows": rows, ...(coverWidth && { "--w": coverWidth }) } as CSSProperties}
       aria-hidden="true"
     >
       <div className={styles.zoom}>

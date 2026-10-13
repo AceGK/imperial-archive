@@ -56,7 +56,7 @@ const NAV_ITEMS: NavItem[] = [
       },
     ],
   },
-  { href: "/track", label: "Track", comingSoon: true },
+  { href: "/track", label: "Track" },
   {
     label: "Info",
     links: [

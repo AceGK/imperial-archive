@@ -1,0 +1,946 @@
+@use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
+
+// Both walkthroughs loop on this cycle. Every element's base style is the
+// walkthrough's end state, so with reduced motion (no animation) each shows
+// its result instead.
+$cycle: 12s;
+
+.guide {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding-block: 3rem 2rem;
+
+  h2 {
+    margin: 0 0 0.75rem;
+  }
+
+  p {
+    line-height: 1.65;
+  }
+}
+
+/* ---- intro and status key ---- */
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22rem;
+  align-items: center;
+  gap: 2.5rem 3.5rem;
+
+  @include max(md) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// a framed window onto the drifting cover wall
+.introArt {
+  @include corner-brackets($size: 14px, $thickness: 1px, $color: var(--primary), $offset: 1px);
+  position: relative;
+  height: 24rem;
+  border: 1px solid var(--border);
+
+  // the frame's corner marks, above the wall's covers
+  &::before {
+    z-index: 3;
+  }
+
+  @include max(md) {
+    height: 16rem;
+  }
+}
+
+// crops the moving wall; on an inner layer, because clipping the frame itself
+// would also cut off its corner marks, which sit on the border
+.introArtWall {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.lead {
+  max-width: 46rem;
+  margin: 0 0 1.75rem;
+  font-size: 1.125rem;
+}
+
+.statusList {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    align-items: center;
+    gap: 1rem;
+    color: var(--subtle);
+  }
+
+  .demoTag {
+    justify-self: start;
+  }
+}
+
+// the cover tags, as on book cards (see CardTags)
+.demoTag {
+  display: inline-block;
+  padding: 0.1875rem 0.4375rem;
+  font-family: var(--font-condensed);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--primary);
+  background: rgba(10, 10, 12, 0.85);
+  border: 1px solid var(--primary);
+}
+
+.demoTagWant {
+  border-style: dashed;
+}
+
+.demoTagRead {
+  color: var(--on-primary);
+  background: var(--primary);
+}
+
+.demoTagOwned {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.demoHeartTag {
+  display: grid;
+  place-items: center;
+  justify-self: start;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--primary);
+  border: 1px solid color-mix(in oklab, var(--primary), transparent 50%);
+
+  svg {
+    width: 0.8125rem;
+    height: 0.8125rem;
+    fill: currentColor;
+  }
+}
+
+/* ---- the two methods: text beside a walkthrough ---- */
+
+.method {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem 3.5rem;
+
+  @include max(md) {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+
+    .methodText {
+      justify-self: stretch;
+    }
+  }
+}
+
+// alternate sides: walkthrough on the left
+.methodFlip {
+  grid-template-columns: auto minmax(0, 1fr);
+
+  .methodText {
+    order: 2;
+  }
+
+  @include max(md) {
+    grid-template-columns: minmax(0, 1fr);
+
+    .methodText {
+      order: 0;
+    }
+  }
+}
+
+.kicker {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-family: var(--font-condensed);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.steps {
+  display: grid;
+  gap: 0.625rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+
+  li {
+    position: relative;
+    padding-left: 2.25rem;
+    line-height: 1.55;
+    counter-increment: step;
+
+    &::before {
+      content: counter(step);
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: grid;
+      place-items: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      border: 1px solid color-mix(in oklab, var(--primary), transparent 50%);
+    }
+  }
+}
+
+.tip {
+  margin: 1rem 0 0;
+  font-size: 0.875rem;
+  color: var(--subtle);
+}
+
+/* ---- walkthrough stage (decorative, fixed-size) ---- */
+
+// the frame around a walkthrough
+.stage {
+  @include corner-brackets($size: 14px, $thickness: 1px, $color: var(--primary), $offset: 1px);
+  flex-shrink: 0;
+  padding: 1.25rem;
+  background: color-mix(in oklab, var(--bg-card), transparent 20%);
+  border: 1px solid var(--border);
+  pointer-events: none;
+  user-select: none;
+
+  // a touch smaller on phones, so the fixed-size walkthrough fits
+  @include max(sm) {
+    zoom: 0.86;
+  }
+}
+
+// fixed size: the animations move the cursor to pixel positions in here
+.stageInner {
+  position: relative;
+}
+
+// just the card: its menu opens over the cover, as the real one does when
+// there's no room below
+.stageCard {
+  width: 190px;
+}
+
+.stageRow {
+  width: 340px;
+  height: 140px;
+}
+
+.cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 22px;
+  height: 22px;
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
+  transform-origin: 4px 2px;
+  opacity: 0;
+}
+
+// the ring that pulses where the cursor "clicks"
+.cursorClick {
+  position: absolute;
+  top: -14px;
+  left: -14px;
+  z-index: 4;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+/* card walkthrough */
+
+.demoCard {
+  position: relative;
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.demoCover {
+  position: relative;
+  height: 304px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.demoShade {
+  position: absolute;
+  inset: auto 0 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent);
+  opacity: 0;
+}
+
+.demoCover .demoTag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+}
+
+.demoTagPop {
+  transform-origin: left top;
+}
+
+.demoTrack {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(10, 10, 12, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  opacity: 0;
+
+  svg {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+.demoCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px 10px;
+}
+
+.demoTitle {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.demoAuthor {
+  font-size: 12px;
+  color: var(--subtle);
+}
+
+// above the Track button, right edges lined up
+.demoMenu {
+  position: absolute;
+  top: 81px;
+  left: 30px;
+  display: flex;
+  flex-direction: column;
+  width: 152px;
+  padding: 6px;
+  font-size: 12.5px;
+  color: var(--text);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  transform-origin: right bottom;
+  opacity: 0;
+}
+
+.demoMenuHeading {
+  padding: 4px 6px 6px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+
+.demoMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 6px;
+
+  svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+  }
+}
+
+.demoMenuPick {
+  color: var(--primary);
+}
+
+.demoTick {
+  margin-left: auto;
+}
+
+.demoMenuDivider {
+  margin: 4px 0;
+  border-top: 1px solid var(--border);
+}
+
+/* page walkthrough */
+
+.demoRow {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.demoButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 37px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+
+  svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+}
+
+.demoStatus {
+  width: 150px;
+}
+
+.demoOwned {
+  width: 88px;
+}
+
+.demoSquare {
+  justify-content: center;
+  width: 37px;
+  padding: 0;
+}
+
+// filled once favorited (the end state); the animation starts it as an outline
+.demoHeart svg {
+  fill: currentColor;
+}
+
+.demoShare {
+  color: var(--text);
+  border-color: var(--border);
+
+  svg {
+    fill: currentColor;
+  }
+}
+
+// the four status labels, stacked; one shows at a time
+.demoLabels {
+  position: relative;
+  flex: 1;
+  height: 100%;
+}
+
+.demoLabel {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.frameRead {
+  opacity: 1;
+}
+
+.demoDots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.demoDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.demoTagsRow {
+  position: absolute;
+  top: 88px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--subtle);
+
+
+}
+
+.demoTagsLabel {
+  margin-right: 2px;
+}
+
+// the same height as the tags beside it
+.demoTagsRow .demoHeartTag {
+  width: 21px;
+  height: 21px;
+
+  svg {
+    width: 11px;
+    height: 11px;
+  }
+}
+
+// One tag that follows the status: its text comes from CSS so the animation
+// can change it, and it's always as wide as its current word. Base style is
+// the end state, Read.
+.demoStatusTag {
+  color: var(--on-primary);
+  background: var(--primary);
+
+  &::after {
+    content: "Read";
+  }
+}
+
+/* ---- animations (skipped entirely with reduced motion) ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+  // card: hover, press Track, choose Reading, tag appears
+  .stageInner:not(.stageRow) {
+    .cursor { animation: cardCursor $cycle ease-in-out infinite; }
+    .cursorClick { animation: cardClickRing $cycle linear infinite; }
+    .demoTrack { animation: cardTrack $cycle ease-out infinite, cardTrackOn $cycle step-end infinite; }
+    .demoShade { animation: cardShade $cycle ease infinite; }
+    .demoMenu { animation: cardMenu $cycle ease-out infinite; }
+    .demoMenuPick { animation: cardPick $cycle step-end infinite; }
+    .demoTick { animation: cardTick $cycle step-end infinite; }
+    .demoTagPop { animation: cardTag $cycle ease-out infinite; }
+  }
+
+  // page: step the status through, then Owned and the heart
+  .stageRow {
+    .cursor { animation: pageCursor $cycle ease-in-out infinite; }
+    .cursorClick { animation: pageClickRing $cycle linear infinite; }
+    .demoStatus { animation: pageStatusOn $cycle step-end infinite; }
+    .frameUnread { animation: frameUnread $cycle step-end infinite; }
+    .frameWant { animation: frameWant $cycle step-end infinite; }
+    .frameReading { animation: frameReading $cycle step-end infinite; }
+    .frameRead { animation: frameRead $cycle step-end infinite; }
+    .dot1 { animation: dot1 $cycle step-end infinite; }
+    .dot2 { animation: dot2 $cycle step-end infinite; }
+    .dot3 { animation: dot3 $cycle step-end infinite; }
+    .demoOwned { animation: ownedOn $cycle step-end infinite; }
+    .demoHeart { animation: heartOn $cycle step-end infinite; }
+    .demoHeart svg { animation: heartFill $cycle step-end infinite; }
+    .demoStatusTag { animation: statusTag $cycle step-end infinite; }
+    .demoStatusTag::after { animation: statusTagText $cycle step-end infinite; }
+    .tagOwnedFrame { animation: tagOwned $cycle step-end infinite; }
+    .tagHeartFrame { animation: tagHeart $cycle step-end infinite; }
+  }
+}
+
+// card stage targets: cover (95,182), Track button (150,283), "Reading" in the menu above it (90,151)
+@keyframes cardCursor {
+  0% { transform: translate(166px, 330px); opacity: 0; }
+  6% { transform: translate(166px, 330px); opacity: 1; }
+  14% { transform: translate(91px, 180px); }
+  22%, 24% { transform: translate(146px, 281px) scale(1); }
+  25% { transform: translate(146px, 281px) scale(0.85); }
+  27%, 28% { transform: translate(146px, 281px) scale(1); }
+  36%, 38% { transform: translate(86px, 149px) scale(1); }
+  39% { transform: translate(86px, 149px) scale(0.85); }
+  41%, 50% { transform: translate(86px, 149px) scale(1); opacity: 1; }
+  62% { transform: translate(166px, 330px); opacity: 1; }
+  70%, 100% { transform: translate(166px, 330px); opacity: 0; }
+}
+
+@keyframes cardClickRing {
+  0%, 24% { transform: translate(150px, 283px) scale(0.3); opacity: 0; }
+  25% { transform: translate(150px, 283px) scale(0.3); opacity: 0.9; }
+  29% { transform: translate(150px, 283px) scale(1.4); opacity: 0; }
+  30%, 38% { transform: translate(90px, 151px) scale(0.3); opacity: 0; }
+  39% { transform: translate(90px, 151px) scale(0.3); opacity: 0.9; }
+  43%, 100% { transform: translate(90px, 151px) scale(1.4); opacity: 0; }
+}
+
+// springs up as the cursor arrives (like the real hover), leaves after
+@keyframes cardTrack {
+  0%, 14% { transform: translateY(8px) scale(0.85); opacity: 0; }
+  18% { transform: translateY(-2px) scale(1.05); opacity: 1; }
+  20%, 58% { transform: none; opacity: 1; }
+  62%, 100% { transform: translateY(8px) scale(0.85); opacity: 0; }
+}
+
+@keyframes cardTrackOn {
+  0% { color: #fff; }
+  27% { color: var(--primary); }
+  50% { color: #fff; }
+}
+
+@keyframes cardShade {
+  0%, 14% { opacity: 0; }
+  18%, 58% { opacity: 1; }
+  62%, 100% { opacity: 0; }
+}
+
+@keyframes cardMenu {
+  0%, 26% { transform: translateY(4px) scale(0.97); opacity: 0; }
+  29%, 48% { transform: none; opacity: 1; }
+  52%, 100% { transform: translateY(4px) scale(0.97); opacity: 0; }
+}
+
+@keyframes cardPick {
+  0% { color: var(--text); background: transparent; }
+  40% { color: var(--primary); background: color-mix(in oklab, var(--accent), transparent 40%); }
+  54% { color: var(--text); background: transparent; }
+}
+
+@keyframes cardTick {
+  0% { opacity: 0; }
+  41% { opacity: 1; }
+  54% { opacity: 0; }
+}
+
+@keyframes cardTag {
+  0%, 50% { transform: scale(0.6); opacity: 0; }
+  54% { transform: scale(1.15); opacity: 1; }
+  57%, 92% { transform: none; opacity: 1; }
+  96%, 100% { transform: scale(0.9); opacity: 0; }
+}
+
+// page stage targets: status button (75,38), Owned (202,38), heart (272,38)
+@keyframes pageCursor {
+  0% { transform: translate(326px, 128px); opacity: 0; }
+  4% { transform: translate(326px, 128px); opacity: 1; }
+  10%, 11% { transform: translate(71px, 36px) scale(1); }
+  12% { transform: translate(71px, 36px) scale(0.85); }
+  13%, 25% { transform: translate(71px, 36px) scale(1); }
+  26% { transform: translate(71px, 36px) scale(0.85); }
+  27%, 39% { transform: translate(71px, 36px) scale(1); }
+  40% { transform: translate(71px, 36px) scale(0.85); }
+  41% { transform: translate(71px, 36px) scale(1); }
+  52%, 55% { transform: translate(198px, 36px) scale(1); }
+  56% { transform: translate(198px, 36px) scale(0.85); }
+  57% { transform: translate(198px, 36px) scale(1); }
+  64%, 67% { transform: translate(268px, 36px) scale(1); }
+  68% { transform: translate(268px, 36px) scale(0.85); }
+  69% { transform: translate(268px, 36px) scale(1); opacity: 1; }
+  78% { transform: translate(326px, 128px); opacity: 1; }
+  84%, 100% { transform: translate(326px, 128px); opacity: 0; }
+}
+
+@keyframes pageClickRing {
+  0%, 11% { transform: translate(75px, 38px) scale(0.3); opacity: 0; }
+  12% { transform: translate(75px, 38px) scale(0.3); opacity: 0.9; }
+  16%, 25% { transform: translate(75px, 38px) scale(1.4); opacity: 0; }
+  26% { transform: translate(75px, 38px) scale(0.3); opacity: 0.9; }
+  30%, 39% { transform: translate(75px, 38px) scale(1.4); opacity: 0; }
+  40% { transform: translate(75px, 38px) scale(0.3); opacity: 0.9; }
+  44%, 55% { transform: translate(75px, 38px) scale(1.4); opacity: 0; }
+  56% { transform: translate(202px, 38px) scale(0.3); opacity: 0.9; }
+  60%, 67% { transform: translate(202px, 38px) scale(1.4); opacity: 0; }
+  68% { transform: translate(272px, 38px) scale(0.3); opacity: 0.9; }
+  72%, 100% { transform: translate(272px, 38px) scale(1.4); opacity: 0; }
+}
+
+// a state is "off" (plain) outside its window, gold inside it
+@keyframes pageStatusOn {
+  0% { color: var(--text); border-color: var(--border); }
+  12% { color: var(--primary); border-color: var(--primary); }
+  94% { color: var(--text); border-color: var(--border); }
+}
+
+@keyframes frameUnread {
+  0% { opacity: 1; }
+  12% { opacity: 0; }
+  94% { opacity: 1; }
+}
+
+@keyframes frameWant {
+  0% { opacity: 0; }
+  12% { opacity: 1; }
+  26% { opacity: 0; }
+}
+
+@keyframes frameReading {
+  0% { opacity: 0; }
+  26% { opacity: 1; }
+  40% { opacity: 0; }
+}
+
+@keyframes frameRead {
+  0% { opacity: 0; }
+  40% { opacity: 1; }
+  94% { opacity: 0; }
+}
+
+@keyframes dot1 {
+  0% { opacity: 0.3; }
+  12% { opacity: 1; }
+  94% { opacity: 0.3; }
+}
+
+@keyframes dot2 {
+  0% { opacity: 0.3; }
+  26% { opacity: 1; }
+  94% { opacity: 0.3; }
+}
+
+@keyframes dot3 {
+  0% { opacity: 0.3; }
+  40% { opacity: 1; }
+  94% { opacity: 0.3; }
+}
+
+@keyframes ownedOn {
+  0% { color: var(--text); border-color: var(--border); }
+  56% { color: var(--primary); border-color: var(--primary); }
+  94% { color: var(--text); border-color: var(--border); }
+}
+
+@keyframes heartFill {
+  0% { fill: none; }
+  68% { fill: currentColor; }
+  94% { fill: none; }
+}
+
+@keyframes heartOn {
+  0% { color: var(--text); border-color: var(--border); }
+  68% { color: var(--primary); border-color: var(--primary); }
+  94% { color: var(--text); border-color: var(--border); }
+}
+
+// unread: hidden; then dashed outline, solid outline, filled, as on real cards
+@keyframes statusTag {
+  0% { opacity: 0; }
+  12% { opacity: 1; color: var(--primary); background: rgba(10, 10, 12, 0.85); border-style: dashed; }
+  26% { opacity: 1; color: var(--primary); background: rgba(10, 10, 12, 0.85); border-style: solid; }
+  40% { opacity: 1; color: var(--on-primary); background: var(--primary); border-style: solid; }
+  94% { opacity: 0; }
+}
+
+@keyframes statusTagText {
+  0% { content: "Want to read"; }
+  26% { content: "Reading"; }
+  40% { content: "Read"; }
+}
+
+@keyframes tagOwned {
+  0% { opacity: 0; }
+  56% { opacity: 1; }
+  94% { opacity: 0; }
+}
+
+// the favorite heart, from the moment the heart button is pressed
+@keyframes tagHeart {
+  0% { opacity: 0; }
+  68% { opacity: 1; }
+  94% { opacity: 0; }
+}
+
+/* ---- your tracker ---- */
+
+.tracker {
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+
+  p {
+    max-width: 38rem;
+    margin: 0 auto 1.5rem;
+    color: var(--subtle);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* ---- coming soon ---- */
+
+.soonHeader {
+  margin-bottom: 1.75rem;
+
+  p {
+    margin: 0;
+    color: var(--subtle);
+  }
+}
+
+.soonBadge {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.1875rem 0.5rem;
+  font-family: var(--font-condensed);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  border: 1px dashed var(--primary);
+}
+
+.soonGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
+  @include max(md) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.soonCard {
+  @include corner-brackets($size: 12px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.125rem;
+  }
+
+  p {
+    margin: 0 0 1.25rem;
+    font-size: 0.9375rem;
+    color: var(--subtle);
+  }
+}
+
+.soonWide {
+  grid-column: 1 / -1;
+}
+
+// sample progress, dimmed: it's a preview, not your data
+.bars {
+  display: grid;
+  gap: 0.875rem;
+  opacity: 0.75;
+}
+
+.bar {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.barLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+
+  span {
+    color: var(--subtle);
+  }
+}
+
+.barTrack {
+  height: 6px;
+  background: color-mix(in srgb, var(--subtle) 18%, transparent);
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+}
+
+// locked honours: dashed outlines, to be filled in once earned. Three even
+// columns (two rows of three), every badge the same padding and spacing.
+.badges {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  // every row as tall as the tallest, even when a description wraps
+  grid-auto-rows: 1fr;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include max(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  text-align: center;
+  border: 1px dashed color-mix(in oklab, var(--primary), transparent 45%);
+}
+
+// the icon in a square frame with the site's corner marks
+.badgeMark {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px);
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 0.25rem;
+  color: color-mix(in oklab, var(--primary), transparent 20%);
+  border: 1px solid color-mix(in oklab, var(--primary), transparent 65%);
+
+  // tall icons are bounded by the height, the wide Aquila by the width
+  svg {
+    width: 2.75rem;
+    height: 2rem;
+  }
+}
+
+.badgeName {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.badgeText {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--subtle);
+}

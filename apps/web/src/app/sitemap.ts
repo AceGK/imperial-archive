@@ -33,6 +33,7 @@ const STATIC_PAGES: { path: string; priority: number }[] = [
   { path: "/authors", priority: 0.8 },
   { path: "/factions", priority: 0.8 },
   { path: "/eras", priority: 0.7 },
+  { path: "/track", priority: 0.5 },
   { path: "/about", priority: 0.4 },
   { path: "/support", priority: 0.3 },
   { path: "/terms", priority: 0.2 },
