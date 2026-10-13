@@ -58,9 +58,53 @@
     color: var(--subtle); 
   }
   
-  &:focus { 
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary), transparent 70%); 
-    border-color: var(--primary); 
+  &:focus {
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary), transparent 70%);
+    border-color: var(--primary);
+  }
+
+  // room for the clear button
+  padding-right: 3rem;
+
+  // replaced by .clearInput, which can be styled in every browser
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    display: none;
+    -webkit-appearance: none;
+  }
+}
+
+.clearInput {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: currentColor;
+  }
+
+  &:hover {
+    color: var(--destructive);
+    background: color-mix(in oklab, var(--destructive), transparent 85%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
   }
 }
 

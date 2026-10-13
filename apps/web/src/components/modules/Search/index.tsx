@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { SearchResults } from "./SearchResults";
 import styles from "./styles.module.scss";
+import XmarkIcon from "@/components/icons/xmark.svg";
 import type { BookHit } from "./types";
 
 const SUGGESTED_SEARCHES = [
@@ -49,6 +50,7 @@ function CustomSearchBox() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const boxRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Load recent searches from localStorage on mount
   useEffect(() => {
@@ -117,6 +119,14 @@ function CustomSearchBox() {
     setValue(searchTerm);
     refine(searchTerm);
     setOpen(true);
+  }
+
+  // back to an empty box with focus kept, so recent searches show again
+  function clearInput() {
+    setValue("");
+    refine("");
+    setOpen(true);
+    inputRef.current?.focus();
   }
 
   function clearRecentSearches() {
@@ -200,7 +210,19 @@ function CustomSearchBox() {
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={onKeyDown}
+        ref={inputRef}
       />
+
+      {value && (
+        <button
+          type="button"
+          className={styles.clearInput}
+          onClick={clearInput}
+          aria-label="Clear search"
+        >
+          <XmarkIcon aria-hidden="true" />
+        </button>
+      )}
 
       {/* Recent Searches */}
       {showRecentSearches && (
