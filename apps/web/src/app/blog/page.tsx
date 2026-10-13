@@ -10,7 +10,7 @@ import styles from "./styles.module.scss";
 export const revalidate = 60;
 
 const TITLE = "Blog";
-const LABEL = "Adeptus Administratum · IA-004 // Chronicles";
+const LABEL = "Adeptus Astra Telepathica · IA-004 // Astropathic Relays";
 
 async function getPosts() {
   return client.fetch<BlogPost[]>(blogPostsQuery);
