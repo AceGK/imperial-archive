@@ -161,8 +161,8 @@ export default async function Home() {
       <Hero
         image="/images/black-library-books.jpg"
         background={heroCovers.length > 0 ? <BookWall covers={heroCovers} /> : undefined}
-        title="Explore the Black Library"
-        subtitle="Browse Warhammer 40,000 books by author, faction, era, and series."
+        title={<>Explore the Black Library<sup>™</sup></>}
+        subtitle="Browse & track Warhammer 40,000 publications by author, faction, era, and series."
         priority
         align="center"
         height="md"

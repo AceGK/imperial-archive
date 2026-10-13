@@ -38,7 +38,7 @@ export default function Hero({
   className = "",
   children,
 }: HeroProps) {
-  
+
   const sectionClass = [
     styles.hero,
     styles[`align-${align}`],
@@ -57,7 +57,7 @@ export default function Hero({
   return (
     <section
       className={sectionClass}
-      aria-label={typeof title === "string" ? title : undefined}
+      aria-labelledby="hero-title"
     >
       <div className={styles.media}>
         {background ??
@@ -75,7 +75,7 @@ export default function Hero({
       </div>
 
       <div className={`${styles.inner} container`}>
-        <h1 className={styles.title}>{title}</h1>
+        <h1 id="hero-title" className={styles.title}>{title}</h1>
         {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
         {children}
       </div>
