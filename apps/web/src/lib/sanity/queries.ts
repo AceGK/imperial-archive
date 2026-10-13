@@ -414,8 +414,6 @@ export const featuredBooks40kQuery = groq`
 }
 `;
 
-// Covers for the homepage hero's book wall (titles with more than one record
-// come back more than once; the page dedupes them)
 // Everything the hero search matches in the browser rather than through Algolia
 export const searchShortcuts40kQuery = groq`{
   "authors": *[_type == "author40k" && defined(slug.current) && !(_id in path("drafts.**"))]{
@@ -437,6 +435,8 @@ export const searchShortcuts40kQuery = groq`{
   }
 }`;
 
+// Covers for the homepage hero's book wall (titles with more than one record
+// come back more than once; the page dedupes them)
 export const heroCoversQuery = groq`
 *[
   _type == "book40k" &&
