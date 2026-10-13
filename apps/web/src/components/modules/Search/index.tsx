@@ -9,6 +9,7 @@ import Link from "next/link";
 import { SearchResults } from "./SearchResults";
 import styles from "./styles.module.scss";
 import XmarkIcon from "@/components/icons/xmark.svg";
+import MagnifyingGlassIcon from "@/components/icons/magnifying-glass.svg";
 import type { BookHit } from "./types";
 
 const SUGGESTED_SEARCHES = [
@@ -197,6 +198,7 @@ function CustomSearchBox() {
 
   return (
     <div className={styles.searchBox} ref={boxRef}>
+      <MagnifyingGlassIcon className={styles.searchIcon} aria-hidden="true" />
       <input
         id="hero-search"
         className={styles.input}
