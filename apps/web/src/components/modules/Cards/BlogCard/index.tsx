@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { BlogPost } from "@/types/sanity";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import { formatPostDate } from "@/lib/blog";
+import ArrowRight from "@/components/icons/arrow-right.svg";
 import styles from "./styles.module.scss";
 
 /** Post preview for the /blog grid: cover, category, title, date, and excerpt */
@@ -43,7 +44,10 @@ export default function BlogCard({
         </div>
         <Heading className={styles.title}>{post.title}</Heading>
         {post.metaDescription && <p className={styles.excerpt}>{post.metaDescription}</p>}
-        <span className={styles.readMore}>Read dispatch →</span>
+        <span className={styles.readMore}>
+          Read dispatch
+          <ArrowRight className={styles.readMoreIcon} aria-hidden="true" />
+        </span>
       </div>
     </Link>
   );
