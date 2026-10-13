@@ -1,0 +1,113 @@
+.wall {
+  // cover size scales with the viewport; --set is one full column of covers,
+  // the distance the wall travels before it loops
+  --w: clamp(130px, 14vw, 250px);
+  --h: calc(var(--w) * 1.5);
+  --gap: calc(var(--w) * 0.09);
+  --set: calc(var(--rows) * (var(--h) + var(--gap)));
+
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  // the gaps between covers catch a crimson glow near the light
+  background: radial-gradient(ellipse 55% 60% at 50% 50%, #3a0d12 0%, #170709 45%, #0b0a0c 80%);
+}
+
+.zoom {
+  position: absolute;
+  inset: 0;
+  animation: kenBurns 48s ease-in-out infinite alternate;
+}
+
+.plane {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--cols) * (var(--w) + var(--gap)));
+  height: var(--set);
+  transform: translate(-50%, -50%) rotate(-30deg);
+}
+
+.track {
+  display: flex;
+  gap: var(--gap);
+  will-change: transform;
+  animation: drift 160s linear infinite;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: var(--w);
+
+  // brick offset, like covers laid out on a table
+  &:nth-child(odd) {
+    transform: translateY(calc(var(--h) * -0.5));
+  }
+}
+
+.cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  // margin, not flex gap, so two sets are exactly twice one set and the loop is seamless
+  margin-bottom: var(--gap);
+  object-fit: cover;
+  background: #1a1719;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+// a light source over the center of the table: covers there are lit warm,
+// and fall off into shadow toward the edges
+.shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 70% at 50% 50%,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.35) 50%,
+    rgba(0, 0, 0, 0.88) 100%
+  );
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    mix-blend-mode: soft-light;
+    background: radial-gradient(
+      ellipse 40% 45% at 50% 48%,
+      rgba(255, 220, 180, 0.9) 0%,
+      rgba(200, 60, 50, 0.45) 45%,
+      rgba(0, 0, 0, 0) 75%
+    );
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, calc(var(--set) * -1), 0);
+  }
+}
+
+@keyframes kenBurns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zoom,
+  .track {
+    animation: none;
+  }
+}

@@ -1,5 +1,6 @@
 // /app/page.tsx
 import Hero from "@/components/modules/Hero";
+import BookWall, { type BookWallCover } from "@/components/modules/Hero/BookWall";
 import AuthorsCarousel from "@/components/modules/Carousel/AuthorsCarousel";
 import BooksCarousel from "@/components/modules/Carousel/BooksCarousel";
 import SeriesCarousel from "@/components/modules/Carousel/SeriesCarousel";
@@ -10,6 +11,7 @@ import BlogCarousel from "@/components/modules/Carousel/BlogCarousel";
 import { client } from "@/lib/sanity/sanity.client";
 import {
   blogPostsQuery,
+  heroCoversQuery,
   featuredAuthors40kQuery,
   featuredBooks40kQuery,
   featuredSeries40kQuery,
@@ -28,6 +30,37 @@ export const metadata = pageMetadata({
   description: SITE_DESCRIPTION,
   path: "/",
 });
+
+// Well-known books for the hero's book wall. Must match titles exactly; titles
+// without a cover are skipped.
+const heroCoverTitles = [
+  "Horus Rising", "False Gods", "Galaxy in Flames", "The Flight of the Eisenstein",
+  "Fulgrim", "Descent of Angels", "Legion", "Mechanicum", "A Thousand Sons",
+  "Know No Fear", "The First Heretic", "Prospero Burns", "Betrayer",
+  "The Outcast Dead", "Angel Exterminatus", "Vulkan Lives", "The Solar War",
+  "The Lost and the Damned", "The First Wall", "Warhawk", "Xenos", "Malleus",
+  "Hereticus", "Ravenor", "Pariah", "First and Only", "Necropolis",
+  "Only in Death", "Ghostmaker", "For the Emperor", "Caves of Ice",
+  "Soul Hunter", "Blood Reaver", "Void Stalker", "Ahriman: Exile", "Helsreach",
+  "Dark Imperium", "Lord of the Night", "Fifteen Hours", "Double Eagle",
+  "Titanicus", "Priests of Mars", "Storm of Iron", "Path of the Warrior",
+  "Avenging Son", "Indomitus", "Farsight: Crisis of Faith",
+  "Yarrick: Imperial Creed", "Dead Men Walking", "Space Wolf",
+  "Brothers of the Snake", "The Talon of Horus", "Black Legion",
+  "Lucius: The Faultless Blade", "Belisarius Cawl: The Great Work", "Krieg",
+  "Valdor: Birth of the Imperium", "Atlas Infernal", "Dante", "Kingsblade",
+];
+
+/** One cover per title, in random order so the wall changes between builds */
+function pickHeroCovers(covers: BookWallCover[]) {
+  const byTitle = new Map(covers.map((c) => [c.title, c]));
+  const unique = [...byTitle.values()];
+  for (let i = unique.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [unique[i], unique[j]] = [unique[j], unique[i]];
+  }
+  return unique;
+}
 
 export default async function Home() {
   const featuredNames = [
@@ -114,12 +147,20 @@ export default async function Home() {
     { next: { revalidate } }
   );
 
+  const heroCovers = pickHeroCovers(
+    await client.fetch<BookWallCover[]>(
+      heroCoversQuery,
+      { titles: heroCoverTitles },
+      { next: { revalidate } }
+    )
+  );
+
   return (
     <main>
       <JsonLd data={siteJsonLd()} />
       <Hero
         image="/images/black-library-books.jpg"
-        alt="Black Library © Games Workshop"
+        background={heroCovers.length > 0 ? <BookWall covers={heroCovers} /> : undefined}
         title="Explore the Black Library"
         subtitle="Browse Warhammer 40,000 books by author, faction, era, and series."
         priority
