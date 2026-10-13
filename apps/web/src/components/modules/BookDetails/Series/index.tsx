@@ -26,7 +26,7 @@ interface SeriesNav {
 }
 
 interface SeriesSectionProps {
-  book: Pick<BookDetailData, "_id" | "series">;
+  book: Pick<BookDetailData, "_id" | "series" | "format">;
   seriesNavigation?: SeriesNav[];
 }
 
@@ -72,28 +72,37 @@ export default function SeriesSection({
     })
     .filter(Boolean);
 
+  // "novel", "short story"… for the sentence; anything unlabelled is a "book"
+  const kind = book.format && book.format.toLowerCase() !== "other" ? book.format.toLowerCase() : "book";
+
   return (
     <>
-      {series.map((s: any, i: number) => {
-        const label =
-          typeof s?.number === "number" && Number.isFinite(s.number)
-            ? `${s?.name} #${s.number}`
-            : (s?.name ?? s?.slug);
-        const href = s?.slug ? `/series/${encodeURIComponent(s.slug)}` : "";
-        const node = href ? (
-          <Link key={s?.slug ?? i} href={href} className={styles.seriesLink}>
-            {label}
-          </Link>
-        ) : (
-          <span key={s?.name ?? i}>{label}</span>
-        );
-        return (
-          <span key={`series-${s?.slug ?? i}`}>
-            {node}
-            {i < series.length - 1 ? ", " : ""}
-          </span>
-        );
-      })}
+      <p className={styles.seriesIntro}>
+        This {kind} is included in the series:{" "}
+        {series.map((s: any, i: number) => {
+          const label =
+            typeof s?.number === "number" && Number.isFinite(s.number)
+              ? `${s?.name} #${s.number}`
+              : (s?.name ?? s?.slug);
+          const href = s?.slug ? `/series/${encodeURIComponent(s.slug)}` : "";
+          const node = href ? (
+            <Link href={href} className={styles.seriesLink}>
+              {label}
+            </Link>
+          ) : (
+            <span>{label}</span>
+          );
+          // "A", "A and B", "A, B and C"
+          const separator =
+            i === series.length - 1 ? "" : i === series.length - 2 ? " and " : ", ";
+          return (
+            <span key={`series-${s?.slug ?? i}`}>
+              {node}
+              {separator}
+            </span>
+          );
+        })}
+      </p>
 
       {/* Series Navigation */}
       {navigationData.map((navData: any, idx: number) => (
