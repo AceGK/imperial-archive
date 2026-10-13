@@ -34,6 +34,7 @@ export default async function FactionsPage() {
         priority
         image="/images/astra-militarum-lewis-jones.jpg"
         credit="Astra Militarum by Lewis Jones"
+        warning="This list is a work in progress. Not every faction, Second Founding chapter, or splinter force is listed yet, and not every book has been tagged with its factions, so some books won't appear under the factions they feature."
       />
       <div className="container">
 

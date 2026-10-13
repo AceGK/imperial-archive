@@ -24,7 +24,7 @@ const CATALOGS: {
     href: "/books",
     variant: "book",
     filters: ["Format", "Author", "Series", "Faction", "Era"],
-    sort: "Most Recent",
+    sort: "Publication Date ↓",
     count: 10,
   },
   {

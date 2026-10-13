@@ -209,6 +209,20 @@ export default function AboutPage() {
                 property.
               </p>
               <p>
+                Faction icons are drawn from{" "}
+                <ExternalLink href="https://github.com/Certseeds/wh40k-icon">
+                  wh40k-icon
+                </ExternalLink>
+                , an open-source collection by Certseeds and its contributors,
+                shared under{" "}
+                <ExternalLink href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  CC BY-NC-SA 4.0
+                </ExternalLink>
+                . Where a faction had no icon there, one was hand-crafted for
+                the Archive. The symbols themselves belong to{" "}
+                <GamesWorkshop />.
+              </p>
+              <p>
                 Where the artist behind a page banner is known — the
                 imagery atop the Books, Authors, Series, Factions, and Eras
                 pages — their attribution is inscribed in the bottom-right

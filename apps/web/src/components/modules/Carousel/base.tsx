@@ -1,7 +1,7 @@
 // components/modules/Carousel/base/index.tsx
 'use client';
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,7 +18,7 @@ type CarouselProps = {
   headerSlot?: React.ReactNode;
   items: React.ReactNode[];
   /** Slides in view per breakpoint, defined in styles.module.scss */
-  layout: "books" | "series" | "authors" | "factions" | "eras";
+  layout: "books" | "series" | "authors" | "factions" | "eras" | "blog";
   loop?: boolean;
   autoplay?: false | { delay?: number; pauseOnMouseEnter?: boolean; disableOnInteraction?: boolean };
   navigation?: boolean;
@@ -30,6 +30,8 @@ type CarouselProps = {
   /** Icon on the "View All" last slide, e.g. the nav icon for this content type */
   viewAllIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   showLastSlide?: boolean;
+  /** Changing this jumps back to the first slide, e.g. when tabs swap the items */
+  resetKey?: string;
 };
 
 export default function Carousel({
@@ -48,10 +50,15 @@ export default function Carousel({
   lastSlideTitle = "View All",
   viewAllIcon: ViewAllIcon,
   showLastSlide = true,
+  resetKey,
 }: CarouselProps) {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const swiperRef = useRef<SwiperInstance | null>(null);
+
+  useEffect(() => {
+    swiperRef.current?.slideTo(0, 0);
+  }, [resetKey]);
 
   return (
     <div className={`${styles.wrap} ${styles[layout]} ${className || ""}`}>

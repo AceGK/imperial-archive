@@ -1,5 +1,6 @@
 // /components/modules/PageHeader/index.tsx
 import Image from "next/image";
+import WarningIcon from "@/components/icons/warning.svg";
 import styles from "./styles.module.scss";
 
 export type PageHeaderImage = {
@@ -23,6 +24,8 @@ export type PageHeaderProps = {
   alt?: string;
   credit?: string;
   children?: React.ReactNode;
+  /** Short caveat shown under the subtitle, e.g. "this list is a work in progress" */
+  warning?: React.ReactNode;
   align?: "left" | "center";
   height?: "xs" | "sm" | "md" | "lg";
   strongOverlay?: boolean;
@@ -37,6 +40,7 @@ export default function PageHeader({
   alt,
   credit,
   children,
+  warning,
   align = "left",
   height = "md",
   strongOverlay = false,
@@ -96,6 +100,12 @@ export default function PageHeader({
         <div className={styles.textBlock}>
           <h1 className={styles.title}>{title}</h1>
           {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
+          {warning && (
+            <p className={styles.warning}>
+              <WarningIcon className={styles.warningIcon} aria-hidden="true" />
+              <span>{warning}</span>
+            </p>
+          )}
           {children && <div className={styles.children}>{children}</div>}
         </div>
       </div>

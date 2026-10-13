@@ -51,6 +51,8 @@ export interface CatalogProps<THit extends BaseHit> {
   cacheKey?: string;
   /** Available sort options */
   sortOptions?: SortOption[];
+  /** Sort used when the URL has none (an option's value); defaults to indexName */
+  defaultSort?: string;
   /** Algolia Filter configurations */
   filters?: FilterConfig[];
   /** Hits per page (default: 25) */
@@ -105,7 +107,7 @@ function Results<THit extends BaseHit>({
 
   // a search still in flight isn't "no results"
   const isLoading = useAwaitingFirstResults() || status === "loading" || status === "stalled";
-  const { minHeight, isRestoring } = useScrollRestoration(
+  const { ref, minHeight, isRestoring } = useScrollRestoration(
     `${cacheKey}-catalog`,
     items.length,
     isLoading
@@ -134,7 +136,7 @@ function Results<THit extends BaseHit>({
   }
 
   return (
-    <div style={{ minHeight: minHeight || undefined }}>
+    <div ref={ref} style={{ minHeight: minHeight || undefined }}>
       <div className={gridClasses[gridVariant]}>
         {items.map((hit) => (
           <React.Fragment key={hit.objectID}>
@@ -164,6 +166,7 @@ export default function Catalog<THit extends BaseHit>({
   gridVariant = "book",
   cacheKey,
   sortOptions,
+  defaultSort,
   filters = [],
   hitsPerPage = 25,
   baseFilters,
@@ -174,8 +177,8 @@ export default function Catalog<THit extends BaseHit>({
   const resolvedCacheKey = cacheKey ?? indexName;
 
   const routing = React.useMemo(
-    () => createAlgoliaRouting(indexName),
-    [indexName]
+    () => createAlgoliaRouting(indexName, defaultSort),
+    [indexName, defaultSort]
   );
 
   // runs after InstantSearch (a child) has hydrated from this page's results
@@ -185,7 +188,7 @@ export default function Catalog<THit extends BaseHit>({
 
   return (
     <InstantSearchNext
-      indexName={indexName}
+      indexName={defaultSort ?? indexName}
       searchClient={searchClient}
       routing={routing}
       future={{ preserveSharedStateOnUnmount: true }}

@@ -219,6 +219,20 @@
   }
 }
 
+.blog {
+  --slides: 1.15;
+
+  @media (min-width: 480px) {
+    --slides: 1.5;
+  }
+  @media (min-width: 640px) {
+    --slides: 2;
+  }
+  @media (min-width: 900px) {
+    --slides: 3;
+  }
+}
+
 /* Pagination overrides */
 .swiper :global(.swiper-pagination-bullet) {
   background: color-mix(in oklab, var(--foreground), transparent 40%);

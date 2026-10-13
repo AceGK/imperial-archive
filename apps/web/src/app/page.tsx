@@ -5,13 +5,16 @@ import BooksCarousel from "@/components/modules/Carousel/BooksCarousel";
 import SeriesCarousel from "@/components/modules/Carousel/SeriesCarousel";
 import FactionCarousel from "@/components/modules/Carousel/FactionCarousel";
 import EraCarousel from "@/components/modules/Carousel/EraCarousel";
+import BlogCarousel from "@/components/modules/Carousel/BlogCarousel";
 
 import { client } from "@/lib/sanity/sanity.client";
 import {
+  blogPostsQuery,
   featuredAuthors40kQuery,
   featuredBooks40kQuery,
   featuredSeries40kQuery,
 } from "@/lib/sanity/queries";
+import type { BlogPost } from "@/types/sanity";
 
 import Search from "@/components/modules/Search";
 import JsonLd from "@/components/seo/JsonLd";
@@ -105,6 +108,12 @@ export default async function Home() {
       featuredSeriesTitles.indexOf(a.title) - featuredSeriesTitles.indexOf(b.title)
   );
 
+  const posts = await client.fetch<BlogPost[]>(
+    blogPostsQuery,
+    {},
+    { next: { revalidate } }
+  );
+
   return (
     <main>
       <JsonLd data={siteJsonLd()} />
@@ -161,6 +170,16 @@ export default async function Home() {
           viewAllLink="/eras"
         />
       </section>
+
+      {posts.length > 0 && (
+        <section className="container row__lg">
+          <BlogCarousel
+            title="Astropathic Relays"
+            subtitle="News and updates from the Imperial Archive Blog"
+            posts={posts}
+          />
+        </section>
+      )}
     </main>
   );
 }

@@ -71,6 +71,7 @@ export default function FactionCarouselClient({
         viewAllLink={viewAllLink}
         viewAllIcon={ShieldIcon}
         viewAllLabel={viewAllLabel}
+        resetKey={activeGroup?.key}
         headerSlot={
           <div className={styles.tabs} role="tablist" aria-label="Faction groups">
             {groups.map(g => {

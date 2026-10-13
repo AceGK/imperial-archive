@@ -112,7 +112,8 @@ export const handler = documentEventHandler(async ({ event, context }) => {
         dataset: SANITY_STUDIO_DATASET,
         apiVersion: "2024-01-01",
         useCdn: false,
-        token: (context as any).token,
+        // the runtime's credential lives in clientOptions; needed now the dataset is private
+        token: context.clientOptions.token,
       });
 
       console.log("🔍 Fetching references by ID...");

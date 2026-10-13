@@ -6,13 +6,16 @@ import Catalog, { type FilterConfig, type SortOption } from "@/components/module
 import BookCard from "@/components/modules/Cards/BookCard";
 import type { BookHit } from "@/types/algolia";
 
-const DEFAULT_SORT_OPTIONS: SortOption[] = [
-  { label: "Most Recent", value: "books40k" },
-  { label: "Title A-Z", value: "books40k_title_asc" },
-  { label: "Title Z-A", value: "books40k_title_desc" },
+export const BOOK_SORT_OPTIONS: SortOption[] = [
   { label: "Publication Date ↓", value: "books40k_date_desc" },
   { label: "Publication Date ↑", value: "books40k_date_asc" },
+  { label: "Title A-Z", value: "books40k_title_asc" },
+  { label: "Title Z-A", value: "books40k_title_desc" },
+  { label: "Recently Added", value: "books40k" },
 ];
+
+/** Newest releases first unless the reader picks another sort */
+export const BOOK_DEFAULT_SORT = "books40k_date_desc";
 
 const DEFAULT_FILTERS: FilterConfig[] = [
   { attribute: "format", label: "Format" },
@@ -44,7 +47,7 @@ export default function BooksCatalog({
   baseFilters,
   placeholder = "Search books...",
   noResultsText = "No books match your search.",
-  sortOptions = DEFAULT_SORT_OPTIONS,
+  sortOptions = BOOK_SORT_OPTIONS,
   filters = DEFAULT_FILTERS,
   hitsPerPage,
 }: BooksCatalogProps) {
@@ -59,6 +62,7 @@ export default function BooksCatalog({
       noResultsText={noResultsText}
       stats={{ singular: "Publication", plural: "Publications" }}
       sortOptions={sortOptions}
+      defaultSort={BOOK_DEFAULT_SORT}
       filters={filters}
       hitsPerPage={hitsPerPage}
     />
