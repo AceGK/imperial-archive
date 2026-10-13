@@ -166,6 +166,7 @@ export default async function Home() {
         priority
         align="center"
         height="md"
+        scrollCue
       >
         <Search />
       </Hero>

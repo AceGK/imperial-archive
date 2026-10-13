@@ -73,6 +73,14 @@ $nav-height: 61px; // 60px bar plus its 1px bottom border
   padding-block: clamp(3rem, 8vw, 6rem);
   margin-inline: auto;
   max-width: 1200px;
+
+  // this box fills the whole hero; let clicks through its empty space to the
+  // scroll button underneath, while the content itself stays clickable
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
 }
 
 .title {

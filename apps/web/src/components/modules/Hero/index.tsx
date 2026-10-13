@@ -3,6 +3,7 @@ import Image from "next/image";
 import styles from "./styles.module.scss";
 import type { Image as SanityImage } from "sanity";
 import { urlFor } from "@/lib/sanity/sanity.image";
+import ScrollCue from "./ScrollCue";
 
 type HeroProps = {
   /** Background image path or URL */
@@ -23,6 +24,8 @@ type HeroProps = {
   height?: "sm" | "md" | "lg" | "xl";
   /** Extra class hook */
   className?: string;
+  /** Show a "scroll down" button at the bottom of the hero */
+  scrollCue?: boolean;
   children?: React.ReactNode;
 };
 
@@ -36,6 +39,7 @@ export default function Hero({
   align = "left",
   height = "lg",
   className = "",
+  scrollCue = false,
   children,
 }: HeroProps) {
 
@@ -43,6 +47,7 @@ export default function Hero({
     styles.hero,
     styles[`align-${align}`],
     styles[`height-${height}`],
+    scrollCue && styles.withCue,
     className,
   ]
     .filter(Boolean)
@@ -79,6 +84,7 @@ export default function Hero({
         {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
         {children}
       </div>
+      {scrollCue && <ScrollCue />}
       <div className={styles.altText}>{alt}</div>
     </section>
   );
