@@ -94,12 +94,42 @@
   line-height: 1.15;
 }
 
-/* Favorite and Share buttons */
-.favorite {
+/* Reading status, Owned and Favorite, then Share on the far right */
+.actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem;
   margin: 0.75rem 0 1rem;
+}
+
+.shareAction {
+  margin-left: auto;
+}
+
+// Square buttons whose corners light up gold on hover or keyboard focus, like
+// the sort button and bracket Buttons: the marks sit exactly on the border
+// ($offset: 1px) and the border itself doesn't change color
+.actions button {
+  @include corner-brackets(
+    $size: 8px,
+    $thickness: 1px,
+    $color: var(--primary),
+    $offset: 1px,
+    $hover-only: true
+  );
+  border-radius: 0;
+
+  // share pop-up open: keep the marks showing
+  &[aria-expanded="true"]::before {
+    opacity: 1;
+  }
+
+  // buttons that are on (Favorited, Owned, a reading status) keep their gold
+  // border, which shows that state; every other border stays plain
+  &:not([aria-pressed="true"]):not([data-active]):is(:hover, [aria-expanded="true"]) {
+    border-color: var(--border);
+  }
 }
 
 .row {

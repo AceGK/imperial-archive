@@ -10,7 +10,9 @@ type ShareButtonProps = Omit<ShareLinksProps, "className"> & {
   /** "overlay" for placement on top of hero images, like FavoriteButton */
   variant?: "default" | "overlay";
   /** which part of the button the pop-up lines up with */
-  align?: "start" | "center";
+  align?: "start" | "center" | "end";
+  /** Just the icon, with "Share" as its accessible name and tooltip */
+  iconOnly?: boolean;
 };
 
 // gap kept between the pop-up and the edges of the screen
@@ -22,7 +24,12 @@ const EDGE = 16;
  * clip their overflow, or sections stacked above them, can't hide it; focus
  * moves into it on open and back to the button on Escape.
  */
-export default function ShareButton({ variant = "default", align = "start", ...share }: ShareButtonProps) {
+export default function ShareButton({
+  variant = "default",
+  align = "start",
+  iconOnly = false,
+  ...share
+}: ShareButtonProps) {
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -45,7 +52,12 @@ export default function ShareButton({ variant = "default", align = "start", ...s
       const button = buttonRef.current?.getBoundingClientRect();
       const width = panelRef.current?.offsetWidth ?? 0;
       if (!button) return;
-      const preferred = align === "center" ? button.left + button.width / 2 - width / 2 : button.left;
+      const preferred =
+        align === "center"
+          ? button.left + button.width / 2 - width / 2
+          : align === "end"
+            ? button.right - width
+            : button.left;
       const left = Math.max(EDGE, Math.min(preferred, window.innerWidth - width - EDGE));
       setPosition({ top: button.bottom + 8, left });
     };
@@ -53,9 +65,14 @@ export default function ShareButton({ variant = "default", align = "start", ...s
     place();
     window.addEventListener("resize", place);
     window.addEventListener("scroll", place, true);
+    // the panel can widen after opening (the native-share button appears once
+    // supported), which moves its right edge when lined up with the button's end
+    const resize = new ResizeObserver(place);
+    if (panelRef.current) resize.observe(panelRef.current);
     return () => {
       window.removeEventListener("resize", place);
       window.removeEventListener("scroll", place, true);
+      resize.disconnect();
     };
   }, [open, align]);
 
@@ -111,13 +128,15 @@ export default function ShareButton({ variant = "default", align = "start", ...s
       <button
         ref={buttonRef}
         type="button"
-        className={`${styles.trigger} ${variant === "overlay" ? styles.overlay : ""}`}
+        className={`${styles.trigger} ${variant === "overlay" ? styles.overlay : ""} ${iconOnly ? styles.iconOnly : ""}`}
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-controls={open ? panelId : undefined}
+        aria-label={iconOnly ? "Share" : undefined}
+        title={iconOnly ? "Share" : undefined}
       >
         <ShareIcon className={styles.triggerIcon} aria-hidden="true" />
-        <span>Share</span>
+        {!iconOnly && <span>Share</span>}
       </button>
 
       {open &&
