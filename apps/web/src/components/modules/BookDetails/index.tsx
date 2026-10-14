@@ -17,6 +17,7 @@ import type { BookDetailData } from "@/types/books";
 import Series from "./Series";
 import Factions from "./Factions";
 import { buildSources, Cite, SourceList } from "@/components/modules/Sources";
+import Paragraphs from "./Paragraphs";
 
 interface Book {
   _id: string;
@@ -135,8 +136,7 @@ export default function BookDetails({ book }: BookDetailProps) {
                 <AccordionItem value="description">
                   <AccordionTrigger>Description</AccordionTrigger>
                   <AccordionContent>
-                    {book.description}
-                    <Cite numbers={citations.description} />
+                    <Paragraphs text={book.description} end={<Cite numbers={citations.description} />} />
                   </AccordionContent>
                 </AccordionItem>
               )}
@@ -193,8 +193,7 @@ export default function BookDetails({ book }: BookDetailProps) {
                 <AccordionItem value="short-story">
                   <AccordionTrigger>Story</AccordionTrigger>
                   <AccordionContent>
-                    {book.story}
-                    <Cite numbers={citations.story} />
+                    <Paragraphs text={book.story} end={<Cite numbers={citations.story} />} />
                   </AccordionContent>
                 </AccordionItem>
               )}
@@ -286,7 +285,7 @@ export default function BookDetails({ book }: BookDetailProps) {
                                   </Link>
                                 </div>
                               </div>
-                              <div className={styles.bio}>{author.bio}</div>
+                              {author.bio && <Paragraphs text={author.bio} className={styles.bio} />}
                             </div>
                           ))}
                       </div>
