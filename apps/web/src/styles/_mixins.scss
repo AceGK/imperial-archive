@@ -1,6 +1,7 @@
 // Reusable style mixins
 @use "sass:list";
 @use "sass:map";
+@use "breakpoints" as *;
 
 $_corner-positions: (
   top-left: top left,
@@ -87,4 +88,39 @@ $_corner-positions: (
     transparent #{$line-width},
     transparent #{$spacing}
   );
+}
+
+// Short gold rule under a section heading, as on the slider titles. It sits
+// $gap below the heading, so leave that much room before the next element.
+// $align: center (centered headings) or start (left-aligned ones).
+@mixin title-rule($align: center, $width: 30%, $gap: 0.75rem) {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -$gap;
+    width: $width;
+    height: 1px;
+    background-color: var(--primary);
+
+    @if $align == center {
+      left: 50%;
+      transform: translateX(-50%);
+    } @else {
+      left: 0;
+    }
+  }
+}
+
+// Width of the info pages (about, FAQ, support, blog): a 180px contents rail,
+// a 3.5rem gap and a 760px content column, or just the column once the rail
+// hides on smaller screens. Centered.
+@mixin page-width {
+  max-width: calc(180px + 3.5rem + 760px);
+  margin-inline: auto;
+
+  @include max(lg) {
+    max-width: 760px;
+  }
 }

@@ -12,11 +12,15 @@
   margin-bottom: 0.75rem;
 }
 
+// A tight line height keeps long titles that wrap from spreading apart; the
+// padding gives one-line titles the room of the default 1.5 line height
+// (0.175em above and below makes up the 0.35em difference)
 .title {
   color: var(--primary);
   text-transform: uppercase;
   font-size: clamp(2rem, 5vw, 2.75rem);
-  line-height: 1.15; // keeps long titles that wrap from spreading apart
+  line-height: 1.15;
+  padding-block: 0.175em;
   margin-bottom: 1.5rem;
 }
 

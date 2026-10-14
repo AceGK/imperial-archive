@@ -62,8 +62,8 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
   const sections = postSections(post.body);
   const showToc = sections.items.length >= 2;
 
-  const article = (
-    <article className={styles.content}>
+  const header = (
+    <div>
       <Link href="/blog" className={styles.back}>
         ← All dispatches
       </Link>
@@ -77,6 +77,14 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
           {post.author && <span>By {post.author}</span>}
         </p>
       </InfoHeader>
+    </div>
+  );
+
+  // with a contents rail the header goes above it (see TocLayout); without one
+  // it stays at the top of the article
+  const article = (
+    <article className={styles.content}>
+      {!showToc && header}
 
       {cover && dims && (
         <div className={styles.cover}>
@@ -130,7 +138,13 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
       />
 
       <section className="container row__md">
-        {showToc ? <TocLayout items={sections.items}>{article}</TocLayout> : article}
+        {showToc ? (
+          <TocLayout items={sections.items} header={header}>
+            {article}
+          </TocLayout>
+        ) : (
+          article
+        )}
       </section>
     </main>
   );

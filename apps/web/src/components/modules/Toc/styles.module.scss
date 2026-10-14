@@ -1,4 +1,11 @@
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
+
+/* the header spans the rail and the content column together, so its left
+   edge lines up with the rail; just the content column once the rail hides */
+.page {
+  @include page-width;
+}
 
 /* page layout: sticky contents rail beside a 760px content column;
    the rail is hidden and the content centred on smaller screens */

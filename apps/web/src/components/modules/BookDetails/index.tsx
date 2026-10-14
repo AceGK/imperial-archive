@@ -16,6 +16,8 @@ import { ShareButton } from "@/components/modules/Share";
 import type { BookDetailData } from "@/types/books";
 import Series from "./Series";
 import Factions from "./Factions";
+import { buildSources, Cite, SourceList } from "@/components/modules/Sources";
+import Paragraphs from "./Paragraphs";
 
 interface Book {
   _id: string;
@@ -58,6 +60,8 @@ interface BookDetailProps {
 export default function BookDetails({ book }: BookDetailProps) {
   const series = Array.isArray(book.series) ? book.series : [];
   const factions = Array.isArray(book.factions) ? book.factions : [];
+  // the book's links, numbered and cited after its description and story
+  const { sources, citations } = buildSources(book.links, ["description", "story"]);
 
   const hasImage = Boolean(book?.image?.asset?.url);
   const imgAlt =
@@ -131,7 +135,9 @@ export default function BookDetails({ book }: BookDetailProps) {
               {book.description && (
                 <AccordionItem value="description">
                   <AccordionTrigger>Description</AccordionTrigger>
-                  <AccordionContent>{book.description}</AccordionContent>
+                  <AccordionContent>
+                    <Paragraphs text={book.description} end={<Cite numbers={citations.description} />} />
+                  </AccordionContent>
                 </AccordionItem>
               )}
               {(book.format ||
@@ -186,7 +192,9 @@ export default function BookDetails({ book }: BookDetailProps) {
               {book.story && (
                 <AccordionItem value="short-story">
                   <AccordionTrigger>Story</AccordionTrigger>
-                  <AccordionContent>{book.story}</AccordionContent>
+                  <AccordionContent>
+                    <Paragraphs text={book.story} end={<Cite numbers={citations.story} />} />
+                  </AccordionContent>
                 </AccordionItem>
               )}
               {book.contents && book.contents.length > 0 && (
@@ -277,7 +285,7 @@ export default function BookDetails({ book }: BookDetailProps) {
                                   </Link>
                                 </div>
                               </div>
-                              <div className={styles.bio}>{author.bio}</div>
+                              {author.bio && <Paragraphs text={author.bio} className={styles.bio} />}
                             </div>
                           ))}
                       </div>
@@ -310,6 +318,8 @@ export default function BookDetails({ book }: BookDetailProps) {
               )}
             </Accordion>
           )}
+
+          <SourceList sources={sources} title={book.title} />
         </div>
       </article>
     </div>

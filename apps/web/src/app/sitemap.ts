@@ -21,7 +21,9 @@ const sitemapQuery = groq`{
   // /faq is only indexable once it has questions (see app/faq/page.tsx)
   "faqUpdatedAt": *[_type == "faq" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]._updatedAt,
   // same rule as /blog itself, which is only indexable once it has posts
-  "blogPosts": *[${blogPostFilter}]{ "slug": slug.current, "updatedAt": _updatedAt }
+  "blogPosts": *[${blogPostFilter}]{ "slug": slug.current, "updatedAt": _updatedAt },
+  // studio pages (e.g. /terms, /privacy), unless hidden from search
+  "pages": *[_type == "page" && defined(slug.current) && noindex != true && !(_id in path("drafts.**"))]{ "slug": slug.current, "updatedAt": _updatedAt }
 }`;
 
 // Only pages meant to rank: placeholder ("coming soon"), account, and auth
@@ -36,7 +38,6 @@ const STATIC_PAGES: { path: string; priority: number }[] = [
   { path: "/track", priority: 0.5 },
   { path: "/about", priority: 0.4 },
   { path: "/support", priority: 0.3 },
-  { path: "/terms", priority: 0.2 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -62,6 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...section("/factions", data.factionGroups, 0.6),
     ...section("/factions", data.factions, 0.6),
     ...section("/eras", data.eras, 0.5),
+    ...section("", data.pages, 0.2),
     ...(data.blogPosts?.length
       ? [
           { url: absoluteUrl("/blog"), priority: 0.5 },

@@ -1,44 +1,9 @@
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
 
-@mixin label {
-  font-family: var(--font-condensed);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 0.75rem;
-}
-
-// Same overall width as the about page: its 180px contents rail + 3.5rem gap
-// + 760px content column; a single 760px column on smaller screens
-$page-width: calc(180px + 3.5rem + 760px);
-$narrow-width: 760px;
-
-/* header (matches the about page) */
+/* the shared InfoHeader, at the width of the other info pages */
 .header {
-  max-width: $page-width;
-  margin: 0 auto 3rem;
-
-  @include max(lg) {
-    max-width: $narrow-width;
-  }
-}
-
-.ref {
-  @include label;
-  color: var(--subtle);
-  margin-bottom: 0.75rem;
-}
-
-.title {
-  color: var(--primary);
-  text-transform: uppercase;
-  font-size: clamp(2rem, 5vw, 2.75rem);
-  margin-bottom: 1.5rem;
-}
-
-.divider {
-  height: 1px;
-  background: var(--border);
+  @include page-width;
 }
 
 /* card eyebrow with a rule fading out to the card's edge (matches the about page) */
@@ -67,12 +32,10 @@ $narrow-width: 760px;
   grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
   gap: 2.5rem;
   align-items: start;
-  max-width: $page-width;
-  margin-inline: auto;
+  @include page-width;
 
   @include max(lg) {
     grid-template-columns: minmax(0, 1fr);
-    max-width: $narrow-width;
   }
 }
 

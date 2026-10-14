@@ -1,5 +1,5 @@
 import type { Collection, StructureResolver } from "sanity/structure";
-import { DocumentsIcon, UsersIcon, TagIcon, ClockIcon, HelpCircleIcon, LinkIcon } from "@sanity/icons";
+import { DocumentsIcon, UsersIcon, TagIcon, ClockIcon, HelpCircleIcon, LinkIcon, DocumentTextIcon } from "@sanity/icons";
 import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 
 export const deskStructure: StructureResolver = (S, context) =>
@@ -142,5 +142,6 @@ export const deskStructure: StructureResolver = (S, context) =>
       S.divider(),
 
       // --- SITE ---
+      S.documentTypeListItem("page").title("Pages").icon(DocumentTextIcon),
       S.documentTypeListItem("redirect").title("Redirects").icon(LinkIcon),
     ]);

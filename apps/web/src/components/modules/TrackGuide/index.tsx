@@ -14,6 +14,8 @@ import LibrariusIcon from "@/components/icons/achievements/librarius.svg";
 import CompletionistIcon from "@/components/icons/achievements/completionist.svg";
 import ChroniclerIcon from "@/components/icons/achievements/chronicler.svg";
 import InquisitorIcon from "@/components/icons/achievements/inquisitor.svg";
+import FaqSection from "@/components/modules/FaqSection";
+import type { FaqCategory } from "@/components/modules/FaqList";
 import styles from "./styles.module.scss";
 
 /*
@@ -178,15 +180,29 @@ const ACHIEVEMENTS = [
   { icon: InquisitorIcon, name: "Inquisitor", text: "Read books featuring 10 factions" },
 ];
 
-export default function TrackGuide() {
+/** The page header's call to action, above the fold */
+export function TrackHeaderActions() {
+  return (
+    <div className={styles.headerActions}>
+      <Button href="/books" variant="primary">
+        Browse books to track
+      </Button>
+    </div>
+  );
+}
+
+/** `faqCategory`: the studio's Reading Tracker FAQ category, also listed on /faq */
+export default function TrackGuide({ faqCategory }: { faqCategory: FaqCategory | null }) {
   return (
     <div className={styles.guide}>
-      <section className={styles.intro}>
+      <section className={styles.intro} aria-labelledby="free-tracker">
         <div className={styles.introText}>
+        <span className={styles.kicker}>How tracking works</span>
+        <h2 id="free-tracker">A free reading tracker for the Black Library</h2>
         <p className={styles.lead}>
-          Keep a log of your journey through the Black Library: what you want to read, what you&apos;re reading
-          now, what you&apos;ve finished, and what&apos;s on your shelf. It&apos;s free with an account, and it
-          follows you to any device.
+          Imperial Archive is a free Warhammer 40k reading tracker for Black Library books. Mark what you want to
+          read, what you&apos;re reading now, what you&apos;ve finished and what&apos;s on your shelf, straight
+          from any book card or book page. Your tracker is saved to your account, so it follows you to any device.
         </p>
         <ul className={styles.statusList}>
           {STATUSES.map(({ label, tag, text }) => (
@@ -316,6 +332,27 @@ export default function TrackGuide() {
               ))}
             </ul>
           </article>
+        </div>
+      </section>
+
+      <FaqSection
+        categories={faqCategory ? [faqCategory] : []}
+        kicker="Reading Tracker"
+        subtitle="Common questions about tracking your Black Library reading."
+        viewAllHref="/faq#reading-tracker"
+        headingId="tracker-faq"
+      />
+
+      <section className={styles.tracker} aria-labelledby="start-tracking">
+        <h2 id="start-tracking">Start your reading log</h2>
+        <p>Find the books you&apos;ve read, are reading or want to read next, and track each one in a click.</p>
+        <div className={styles.actions}>
+          <Button href="/books" variant="primary">
+            Browse books
+          </Button>
+          <Button href="/series" variant="outline">
+            Browse by series
+          </Button>
         </div>
       </section>
     </div>

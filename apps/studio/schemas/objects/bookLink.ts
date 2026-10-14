@@ -27,5 +27,27 @@ export default defineType({
       type: "url",
       validation: (Rule) => Rule.uri({allowRelative: false}).required(),
     }),
+    defineField({
+      name: "sourceFor",
+      title: "Source for",
+      type: "array",
+      of: [{type: "string"}],
+      description:
+        "Which text on the book page came from this link; it's cited there as [1], [2]… Leave it empty on every link to cite all of them for both.",
+      options: {
+        list: [
+          {title: "Description", value: "description"},
+          {title: "Story / Back Cover", value: "story"},
+        ],
+        layout: "grid",
+      },
+    }),
   ],
+  preview: {
+    select: {type: "type", url: "url", sourceFor: "sourceFor"},
+    prepare: ({type, url, sourceFor}) => ({
+      title: type || "Link",
+      subtitle: [url, sourceFor?.length ? `Source for: ${sourceFor.join(", ")}` : null].filter(Boolean).join(" · "),
+    }),
+  },
 });

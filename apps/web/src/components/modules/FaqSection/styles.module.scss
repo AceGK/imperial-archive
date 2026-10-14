@@ -1,0 +1,129 @@
+@use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
+
+// heading on the left, questions on the right; one column below tablet width
+.wrapper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  align-items: start;
+  gap: 3rem;
+
+  @include max(md) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+// stays in view beside the questions, clear of the sticky nav, like the
+// site's other sticky columns
+.sidebar {
+  position: sticky;
+  top: 5rem;
+
+  @include max(md) {
+    position: static;
+  }
+}
+
+.kicker {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-family: var(--font-condensed);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+// gold rule underneath, as on the slider titles; width follows the text
+.title {
+  @include title-rule($align: start);
+  width: fit-content;
+  margin: 0;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+// clears the title's rule
+.subtitle {
+  margin: 1.5rem 0 0;
+  line-height: 1.6;
+  color: var(--subtle);
+}
+
+// category switcher, square like the site's other controls
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.pill {
+  padding: 0.5rem 0.875rem;
+  font-family: var(--font-condensed);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--text);
+    border-color: color-mix(in oklab, var(--primary), transparent 50%);
+  }
+
+  &[aria-pressed="true"] {
+    color: var(--on-primary);
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.viewAll {
+  margin-top: 1.5rem;
+}
+
+.list {
+  min-width: 0;
+}
+
+.answer {
+  line-height: 1.65;
+  color: var(--subtle);
+
+  p {
+    margin: 0 0 0.75rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul,
+  ol {
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  // as on the full FAQ page
+  a {
+    color: var(--primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

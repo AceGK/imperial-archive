@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { urlFor } from "@/lib/sanity/sanity.image";
-import { PortableText, type PortableTextComponents } from "@portabletext/react";
+import { PortableText, type PortableTextBlockComponent, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { SITE_URL } from "@/lib/seo";
 
@@ -45,14 +45,16 @@ function imageSize(ref: string | undefined) {
   return match ? { width: Number(match[1]), height: Number(match[2]) } : null;
 }
 
+const blockComponents: Record<string, PortableTextBlockComponent> = {
+  // the page title is the only h1; an "H1" inside content renders one level down
+  h1: ({ children }) => <h2>{children}</h2>,
+};
+
 export const richTextComponents: PortableTextComponents = {
   marks: {
     link: ({ value, children }) => <SmartLink href={value?.href ?? ""}>{children}</SmartLink>,
   },
-  block: {
-    // the page title is the only h1; an "H1" inside content renders one level down
-    h1: ({ children }) => <h2>{children}</h2>,
-  },
+  block: blockComponents,
   types: {
     image: ({ value }) => {
       const size = imageSize(value?.asset?._ref);
@@ -77,25 +79,41 @@ export const richTextComponents: PortableTextComponents = {
 /**
  * Renders Portable Text from Sanity with the site's shared link handling.
  * `headingIds` maps a heading block's `_key` to the anchor id it should get.
+ * `endOfText` is placed at the end of the last paragraph, e.g. source citations.
  */
 export default function RichText({
   value,
   headingIds,
+  endOfText,
 }: {
   value: PortableTextBlock[] | undefined | null;
   headingIds?: Record<string, string>;
+  endOfText?: ReactNode;
 }) {
   if (!value?.length) return null;
 
-  const components: PortableTextComponents = headingIds
-    ? {
-        ...richTextComponents,
-        block: {
-          h1: ({ value, children }) => <h2 id={headingIds[value._key ?? ""]}>{children}</h2>,
-          h2: ({ value, children }) => <h2 id={headingIds[value._key ?? ""]}>{children}</h2>,
-        },
-      }
-    : richTextComponents;
+  const lastParagraph = endOfText
+    ? value.findLast((b) => b._type === "block" && (b.style ?? "normal") === "normal" && !b.listItem)?._key
+    : undefined;
+
+  const components: PortableTextComponents = {
+    ...richTextComponents,
+    block: {
+      ...blockComponents,
+      ...(headingIds && {
+        h1: ({ value, children }) => <h2 id={headingIds[value._key ?? ""]}>{children}</h2>,
+        h2: ({ value, children }) => <h2 id={headingIds[value._key ?? ""]}>{children}</h2>,
+      }),
+      ...(lastParagraph && {
+        normal: ({ value, children }) => (
+          <p>
+            {children}
+            {value._key === lastParagraph && endOfText}
+          </p>
+        ),
+      }),
+    },
+  };
 
   return <PortableText value={value} components={components} />;
 }

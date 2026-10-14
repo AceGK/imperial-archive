@@ -11,6 +11,7 @@ import { urlFor } from "@/lib/sanity/sanity.image";
 import BookGrid from "@/components/modules/BookGrid";
 import type { BookCardData } from "@/components/modules/Cards/BookCard";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import { buildSources, Cite, SourceList } from "@/components/modules/Sources";
 import type { Metadata } from "next";
 import { toPlainText } from "@portabletext/react";
 import JsonLd from "@/components/seo/JsonLd";
@@ -70,6 +71,9 @@ export default async function SeriesPage({
 
   const data = await getSeries(slug);
   if (!data) notFound();
+
+  // the series' links, numbered and cited after its description
+  const { sources, citations } = buildSources(data.links, ["description"]);
 
   // every book across the series' lists, in reading order, without repeats
   const seen = new Set<string>();
@@ -147,7 +151,7 @@ const hero = data.image?.asset
         <Breadcrumb />
         {data.description && (
             <div className="rich-text">
-              <RichText value={data.description} />
+              <RichText value={data.description} endOfText={<Cite numbers={citations.description} />} />
             </div>
         )}
 
@@ -198,6 +202,8 @@ const hero = data.image?.asset
             <em>No books linked yet.</em>
           </div>
         )}
+
+        <SourceList sources={sources} title={data.title} />
         </div>
       </main>
     </>

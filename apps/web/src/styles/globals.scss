@@ -4,6 +4,8 @@
 :root {
   @include theme-vars($light);
   --site-width: 1200px;
+  // .container's side padding; carousels bleed past it to reach the screen edge
+  --container-pad: 1rem;
 }
 
 [data-theme="dark"] {
@@ -125,7 +127,7 @@ h6 {
   width: 100%;
   max-width: var(--site-width);
   margin-inline: auto;
-  padding-inline: 1rem;
+  padding-inline: var(--container-pad);
 }
 
 section {
@@ -161,4 +163,5 @@ main {
 p {
   padding-bottom:0.5rem;
   color:var(--subtle);
+  text-wrap: pretty;
 }

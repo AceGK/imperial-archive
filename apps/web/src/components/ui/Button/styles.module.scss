@@ -9,7 +9,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  border-radius: var(--radius-xs); // rounded-md
+  border-radius: 0;
   transition:
     background-color 160ms ease,
     color 160ms ease,
@@ -55,12 +55,25 @@
 }
 
 /* Variants */
+// solid gold at rest; on hover it takes the .bracket button's look: its dark
+// fill, gold text and the corner marks
 .primary {
+  @include corner-brackets(
+    $size: 10px,
+    $thickness: 1px,
+    $color: var(--primary),
+    $offset: 1px,
+    $hover-only: true
+  );
   background: var(--primary);
   color: var(--on-primary);
+  border-color: var(--primary);
 
-  &:hover {
-    background: color-mix(in srgb, var(--primary) 85%, #fff);
+  &:hover,
+  &:focus-visible {
+    background: color-mix(in srgb, var(--bg-accent) 98%, var(--subtle));
+    color: var(--primary);
+    border-color: color-mix(in srgb, var(--primary) 25%, transparent);
   }
 }
 
@@ -96,6 +109,20 @@
     background: var(--accent);
     color: var(--on-accent);
   }
+}
+
+// .outline with the corner marks on hover instead of a fill
+.outline-bracket {
+  @include corner-brackets(
+    $size: 10px,
+    $thickness: 1px,
+    $color: var(--primary),
+    $offset: 1px,
+    $hover-only: true
+  );
+  background: transparent;
+  color: var(--foreground);
+  border-color: var(--border);
 }
 
 .outline-primary {

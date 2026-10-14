@@ -314,7 +314,7 @@ export const bookBySlug40kQuery = groq`
   "page_count": pageCount,
 
   "editions": coalesce(editions[]{ isbn, note }, []),
-  "links": coalesce(links[]{ type, url }, []),
+  "links": coalesce(links[]{ _key, type, url, sourceFor }, []),
 
   image{
     alt,
@@ -656,6 +656,65 @@ export const faqPageQuery = groq`
     answer
   }
 }[count(faqs) > 0]
+`;
+
+/**
+ * Catalog totals for the homepage's closing call to action. Authors and series
+ * only count once they have books, matching what the search lists.
+ */
+export const catalogStats40kQuery = groq`{
+  "books": count(*[_type == "book40k" && defined(slug.current) && !(_id in path("drafts.**"))]),
+  "authors": count(*[_type == "author40k" && defined(slug.current) && !(_id in path("drafts.**"))
+    && count(*[_type == "book40k" && references(^._id) && !(_id in path("drafts.**"))]) > 0]),
+  "series": count(*[_type == "series40k" && defined(slug.current) && !(_id in path("drafts.**"))
+    && count(*[_type == "book40k" && !(_id in path("drafts.**")) && _id in ^.lists[].items[].work._ref]) > 0]),
+  "factions": count(*[_type == "faction40k" && defined(slug.current) && defined(group->slug.current) && !(_id in path("drafts.**"))])
+}`;
+
+/* -------------------------------------------------------------
+   PAGES: standalone pages built in the studio, shown at /<slug>
+-------------------------------------------------------------- */
+export const pageBySlugQuery = groq`
+*[_type == "page" && slug.current == $slug && !(_id in path("drafts.**"))][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  label,
+  description,
+  updated,
+  body,
+  noindex
+}
+`;
+
+/** FAQ categories by slug, in studio order, each with its questions (e.g. the homepage FAQ) */
+export const faqCategoriesBySlugsQuery = groq`
+*[_type == "faqCategory" && slug.current in $slugs && !(_id in path("drafts.**"))] | order(orderRank asc){
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  "faqs": *[_type == "faq" && !(_id in path("drafts.**")) && references(^._id)] | order(orderRank asc){
+    _id,
+    question,
+    answer
+  }
+}
+`;
+
+/** One FAQ category by slug with its questions, e.g. the Reading Tracker FAQ on /track */
+export const faqCategoryBySlugQuery = groq`
+*[_type == "faqCategory" && slug.current == $slug && !(_id in path("drafts.**"))][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  "faqs": *[_type == "faq" && !(_id in path("drafts.**")) && references(^._id)] | order(orderRank asc){
+    _id,
+    question,
+    answer
+  }
+}
 `;
 
 /* -------------------------------------------------------------
