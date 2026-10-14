@@ -13,6 +13,8 @@ import Footer from "@/components/modules/Footer";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/context/ConvexClientProvider";
 import { isProduction } from "@/lib/env";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { authHintScript } from "@/components/modules/Nav/authHint";
 import {
   DEFAULT_OG_IMAGE,
@@ -110,6 +112,13 @@ export default async function RootLayout({
               <Footer />
             </ConvexClientProvider>
           </ThemeProvider>
+          {/* production only, so previews and local testing aren't counted */}
+          {isProduction && (
+            <>
+              <Analytics />
+              <SpeedInsights />
+            </>
+          )}
         </body>
       </html>
     </ConvexAuthNextjsServerProvider>
