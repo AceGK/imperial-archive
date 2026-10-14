@@ -1,0 +1,185 @@
+"use client";
+
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import HeartIcon from "@/components/icons/account/favorites.svg";
+import BookIcon from "@/components/icons/book.svg";
+import PlusIcon from "@/components/icons/plus.svg";
+import { STATUS_STEPS, type ReadingStatus } from "@/components/modules/TrackButtons/steps";
+import { useBookLibrary } from "./useBookLibrary";
+import styles from "./styles.module.scss";
+
+// gap kept between the menu and the edges of the screen
+const EDGE = 12;
+
+const STATUS_OPTIONS = STATUS_STEPS.filter(
+  (s): s is (typeof STATUS_STEPS)[number] & { status: Exclude<ReadingStatus, null> } => s.status !== null,
+);
+
+type Props = {
+  bookId: string;
+  title: string;
+  /** "overlay" sits on a cover and appears on hover; "inline" is an ordinary, always-visible button */
+  variant?: "overlay" | "inline";
+  /** Called as the menu opens and closes, e.g. to keep a hover-only button showing */
+  onOpenChange?: (open: boolean) => void;
+};
+
+/**
+ * A "Track" button opening a small menu: reading status (Want to read,
+ * Reading, Read; picking the current one clears it), Owned, and Favorite.
+ * The menu renders at the end of <body> so carousels that clip their slides
+ * can't cut it off.
+ */
+export default function TrackMenu({ bookId, title, variant = "overlay", onOpenChange }: Props) {
+  const { favorite, status, owned, ready, error, toggleFavorite, chooseStatus, toggleOwned } =
+    useBookLibrary(bookId);
+  const [open, setOpenState] = useState(false);
+  const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
+
+  const setOpen = (next: boolean) => {
+    setOpenState(next);
+    onOpenChange?.(next);
+  };
+
+  const close = (returnFocus: boolean) => {
+    setOpen(false);
+    if (returnFocus) triggerRef.current?.focus();
+  };
+
+  // below the button, lined up with its right edge; above it when there's no
+  // room below; always inside the screen
+  useLayoutEffect(() => {
+    if (!open) {
+      setPosition(null);
+      return;
+    }
+    const place = () => {
+      const button = triggerRef.current?.getBoundingClientRect();
+      const menu = menuRef.current;
+      if (!button || !menu) return;
+      const { offsetWidth: width, offsetHeight: height } = menu;
+      const below = button.bottom + 6;
+      const top = below + height > window.innerHeight - EDGE ? Math.max(EDGE, button.top - 6 - height) : below;
+      const left = Math.max(EDGE, Math.min(button.right - width, window.innerWidth - width - EDGE));
+      setPosition({ top, left });
+    };
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+    };
+  }, [open]);
+
+  // focus the first option once the menu is placed (it's hidden, and so can't
+  // take focus, until then); only on opening, not every time it moves
+  const placed = position !== null;
+  useEffect(() => {
+    if (open && placed) menuRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+  }, [open, placed]);
+
+  // close on Escape or a click elsewhere
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close(true);
+    };
+    const onPointer = (e: PointerEvent) => {
+      const target = e.target as Node;
+      if (!menuRef.current?.contains(target) && !triggerRef.current?.contains(target)) close(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  // up/down arrows move between the options, as in other menus
+  const onMenuKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
+    const items = [...(menuRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? [])];
+    const i = items.indexOf(document.activeElement as HTMLButtonElement);
+    const next = e.key === "ArrowDown" ? (i + 1) % items.length : (i - 1 + items.length) % items.length;
+    items[next]?.focus();
+  };
+
+  return (
+    <>
+      <button
+        ref={triggerRef}
+        type="button"
+        className={variant === "inline" ? styles.trackButtonInline : styles.trackButton}
+        onClick={() => setOpen(!open)}
+        disabled={!ready}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={open ? menuId : undefined}
+        aria-label={`Track ${title}`}
+      >
+        <PlusIcon className={styles.trackIcon} aria-hidden="true" />
+        <span>Track</span>
+      </button>
+
+      {open &&
+        createPortal(
+          <div
+            ref={menuRef}
+            id={menuId}
+            role="menu"
+            aria-label={`Track ${title}`}
+            className={styles.trackMenu}
+            onKeyDown={onMenuKey}
+            // hidden until measured, so it never flashes in the wrong spot
+            style={position ?? { visibility: "hidden" }}
+          >
+            <p className={styles.menuHeading}>Reading status</p>
+            {STATUS_OPTIONS.map(({ status: s, label, icon: Icon }) => (
+              <button
+                key={s}
+                type="button"
+                role="menuitemradio"
+                aria-checked={status === s}
+                className={styles.menuItem}
+                onClick={() => chooseStatus(s)}
+              >
+                <Icon className={styles.menuIcon} aria-hidden="true" />
+                <span>{label}</span>
+              </button>
+            ))}
+            <hr className={styles.menuDivider} />
+            <button
+              type="button"
+              role="menuitemcheckbox"
+              aria-checked={owned}
+              className={styles.menuItem}
+              onClick={toggleOwned}
+            >
+              <BookIcon className={styles.menuIcon} aria-hidden="true" />
+              <span>Owned</span>
+            </button>
+            <button
+              type="button"
+              role="menuitemcheckbox"
+              aria-checked={favorite}
+              className={`${styles.menuItem} ${styles.menuFavorite}`}
+              onClick={toggleFavorite}
+            >
+              <HeartIcon className={styles.menuIcon} aria-hidden="true" />
+              <span>Favorite</span>
+            </button>
+            {error && <p className={styles.menuError}>Couldn&apos;t save. Try again.</p>}
+          </div>,
+          document.body,
+        )}
+    </>
+  );
+}

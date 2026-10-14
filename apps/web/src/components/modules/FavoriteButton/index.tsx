@@ -15,6 +15,8 @@ type FavoriteButtonProps = {
   itemId: string;
   /** "overlay" for placement on top of hero images */
   variant?: "default" | "overlay";
+  /** Just the heart, with "Favorite"/"Favorited" as its accessible name and tooltip */
+  iconOnly?: boolean;
   className?: string;
 };
 
@@ -23,6 +25,7 @@ export default function FavoriteButton({
   kind,
   itemId,
   variant = "default",
+  iconOnly = false,
   className,
 }: FavoriteButtonProps) {
   const { isAuthenticated, isLoading } = useConvexAuth();
@@ -52,14 +55,15 @@ export default function FavoriteButton({
   return (
     <button
       type="button"
-      className={`${styles.button} ${variant === "overlay" ? styles.overlay : ""} ${active ? styles.active : ""} ${className ?? ""}`}
+      className={`${styles.button} ${variant === "overlay" ? styles.overlay : ""} ${active ? styles.active : ""} ${iconOnly ? styles.iconOnly : ""} ${className ?? ""}`}
       onClick={handleClick}
       disabled={isLoading || (isAuthenticated && isFavorite === undefined)}
       aria-pressed={active}
-      title={error ? "Couldn't save. Try again." : undefined}
+      aria-label={iconOnly ? "Favorite" : undefined}
+      title={error ? "Couldn't save. Try again." : iconOnly ? (active ? "Favorited" : "Favorite") : undefined}
     >
       <HeartIcon className={styles.icon} aria-hidden="true" />
-      <span>{active ? "Favorited" : "Favorite"}</span>
+      {!iconOnly && <span>{active ? "Favorited" : "Favorite"}</span>}
     </button>
   );
 }

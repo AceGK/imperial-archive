@@ -1,5 +1,9 @@
 @use "@/styles/breakpoints" as *;
 
+.seriesIntro {
+  margin: 0;
+}
+
 .seriesLink {
   color: var(--primary);
 }

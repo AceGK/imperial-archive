@@ -93,17 +93,20 @@ export default async function Home() {
       featuredNames.indexOf(a.name) - featuredNames.indexOf(b.name)
   );
 
-  // Must match titles exactly.
+  // The most-read and most-recommended 40k books outside the Horus Heresy
+  // (Goodreads ratings, r/40kLore and forum recommendations), mostly series
+  // openers so each is a good place to start. Must match titles exactly.
   const featuredTitles = [
-    "Horus Rising",
-    "False Gods",
-    "Galaxy in Flames",
-    "The Flight of the Eisenstein",
-    "Fulgrim",
-    "Descent of Angels",
-    "Legion",
-    "Mechanicum",
-    "A Thousand Sons",
+    "Xenos",
+    "First and Only",
+    "For the Emperor",
+    "Soul Hunter",
+    "Helsreach",
+    "The Talon of Horus",
+    "Ravenor",
+    "Dark Imperium",
+    "Space Wolf",
+    "Storm of Iron",
   ];
 
   const featuredBooksRaw = await client.fetch(

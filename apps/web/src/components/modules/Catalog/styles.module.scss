@@ -1,5 +1,6 @@
 // components/modules/SeriesContent/styles.module.scss
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
 
 .contentWrapper {
   display: flex;
@@ -95,6 +96,239 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1rem;
+  margin-top: 2rem;
+}
+
+// the result count with the grid/list switch on the right, on one line
+.resultsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  // the count brings its own bottom margin for when it stands alone
+  > :first-child {
+    margin-bottom: 0;
+  }
+}
+
+.viewToggle {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.viewButton {
+  @include corner-brackets($size: 6px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  color: var(--subtle);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+  }
+
+  &[aria-pressed="true"] {
+    color: var(--primary);
+    border-color: color-mix(in oklab, var(--primary), transparent 50%);
+
+    svg rect {
+      fill: currentColor;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.resultsTools {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// ---- book card Display menu ----
+
+.displayWrap {
+  position: relative;
+}
+
+.displayButton {
+  @include corner-brackets($size: 6px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2rem;
+  padding: 0 0.625rem;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--subtle);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+  }
+
+  &[aria-expanded="true"] {
+    color: var(--primary);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.displayPanel {
+  position: absolute;
+  top: calc(100% + 0.375rem);
+  right: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: min(18rem, calc(100vw - 2rem));
+  padding: 0.875rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.displayGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.displayHeading {
+  padding: 0;
+  margin-bottom: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+
+.displayHeadingRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.displayAll {
+  padding: 0;
+  font: inherit;
+  font-size: 0.75rem;
+  color: var(--primary);
+  background: none;
+  border: 0;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+// Cover + Title / Cover / Title, as three joined buttons
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+}
+
+.segment {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0.4375rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--subtle);
+  cursor: pointer;
+
+  & + & {
+    border-left: 1px solid var(--border);
+  }
+
+  // the real radio stays for keyboard and screen readers, just unseen
+  input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  &:has(input:checked) {
+    color: var(--on-primary);
+    background: var(--primary);
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.25rem 0;
+  font-size: 0.875rem;
+  cursor: pointer;
+
+  input {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--primary);
+    cursor: pointer;
+  }
+}
+
+// list view: one result per row
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
   margin-top: 2rem;
 }
 

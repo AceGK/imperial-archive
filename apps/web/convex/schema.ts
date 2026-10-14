@@ -29,6 +29,17 @@ const schema = defineSchema({
     .index("by_user_kind", ["userId", "kind"])
     .index("by_user_item", ["userId", "itemId"])
     .index("by_item", ["itemId"]),
+
+  // A user's reading log, one row per book. Reading status and ownership are
+  // independent (you can own a book you've read); a row with neither is deleted.
+  // `bookId` is the Sanity document _id.
+  tracked: defineTable({
+    userId: v.id("users"),
+    bookId: v.string(),
+    status: v.optional(v.union(v.literal("want"), v.literal("reading"), v.literal("read"))),
+    owned: v.boolean(),
+    updatedAt: v.number(),
+  }).index("by_user_book", ["userId", "bookId"]),
 });
 
 export default schema;

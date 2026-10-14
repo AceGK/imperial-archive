@@ -4,6 +4,7 @@
 import PageHeader from "@/components/modules/PageHeader";
 import Catalog from "@/components/modules/Catalog";
 import AuthorCard from "@/components/modules/Cards/AuthorCard";
+import AuthorRow from "@/components/modules/Cards/AuthorRow";
 import type { AuthorHit } from "@/types/algolia";
 
 export default function AuthorsPage() {
@@ -22,7 +23,7 @@ export default function AuthorsPage() {
 
       <Catalog<AuthorHit>
         indexName="authors40k"
-        renderHit={(hit) => (
+        renderHit={(hit, view) => view === "list" ? <AuthorRow author={hit} /> : (
           //TODO make AuthorCard accept hit directly
           <AuthorCard
             name={hit.name}

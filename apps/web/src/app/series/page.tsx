@@ -4,6 +4,7 @@
 import PageHeader from "@/components/modules/PageHeader";
 import Catalog from "@/components/modules/Catalog";
 import SeriesCard from "@/components/modules/Cards/SeriesCard";
+import SeriesRow from "@/components/modules/Cards/SeriesRow";
 import type { SeriesHit } from "@/types/algolia";
 
 export default function SeriesIndexPage() {
@@ -38,7 +39,7 @@ export default function SeriesIndexPage() {
         ]}
         gridVariant="series"
         hitsPerPage={36}
-        renderHit={(hit) => (
+        renderHit={(hit, view) => view === "list" ? <SeriesRow series={hit} /> : (
           //TODO make SeriesCard accept hit directly
           <SeriesCard
             key={hit.objectID}

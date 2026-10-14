@@ -1,20 +1,30 @@
 import { pageMetadata } from "@/lib/seo";
-import ComingSoon from "@/components/modules/ComingSoon";
+import PageHeader from "@/components/modules/PageHeader";
+import TrackGuide from "@/components/modules/TrackGuide";
 
 export const metadata = pageMetadata({
   title: "Warhammer 40k Reading Tracker",
   description:
-    "Track your Warhammer 40k reading: mark Black Library books as read, reading, or want to read, follow series progress, and keep a purchase list. Coming soon to Imperial Archive.",
+    "Track your Warhammer 40k reading for free: mark Black Library books as want to read, reading, read, or owned, straight from any book card or book page.",
   path: "/track",
-  // placeholder until the page has real content
-  noindex: true,
 });
 
 export default function TrackPage() {
   return (
-    <ComingSoon
-      title="Track"
-      description="Reading trackers, purchase lists, and progress logs are being assembled. Soon you'll be able to chart your journey through the Black Library."
-    />
+    <main>
+      <PageHeader
+        title="Track Your Reading"
+        subtitle="Log every book you want to read, are reading, have finished, and own, across the whole Black Library."
+        align="center"
+        strongOverlay
+        height="sm"
+        priority
+        image="/images/Inquisitor-Arch-vukasin-ivkovic.jpg"
+        credit="Inquisitor Arch by Vukasin Ivkovic"
+      />
+      <div className="container">
+        <TrackGuide />
+      </div>
+    </main>
   );
 }

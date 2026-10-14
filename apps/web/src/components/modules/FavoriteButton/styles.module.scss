@@ -46,6 +46,15 @@
   }
 }
 
+// square, the same height as the labelled buttons beside it: their height is
+// one line of text (1lh) plus padding and border, which a 1rem icon falls short of
+.iconOnly {
+  justify-content: center;
+  padding: 0;
+  width: calc(1lh + 0.875rem + 2px);
+  height: calc(1lh + 0.875rem + 2px);
+}
+
 .icon {
   width: 1rem;
   height: 1rem;

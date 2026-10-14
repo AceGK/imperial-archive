@@ -43,9 +43,8 @@ export const accountNav: { label?: string; items: AccountNavItem[] }[] = [
       {
         href: "/account/track",
         label: "Track",
-        description: "Log what you've read, are reading, and want to read",
+        description: "The books you're reading, want to read, have read, and own",
         icon: TrackIcon,
-        comingSoon: true,
       },
       {
         href: "/account/reading-lists",
