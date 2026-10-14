@@ -27,6 +27,7 @@ const defaultPrimary: FooterLink[] = [
 ];
 
 const defaultSecondary: FooterLink[] = [
+  { href: "/track", label: "Reading Tracker" },
   { href: "/about", label: "About" },
   { href: "/resources", label: "Resources" },
   { href: "/blog", label: "Blog" },

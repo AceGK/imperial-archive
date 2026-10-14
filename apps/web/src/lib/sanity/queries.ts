@@ -658,6 +658,21 @@ export const faqPageQuery = groq`
 }[count(faqs) > 0]
 `;
 
+/** One FAQ category by slug with its questions, e.g. the Reading Tracker FAQ on /track */
+export const faqCategoryBySlugQuery = groq`
+*[_type == "faqCategory" && slug.current == $slug && !(_id in path("drafts.**"))][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  "faqs": *[_type == "faq" && !(_id in path("drafts.**")) && references(^._id)] | order(orderRank asc){
+    _id,
+    question,
+    answer
+  }
+}
+`;
+
 /* -------------------------------------------------------------
    FAVORITES: card data for a mixed list of document ids
 -------------------------------------------------------------- */

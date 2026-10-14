@@ -48,8 +48,9 @@ $cycle: 12s;
     z-index: 3;
   }
 
+  // decoration only: on phones it would just push the content down
   @include max(md) {
-    height: 16rem;
+    display: none;
   }
 }
 
@@ -798,6 +799,15 @@ $cycle: 12s;
   justify-content: center;
   gap: 0.75rem;
 }
+
+// the page header's Browse button, under the subtitle
+.headerActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+
 
 /* ---- coming soon ---- */
 
