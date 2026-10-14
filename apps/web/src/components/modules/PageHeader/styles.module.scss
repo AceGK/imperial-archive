@@ -107,13 +107,22 @@
 .children {
   margin-top: clamp(0.75rem, 1.5vw, 1rem);
   font-size: 1rem;
-  opacity: 0.95;
+
+  // text only: buttons stay solid
+  p {
+    opacity: 0.95;
+  }
 }
 
 .title,
 .subtitle,
 .children {
   text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+// controls have their own backgrounds, so they don't need the shadow
+.children :is(a, button) {
+  text-shadow: none;
 }
 
 .altText {
