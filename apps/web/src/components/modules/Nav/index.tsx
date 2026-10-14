@@ -71,12 +71,22 @@ const NAV_ITEMS: NavItem[] = [
 
 const dropdownItems = NAV_ITEMS.filter((item): item is NavGroup => !("href" in item));
 
-// The mobile menu lists the sections first, then the single links: Track sits
-// below Info instead of between Browse and Info as on desktop
-const MOBILE_ORDER = ["Browse", "Info", "Track", "Support"];
-const mobileItems = [...NAV_ITEMS].sort(
-  (a, b) => MOBILE_ORDER.indexOf(a.label) - MOBILE_ORDER.indexOf(b.label)
-);
+// The mobile menu has just the two sections, each a two-column grid: the
+// single links (Track, Support) join Info there, with the tracker second
+const browseGroup = dropdownItems.find((g) => g.label === "Browse")!;
+const infoGroup = dropdownItems.find((g) => g.label === "Info")!;
+const mobileItems: NavGroup[] = [
+  browseGroup,
+  {
+    ...infoGroup,
+    links: [
+      infoGroup.links[0],
+      { href: "/track", label: "Reading Tracker" },
+      ...infoGroup.links.slice(1),
+      { href: "/support", label: "Support" },
+    ],
+  },
+];
 
 type IndicatorStyle = { opacity: number; width?: number; transform?: string };
 type HighlightStyle = {
@@ -465,46 +475,32 @@ export default function Nav() {
       {/* mobile panel */}
       <div id="mobile-menu" className={`${styles.mobile} ${mobileOpen ? styles.show : ""}`}>
         <ul className={styles.mobileLinks}>
-          {mobileItems.map((item) =>
-            "href" in item ? (
-              <li key={item.label}>
-                <Link
-                  href={item.href}
-                  className={`${styles.mobileLink} ${isLinkActive(item.href) ? styles.active : ""}`}
-                >
-                  {item.label}
-                  {item.comingSoon && <span className={styles.mobileSoon}>Soon</span>}
-                </Link>
-              </li>
-            ) : (
-              <li key={item.label} className={styles.mobileGroup}>
-                <div className={styles.mobileGroupLabel}>{item.label}</div>
-                <ul
-                  className={`${styles.mobileSubLinks} ${item.columns === 2 ? styles.mobileTwoCol : ""}`}
-                >
-                  {item.links.map((link) => {
-                    const Icon = link.icon;
-                    return (
-                      <li key={link.href}>
-                        <Link
-                          href={link.href}
-                          className={`${styles.mobileLink} ${isLinkActive(link.href) ? styles.active : ""}`}
-                        >
-                          {Icon && (
-                            <span className={styles.mobileLinkIcon}>
-                              <Icon aria-hidden="true" />
-                            </span>
-                          )}
-                          {link.label}
-                          {link.comingSoon && <span className={styles.mobileSoon}>Soon</span>}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </li>
-            )
-          )}
+          {mobileItems.map((item) => (
+            <li key={item.label} className={styles.mobileGroup}>
+              <div className={styles.mobileGroupLabel}>{item.label}</div>
+              <ul className={`${styles.mobileSubLinks} ${styles.mobileTwoCol}`}>
+                {item.links.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className={`${styles.mobileLink} ${isLinkActive(link.href) ? styles.active : ""}`}
+                      >
+                        {Icon && (
+                          <span className={styles.mobileLinkIcon}>
+                            <Icon aria-hidden="true" />
+                          </span>
+                        )}
+                        {link.label}
+                        {link.comingSoon && <span className={styles.mobileSoon}>Soon</span>}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          ))}
           <MobileAccountGroup isLinkActive={isLinkActive} />
         </ul>
 
@@ -539,7 +535,7 @@ function MobileAuthButtons() {
       <Button href="/login" variant="primary" size="lg" className={styles.mobileLoginButton}>
         Login
       </Button>
-      <Button href="/signup" variant="secondary" size="lg" className={styles.mobileLoginButton}>
+      <Button href="/signup" variant="bracket" size="lg" className={styles.mobileLoginButton}>
         Signup
       </Button>
     </>
