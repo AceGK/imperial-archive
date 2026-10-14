@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import TocLayout from "@/components/modules/Toc/TocLayout";
 import type { TocItem } from "@/components/modules/Toc";
 import styles from "./styles.module.scss";
+import InfoHeader from "@/components/modules/InfoHeader";
 
 export const metadata = pageMetadata({
   title: "About",
@@ -87,12 +88,10 @@ export default function AboutPage() {
   return (
     <main>
       <section className="container row__md">
-        <TocLayout items={SECTIONS}>
-          <header className={styles.header}>
-            <div className={styles.ref}>Adeptus Administratum · IA-001 // Dossier</div>
-            <h1 className={styles.title}>About this project</h1>
-            <div className={styles.divider} />
-          </header>
+        <TocLayout
+          items={SECTIONS}
+          header={<InfoHeader label="Adeptus Administratum · IA-001 // Dossier" title="About this project" />}
+        >
 
           <div className={styles.sections}>
             <Card

@@ -3,6 +3,7 @@ import KofiButton from "@/components/modules/KofiButton";
 import { ShareLinks } from "@/components/modules/Share";
 import { pageMetadata } from "@/lib/seo";
 import styles from "./styles.module.scss";
+import InfoHeader from "@/components/modules/InfoHeader";
 
 export const metadata = pageMetadata({
   title: "Support",
@@ -46,11 +47,11 @@ export default function SupportPage() {
   return (
     <main>
       <section className="container row__md">
-        <header className={styles.header}>
-          <div className={styles.ref}>Adeptus Administratum · IA-005 // Exchequer</div>
-          <h1 className={styles.title}>Support the Archive</h1>
-          <div className={styles.divider} />
-        </header>
+        <InfoHeader
+          label="Adeptus Administratum · IA-005 // Exchequer"
+          title="Support the Archive"
+          className={styles.header}
+        />
 
         <div className={styles.layout}>
           <aside className={styles.payment} aria-label="Donate">

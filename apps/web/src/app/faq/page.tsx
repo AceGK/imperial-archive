@@ -8,6 +8,7 @@ import { client } from "@/lib/sanity/sanity.client";
 import { faqPageQuery } from "@/lib/sanity/queries";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 import styles from "./styles.module.scss";
+import InfoHeader from "@/components/modules/InfoHeader";
 
 export const revalidate = 60;
 
@@ -66,12 +67,8 @@ export default async function FaqPage() {
       <section className="container row__md">
         <TocLayout
           items={categories.map((c, i) => ({ id: c.slug, index: faqCategoryCode(i), label: c.title }))}
+          header={<InfoHeader label={LABEL} title={TITLE} />}
         >
-          <header className={styles.header}>
-            <div className={styles.ref}>{LABEL}</div>
-            <h1 className={styles.title}>{TITLE}</h1>
-            <div className={styles.divider} />
-          </header>
 
           <FaqList categories={categories} />
         </TocLayout>

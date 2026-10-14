@@ -1,6 +1,7 @@
 import FaqList, { faqCategoryCode, type FaqCategory } from "@/components/modules/FaqList";
 import TocLayout from "@/components/modules/Toc/TocLayout";
 import styles from "@/app/faq/styles.module.scss";
+import InfoHeader from "@/components/modules/InfoHeader";
 
 // Sample content for previewing the FAQ layout before real FAQs are in Sanity
 function text(t: string) {
@@ -54,12 +55,8 @@ export default function FaqTestPage() {
       <section className="container row__md">
         <TocLayout
           items={SAMPLE.map((c, i) => ({ id: c.slug, index: faqCategoryCode(i), label: c.title }))}
+          header={<InfoHeader label="Adeptus Administratum · IA-003 // Catechism" title="Frequently Asked Questions" />}
         >
-          <header className={styles.header}>
-            <div className={styles.ref}>Adeptus Administratum · IA-003 // Catechism</div>
-            <h1 className={styles.title}>Frequently Asked Questions</h1>
-            <div className={styles.divider} />
-          </header>
           <FaqList categories={SAMPLE} />
         </TocLayout>
       </section>
