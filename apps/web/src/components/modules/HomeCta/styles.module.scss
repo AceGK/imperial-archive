@@ -1,0 +1,202 @@
+@use "@/styles/breakpoints" as *;
+
+.cta {
+  // the page's own background, captured before the dark theme below swaps
+  // --bg, so the fades blend into whichever theme the page is in
+  --page-bg: var(--bg);
+  position: relative;
+  padding: 0;
+  overflow: clip;
+  // scroll position of this section drives the parallax
+  view-timeline: --home-cta block;
+}
+
+.inner {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(7rem, 14vw, 11rem);
+  color: var(--text);
+}
+
+// taller than the section, so it has room to drift as the page scrolls
+.media {
+  position: absolute;
+  inset: -15% 0;
+  z-index: -2;
+}
+
+.image {
+  object-fit: cover;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .media {
+      animation: parallax linear both;
+      animation-timeline: --home-cta;
+    }
+  }
+}
+
+// moves against the scroll, so the artwork seems further away than the page
+@keyframes parallax {
+  from {
+    transform: translateY(-10%);
+  }
+  to {
+    transform: translateY(10%);
+  }
+}
+
+// fades in and out of the page, darkens the art, a crimson glow behind the
+// text (as on the hero), and faint scan lines like the blog's cogitator cards
+.shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(to bottom, var(--page-bg) 0%, transparent 22%, transparent 78%, var(--page-bg) 100%),
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse 45% 55% at 50% 50%, rgba(185, 25, 35, 0.22) 0%, rgba(120, 10, 20, 0.1) 55%, transparent 80%),
+    rgba(6, 6, 8, 0.7);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 48rem;
+  text-align: center;
+}
+
+.kicker {
+  margin-bottom: 0.5rem;
+  font-family: var(--font-condensed);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.75rem, 4.5vw, 3rem);
+  line-height: 1.1;
+  text-wrap: balance;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+
+  // trademark mark: small and raised, as on the hero title
+  sup {
+    font-size: 0.3em;
+    vertical-align: top;
+    position: relative;
+    top: 0.35em;
+    margin-left: 0.1em;
+  }
+}
+
+.text {
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: color-mix(in oklab, var(--text), transparent 12%);
+  text-wrap: pretty;
+}
+
+// four figures between thin gold rules
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: 100%;
+  max-width: 34rem;
+  margin: 2rem 0 0;
+  padding-block: 1rem;
+  border-block: 1px solid color-mix(in oklab, var(--primary), transparent 65%);
+
+  @include max(sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 1rem;
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column-reverse; // number above its label, read label first
+  gap: 0.125rem;
+
+  & + & {
+    border-left: 1px solid color-mix(in oklab, var(--primary), transparent 75%);
+  }
+
+  @include max(sm) {
+    &:nth-child(3) {
+      border-left: none;
+    }
+  }
+
+  dd {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(1.375rem, 3vw, 1.875rem);
+    line-height: 1.1;
+    color: var(--primary);
+  }
+
+  dt {
+    font-family: var(--font-condensed);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--subtle);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.login {
+  margin: 1rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--subtle);
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// sign-in state from <html data-auth>, set before first paint
+.memberOnly {
+  display: none !important;
+}
+
+:global(html[data-auth="in"]) {
+  .guestOnly {
+    display: none !important;
+  }
+
+  .memberOnly {
+    display: inline-flex !important;
+  }
+}
+
+.credit {
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+  font-size: 0.625rem;
+  color: #858585;
+}

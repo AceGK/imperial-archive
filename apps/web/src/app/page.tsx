@@ -12,15 +12,20 @@ import { client } from "@/lib/sanity/sanity.client";
 import {
   blogPostsQuery,
   heroCoversQuery,
-  searchShortcuts40kQuery,
+  faqCategoriesBySlugsQuery,
   featuredAuthors40kQuery,
   featuredBooks40kQuery,
   featuredSeries40kQuery,
 } from "@/lib/sanity/queries";
 import type { BlogPost } from "@/types/sanity";
 
-import Search, { type SearchShortcut } from "@/components/modules/Search";
+import Search from "@/components/modules/Search";
+import { getSearchShortcuts } from "@/lib/searchShortcuts";
 import JsonLd from "@/components/seo/JsonLd";
+import TrackerPromo from "@/components/modules/TrackerPromo";
+import FaqSection from "@/components/modules/FaqSection";
+import HomeCta from "@/components/modules/HomeCta";
+import type { FaqCategory } from "@/components/modules/FaqList";
 import { DEFAULT_TITLE, SITE_DESCRIPTION, pageMetadata, siteJsonLd } from "@/lib/seo";
 
 export const revalidate = 60;
@@ -159,35 +164,16 @@ export default async function Home() {
     )
   );
 
-  type Doc = { id: string; title: string; slug: string };
-  const shortcutDocs = await client.fetch<{
-    authors: (Doc & { count: number })[];
-    series: (Doc & { count: number })[];
-    factions: (Doc & { group: { title: string; slug: string } })[];
-    groups: Doc[];
-    eras: Doc[];
-  }>(searchShortcuts40kQuery, {}, { next: { revalidate } });
-  const works = (n: number) => `${n} ${n === 1 ? "work" : "works"}`;
-  const searchShortcuts: SearchShortcut[] = [
-    ...shortcutDocs.authors.map((a) => ({
-      id: a.id, kind: "author" as const, title: a.title, href: `/authors/${a.slug}`, context: works(a.count), count: a.count,
-    })),
-    ...shortcutDocs.series.map((s) => ({
-      id: s.id, kind: "series" as const, title: s.title, href: `/series/${s.slug}`, context: works(s.count), count: s.count,
-    })),
-    ...shortcutDocs.groups.map((g) => ({
-      id: g.id, kind: "factionGroup" as const, title: g.title, href: `/factions/${g.slug}`, context: "Faction group",
-    })),
-    ...shortcutDocs.factions.map((f) => ({
-      id: f.id, kind: "faction" as const, title: f.title, href: `/factions/${f.group.slug}/${f.slug}`, context: f.group.title,
-    })),
-    ...shortcutDocs.eras.map((e) => ({
-      id: e.id, kind: "era" as const, title: e.title, href: `/eras/${e.slug}`,
-    })),
-  ];
+  const searchShortcuts = await getSearchShortcuts();
+
+  const faqCategories = await client.fetch<FaqCategory[]>(
+    faqCategoriesBySlugsQuery,
+    { slugs: ["getting-started", "the-archive"] },
+    { next: { revalidate } },
+  );
 
   return (
-    <main>
+    <main style={{paddingBottom:'0px'}}>
       <JsonLd data={siteJsonLd()} />
       <Hero
         image="/images/black-library-books.jpg"
@@ -210,6 +196,10 @@ export default async function Home() {
           viewAllLink="/books"
         />
       </section>
+
+      <div className="container row__lg">
+        <TrackerPromo />
+      </div>
 
       <section className="container row__lg">
         <AuthorsCarousel
@@ -244,6 +234,16 @@ export default async function Home() {
         />
       </section>
 
+      <div className="container row__lg">
+        <FaqSection
+          categories={faqCategories}
+          combined
+          subtitle="New to the Archive? Start here."
+          viewAllHref="/faq"
+          headingId="home-faq"
+        />
+      </div>
+
       {posts.length > 0 && (
         <section className="container row__lg">
           <BlogCarousel
@@ -253,6 +253,8 @@ export default async function Home() {
           />
         </section>
       )}
+
+      <HomeCta />
     </main>
   );
 }
