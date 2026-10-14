@@ -1,5 +1,6 @@
 // styles.module.scss
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
 
 .wrap {
   width: 100%;
@@ -27,16 +28,8 @@
   text-align: center;
   position: relative;
 
-  &.hasSubtitle::after {
-    content: "";
-    position: absolute;
-    bottom: -0.75rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30%;
-    height: 1px;
-    background-color: var(--primary);
-    border-radius: var(--radius-full);
+  &.hasSubtitle {
+    @include title-rule;
   }
 }
 
@@ -45,11 +38,15 @@
   color: var(--subtle);
 }
 
-/* Carousel container with external navigation */
+// The arrows always sit beside the cards, never over them. Where the page
+// has no room outside the content for them, the slider makes room by
+// insetting the cards; with room (see below) the cards span the content
+// width and line up with the page's other sections.
 .carouselContainer {
   position: relative;
   padding-inline: 3rem;
 
+  // phones: no arrows, so no room needed
   @include max(md) {
     padding-inline: 0;
   }
@@ -62,10 +59,10 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  fill:var(--primary);
-  background:transparent;
-  border:transparent;
-  border-radius: var(--radius-full);
+  fill: var(--primary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0;
   width: 2.5rem;
   height: 2.5rem;
   display: grid;
@@ -78,12 +75,12 @@
   }
 
   &:hover:not(:disabled) {
-    fill:var(--primary);
+    fill: var(--primary);
     background: var(--accent);
   }
 
   &:global(.swiper-button-disabled) {
-    display:none;
+    display: none;
   }
 
   @include max(md) {
@@ -99,10 +96,36 @@
   right: 0;
 }
 
+// Wide enough that the boxed content has room beside it: the arrows move out
+// there, and the cards take the full content width
+@media (min-width: 1300px) {
+  :global(:root:not([data-layout="full"])) {
+    .carouselContainer {
+      padding-inline: 0;
+    }
+
+    .navPrev {
+      left: -3rem;
+    }
+
+    .navNext {
+      right: -3rem;
+    }
+  }
+}
+
 .swiper {
   // Swiper clips overflow, and card corner brackets sit 1px outside the card
   // ($offset: 1px), so leave 1px of room on every side or they get cut off
   padding: 1px;
+
+  // Phones: run the cards out past the container's padding to the screen
+  // edge. The matching padding keeps the first card lined up with the page
+  // content; cards scroll on under it to the edge.
+  @include max(md) {
+    margin-inline: calc(-1 * var(--container-pad));
+    padding-inline: var(--container-pad);
+  }
 
   /* Hide default Swiper navigation */
   :global(.swiper-button-prev),
@@ -260,7 +283,10 @@
   align-items: stretch;
 }
 
+// square, with the gold corner marks on hover like the cards beside it
 .viewAllCard {
+  @include corner-brackets($size: 12px, $thickness: 1px, $offset: 1px, $hover-only: true);
+  position: relative;
   display: grid;
   place-content: center;
   justify-items: center;
@@ -268,19 +294,15 @@
   width: 100%;
   min-height: 100%;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 0;
   text-align: center;
   background: color-mix(in oklab, var(--accent), transparent 40%);
   color: var(--foreground);
   text-decoration: none;
-  transition:
-    transform 0.15s ease,
-    background 0.15s ease,
-    border-color 0.15s ease;
+  transition: background 0.15s ease;
 
   &:hover {
     background: color-mix(in oklab, var(--accent), transparent 25%);
-    border-color: var(--primary);
   }
 }
 
