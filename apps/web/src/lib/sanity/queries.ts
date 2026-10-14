@@ -671,6 +671,22 @@ export const catalogStats40kQuery = groq`{
   "factions": count(*[_type == "faction40k" && defined(slug.current) && defined(group->slug.current) && !(_id in path("drafts.**"))])
 }`;
 
+/* -------------------------------------------------------------
+   PAGES: standalone pages built in the studio, shown at /<slug>
+-------------------------------------------------------------- */
+export const pageBySlugQuery = groq`
+*[_type == "page" && slug.current == $slug && !(_id in path("drafts.**"))][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  label,
+  description,
+  updated,
+  body,
+  noindex
+}
+`;
+
 /** FAQ categories by slug, in studio order, each with its questions (e.g. the homepage FAQ) */
 export const faqCategoriesBySlugsQuery = groq`
 *[_type == "faqCategory" && slug.current in $slugs && !(_id in path("drafts.**"))] | order(orderRank asc){

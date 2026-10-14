@@ -1,4 +1,4 @@
-/* single 760px reading column, like the other info pages */
+/* single 760px reading column when there's no contents rail */
 .content {
   max-width: 760px;
   margin-inline: auto;
@@ -28,9 +28,17 @@
     text-transform: uppercase;
     line-height: 1.25;
     color: var(--primary);
+    // clears the sticky nav when jumped to from the contents rail
+    scroll-margin-top: 5rem;
   }
 
-  ul {
+  h3 {
+    margin: 1.75rem 0 0.75rem;
+    font-size: 1.125rem;
+  }
+
+  ul,
+  ol {
     padding-left: 1.5rem;
     margin-bottom: 1.25rem;
     color: var(--subtle);
@@ -42,6 +50,14 @@
     li::marker {
       color: var(--primary);
     }
+  }
+
+  a {
+    color: var(--primary);
+  }
+
+  > *:first-child {
+    margin-top: 0;
   }
 
   > *:last-child {

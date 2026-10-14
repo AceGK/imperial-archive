@@ -10,7 +10,7 @@ type FooterLink = { href: string; label: string; comingSoon?: boolean };
 export type FooterProps = {
   /** Primary site nav */
   links?: FooterLink[];
-  /** Optional secondary links (legal, about, etc.) */
+  /** Info links (about, FAQ, etc.) */
   secondary?: FooterLink[];
   note?: string;
   /** Show a slim bottom bar with © and utility links */
@@ -33,11 +33,33 @@ const defaultSecondary: FooterLink[] = [
   { href: "/blog", label: "Blog" },
   { href: "/faq", label: "FAQ" },
   { href: "/support", label: "Support" },
-  // { href: "/about#attribution", label: "Attribution" },
+];
+
+const legalLinks: FooterLink[] = [
+  { href: "/about#attribution", label: "Attribution" },
   { href: "/terms", label: "Terms of Use" },
+  { href: "/privacy", label: "Privacy Policy" },
 ];
 
 const accountLinks = accountNav.flatMap((group) => group.items);
+
+function FooterColumn({ heading, label, links }: { heading: string; label: string; links: FooterLink[] }) {
+  return (
+    <nav className={styles.column} aria-label={label}>
+      <h2 className={styles.heading}>{heading}</h2>
+      <ul className={styles.linkList}>
+        {links.map(({ href, label, comingSoon }) => (
+          <li key={href}>
+            <Link href={href} className={styles.link}>
+              {label}
+            </Link>
+            {comingSoon && <span className={styles.soon}>Soon</span>}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
 
 export default function Footer({
   links = defaultPrimary,
@@ -59,50 +81,10 @@ export default function Footer({
             {note && <p className={styles.note}>{note}</p>}
           </div>
 
-          {/* Primary links */}
-          <nav className={styles.nav} aria-label="Footer navigation">
-            <h2 className={styles.heading}>Browse</h2>
-            <ul className={styles.linkList}>
-              {links.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className={styles.link}>
-                    {l.label}
-                  </Link>
-                  {l.comingSoon && <span className={styles.soon}>Soon</span>}
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Secondary / utility */}
-          <nav className={styles.utility} aria-label="Utility links">
-            <h2 className={styles.heading}>Info</h2>
-            <ul className={styles.linkList}>
-              {secondary.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className={styles.link}>
-                    {l.label}
-                  </Link>
-                  {l.comingSoon && <span className={styles.soon}>Soon</span>}
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Account */}
-          <nav className={styles.utility} aria-label="Account links">
-            <h2 className={styles.heading}>Account</h2>
-            <ul className={styles.linkList}>
-              {accountLinks.map(({ href, label, comingSoon }) => (
-                <li key={href}>
-                  <Link href={href} className={styles.link}>
-                    {label}
-                  </Link>
-                  {comingSoon && <span className={styles.soon}>Soon</span>}
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <FooterColumn heading="Browse" label="Footer navigation" links={links} />
+          <FooterColumn heading="Info" label="Info links" links={secondary} />
+          <FooterColumn heading="Account" label="Account links" links={accountLinks} />
+          <FooterColumn heading="Legal" label="Legal links" links={legalLinks} />
         </div>
       </div>
 

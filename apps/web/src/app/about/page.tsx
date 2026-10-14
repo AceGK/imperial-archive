@@ -208,6 +208,12 @@ export default function AboutPage() {
                 property.
               </p>
               <p>
+                Book descriptions and synopses are quoted from their publishers
+                and other sources, including <BlackLibrary /> book covers and
+                listings, <Lexicanum />, and retailers such as Amazon. They
+                remain the work of their respective authors and publishers.
+              </p>
+              <p>
                 Faction icons are drawn from{" "}
                 <ExternalLink href="https://github.com/Certseeds/wh40k-icon">
                   wh40k-icon
