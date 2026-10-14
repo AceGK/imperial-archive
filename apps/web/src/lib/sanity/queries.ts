@@ -314,7 +314,7 @@ export const bookBySlug40kQuery = groq`
   "page_count": pageCount,
 
   "editions": coalesce(editions[]{ isbn, note }, []),
-  "links": coalesce(links[]{ type, url }, []),
+  "links": coalesce(links[]{ _key, type, url, sourceFor }, []),
 
   image{
     alt,

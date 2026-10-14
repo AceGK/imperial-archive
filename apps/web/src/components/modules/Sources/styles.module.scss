@@ -1,0 +1,83 @@
+// [1][2] after a text: small, raised, gold
+.cite {
+  margin-left: 0.15em;
+  font-size: 0.7em;
+  line-height: 0;
+  white-space: nowrap;
+
+  a + a {
+    margin-left: 0.3em;
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      text-decoration: underline;
+    }
+  }
+}
+
+.sources {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.heading {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-condensed);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+
+.list {
+  display: grid;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--subtle);
+}
+
+.item {
+  // clears the sticky nav when jumped to from a [1]
+  scroll-margin-top: 5rem;
+
+  // briefly marks the entry a [1] link jumped to
+  &:target {
+    color: var(--text);
+  }
+}
+
+.number {
+  flex-shrink: 0;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.link {
+  color: var(--primary);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

@@ -1,3 +1,4 @@
+import type { SourceLink } from "@/components/modules/Sources";
 import type { SanityImageField } from './sanity';
 
 // Minimal author shape for display
@@ -59,6 +60,8 @@ export type BookDetailData = {
   image?: SanityImageField;
   description?: string | null;
   story?: string | null;
+  /** Shown as the page's numbered sources (see Sources) */
+  links?: SourceLink[];
   contents?: BookContent[];
   collectedIn?: BookCollection[];
   page_count?: number | null;
