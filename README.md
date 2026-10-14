@@ -4,199 +4,159 @@
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/Sanity-F03E2F?style=for-the-badge&logo=sanity&logoColor=white" alt="Sanity" />
   <img src="https://img.shields.io/badge/Algolia-5468FF?style=for-the-badge&logo=algolia&logoColor=white" alt="Algolia" />
+  <img src="https://img.shields.io/badge/Convex-EE342F?style=for-the-badge&logoColor=white" alt="Convex" />
   <img src="https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white" alt="SCSS" />
 </p>
 
-A comprehensive web application for browsing [Games Workshop's Warhammer 40,000](https://www.warhammer.com/) books from the [Black Library](https://www.blacklibrary.com/). Browse the extensive catalog by format, author, series, faction, and era.
+A free, fan-made catalog and reading tracker for [Warhammer 40,000](https://www.warhammer.com/) fiction from the [Black Library](https://www.blacklibrary.com/). Browse more than 1,100 novels, novellas, short stories, anthologies and audio dramas by author, series, faction and era, find reading orders, and track what you want to read, are reading, have read and own.
 
-Visit the site at [ImperialArchive.com](https://imperialarchive.com). This site is currently in development, but you can access the site using the password **emperorprotects**
-
-<!-- ![Black Library](https://black-library.vercel.app/images/black-library-books.jpg) -->
-
+**Live site: [imperialarchive.com](https://imperialarchive.com)**
 
 <h2>Contents</h2>
 
-- [🚧 Work in Progress](#-work-in-progress)
-  - [Upcoming Features](#upcoming-features)
 - [Why](#why)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
   - [Project Structure](#project-structure)
   - [Component Organization](#component-organization)
-- [Key Integrations](#key-integrations)
-  - [Sanity → Algolia Sync](#sanity--algolia-sync)
   - [Data Flow](#data-flow)
+- [Getting Started](#getting-started)
+- [Roadmap](#roadmap)
+- [Technical Challenges](#technical-challenges)
 - [License](#license)
-
-
-## 🚧 Work in Progress
-
-This project is actively being developed! Here's what's currently in the works:
-
-### Upcoming Features
-- **Enhanced UI/UX** - Continued improvements to the interfacea and user experience for both mobile and desktop devices
-- **Advanced Algolia Features** - Including Algolia instantsearch on needed pages
-- **User Authentication** - Sign in to access personalized features
-- **Personal Library Management** - Track books you've read and own
-- **Favorites & Wishlists** - Save books you want to read
-- **User Reviews & Ratings** - Share your thoughts on books with the community
-- **Real-time Database** - Powered by [Convex](https://www.convex.dev/) for instant synchronization
-- **Missing or Incomplete Book Data** - Ongoing manual curation to fill catalog gaps, with potential community submissions in the future
 
 ## Why
 
-The official [Black Library](https://www.blacklibrary.com/) website and existing third-party Warhammer 40,000 wikis like [Lexicanum](https://lexicanum.com/) and the [Warhammer 40k Wiki](https://warhammer40k.fandom.com/) lack robust search and filtering capabilities, making it difficult to discover books across the extensive catalog. This project was created to provide:
+The official [Black Library](https://www.blacklibrary.com/) website has closed its online catalog, and community wikis like [Lexicanum](https://wh40k.lexicanum.com/) and the [Warhammer 40k Wiki](https://warhammer40k.fandom.com/) are great for lore but weak at search and filtering. Finding books across a catalog this size is hard. Imperial Archive provides:
 
-- **Better Search** - Fast, typo-tolerant search powered by Algolia
-- **Advanced Filtering** - Filter by multiple criteria simultaneously (author, faction, era, series, format)
-- **Complete Catalog** - A comprehensive view of the entire Black Library collection in one place
-- **Better Discovery** - Find books by faction, era, or author
-- **Modern UX** - A clean, fast interface built with modern web technologies
-
-<!-- ## Learning Goals & Technical Challenges
-I started this app to gain deeper experience with **TypeScript**, **Algolia v5**, **Sanity v4**, and **Next.js 15**. I have built e-commerce applications with this stack professionally, but they are in private repositories. This project serves as a public demonstration. 
-
-I chose the Black Library catalog because I'm a fan of Warhammer 40k books, and the catalog presents several interesting technical challenges that make it ideal for learning:
-
-### Data Complexity
-
-**1. No Official API**
-- Games Workshop does not provide an official API 
-- Open APIs (OpenLibrary, Google Books) lack complete Black Library coverage
-  - Book data within the open APIs often don't include useful descriptions and have low resolution cover images
-- No official resource for data like author image/bio and faction svg icon/description
-
-**2. Multi-Format Publications**
-- Stories may be released as standalones, and then in Omnibus collections and/or Anthologies
-
-**3. Multiple Content Formats**
-- Traditional print (novels, novellas, graphic novels, omnibus, anthologies)
-- Stories may be traditional print and/or audio
-- Each format has different metadata requirements
-
-**4. Complex Relationships**
-- Stories may belong to multiple series simultaneously
-- Series can be nested (sub-series within larger series)
-- Relationships between books, factions, and eras
-
-**5. Rich Metadata**
-- Book meta data (author, descriptions, era, series, included factions, external links)
-  - Publication details (ISBNs, page counts, release dates, multiple editions)
-- Author metadata (biographies, photos, external links, social profiles)
-- Faction metadata (SVG icons, descriptions, color schemes)
-
-### Technical Learnings
-
-- Complex Sanity schemas with references and conditional fields
-- Algolia indexing for nested relationships and faceted search
-- Real-time sync using Sanity Functions
-- Document size optimization near Algolia's free 10KB limit
-- Type-safe TypeScript interfaces mirroring CMS schemas
-- Next.js SSR/SSG optimization patterns -->
+- **Better search:** fast, typo-tolerant search powered by Algolia
+- **Real filtering:** combine author, faction, era, series and format at once
+- **The whole catalog in one place:** every format, linked to its authors, series, factions and era
+- **Reading orders:** series laid out in order, with "preceded by" and "followed by" links on each book
+- **A reading tracker:** a free log of your Black Library reading that follows you across devices
 
 ## Features
 
-- **Fast Search & Filtering** - Powered by Algolia for instant results
-- **[Browse all books](https://black-library.vercel.app/books)** - Browse the full catalog of Warhammer 40,000 stories
-- **[Browse by Author](https://black-library.vercel.app/authors)** - Explore books from your favorite Black Library authors
-- **[Browse by Faction](https://black-library.vercel.app/factions)** - Find books about specific armies, legions, chapters, and factions
-- **[Browse by Era](https://black-library.vercel.app/eras)** - Discover books from different Warhammer 40,000 eras
-- **[Browse by Series](https://black-library.vercel.app/eras)** - Follow complete book series in order
-
+- **[Books](https://imperialarchive.com/books)**, **[Authors](https://imperialarchive.com/authors)**, **[Series](https://imperialarchive.com/series)**, **[Factions](https://imperialarchive.com/factions)** and **[Eras](https://imperialarchive.com/eras)** catalogs with faceted filters, grid and list views, and per-reader display options (show or hide covers, authors, dates, formats and more)
+- **Hero search** across books, authors, series, factions and eras in one list, with authors first
+- **[Reading tracker](https://imperialarchive.com/track):** mark any book as Want to read, Reading or Read, and separately as Owned, from a book card or book page; see it all on your account's Track page
+- **Accounts:** email and password sign-up with email verification, password reset, favorites for books, series, authors, factions and eras
+- **Book pages** with descriptions, back-cover text, series navigation, collected-in links and numbered sources (`[1][2]`) linking to Black Library and Lexicanum
+- **Content managed in Sanity:** books and catalog data, FAQs, blog posts, standalone pages (Terms, Privacy) and URL redirects, all live without a redeploy
+- **SEO:** per-page metadata, structured data (Book, BookSeries, FAQPage, BreadcrumbList and more), and a full sitemap
 
 ## Tech Stack
-- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript for better developer experience and code quality
-- **[Next.js](https://nextjs.org/)** - Full-stack React framework with server-side rendering, static generation, and API routes
-  - **[SCSS](https://sass-lang.com/)** - CSS preprocessor with variables, nesting, and mixins
-   - **[Swiper](https://swiperjs.com/)** - Touch-enabled carousels and sliders
-   - **[dnd kit](https://dndkit.com/)** - Drag and drop toolkit for sortable lists and interactive UI
-- **[Sanity CMS](https://www.sanity.io/)** - Headless CMS for content management
-- **[Algolia](https://www.algolia.com/)** - Search and discovery API for fast, relevant search and filtering
-- **[Convex](https://www.convex.dev/)** - Real-time backend for user data, favorites, and library tracking
+
+- **[TypeScript](https://www.typescriptlang.org/)** throughout
+- **[Next.js 15](https://nextjs.org/)** (App Router) with server rendering and incremental revalidation
+  - **[SCSS modules](https://sass-lang.com/)** with shared mixins; no UI framework, every component is hand-built
+  - **[Swiper](https://swiperjs.com/)** for carousels and **[dnd kit](https://dndkit.com/)** for drag-and-drop lists
+- **[Sanity](https://www.sanity.io/)** (v4) as the headless CMS, with **Sanity Functions** keeping Algolia in sync
+- **[Algolia](https://www.algolia.com/)** (v5) with React InstantSearch for search and faceted filtering
+- **[Convex](https://www.convex.dev/)** for user data (favorites, reading tracker) and **[Convex Auth](https://labs.convex.dev/auth)** for accounts
+- **[Resend](https://resend.com/)** for account emails (verification and password-reset codes)
+- **[Vercel](https://vercel.com/)** for hosting, Web Analytics and Speed Insights
 
 ## Architecture
+
 ### Project Structure
 
-This is a monorepo containing both the CMS and web application:
+An npm workspaces monorepo with the website, the CMS studio, and the Sanity Functions that sync content to Algolia:
+
 ```
 /
 ├── apps/
-│   ├── studio/    # Sanity CMS studio, schemas, and Algolia scripts
-│   └── web/       # Next.js web application
+│   ├── studio/              # Sanity Studio: schemas, desk structure, one-off scripts
+│   └── web/                 # Next.js website
+│       ├── convex/          # Convex backend: schema, auth, favorites, tracking, emails
 │       └── src/
-│           └── components/
-│               ├── algolia/    # Algolia-specific search comps
-│               ├── icons/      # SVG icons compiled with SVGR
-│               ├── layouts/    # Reusable page layouts
-│               ├── modules/    # Complex composite comps
-│               └── ui/         # Atomic UI comps
+│           ├── app/         # Routes (App Router)
+│           ├── components/
+│           │   ├── algolia/ # InstantSearch widgets
+│           │   ├── icons/   # SVG icons compiled with SVGR (faction icons, achievements, UI)
+│           │   ├── layouts/ # Reusable page layouts
+│           │   ├── modules/ # Composite, feature-level components
+│           │   └── ui/      # Atomic building blocks (Button, Accordion, RichText…)
+│           ├── lib/         # Sanity client and queries, Algolia client, SEO helpers
+│           └── styles/      # Global styles, breakpoints and mixins
+├── functions/               # Sanity Functions: sync books, authors and series to Algolia
+└── sanity.blueprint.ts      # Deploys the Sanity Functions
 ```
 
 ### Component Organization
 
-- **`/algolia`** - Search UI components that integrate with Algolia's API
-- **`/icons`** - Faction icons, UI icons, and custom SVG components
-- **`/layouts`** - Page-level layout wrappers and structural templates
-- **`/modules`** - Feature-rich components built from multiple smaller pieces
-- **`/ui`** - Simple, reusable building blocks following atomic design principles
-
-<!-- ### Content Management
-The site uses **Sanity CMS** as a headless content management system to manage:
-- Book catalog
-- Author information
-- Faction details
-- Era classifications
-- Series organization
-
-### Search & Discovery
-**Algolia** powers the search functionality with:
-- Real-time indexing via Sanity Functions
-- Automatic sync when content is created, updated, or deleted
-- Fast, typo-tolerant search
-- Faceted filtering by author, faction, era, and format
-
-### Frontend
-Built with **Next.js** for:
-- Server-side rendering (SSR)
-- Static site generation (SSG)
-- Optimized image loading
-- Fast page transitions
-- SEO optimization -->
-
-
-<!-- ### Why Not Use Pre-built Component Libraries or Design Systems?
-
-Since this is a solo project intended for learning, I wanted to avoid prebuilt component libraries and design systems like [Tailwind](https://tailwindcss.com/), [Shadcn](https://ui.shadcn.com/), or [Radix Primitives](https://www.radix-ui.com/). While more time-consuming and arguably reinventing the wheel, building components from scratch provides valuable opportunities to:
-
-- **Deepen understanding of UI architecture** - Learn how component libraries are structured internally
-- **Master CSS/SCSS patterns** - Develop custom styling systems and best practices
-- **Implement accessibility first-hand** - Implement ARIA, keyboard navigation, and focus management from scratch
-- **Practice design patterns** - Build reusable, composable components following atomic design principles
-- **Full creative control** - Customize every aspect without fighting against framework opinions
-
-This approach isn't practical for production work with tight deadlines, but it's ideal for a learning project where the journey matters as much as the destination. -->
-
-## Key Integrations
-
-### Sanity → Algolia Sync
-The project includes a Sanity Function that automatically syncs book data to Algolia:
-- Listens for document create/update/delete events
-- Fetches related references (authors, factions, eras, series)
-- Formats and indexes data in Algolia
-- Handles document size limits and field truncation
+- **`/algolia`:** search UI components that integrate with Algolia's API
+- **`/icons`:** faction icons, achievement icons, UI icons and custom SVG components
+- **`/layouts`:** page-level layout wrappers and structural templates
+- **`/modules`:** feature-rich components built from smaller pieces
+- **`/ui`:** simple, reusable building blocks following atomic design principles
 
 ### Data Flow
+
 ```
-Sanity CMS → Sanity Function → Algolia Index → Next.js Frontend
+Sanity Studio ──publish──> Sanity Function ──> Algolia indexes ──> catalogs and search
+      │
+      └──────────── GROQ queries ─────────────────────────────> book, series and info pages
+
+Browser ──> Convex (auth, favorites, reading tracker)
 ```
+
+- **Catalog content** lives in Sanity. Publishing a book, author or series triggers a Sanity Function that formats it (resolving references, trimming fields to Algolia's size limits) and updates the matching Algolia index.
+- **Catalog pages** query Algolia through a cached `/api/search` proxy; detail pages query Sanity directly and revalidate every 60 seconds.
+- **User data** (accounts, favorites, tracked books) lives in Convex and updates live, with optimistic updates in the UI.
+
+## Getting Started
+
+Requires **Node 22 or newer** and npm 10+.
+
+```sh
+npm install          # from the repo root; installs both apps
+npm run dev          # runs the website (localhost:3000) and the studio (localhost:3333)
+```
+
+The website also needs the Convex dev backend. Run it from **`apps/web`**, not the repo root:
+
+```sh
+cd apps/web
+npx convex dev
+```
+
+Each app reads its credentials (Sanity, Algolia, Convex) from its own `.env.local`, which isn't committed. Convex keeps its auth and email settings on the deployment itself.
+
+### Useful scripts
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Website and studio together |
+| `npm run dev:web` / `npm run dev:studio` | One app only |
+| `npm run build` | Production builds of both apps |
+| `npm run typecheck` | Type-check every workspace |
+| `npx sanity deploy` (in `apps/studio`) | Deploy the studio |
+| `npx convex deploy` (in `apps/web`) | Deploy Convex functions to production |
+
+## Roadmap
+
+The project is in active development. Next up:
+
+- **Reading progress:** series, era, faction and author progress, reading stats and achievements
+- **Reviews and ratings**, and display names for reader profiles
+- **Sign in with Google, GitHub and Discord** (built, waiting on provider setup)
+- **Characters** catalog
+- **Catalog completeness:** ongoing manual curation to fill gaps, with community submissions later
+
+## Technical Challenges
+
+The Black Library catalog makes for an interesting data problem:
+
+- **No official API.** Games Workshop doesn't offer one, and open book APIs (OpenLibrary, Google Books) have patchy coverage, thin descriptions and low-resolution covers, so the catalog is curated by hand in Sanity.
+- **Stories are published many ways.** A story may appear on its own, then in an anthology and an omnibus, in print and audio, so books link to the collections that contain them.
+- **Many-to-many relationships.** Books belong to several series at once, series contain ordered lists, and books feature multiple factions and an era.
+- **Search on a budget.** Algolia records stay under the free plan's 10KB limit, typed search only, and small collections (factions, eras, authors, series) are matched in the browser instead of costing Algolia searches.
+- **Hand-built UI.** No component library: accessible menus, accordions, carousels and dialogs written from scratch with SCSS modules.
 
 ## License
 
-MIT License
+Copyright © 2025-2026 Imperial Archive. All rights reserved. The source code is public so you can read it, but it isn't licensed for reuse; see [LICENSE](LICENSE).
 
-**© Games Workshop** - All Warhammer 40,000 content and imagery is property of Games Workshop.
-
-**Imperial Archive** is an unofficial, fan-made database and reading guide for the Warhammer universe. This site is not affiliated with or endorsed by Games Workshop. All Warhammer® and Warhammer 40,000® trademarks, logos, names, and images are the property of Games Workshop Limited.
-
----
+**Imperial Archive** is an unofficial, fan-made database and reading guide for the Warhammer universe. It is not affiliated with or endorsed by Games Workshop. All Warhammer® and Warhammer 40,000® trademarks, logos, names, and images are the property of Games Workshop Limited. Book descriptions are quoted from their publishers and other sources and remain the work of their respective authors and publishers. Faction icons are from [wh40k-icon](https://github.com/Certseeds/wh40k-icon); see the [About page](https://imperialarchive.com/about#attribution) for full credits.

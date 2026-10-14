@@ -1,29 +1,45 @@
 # TODO
 
+# ui 
+- [ ] fix: initial opening of the account dropdown in nav will render "Dashboard" in its hovered state 
+- [ ] implement: highlight the currently selected page in the account dropdown in nav
+- [ ] fix: the "track" modal moves when scrolling the page, it should stay "locked" to its button/card 
+- [ ] reconfigure: perhaps change primary nav to "browse", "resources", "about", and "support". With resources having more sub pages, such as "guides", and support having "donate", "contribute", "report issue", etc
+  - [ ] make footer match, move legal to bottom bar
+- [ ] implement: add icons to pages in nav (about, faq, etc)
+- [ ] fix: account icon CLS on load 
+- [ ] improve: hero scroll down button (perhaps ditch "scroll", or fade out gradually on scroll state rather than scroll thresold)
+- [ ] improve: reading tracker image/example section on homepage 
+- [ ] improve: change border/hover state of blog cards? 
+- [ ] improve: combine theme, layout, and card controls as singular cog icon in nav? 
+- [ ] improve: accordion body content overflows container due to height being calculated upon open. This should prevent overflow on open accordions when screensize changes 
+- [ ] improve: make login/signup a modal popup instead of just a page. Then, improve login/signup page, perhaps as fullscreen? 
+- [ ] improve: add hover 'click to copy' option for pages with TOC (e.g. blog posts, about, etc)
+- [ ] improve: don't hide nav on scroll if modal is open
+- [ ] improve: make +Track button on book cards controled with "Display" options to either be on-hover, inline, or hidden completely
+- [ ] fix: book count limit for infinite loading (so there's always full rows)
+- [ ] fix: catalog nav from resetting into place based on scroll threshold (perhaps see how I managed this on PL-next)
+- [ ] fix: create my own header image for /books instead of the black library owned image
+- [ ] improve: series cards should maybe say how many lists + works?
+- [ ] improve: Perhaps change "works" to "publications"? 
+- [ ] improve: update favicon to original artwork
+- [ ] improve: add the "Book N in series, read after…" line to book pages, which gives each page original text that answers reading-order searches directly.
+
+# seo 
+- [ ] audit for keywords etc 
+
+# ideas 
+- [ ] book reviews from APIs, combined into aggregate review count + let users write IA book reviews
+- [ ] include ISBNs and additional book images (different formats/editions)
+ 
 ## Auth (Convex Auth)
 
-### Deploy the new auth functions
-- [x] Delete the stray `convex/` folder at the repo root (it holds only generated files, created by running `convex dev` from the wrong directory)
-- [x] Run `npx convex dev` from `apps/web`, **not** the repo root
-- [x] Confirm `users:viewer`, `users:updateEmail`, and `users:updatePassword` show under Functions in the Convex dashboard
+- [ ] remove unverified accounts after X amount of time
+- [ ] captcha for signup/login? 
 
-### Password reset emails (Resend)
-- [x] Create a [Resend](https://resend.com) account
-- [x] Create an API key and set `AUTH_RESEND_KEY` on the dev deployment (also saved in `apps/web/.env.local` for reference; Convex only reads its own env)
-- [ ] Verify the sending domain (e.g. `imperialarchive.com`) in Resend
-- [ ] Set the sender on the dev deployment (run from `apps/web`):
-  ```sh
-  npx convex env set AUTH_EMAIL_FROM "Imperial Archive <noreply@imperialarchive.com>"
-  ```
-  Before the domain is verified, `"Imperial Archive <onboarding@resend.dev>"` works for testing, but it only delivers to your Resend account's own email
-- [x] Set `SITE_URL=http://localhost:3000` on dev (Convex Auth requires it for any email codes, not just OAuth)
-- [x] Test `/reset-password` end to end
-
-### Email testing tools
-Emails (plain text, defined in `apps/web/convex/emails.ts`): password reset code and email verification code.
-- [x] Move the Resend `fetch` call into a shared `sendEmail` helper (`convex/emails.ts`) used by the reset and verification emails
-- [x] Add an internal `emails:sendTest` action that sends a code email with a dummy code (`"type": "verification"` for the verification email). Run it from the Convex dashboard (Functions → Run) or `npx convex run emails:sendTest '{"to": "you@example.com"}'`. It's internal, so clients can't call it
-- [x] Use Resend's test addresses to check delivery without a real inbox: `delivered@resend.dev`, `bounced@resend.dev`, `complained@resend.dev` (results show in Resend's Emails log)
+### Emails (Resend)
+Emails (plain text, defined in `apps/web/convex/emails.ts`): password reset code and email verification code. Test with `npx convex run emails:sendTest '{"to": "delivered@resend.dev"}'`.
+- [ ] Verify the sending domain (`imperialarchive.com`) in Resend, if not done yet (check Resend → Domains)
 - [ ] Later, once emails are styled: switch to [React Email](https://react.email) templates and preview them locally with its dev server
 
 ### Manual test checklist
@@ -51,13 +67,8 @@ Same Convex project, separate **production deployment**: its own data, functions
 - [ ] Decide: copy them to prod (`npx convex export` from dev, then `npx convex import --prod <file>`), or start prod fresh and let them sign up again
 
 **Convex prod deployment** (run from `apps/web`)
-- [ ] Create the prod deployment and its auth keys: `npx @convex-dev/auth --prod` (sets `JWT_PRIVATE_KEY` and `JWKS` on prod)
-- [ ] Create a separate prod Resend key (`imperial-archive-convex-prod`, Sending access only, limited to `imperialarchive.com`)
-- [ ] Set prod env vars in the dashboard (switch to Production → Settings → Environment Variables) or with `npx convex env set --prod`:
-  - `SITE_URL` = `https://imperialarchive.com` (without it, reset and verification emails fail)
-  - `AUTH_RESEND_KEY` = the prod Resend key
-  - `AUTH_EMAIL_FROM` = `noreply@imperialarchive.com`
-  - Later: OAuth client IDs and secrets (`AUTH_GOOGLE_ID`, etc.), using prod OAuth apps whose callback URLs point at the prod `.convex.site` domain
+- [ ] Confirm the prod `AUTH_RESEND_KEY` is a separate prod key (`imperial-archive-convex-prod`, Sending access only, limited to `imperialarchive.com`), not the dev one
+- [ ] Later: OAuth client IDs and secrets on prod (`AUTH_GOOGLE_ID`, etc.), using prod OAuth apps whose callback URLs point at the prod `.convex.site` domain
 
 **Vercel**
 - [ ] Root directory: `apps/web`
@@ -86,17 +97,9 @@ Same Convex project, separate **production deployment**: its own data, functions
   - Reset form accepts email or phone (libphonenumber-js is already installed for parsing)
 
 ### Federated login (Google, GitHub, Discord) with account linking
-Convex Auth links sign-ins to an existing user **only when that user's email is verified** (`emailVerificationTime` set). OAuth emails count as verified, but password signups currently don't verify, so enabling OAuth now would create duplicate users for the same email. Do these in order, **before** turning on any provider:
+Convex Auth links sign-ins to an existing user **only when that user's email is verified** (`emailVerificationTime` set). The groundwork is done: email verification, lowercase emails, re-verification on email change, providers in `convex/oauth.ts` that only trust verified emails, and provider buttons on `/login`, `/signup` and `/account/security`, **hidden** until `AUTH_OAUTH_ENABLED=true` is set. Don't bulk-mark unverified users as verified (an unverified signup could be squatting someone else's email). If you import data into prod, dry-run `npx convex run migrations:lowercaseEmails --prod` first, then run it with `'{"dryRun": false}'`.
 
-1. [x] **Resend working** (see above); verification codes use the same email setup
-2. [x] **Normalize emails to lowercase**: done in the Password provider's `profile` and the email-change flow. Dev data was already all lowercase. If you import data into prod, dry-run `npx convex run migrations:lowercaseEmails --prod` first, then run it with `'{"dryRun": false}'`
-3. [x] **Email verification on password signup**: add `verify` to the `Password` provider (8-digit code via Resend, like `passwordResetEmail.ts`), and add the verification step to `AuthForm`
-4. [x] **Existing unverified password users**: prompt for verification on next sign-in, or add a "Verify your email" button on `/account/profile`. Don't bulk-mark them as verified (an unverified signup could be squatting someone else's email, and their Google sign-in would then link into the squatter's account)
-5. [x] **Email change re-verifies**: the new address gets a code and the email only changes after it's confirmed
-6. [x] **Accounts without a password**: `/account/security` shows connected sign-in methods and "Set a Password" for OAuth-only users; Profile points them there before changing email or phone
-7. [x] **Set `SITE_URL`** on the dev deployment (`http://localhost:3000`); prod is covered in the Production section
-8. [x] **Providers in code** (`convex/oauth.ts`): Google, GitHub, Discord, with profile overrides so only **verified** emails link (Discord and GitHub's defaults would trust unverified emails)
-9. [x] **Provider buttons** on `/login` and `/signup`, plus the Sign-in Methods card on `/account/security`. **Hidden** until `AUTH_OAUTH_ENABLED=true` is set on the deployment; then each provider appears once its credentials are set
+1. Create the provider apps and turn them on:
    - [ ] **Google OAuth app** at [console.cloud.google.com](https://console.cloud.google.com):
      1. Create or select a project (e.g. "Imperial Archive")
      2. **Google Auth Platform** (formerly "OAuth consent screen"): app name, support email, audience "External"
@@ -114,8 +117,8 @@ Convex Auth links sign-ins to an existing user **only when that user's email is 
    - [ ] **Set credentials** in the Convex dashboard (dev → Settings → Environment Variables): `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET`, `AUTH_GITHUB_ID`/`AUTH_GITHUB_SECRET`, `AUTH_DISCORD_ID`/`AUTH_DISCORD_SECRET`
    - [ ] **Turn on the buttons**: set `AUTH_OAUTH_ENABLED=true` on dev (delete it or set anything else to hide them again; no redeploy needed)
    - [ ] **Prod**: separate OAuth apps (or extra callback URLs) pointing at the prod `.convex.site` domain, the same credential env vars on the prod deployment, and `AUTH_OAUTH_ENABLED=true` on prod when ready to launch
-10. [ ] **Test linking both ways**: password signup → verify → Google sign-in lands in the same account, and Google first → password signup with the same email links too
-11. [ ] (Only if duplicates ever appear) **Merge mutation**: move `authAccounts` rows and app data (favorites, tracking) from one user to the other, then delete the empty user
+2. [ ] **Test linking both ways**: password signup → verify → Google sign-in lands in the same account, and Google first → password signup with the same email links too
+3. [ ] (Only if duplicates ever appear) **Merge mutation**: move `authAccounts` rows and app data (favorites, tracking) from one user to the other, then delete the empty user
 
 ## Account Dashboard
 
@@ -126,9 +129,8 @@ New sections go in `apps/web/src/components/modules/Account/nav.ts` plus a page 
 - [ ] Avatar upload with Convex file storage, or pick a faction icon from the existing set as a cheaper first version (replace the email-initial avatar in the sidebar)
 
 ### Library
-- [ ] **Track**: mark books as Read / Reading / Want to Read, series progress, reading stats by faction, era, and author (replace the coming-soon page at `/account/track`)
-  - Planned design: `libraryEntries` table (userId, Sanity bookId, `owned` boolean and reading `status` want/reading/read as separate fields, optional started/finished dates), indexes by_user_book, by_user_status, by_book. No row = untracked
-- [x] **Favorites**: `favorites` table in Convex keyed by Sanity `_id`, Favorite button on book, series, author, faction, and era pages, and `/account/favorites` grouped by type
+- [ ] **Track, next steps** (tracking itself is built: the `tracked` table, want/reading/read plus owned, `/account/track`): series progress, reading stats by faction, era, and author, and achievements (previewed on `/track`); optional started/finished dates
+- Favorites:
   - [ ] Wishlist ("want to buy") as a separate list, or fold into Track's ownership
   - [ ] Show "Favorited by N readers" on detail pages (`by_item` index already exists)
 - [ ] **My Reviews** page once reviews and ratings exist
