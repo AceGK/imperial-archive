@@ -31,7 +31,7 @@ export default function SeriesRow({ series }: { series: SeriesHit }) {
           {series.title}
         </Link>
         <div className={styles.byline}>
-          {count} {count === 1 ? "work" : "works"}
+          {count} {count === 1 ? "publication" : "publications"}
           {authors.length > 0 && (
             <>
               {" · by "}

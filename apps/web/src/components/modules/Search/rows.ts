@@ -45,7 +45,7 @@ function matchShortcuts(
     .filter((s) => kinds.includes(s.kind) && s.count !== 0)
     .map((s) => ({ s, r: rank(s.title, q) }))
     .filter((m) => m.r >= 0)
-    // equally good matches: most works first, so "horus" leads with the
+    // equally good matches: most publications first, so "horus" leads with the
     // 54-book Horus Heresy rather than one of its smaller sub-series
     .sort((a, b) => a.r - b.r || (b.s.count ?? 0) - (a.s.count ?? 0))
     .slice(0, max)

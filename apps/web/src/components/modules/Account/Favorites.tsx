@@ -114,7 +114,7 @@ export default function Favorites() {
                     slug={s.slug}
                     image={s.image}
                     compact
-                    countLabel={`${s.totalCount} ${s.totalCount === 1 ? "Work" : "Works"}`}
+                    countLabel={`${s.totalCount} ${s.totalCount === 1 ? "Publication" : "Publications"}`}
                   />
                 ))}
               </div>

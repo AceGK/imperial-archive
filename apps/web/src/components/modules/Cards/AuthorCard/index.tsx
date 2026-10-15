@@ -74,7 +74,7 @@ export default function AuthorCard({
       <div className={styles.meta}>
         <div className={styles.name}>{name}</div>
         <span className={styles.count}>
-          {count} Work{count === 1 ? "" : "s"}
+          {count} Publication{count === 1 ? "" : "s"}
         </span>
       </div>
     </Link>

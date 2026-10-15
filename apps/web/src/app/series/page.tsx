@@ -46,7 +46,7 @@ export default function SeriesIndexPage() {
             title={hit.title}
             slug={hit.slug}
             image={hit.image?.asset ? hit.image as any : null}
-            countLabel={`${hit.bookCount} ${hit.bookCount === 1 ? "Work" : "Works"}`}
+            countLabel={`${hit.bookCount} ${hit.bookCount === 1 ? "Publication" : "Publications"}`}
           />
         )}
       />

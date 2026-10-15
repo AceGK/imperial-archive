@@ -39,7 +39,7 @@ export default function AuthorRow({ author }: { author: AuthorHit }) {
           {author.name}
         </Link>
         <div className={styles.byline}>
-          {count} {count === 1 ? "work" : "works"}
+          {count} {count === 1 ? "publication" : "publications"}
         </div>
         {author.bio && <p className={styles.excerpt}>{author.bio}</p>}
         {series.length > 0 && (

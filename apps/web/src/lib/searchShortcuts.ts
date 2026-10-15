@@ -18,14 +18,14 @@ type ShortcutDocs = {
   eras: Doc[];
 };
 
-const works = (n: number) => `${n} ${n === 1 ? "work" : "works"}`;
+const publications = (n: number) => `${n} ${n === 1 ? "publication" : "publications"}`;
 
 const authorShortcut = (a: CountedDoc): SearchShortcut => ({
   id: a.id,
   kind: "author",
   title: a.title,
   href: `/authors/${a.slug}`,
-  context: works(a.count),
+  context: publications(a.count),
   count: a.count,
 });
 
@@ -34,7 +34,7 @@ const seriesShortcut = (s: CountedDoc): SearchShortcut => ({
   kind: "series",
   title: s.title,
   href: `/series/${s.slug}`,
-  context: works(s.count),
+  context: publications(s.count),
   count: s.count,
 });
 
