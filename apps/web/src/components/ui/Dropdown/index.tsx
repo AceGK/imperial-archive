@@ -435,11 +435,16 @@ function Item({
   onSelect,
   disabled = false,
   destructive = false,
+  active = false,
+  className,
 }: {
   children: React.ReactNode;
   onSelect?: () => void;
   disabled?: boolean;
   destructive?: boolean;
+  /** the item for the page being viewed (marked aria-current="page") */
+  active?: boolean;
+  className?: string;
 }) {
   const { setOpen, triggerRef } = useDropdown();
 
@@ -457,7 +462,9 @@ function Item({
         styles.item,
         disabled ? styles.disabled : "",
         destructive ? styles.destructive : "",
+        className || "",
       ].join(" ")}
+      aria-current={active ? "page" : undefined}
       tabIndex={-1}
       type="button"
       disabled={disabled}

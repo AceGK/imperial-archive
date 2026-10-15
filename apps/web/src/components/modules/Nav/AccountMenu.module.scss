@@ -1,3 +1,5 @@
+@use "@/styles/mixins" as *;
+
 .trigger {
   display: grid;
   place-items: center;
@@ -54,6 +56,37 @@
   width: 1rem;
   height: 1rem;
   color: var(--subtle);
+}
+
+// square items with hover-only corner brackets, like the bracket Buttons.
+// Doubled class to outrank the Dropdown's own item styles (the mobile sheet
+// doesn't carry .menu, so nesting under it wouldn't reach there)
+.item.item {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $hover-only: true);
+  border-radius: 0;
+  // same timing as the brackets' fade (the mixin's 0.15s ease) so they arrive together
+  transition: background-color 0.15s ease;
+
+  // same hover fill as the main nav's dropdown links: lighter than the panel
+  // (--secondary), which the .secondary Button's fill nearly matched
+  &:hover,
+  &:focus-visible {
+    background: color-mix(in oklab, var(--accent), transparent 40%);
+  }
+
+  // the page being viewed
+  &[aria-current="page"] {
+    color: var(--primary);
+
+    .icon {
+      color: var(--primary);
+    }
+  }
+}
+
+// after .item.item, at the same weight, so the red hover wins
+.item.signOut {
+  @include destructive-hover;
 }
 
 .soon {

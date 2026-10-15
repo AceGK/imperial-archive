@@ -70,6 +70,33 @@ $_corner-positions: (
   }
 }
 
+// Quiet at rest; on hover/focus a see-through red fill and red corner marks
+// (the .destructive Button's hover look). The text and icon go to --text
+// (white in dark mode) rather than red, which reads poorly on the red fill.
+// For sign out and other ghost-style actions that can't be undone.
+@mixin destructive-hover($bracket-size: 8px, $offset: 0px) {
+  @include corner-brackets(
+    $size: $bracket-size,
+    $thickness: 1px,
+    $color: var(--destructive),
+    $offset: $offset,
+    $hover-only: true
+  );
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--text);
+    background: color-mix(in srgb, var(--destructive) 15%, transparent);
+
+    svg {
+      color: var(--text);
+    }
+  }
+}
+
 // Thin repeating diagonal lines over a flat base color — used as a
 // placeholder background (e.g. a book/series card missing a cover image)
 // instead of a plain solid fill.

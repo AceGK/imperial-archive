@@ -64,7 +64,7 @@ export default function AccountShell({ children }: { children: ReactNode }) {
           ))}
 
           <div className={styles.navGroup}>
-            <button type="button" className={styles.navLink} onClick={handleSignOut}>
+            <button type="button" className={`${styles.navLink} ${styles.signOut}`} onClick={handleSignOut}>
               <SignOutIcon className={styles.navIcon} />
               <span>Sign Out</span>
             </button>

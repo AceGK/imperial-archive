@@ -1,4 +1,5 @@
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
 
 /* ---------- Shell ---------- */
 
@@ -154,7 +155,9 @@ $sidebar-gap: 1.5rem;
   }
 }
 
+// corner brackets on hover, except on the active page's link
 .navLink {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $hover-only: true);
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -169,7 +172,7 @@ $sidebar-gap: 1.5rem;
   // Transparent until active so the link doesn't shift when the border appears
   border: none;
   border-left: 2px solid transparent;
-  border-radius: 0 var(--radius) var(--radius) 0;
+  border-radius: 0;
   cursor: pointer;
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 
@@ -182,6 +185,10 @@ $sidebar-gap: 1.5rem;
     color: var(--text);
     background-color: var(--bg-accent);
     border-color: var(--primary);
+
+    &::before {
+      display: none;
+    }
   }
 
   // Mobile tabs: bottom border instead of left
@@ -193,8 +200,12 @@ $sidebar-gap: 1.5rem;
     padding: 0.5rem 0.75rem;
     border-left: none;
     border-bottom: 2px solid transparent;
-    border-radius: var(--radius) var(--radius) 0 0;
   }
+}
+
+// two classes to outrank .navLink's own hover
+.navLink.signOut {
+  @include destructive-hover;
 }
 
 .navIcon {
@@ -301,7 +312,9 @@ $sidebar-gap: 1.5rem;
   gap: 1rem;
 }
 
+// square, with corner brackets on hover like the other cards
 .linkCard {
+  @include corner-brackets($size: 12px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -310,12 +323,10 @@ $sidebar-gap: 1.5rem;
   text-decoration: none;
   background-color: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  border-radius: 0;
 
-  &:hover {
-    border-color: var(--primary);
-
+  &:hover,
+  &:focus-visible {
     .linkCardChevron {
       color: var(--primary);
       transform: translateX(2px);
@@ -331,7 +342,6 @@ $sidebar-gap: 1.5rem;
   height: 2.5rem;
   color: var(--primary);
   background-color: var(--bg-accent);
-  border-radius: var(--radius);
 
   svg {
     width: 1.25rem;
