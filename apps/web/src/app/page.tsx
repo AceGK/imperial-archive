@@ -37,8 +37,9 @@ export const metadata = pageMetadata({
   path: "/",
 });
 
-// Well-known books for the hero's book wall. Must match titles exactly; titles
-// without a cover are skipped.
+// Well-known books for the hero's book wall, favouring dark covers so the
+// title stays readable over them. Must match titles exactly; titles without a
+// cover are skipped.
 const heroCoverTitles = [
   "Horus Rising", "False Gods", "Galaxy in Flames", "The Flight of the Eisenstein",
   "Fulgrim", "Descent of Angels", "Legion", "Mechanicum", "A Thousand Sons",
@@ -47,14 +48,14 @@ const heroCoverTitles = [
   "The Lost and the Damned", "The First Wall", "Warhawk", "Xenos", "Malleus",
   "Hereticus", "Ravenor", "Pariah", "First and Only", "Necropolis",
   "Only in Death", "Ghostmaker", "For the Emperor", "Caves of Ice",
-  "Soul Hunter", "Blood Reaver", "Void Stalker", "Ahriman: Exile", "Helsreach",
-  "Dark Imperium", "Lord of the Night", "Fifteen Hours", "Double Eagle",
-  "Titanicus", "Priests of Mars", "Storm of Iron", "Path of the Warrior",
+  "Soul Hunter", "Blood Reaver", "Void Stalker", "Ahriman: Exile", "Night Lords: The Omnibus",
+  "Dark Imperium", "Leviathan", "Ravenor: The Omnibus", "Double Eagle",
+  "Titanicus", "Priests of Mars", "Storm of Iron", "Vengeful Spirit",
   "Avenging Son", "Indomitus", "Farsight: Crisis of Faith",
-  "Yarrick: Imperial Creed", "Dead Men Walking", "Space Wolf",
+  "Yarrick: Imperial Creed", "Dead Men Walking", "Shroud of Night",
   "Brothers of the Snake", "The Talon of Horus", "Black Legion",
   "Lucius: The Faultless Blade", "Belisarius Cawl: The Great Work", "Krieg",
-  "Valdor: Birth of the Imperium", "Atlas Infernal", "Dante", "Kingsblade",
+  "Valdor: Birth of the Imperium", "The Lords of Silence", "Dante", "Kingsblade",
 ];
 
 /** One cover per title, in random order so the wall changes between builds */
