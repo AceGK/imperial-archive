@@ -14,7 +14,7 @@ export type AccountNavItem = {
   comingSoon?: boolean;
 };
 
-export const accountNav: { label?: string; items: AccountNavItem[] }[] = [
+export const accountNav: { items: AccountNavItem[] }[] = [
   {
     items: [
       {
@@ -38,7 +38,6 @@ export const accountNav: { label?: string; items: AccountNavItem[] }[] = [
     ],
   },
   {
-    label: "Library",
     items: [
       {
         href: "/account/track",

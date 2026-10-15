@@ -51,7 +51,7 @@ export default function AccountMenu() {
         </div>
 
         {accountNav.map((group, i) => (
-          <div key={group.label ?? i}>
+          <div key={i}>
             <Dropdown.Separator />
             {group.items.map(({ href, label, icon: Icon, comingSoon }) => (
               <Dropdown.Item

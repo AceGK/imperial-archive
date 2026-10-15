@@ -58,9 +58,14 @@ $sidebar-gap: 1.5rem;
     white-space: nowrap;
   }
 
+  // one line each, so they never wrap (the sidebar animating open would
+  // otherwise reflow them line by line)
   span {
     font-size: 0.8125rem;
     color: var(--subtle);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
@@ -138,20 +143,6 @@ $sidebar-gap: 1.5rem;
       padding-top: 0;
       border-top: none;
     }
-  }
-}
-
-.navLabel {
-  margin: 0;
-  padding-inline: 0.75rem;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--subtle);
-
-  @include max(md) {
-    display: none;
   }
 }
 
@@ -236,6 +227,104 @@ $sidebar-gap: 1.5rem;
   gap: 1.5rem;
   min-width: 0;
   max-width: 720px;
+}
+
+/* ---------- Collapsible sidebar (desktop) ---------- */
+
+// Collapsing keeps everything where it is: the icons, avatar and chevron never
+// move sideways, the column narrows over them, and the text fades as it is
+// clipped. The collapsed column is the icon plus equal padding either side
+// (2px edge + 12px + 18px icon + 12px = 44px, also the avatar size), so the
+// icons end up centred without being moved there.
+$collapsed-width: 2.75rem;
+
+// top left of the sidebar, just the chevron; sits centred in the collapsed column
+.collapseToggle {
+  @include corner-brackets($size: 6px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  display: grid;
+  place-items: center;
+  align-self: flex-start;
+  width: 2rem;
+  height: 2rem;
+  margin: -0.5rem 0 -0.75rem calc((#{$collapsed-width} - 2rem) / 2);
+  padding: 0;
+  color: var(--subtle);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  @include max(md) {
+    display: none;
+  }
+}
+
+.collapseIcon {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: currentColor;
+  transition: transform 0.2s ease;
+}
+
+// Collapsed: the sidebar shrinks to its icons and the content takes the freed width
+@include min(md, 1px) {
+  .shell {
+    transition: grid-template-columns 0.2s ease;
+  }
+
+  // While the column animates, text that doesn't fit is clipped rather than
+  // wrapping onto extra lines. The clip margin leaves room for focus outlines.
+  .sidebar {
+    overflow-x: clip;
+    overflow-clip-margin: 0.25rem;
+  }
+
+  // the text fades rather than being removed, so nothing reflows: the sidebar
+  // keeps its height and every icon keeps its position
+  .identityText,
+  .navText,
+  .soon {
+    transition: opacity 0.15s ease;
+  }
+
+  .shell.collapsed {
+    grid-template-columns: #{$collapsed-width} minmax(0, 1fr);
+
+    // still read by screen readers; the links also show their name on hover
+    .identityText,
+    .navText,
+    .soon {
+      opacity: 0;
+    }
+
+    .collapseIcon {
+      transform: rotate(180deg);
+    }
+
+    .content {
+      max-width: 960px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell,
+  .collapseIcon,
+  .identityText,
+  .navText,
+  .soon {
+    transition: none;
+  }
 }
 
 /* ---------- Sections ---------- */
