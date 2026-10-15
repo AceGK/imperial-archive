@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "./styles.module.scss";
 import PasswordInput from "@/components/ui/PasswordInput";
+import Button from "@/components/ui/Button";
 
 export default function ResetPasswordForm() {
   const { signIn } = useAuthActions();
@@ -83,9 +84,9 @@ export default function ResetPasswordForm() {
 
           <input name="flow" type="hidden" value="reset" />
 
-          <button type="submit" className={styles.submitButton} disabled={loading}>
+          <Button type="submit" variant="primary" size="lg" className={styles.fullWidth} disabled={loading}>
             {loading ? "Sending..." : "Send Code"}
-          </button>
+          </Button>
         </form>
       ) : (
         <form onSubmit={handleVerify} className={styles.form}>
@@ -138,13 +139,14 @@ export default function ResetPasswordForm() {
 
           {error && <p className={styles.error}>{error}</p>}
 
-          <button type="submit" className={styles.submitButton} disabled={loading}>
+          <Button type="submit" variant="primary" size="lg" className={styles.fullWidth} disabled={loading}>
             {loading ? "Resetting..." : "Reset Password"}
-          </button>
+          </Button>
 
-          <button
-            type="button"
-            className={styles.switchButton}
+          <Button
+            variant="tertiary"
+            size="lg"
+            className={styles.fullWidth}
             onClick={() => {
               setStep("request");
               setError(null);
@@ -152,7 +154,7 @@ export default function ResetPasswordForm() {
             disabled={loading}
           >
             Use a different email
-          </button>
+          </Button>
         </form>
       )}
 

@@ -80,8 +80,11 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  /** The @modal slot: the login/signup modal, when opened from a link */
+  modal: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
   const layoutCookie = cookieStore.get("site-layout")?.value;
@@ -110,6 +113,7 @@ export default async function RootLayout({
               <Nav />
               {children}
               <Footer />
+              {modal}
             </ConvexClientProvider>
           </ThemeProvider>
           {/* production only, so previews and local testing aren't counted */}

@@ -8,9 +8,14 @@ import OAuthButtons from "./OAuthButtons";
 import VerifyEmailStep from "./VerifyEmailStep";
 import styles from "./styles.module.scss";
 import PasswordInput from "@/components/ui/PasswordInput";
+import Button from "@/components/ui/Button";
 
 type AuthFormProps = {
   mode: "signIn" | "signUp";
+  /** Runs once signed in, instead of going to /account (e.g. the modal closes) */
+  onSuccess?: () => void;
+  /** Inside the login/signup modal: no card of its own, and an h2 under the page's h1 */
+  inModal?: boolean;
 };
 
 // Server error messages are redacted in production, so these are best-effort
@@ -29,7 +34,7 @@ function getErrorMessage(err: unknown, mode: AuthFormProps["mode"]) {
   return "Invalid email or password.";
 }
 
-export default function AuthForm({ mode }: AuthFormProps) {
+export default function AuthForm({ mode, onSuccess, inModal = false }: AuthFormProps) {
   const { signIn } = useAuthActions();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +45,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
     password: string;
   } | null>(null);
   const isSignIn = mode === "signIn";
+  const done = () => (onSuccess ? onSuccess() : router.push("/account"));
+  const Heading = inModal ? "h2" : "h1";
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -60,7 +67,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     try {
       const { signingIn } = await signIn("password", formData);
       if (signingIn) {
-        router.push("/account");
+        done();
       } else {
         // Unverified email: a code was sent, so ask for it
         setPendingVerification({ email, password: String(formData.get("password")) });
@@ -78,14 +85,15 @@ export default function AuthForm({ mode }: AuthFormProps) {
         {...pendingVerification}
         isNewAccount={!isSignIn}
         onBack={() => setPendingVerification(null)}
+        onSuccess={done}
       />
     );
   }
 
   return (
-    <div className={styles.authForm}>
+    <div className={`${styles.authForm} ${inModal ? styles.inModal : ""}`}>
       <div className={styles.header}>
-        <h1>{isSignIn ? "Login" : "Create Account"}</h1>
+        <Heading id="auth-heading">{isSignIn ? "Login" : "Create Account"}</Heading>
         <p>
           {isSignIn
             ? "Sign in to continue to your account"
@@ -148,26 +156,26 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
         {error && <p className={styles.error}>{error}</p>}
 
-        <button
-          type="submit"
-          className={styles.submitButton}
-          disabled={loading}
-        >
+        <Button type="submit" variant="primary" size="lg" className={styles.fullWidth} disabled={loading}>
           {loading ? "Loading..." : isSignIn ? "Sign In" : "Sign Up"}
-        </button>
+        </Button>
 
         <div className={styles.divider}>
           <span>or</span>
         </div>
 
-        <Link
+        {/* replace: switching between login and signup isn't a step to go back to */}
+        <Button
           href={isSignIn ? "/signup" : "/login"}
-          className={styles.switchButton}
+          replace
+          variant="tertiary"
+          size="lg"
+          className={styles.fullWidth}
         >
           {isSignIn
             ? "Don't have an account? Sign up"
             : "Already have an account? Sign in"}
-        </Link>
+        </Button>
       </form>
     </div>
   );
