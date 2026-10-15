@@ -70,6 +70,28 @@ $_corner-positions: (
   }
 }
 
+// For a button with hover-only corner-brackets that opens a menu or panel: while
+// open (aria-expanded), a full gold outline fades in on the brackets' own layer,
+// so the marks join it exactly. Recoloring the border instead can show a doubled
+// edge, since at fractional positions a border and the marks round differently.
+@mixin open-outline {
+  &::before {
+    box-shadow: inset 0 0 0 1px transparent;
+    transition:
+      opacity 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  &[aria-expanded="true"] {
+    color: var(--primary);
+
+    &::before {
+      opacity: 1;
+      box-shadow: inset 0 0 0 1px var(--primary);
+    }
+  }
+}
+
 // Quiet at rest; on hover/focus a see-through red fill and red corner marks
 // (the .destructive Button's hover look). The text and icon go to --text
 // (white in dark mode) rather than red, which reads poorly on the red fill.
