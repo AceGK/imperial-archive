@@ -17,6 +17,34 @@ import React, {
 import { createPortal } from "react-dom";
 import styles from "./styles.module.scss";
 
+/** ---------- Focus helpers ---------- */
+
+const ITEM_SELECTOR = '[role^="menuitem"]:not([disabled])';
+const TABBABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/** The menu's enabled items, in order, read from the menu itself. Menus built
+ * from plain buttons or inputs (sort, filters) use whatever can take focus. */
+function menuItems(menu: HTMLElement | null) {
+  if (!menu) return [];
+  const items = menu.querySelectorAll<HTMLElement>(ITEM_SELECTOR);
+  return [...(items.length ? items : menu.querySelectorAll<HTMLElement>(TABBABLE))];
+}
+
+/** The element that actually takes focus for a trigger (the button inside an asChild wrapper) */
+function focusableIn(el: HTMLElement | null) {
+  if (!el) return null;
+  return el.matches(TABBABLE) ? el : el.querySelector<HTMLElement>(TABBABLE);
+}
+
+/** The next tabbable element on the page after `from`, ignoring anything inside `skip` */
+function tabbableAfter(from: HTMLElement, skip: HTMLElement | null) {
+  const all = [...document.querySelectorAll<HTMLElement>(TABBABLE)].filter(
+    (el) => !skip?.contains(el) && el.offsetParent !== null
+  );
+  return all[all.indexOf(from) + 1] ?? null;
+}
+
 /** ---------- Context & Types ---------- */
 
 type Align = "start" | "end";
@@ -26,7 +54,6 @@ type DropdownContextValue = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   triggerRef: React.RefObject<HTMLElement | null>;
   menuRef: React.RefObject<HTMLDivElement | null>;
-  itemsRef: React.MutableRefObject<HTMLElement[]>;
   labelId: string | undefined;
   setLabelId: React.Dispatch<React.SetStateAction<string | undefined>>;
   onMenuKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
@@ -57,7 +84,6 @@ function Root({
   const [isMobile, setIsMobile] = useState(false);
   const triggerRef = useRef<HTMLElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const itemsRef = useRef<HTMLElement[]>([]);
   const [labelId, setLabelId] = useState<string | undefined>(undefined);
 
   // Detect mobile breakpoint
@@ -108,10 +134,7 @@ function Root({
   // keyboard nav inside menu
   const onMenuKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
-      // Only consider enabled items
-      const items = itemsRef.current.filter(
-        (el) => el && !(el as HTMLButtonElement).disabled
-      ) as HTMLElement[];
+      const items = menuItems(menuRef.current);
 
       const currentIndex = items.findIndex(
         (el) => el === document.activeElement
@@ -122,6 +145,10 @@ function Root({
         const clamped = (idx + items.length) % items.length;
         items[clamped]?.focus();
       };
+
+      // leave typing keys alone in a text field (a filter's search box)
+      const typing = (document.activeElement as HTMLElement | null)?.matches("input:not([type=checkbox]):not([type=radio]), textarea");
+      if (typing && ["Home", "End", "Enter", " "].includes(e.key)) return;
 
       switch (e.key) {
         case "ArrowDown":
@@ -141,15 +168,27 @@ function Root({
           focusIndex(items.length - 1);
           break;
 
-        // Let Tab move through items instead of leaving the menu
-        case "Tab":
+        // Tab moves through the items like the arrow keys, then leaves the menu:
+        // past the last item to whatever follows the trigger, back from the
+        // first item to the trigger
+        case "Tab": {
           e.preventDefault();
+          const trigger = focusableIn(triggerRef.current);
           if (e.shiftKey) {
-            focusIndex((currentIndex === -1 ? 0 : currentIndex) - 1);
+            if (currentIndex > 0) focusIndex(currentIndex - 1);
+            else {
+              setOpen(false);
+              trigger?.focus();
+            }
+          } else if (currentIndex < items.length - 1) {
+            focusIndex(currentIndex + 1);
           } else {
-            focusIndex((currentIndex === -1 ? -1 : currentIndex) + 1);
+            setOpen(false);
+            const next = trigger ? tabbableAfter(trigger, menuRef.current) : null;
+            (next ?? trigger)?.focus();
           }
           break;
+        }
 
         // Activate the focused item
         case "Enter":
@@ -161,7 +200,7 @@ function Root({
         case "Escape":
           e.preventDefault();
           setOpen(false);
-          (triggerRef.current as HTMLElement | null)?.focus();
+          focusableIn(triggerRef.current)?.focus();
           break;
       }
     },
@@ -174,7 +213,6 @@ function Root({
       setOpen,
       triggerRef,
       menuRef,
-      itemsRef,
       labelId,
       setLabelId,
       onMenuKeyDown,
@@ -266,7 +304,6 @@ function Content({
     setOpen,
     triggerRef,
     menuRef,
-    itemsRef,
     labelId,
     onMenuKeyDown,
     isMobile,
@@ -297,10 +334,7 @@ function Content({
   useLayoutEffect(() => {
     if (!open || isMobile) return;
     const raf = requestAnimationFrame(() => {
-      const first = itemsRef.current.find(
-        (el) => el && !(el as HTMLButtonElement).disabled
-      );
-      first?.focus();
+      menuItems(menuRef.current)[0]?.focus();
       updatePosition();
     });
 
@@ -314,7 +348,7 @@ function Content({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
-  }, [open, isMobile, itemsRef, updatePosition]);
+  }, [open, isMobile, menuRef, updatePosition]);
 
   if (!open) return null;
 
@@ -407,27 +441,18 @@ function Item({
   disabled?: boolean;
   destructive?: boolean;
 }) {
-  const { setOpen, triggerRef, itemsRef } = useDropdown();
-  const ref = useRef<HTMLButtonElement | null>(null);
-
-  useEffect(() => {
-    if (ref.current) itemsRef.current.push(ref.current);
-    return () => {
-      itemsRef.current = itemsRef.current.filter((el) => el !== ref.current);
-    };
-  }, [itemsRef]);
+  const { setOpen, triggerRef } = useDropdown();
 
   const run = () => {
     if (disabled) return;
     onSelect?.();
     setOpen(false);
-    (triggerRef.current as HTMLElement | null)?.focus();
+    focusableIn(triggerRef.current)?.focus();
   };
 
   return (
     <button
       role="menuitem"
-      ref={ref}
       className={[
         styles.item,
         disabled ? styles.disabled : "",

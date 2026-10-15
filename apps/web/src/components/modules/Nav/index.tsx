@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ComponentType, MouseEvent, SVGProps } from "react";
+import type { ComponentType, KeyboardEvent as ReactKeyboardEvent, MouseEvent, SVGProps } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useConvexAuth } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -100,6 +100,9 @@ type ViewportSize = { width: number; height: number; left: number };
 
 const CLOSE_DELAY = 150;
 
+const TABBABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export default function Nav() {
   const pathname = usePathname();
   const isVisible = useScrollVisibility();
@@ -120,6 +123,7 @@ export default function Nav() {
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const rootRef = useRef<HTMLElement | null>(null);
   const menuListRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
 
   const isOpen = activeIndex !== null;
 
@@ -248,18 +252,78 @@ export default function Nav() {
     if (activeIndex !== null) updateViewportSize(activeIndex);
   }, [activeIndex, updateViewportSize]);
 
-  // close the open dropdown on Escape
+  // close the open dropdown on Escape, returning focus to its trigger if it was in the panel
   useEffect(() => {
-    if (!isOpen) return;
+    if (activeIndex === null) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setActiveIndex(null);
-        setIndicatorStyle((s) => ({ ...s, opacity: 0 }));
-      }
+      if (e.key !== "Escape") return;
+      if (panelRef.current?.contains(document.activeElement)) triggerRefs.current[activeIndex]?.focus();
+      setActiveIndex(null);
+      setIndicatorStyle((s) => ({ ...s, opacity: 0 }));
     };
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
-  }, [isOpen]);
+  }, [activeIndex]);
+
+  // close the open dropdown once keyboard focus moves somewhere other than its trigger or panel
+  useEffect(() => {
+    if (activeIndex === null) return;
+    const handleFocus = (e: FocusEvent) => {
+      const t = e.target as Node;
+      if (panelRef.current?.contains(t) || triggerRefs.current[activeIndex]?.contains(t)) return;
+      closeDropdown();
+    };
+    document.addEventListener("focusin", handleFocus);
+    return () => document.removeEventListener("focusin", handleFocus);
+  }, [activeIndex, closeDropdown]);
+
+  // the panel sits at the end of the nav in the DOM, so Tab is steered by hand:
+  // from an open trigger into its links, and from the last link on to the
+  // control after the trigger
+  const panelLinks = (index: number) => [
+    ...(contentRefs.current[index]?.querySelectorAll<HTMLElement>("a[href]") ?? []),
+  ];
+
+  const focusAfterTrigger = (index: number) => {
+    const trigger = triggerRefs.current[index];
+    const root = rootRef.current;
+    if (!trigger || !root) return;
+    const tabbable = [...root.querySelectorAll<HTMLElement>(TABBABLE)].filter(
+      (el) => !panelRef.current?.contains(el) && el.offsetParent !== null
+    );
+    (tabbable[tabbable.indexOf(trigger) + 1] ?? trigger).focus();
+  };
+
+  const onTriggerKeyDown = (e: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
+    const open = activeIndex === index;
+    if ((e.key === "Tab" && !e.shiftKey && open) || e.key === "ArrowDown") {
+      e.preventDefault();
+      if (!open) openDropdown(index);
+      // wait a frame when opening, so the links are displayed and can take focus
+      requestAnimationFrame(() => panelLinks(index)[0]?.focus());
+    }
+  };
+
+  const onPanelKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (activeIndex === null) return;
+    const links = panelLinks(activeIndex);
+    const current = links.indexOf(document.activeElement as HTMLElement);
+    if (current === -1) return;
+
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const step = e.key === "ArrowDown" ? 1 : -1;
+      links[(current + step + links.length) % links.length]?.focus();
+    } else if (e.key === "Tab" && e.shiftKey && current === 0) {
+      e.preventDefault();
+      triggerRefs.current[activeIndex]?.focus();
+    } else if (e.key === "Tab" && !e.shiftKey && current === links.length - 1) {
+      e.preventDefault();
+      const index = activeIndex;
+      closeDropdown();
+      focusAfterTrigger(index);
+    }
+  };
 
   // lock scroll while the mobile panel is open
   useEffect(() => {
@@ -303,13 +367,12 @@ export default function Nav() {
                   : "transform 200ms ease, width 200ms ease, height 200ms ease, opacity 150ms ease",
               }}
             />
-            <ul className={styles.links} role="menubar">
+            <ul className={styles.links}>
               {NAV_ITEMS.map((item) => {
                 if ("href" in item) {
                   return (
                     <li
                       key={item.label}
-                      role="none"
                       onMouseEnter={(e) => {
                         updateHighlight(e);
                         startCloseDropdown();
@@ -332,7 +395,6 @@ export default function Nav() {
                 return (
                   <li
                     key={item.label}
-                    role="none"
                     onMouseEnter={(e) => {
                       updateHighlight(e);
                       openDropdown(index);
@@ -346,9 +408,10 @@ export default function Nav() {
                         triggerRefs.current[index] = el;
                       }}
                       data-state={itemIsActive ? "open" : "closed"}
-                      aria-haspopup="true"
                       aria-expanded={itemIsActive}
+                      aria-controls={`nav-panel-${index}`}
                       onClick={() => (itemIsActive ? startCloseDropdown() : openDropdown(index))}
+                      onKeyDown={(e) => onTriggerKeyDown(e, index)}
                     >
                       {item.label}
                       <ChevronDown className={styles.caret} aria-hidden="true" />
@@ -404,6 +467,8 @@ export default function Nav() {
       {/* dropdown panel */}
       <div
         className={styles.viewportPosition}
+        ref={panelRef}
+        onKeyDown={onPanelKeyDown}
         style={{
           left: viewportSize.left,
           pointerEvents: isOpen ? "auto" : "none",
@@ -428,6 +493,7 @@ export default function Nav() {
             return (
               <div
                 key={item.label}
+                id={`nav-panel-${index}`}
                 className={styles.content}
                 ref={(el) => {
                   contentRefs.current[index] = el;

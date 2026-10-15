@@ -138,8 +138,10 @@
   font: inherit;
   outline: none;
 
+  // focus-visible, not focus: opening the menu focuses the first item (so the
+  // arrow keys work), which shouldn't look hovered after a mouse click
   &:hover,
-  &:focus {
+  &:focus-visible {
     background: var(--accent);
   }
 }
@@ -154,7 +156,7 @@
   color: var(--destructive);
 
   &:hover,
-  &:focus {
+  &:focus-visible {
     background: color-mix(in oklab, var(--destructive) 15%, transparent);
   }
 }
