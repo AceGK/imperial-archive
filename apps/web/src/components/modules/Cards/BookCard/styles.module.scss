@@ -392,11 +392,12 @@
   }
 }
 
-// The menu renders at the end of <body>; CardActions sets top/left and keeps
-// it on screen
+// The menu renders at the end of <body>; TrackMenu sets top/left in page
+// coordinates so it scrolls with its button. Stacks under the sticky bars
+// (nav 100, mobile nav 48–49, catalog filters 50) so it slides under them.
 .trackMenu {
-  position: fixed;
-  z-index: 50;
+  position: absolute;
+  z-index: 45;
   min-width: 12rem;
   padding: 0.375rem;
   color: var(--text);
