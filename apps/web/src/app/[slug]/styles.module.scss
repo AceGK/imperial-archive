@@ -1,7 +1,14 @@
-/* single 760px reading column when there's no contents rail */
+@use "@/styles/mixins" as *;
+
+/* single 760px reading column when there's no contents rail; the full width
+   in the full-width layout */
 .content {
   max-width: 760px;
   margin-inline: auto;
+
+  @include full-layout {
+    max-width: none;
+  }
 }
 
 .meta {

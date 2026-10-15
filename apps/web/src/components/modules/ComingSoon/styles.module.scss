@@ -1,6 +1,12 @@
+@use "@/styles/mixins" as *;
+
 .content {
   max-width: 760px;
   margin-inline: auto;
+
+  @include full-layout {
+    max-width: none;
+  }
 }
 
 .header {

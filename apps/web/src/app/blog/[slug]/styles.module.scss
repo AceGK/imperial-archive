@@ -1,7 +1,14 @@
-/* single 760px reading column, like the other info pages */
+@use "@/styles/mixins" as *;
+
+/* single 760px reading column, like the other info pages; the full width in
+   the full-width layout */
 .content {
   max-width: 760px;
   margin-inline: auto;
+
+  @include full-layout {
+    max-width: none;
+  }
 }
 
 .back {

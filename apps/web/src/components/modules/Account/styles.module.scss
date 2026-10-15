@@ -229,7 +229,7 @@ $sidebar-gap: 1.5rem;
   max-width: 720px;
 
   // the site's full-width layout (nav's layout toggle): use the whole width
-  :global(:root[data-layout="full"]) & {
+  @include full-layout {
     max-width: none;
   }
 }
@@ -319,7 +319,7 @@ $collapsed-width: 2.75rem;
     .content {
       max-width: 960px;
 
-      :global(:root[data-layout="full"]) & {
+      @include full-layout {
         max-width: none;
       }
     }

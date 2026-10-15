@@ -1,4 +1,5 @@
 import type { ElementType, ReactNode } from "react";
+import HeadingAnchor from "@/components/ui/HeadingAnchor";
 import styles from "./styles.module.scss";
 
 export type CardProps = {
@@ -28,7 +29,15 @@ export default function Card({
       className={`${styles.card} ${align === "center" ? styles.center : ""} ${className ?? ""}`}
     >
       {eyebrow && <div className={styles.eyebrow}>{eyebrow}</div>}
-      {title && <h2 className={styles.title}>{title}</h2>}
+      {title &&
+        (id ? (
+          // a card with an id is a linkable section (a contents rail points at it)
+          <h2 className={styles.title}>
+            <HeadingAnchor id={id}>{title}</HeadingAnchor>
+          </h2>
+        ) : (
+          <h2 className={styles.title}>{title}</h2>
+        ))}
       {children && <div className={styles.body}>{children}</div>}
     </Comp>
   );
