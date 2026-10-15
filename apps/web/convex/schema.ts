@@ -40,6 +40,27 @@ const schema = defineSchema({
     owned: v.boolean(),
     updatedAt: v.number(),
   }).index("by_user_book", ["userId", "bookId"]),
+
+  // A user's own named lists of books, in an order they choose.
+  readingLists: defineTable({
+    userId: v.id("users"),
+    name: v.string(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
+
+  // One book in a reading list. `position` orders the list (lowest first);
+  // `bookId` is the Sanity document _id. `userId` is copied from the list so a
+  // user's lists can be read in one query.
+  readingListItems: defineTable({
+    listId: v.id("readingLists"),
+    userId: v.id("users"),
+    bookId: v.string(),
+    position: v.number(),
+  })
+    .index("by_list_position", ["listId", "position"])
+    .index("by_list_book", ["listId", "bookId"])
+    .index("by_user", ["userId"])
+    .index("by_user_book", ["userId", "bookId"]),
 });
 
 export default schema;

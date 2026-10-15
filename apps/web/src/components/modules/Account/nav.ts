@@ -14,7 +14,7 @@ export type AccountNavItem = {
   comingSoon?: boolean;
 };
 
-export const accountNav: { label?: string; items: AccountNavItem[] }[] = [
+export const accountNav: { items: AccountNavItem[] }[] = [
   {
     items: [
       {
@@ -38,7 +38,6 @@ export const accountNav: { label?: string; items: AccountNavItem[] }[] = [
     ],
   },
   {
-    label: "Library",
     items: [
       {
         href: "/account/track",
@@ -51,7 +50,6 @@ export const accountNav: { label?: string; items: AccountNavItem[] }[] = [
         label: "Reading Lists",
         description: "Curate your own reading lists and orders",
         icon: ReadingListsIcon,
-        comingSoon: true,
       },
       {
         href: "/account/favorites",

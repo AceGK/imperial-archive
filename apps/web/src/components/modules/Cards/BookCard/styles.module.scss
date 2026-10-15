@@ -450,6 +450,23 @@
   flex-shrink: 0;
 }
 
+// how many of the reader's lists hold the book, where the other items show their tick
+.menuCount {
+  min-width: 1.25rem;
+  margin-left: auto;
+  padding: 0 0.3rem;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  text-align: center;
+  color: var(--primary);
+  border: 1px solid color-mix(in srgb, var(--primary) 50%, transparent);
+}
+
+// the count takes the tick's place at the end of the row
+.menuItem:has(.menuCount)::after {
+  display: none;
+}
+
 // the heart fills in once favorited, as on the Favorite button
 .menuFavorite[aria-checked="true"] .menuIcon {
   fill: currentColor;
