@@ -52,10 +52,14 @@
   width: 100%;
   height: auto;
   aspect-ratio: 2 / 3;
+  // the blurred preview (set per cover in BookWall) fills the tile until the
+  // full image loads over it; dark where there's no preview
+  background-size: cover;
+  background-position: center;
   // margin, not flex gap, so two sets are exactly twice one set and the loop is seamless
   margin-bottom: var(--gap);
   object-fit: cover;
-  background: #1a1719;
+  background-color: #1a1719;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   user-select: none;
 }

@@ -25,6 +25,7 @@
 - [ ] improve: Perhaps change "works" to "publications"? 
 - [ ] improve: update favicon to original artwork
 - [ ] improve: add the "Book N in series, read after…" line to book pages, which gives each page original text that answers reading-order searches directly.
+- [ ] compress svgs from inline to cacheable files?
 
 # seo 
 - [ ] audit for keywords etc 
