@@ -5,8 +5,8 @@
 - [x] fix nav a11y keyboard controls
 - [x] fix catalog filters for a11y keyboard controls
 - [x] accordion content should not be tabbable unless opened
-- [ ] implement: highlight the currently selected page in the account dropdown in nav
-- [ ] switch active filters to more visible styling
+- [x] implement: highlight the currently selected page in the account dropdown in nav
+- [x] switch active filters to more visible styling
 - [ ] fix: the "track" modal moves when scrolling the page, it should stay "locked" to its button/card 
 - [ ] reconfigure: perhaps change primary nav to "browse", "resources", "about", and "support". With resources having more sub pages, such as "guides", "Where to start", "reading orders", and support having "donate", "contribute", "report issue", etc
   - [ ] make footer match, move legal to bottom bar
@@ -41,7 +41,7 @@
 ## Auth (Convex Auth)
 
 - [ ] remove unverified accounts after X amount of time
-- [ ] captcha for signup/login? 
+- [x] captcha for signup/login/reset pw
 
 ### Emails (Resend)
 Emails (plain text, defined in `apps/web/convex/emails.ts`): password reset code and email verification code. Test with `npx convex run emails:sendTest '{"to": "delivered@resend.dev"}'`.
