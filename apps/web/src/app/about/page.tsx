@@ -90,7 +90,7 @@ export default function AboutPage() {
       <section className="container row__md">
         <TocLayout
           items={SECTIONS}
-          header={<InfoHeader label="Adeptus Administratum · IA-001 // Dossier" title="About this project" />}
+          header={<InfoHeader label="Adeptus Administratum · IA-001 // Dossier" title="About the Imperial Archive" />}
         >
 
           <div className={styles.sections}>
