@@ -35,6 +35,35 @@ export function useCatalogView() {
   return [view, choose] as const;
 }
 
+/**
+ * A grid/list choice kept under its own key (e.g. one page's view), starting
+ * on `fallback`. Like useCatalogView, the saved choice applies after the first
+ * render so the server and browser renders match.
+ */
+export function useStoredView(storageKey: string, fallback: CatalogView) {
+  const [view, setView] = useState<CatalogView>(fallback);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved === "grid" || saved === "list") setView(saved);
+    } catch {
+      // storage unavailable: stay on the fallback
+    }
+  }, [storageKey]);
+
+  const choose = (next: CatalogView) => {
+    setView(next);
+    try {
+      localStorage.setItem(storageKey, next);
+    } catch {
+      // the choice still applies until the page is left
+    }
+  };
+
+  return [view, choose] as const;
+}
+
 const GridIcon = () => (
   <svg viewBox="0 0 16 16" aria-hidden="true">
     <rect x="1.5" y="1.5" width="5" height="5" />

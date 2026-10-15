@@ -26,35 +26,12 @@ import { MAX_NAME_LENGTH } from "@convex/readingListLimits";
 import { getListBooks, type ListBook } from "@/app/account/reading-lists/actions";
 import accountStyles from "@/components/modules/Account/styles.module.scss";
 import BookGrid from "@/components/modules/BookGrid";
-import { ViewToggle, type CatalogView } from "@/components/modules/Catalog/ViewToggle";
+import { ViewToggle, useStoredView } from "@/components/modules/Catalog/ViewToggle";
 import ArrowLeftIcon from "@/components/icons/arrow-left.svg";
 import XmarkIcon from "@/components/icons/xmark.svg";
 import Button from "@/components/ui/Button";
 import { bookCount, listErrorMessage, thumbUrl, useReadingLists, type ReadingList } from "./useReadingLists";
 import styles from "./styles.module.scss";
-
-const VIEW_KEY = "reading-list-view";
-
-/** List (the default, reorderable) or grid, remembered in this browser */
-function useListView() {
-  const [view, setView] = useState<CatalogView>("list");
-  useEffect(() => {
-    try {
-      if (localStorage.getItem(VIEW_KEY) === "grid") setView("grid");
-    } catch {
-      // storage unavailable: stay on list
-    }
-  }, []);
-  const choose = (next: CatalogView) => {
-    setView(next);
-    try {
-      localStorage.setItem(VIEW_KEY, next);
-    } catch {
-      // the choice still applies until the page is left
-    }
-  };
-  return [view, choose] as const;
-}
 
 /** /account/reading-lists/[listId]: one list, reorderable by drag or keyboard. */
 export default function ReadingListDetail({ listId }: { listId: string }) {
@@ -64,7 +41,8 @@ export default function ReadingListDetail({ listId }: { listId: string }) {
   const [books, setBooks] = useState<Map<string, ListBook> | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [view, setView] = useListView();
+  // list (the default, reorderable) or grid, remembered in this browser
+  const [view, setView] = useStoredView("reading-list-view", "list");
   const [deleting, setDeleting] = useState(false);
 
   // refetch card data when the set of books changes, not when they're reordered
