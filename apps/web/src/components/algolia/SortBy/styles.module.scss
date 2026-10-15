@@ -19,10 +19,8 @@
 .sortButton {
   @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
 
-  // dropdown open: keep the brackets showing
-  &[aria-expanded="true"]::before {
-    opacity: 1;
-  }
+  // dropdown open: the brackets join into a full gold outline
+  @include open-outline;
 
   display: flex;
   align-items: center;

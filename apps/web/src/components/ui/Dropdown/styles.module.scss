@@ -5,17 +5,9 @@
   display: inline-block;
 }
 
+// Triggers style their own open state (aria-expanded), e.g. with open-outline
 .triggerWrap {
   display: inline-block;
-  
-  // Apply orange border/shadow to trigger when dropdown is open (desktop only)
-  &:has(button[aria-expanded="true"]) button,
-  &:has([aria-expanded="true"]) > * {
-     @include min(sm) { 
-      border-color: var(--primary) !important;
-    //   box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary), transparent 70%) !important;
-    }
-  }
 }
 
 .trigger {
