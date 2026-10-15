@@ -437,7 +437,7 @@ export default function Demo() {
   return (
     <Select.Root value={value} onValueChange={setValue}>
       <Select.Trigger asChild>
-        <Button variant="outline" className="w-[220px]">
+        <Button variant="tertiary" className="w-[220px]">
           <Select.Value placeholder="Choose a fruit" />
         </Button>
       </Select.Trigger>

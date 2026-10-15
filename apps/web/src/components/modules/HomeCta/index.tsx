@@ -56,10 +56,10 @@ export default async function HomeCta() {
             <Button href="/books" variant="primary" size="lg">
               Browse books
             </Button>
-            <Button href="/signup" variant="bracket" size="lg" className={styles.guestOnly}>
+            <Button href="/signup" variant="secondary" size="lg" className={styles.guestOnly}>
               Create a free account
             </Button>
-            <Button href="/account/track" variant="bracket" size="lg" className={styles.memberOnly}>
+            <Button href="/account/track" variant="secondary" size="lg" className={styles.memberOnly}>
               Open your tracker
             </Button>
           </div>

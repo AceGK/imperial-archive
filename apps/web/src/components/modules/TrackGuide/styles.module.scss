@@ -780,7 +780,10 @@ $cycle: 12s;
 
 /* ---- your tracker ---- */
 
+// "Everything in one place" and "Start your reading log": framed with the
+// gold corner marks, like the homepage's reading tracker section
 .tracker {
+  @include corner-brackets($size: 14px, $thickness: 1px, $color: var(--primary), $offset: 1px);
   padding: 2rem;
   text-align: center;
   background: var(--bg-card);

@@ -6,7 +6,7 @@ import styles from "./styles.module.scss";
 
 type ButtonProps = {
   children: React.ReactNode;
-  variant?: "primary" | "secondary" | "secondary-bracket" | "outline" | "outline-bracket" | "outline-primary" | "bracket" | "bracket-diagonal" | "bracket-ghost" | "destructive" | "ghost" | "link";
+  variant?: "primary" | "secondary" | "tertiary" | "outline-primary" | "destructive" | "ghost" | "link";
   size?: "sm" | "md" | "lg" | "icon";
   className?: string;
   href?: string; // <— if present, renders a Link
@@ -16,6 +16,10 @@ type ButtonProps = {
   title?: string;
   target?: string;
   rel?: string;
+  /** Links only: replace the current history entry instead of adding one */
+  replace?: boolean;
+  /** Links only: load the page ahead of time (Next's prefetch); true loads it in full */
+  prefetch?: boolean;
 };
 
 /**
@@ -35,6 +39,8 @@ export default function Button({
   title,
   target,
   rel,
+  replace,
+  prefetch,
 }: ButtonProps) {
   const classes = `
     ${styles.button}
@@ -46,7 +52,7 @@ export default function Button({
 
   if (href) {
     return (
-      <Link href={href} className={classes} target={target} rel={rel} title={title}>
+      <Link href={href} className={classes} target={target} rel={rel} title={title} replace={replace} prefetch={prefetch}>
         {children}
       </Link>
     );

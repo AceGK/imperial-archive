@@ -361,7 +361,7 @@ export default function Nav() {
 
           {/* desktop right controls */}
           <div className={styles.secondary}>
-            <AuthSlot signupVariant="secondary-bracket" />
+            <AuthSlot showSignup />
             <SiteWidthToggle />
             <ThemeToggle />
           </div>
@@ -532,10 +532,10 @@ function MobileAuthButtons() {
 
   return (
     <>
-      <Button href="/login" variant="primary" size="lg" className={styles.mobileLoginButton}>
+      <Button href="/login" variant="primary" size="lg" className={styles.mobileLoginButton} prefetch>
         Login
       </Button>
-      <Button href="/signup" variant="bracket" size="lg" className={styles.mobileLoginButton}>
+      <Button href="/signup" variant="secondary" size="lg" className={styles.mobileLoginButton} prefetch>
         Signup
       </Button>
     </>

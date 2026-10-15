@@ -1,0 +1,78 @@
+@use "@/styles/mixins" as *;
+
+// the dialog itself is only the frame: centered, scrolls if the screen is short
+.dialog {
+  width: min(26rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  color: var(--text);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0;
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(3px);
+  }
+
+  &[open] {
+    animation: rise 0.15s ease-out;
+  }
+}
+
+// the corner marks sit just inside the edge: the dialog scrolls when the screen
+// is short, so anything outside it would add scrollbars
+.panel {
+  @include corner-brackets($size: 14px, $thickness: 1px, $color: var(--primary), $offset: 0px);
+  position: relative;
+  padding: 2rem 1.75rem 1.75rem;
+}
+
+.close {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  color: var(--subtle);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: currentColor;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open] {
+    animation: none;
+  }
+}

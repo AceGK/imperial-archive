@@ -240,12 +240,12 @@ function EmailCodeForm({
           {loading ? "Confirming..." : "Confirm"}
         </Button>
         {onResend && (
-          <Button variant="secondary" onClick={onResend} disabled={loading}>
+          <Button variant="tertiary" onClick={onResend} disabled={loading}>
             Send a new code
           </Button>
         )}
         {onCancel && (
-          <Button variant="secondary" onClick={onCancel} disabled={loading}>
+          <Button variant="tertiary" onClick={onCancel} disabled={loading}>
             Cancel
           </Button>
         )}

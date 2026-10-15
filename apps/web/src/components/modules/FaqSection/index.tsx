@@ -74,7 +74,7 @@ export default function FaqSection({
         )}
 
         {viewAllHref && (
-          <Button href={viewAllHref} variant="bracket" className={styles.viewAll}>
+          <Button href={viewAllHref} variant="secondary" className={styles.viewAll}>
             View all FAQs
           </Button>
         )}

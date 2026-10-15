@@ -8,6 +8,9 @@ export type BookWallCover = {
   image: unknown;
 };
 
+const lqipOf = (image: BookWallCover["image"]) =>
+  (image as { asset?: { metadata?: { lqip?: string | null } } })?.asset?.metadata?.lqip ?? null;
+
 type Props = {
   /** Sanity covers; or pass `images` for plain image URLs */
   covers?: BookWallCover[];
@@ -31,12 +34,23 @@ export default function BookWall({ covers = [], images, coverWidth, columns = 14
   const urls =
     images ??
     covers.map((c) =>
-      urlFor(c.image).width(320).height(480).fit("crop").quality(60).auto("format").url()
+      // small and soft is fine: the wall sits under a dark, blurred overlay
+      urlFor(c.image).width(280).height(420).fit("crop").quality(50).auto("format").url()
     );
   if (urls.length === 0) return null;
 
+  // Each cover's blurred preview (Sanity's LQIP, ~0.7KB) shows from the first
+  // paint and the full image draws over it once loaded, so no tile is ever
+  // empty. The wall repeats every cover several times, so each preview is
+  // written once here and tiles point at it by number, rather than inlining it
+  // on every tile.
+  const previews = images ? [] : covers.map((c) => lqipOf(c.image));
+  const previewCss = previews
+    .map((lqip, i) => (lqip ? `.${styles.wall} [data-cover="${i}"]{background-image:url("${lqip}")}` : ""))
+    .join("");
+
   const grid = Array.from({ length: columns }, (_, col) =>
-    Array.from({ length: rows }, (_, row) => urls[(col * rows + row) % urls.length])
+    Array.from({ length: rows }, (_, row) => (col * rows + row) % urls.length)
   );
 
   return (
@@ -45,19 +59,21 @@ export default function BookWall({ covers = [], images, coverWidth, columns = 14
       style={{ "--cols": columns, "--rows": rows, ...(coverWidth && { "--w": coverWidth }) } as CSSProperties}
       aria-hidden="true"
     >
+      {previewCss && <style dangerouslySetInnerHTML={{ __html: previewCss }} />}
       <div className={styles.zoom}>
         <div className={styles.plane}>
           <div className={styles.track}>
             {grid.map((column, col) => (
               <div key={col} className={styles.column}>
-                {[...column, ...column].map((src, i) => (
+                {[...column, ...column].map((cover, i) => (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     key={i}
-                    src={src}
+                    src={urls[cover]}
+                    data-cover={cover}
                     alt=""
-                    width={320}
-                    height={480}
+                    width={280}
+                    height={420}
                     decoding="async"
                     draggable={false}
                     className={styles.cover}

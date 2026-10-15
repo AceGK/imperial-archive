@@ -1,0 +1,61 @@
+.page {
+  padding-block: 2rem 4rem;
+}
+
+.intro {
+  max-width: 48rem;
+  margin-bottom: 2rem;
+}
+
+// scrolls sideways on narrow screens rather than squashing the buttons
+.table {
+  display: grid;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(14rem, 1.6fr) repeat(6, minmax(7.5rem, 1fr));
+  align-items: center;
+  gap: 1rem;
+  min-width: 62rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+
+  &:first-child {
+    border-top: 0;
+  }
+}
+
+.head {
+  padding-block: 0.75rem;
+  font-family: var(--font-condensed);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--subtle);
+  background: var(--bg-card);
+}
+
+.name {
+  display: grid;
+  gap: 0.25rem;
+
+  code {
+    color: var(--primary);
+  }
+
+  span {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--subtle);
+  }
+}
+
+.icon {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}

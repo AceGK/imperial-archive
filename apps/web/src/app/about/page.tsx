@@ -90,7 +90,7 @@ export default function AboutPage() {
       <section className="container row__md">
         <TocLayout
           items={SECTIONS}
-          header={<InfoHeader label="Adeptus Administratum · IA-001 // Dossier" title="About this project" />}
+          header={<InfoHeader label="Adeptus Administratum · IA-001 // Dossier" title="About the Imperial Archive" />}
         >
 
           <div className={styles.sections}>
@@ -280,7 +280,7 @@ export default function AboutPage() {
                   a tithe toward hosting and upkeep keeps the cogitators
                   running.
                 </p>
-                <Button href="/support" variant="bracket" size="sm">
+                <Button href="/support" variant="secondary" size="sm">
                   Offer a Tithe
                 </Button>
               </Card>

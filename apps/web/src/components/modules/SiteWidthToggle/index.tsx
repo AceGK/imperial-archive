@@ -37,7 +37,7 @@ export default function SiteWidthToggle() {
 
   return (
     <div className={styles.interface}>
-      <Button variant="bracket-ghost" size="icon" title="switch layout" onClick={toggle}>
+      <Button variant="ghost" size="icon" title="switch layout" onClick={toggle}>
         <Interface />
       </Button>
     </div>

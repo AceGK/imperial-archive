@@ -278,10 +278,10 @@ export default function TrackGuide({ faqCategory }: { faqCategory: FaqCategory |
           Read and Owned, with the most recently changed first.
         </p>
         <div className={styles.actions}>
-          <Button href="/account/track" variant="bracket">
+          <Button href="/account/track" variant="secondary">
             Open your tracker
           </Button>
-          <Button href="/signup" variant="outline">
+          <Button href="/signup" variant="tertiary">
             Create a free account
           </Button>
         </div>
@@ -350,7 +350,7 @@ export default function TrackGuide({ faqCategory }: { faqCategory: FaqCategory |
           <Button href="/books" variant="primary">
             Browse books
           </Button>
-          <Button href="/series" variant="outline">
+          <Button href="/series" variant="tertiary">
             Browse by series
           </Button>
         </div>

@@ -1,21 +1,22 @@
 'use client';
 
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "./styles.module.scss";
+import Button from "@/components/ui/Button";
 
 type VerifyEmailStepProps = {
   email: string;
   password: string;
   isNewAccount: boolean;
   onBack: () => void;
+  /** Runs once verified and signed in */
+  onSuccess: () => void;
 };
 
 /** Second step of sign up / sign in when the account's email isn't verified yet. */
-export default function VerifyEmailStep({ email, password, isNewAccount, onBack }: VerifyEmailStepProps) {
+export default function VerifyEmailStep({ email, password, isNewAccount, onBack, onSuccess }: VerifyEmailStepProps) {
   const { signIn } = useAuthActions();
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ export default function VerifyEmailStep({ email, password, isNewAccount, onBack 
     setLoading(true);
     try {
       await signIn("password", { email, code, flow: "email-verification" });
-      router.push("/account");
+      onSuccess();
     } catch {
       setError("Incorrect or expired code. Check the code or send a new one.");
       setLoading(false);
@@ -82,13 +83,13 @@ export default function VerifyEmailStep({ email, password, isNewAccount, onBack 
         {notice && <p className={styles.success}>{notice}</p>}
         {error && <p className={styles.error}>{error}</p>}
 
-        <button type="submit" className={styles.submitButton} disabled={loading}>
+        <Button type="submit" variant="primary" size="lg" className={styles.fullWidth} disabled={loading}>
           {loading ? "Verifying..." : "Verify"}
-        </button>
+        </Button>
 
-        <button type="button" className={styles.switchButton} onClick={handleResend} disabled={loading}>
+        <Button variant="tertiary" size="lg" className={styles.fullWidth} onClick={handleResend} disabled={loading}>
           Send a new code
-        </button>
+        </Button>
       </form>
 
       <div className={styles.footerLink}>

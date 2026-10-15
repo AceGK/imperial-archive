@@ -15,10 +15,10 @@ import styles from "./AuthSlot.module.scss";
  * resolves. `data-auth` on <html> decides which is visible.
  */
 export default function AuthSlot({
-  signupVariant,
+  showSignup = false,
 }: {
-  /** Omit to show Login only (mobile top bar) */
-  signupVariant?: "secondary" | "secondary-bracket";
+  /** Leave off to show Login only (mobile top bar) */
+  showSignup?: boolean;
 }) {
   const { isAuthenticated, isLoading } = useConvexAuth();
 
@@ -35,12 +35,14 @@ export default function AuthSlot({
   return (
     <div className={styles.slot}>
       <span className={styles.out}>
-        {signupVariant && (
-          <Button href="/signup" variant={signupVariant} size="sm" className={styles.signup}>
+        {/* prefetch: the site's layout is dynamic, so Next only fully prefetches these
+            when asked, and the login/signup modal would otherwise wait on the server */}
+        {showSignup && (
+          <Button href="/signup" variant="tertiary" size="sm" className={styles.signup} prefetch>
             Signup
           </Button>
         )}
-        <Button href="/login" variant="primary" size="sm" className={styles.login}>
+        <Button href="/login" variant="primary" size="sm" className={styles.login} prefetch>
           Login
         </Button>
       </span>

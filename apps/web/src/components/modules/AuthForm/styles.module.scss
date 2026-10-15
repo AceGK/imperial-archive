@@ -8,11 +8,21 @@
   border: 1px solid var(--border);
 }
 
+// inside AuthModal, which supplies the panel
+.inModal {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+
 .header {
   text-align: center;
   margin-bottom: 2rem;
 
-  h1 {
+  h1,
+  h2 {
     font-size: 1.75rem;
     font-weight: 600;
     color: var(--text);
@@ -111,29 +121,9 @@
   margin: 0;
 }
 
-.submitButton {
-  padding: 0.875rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--on-primary);
-  background: var(--primary);
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-
-  &:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--primary) 85%, white);
-  }
-
-  &:active:not(:disabled) {
-    transform: scale(0.98);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+// the shared Button, full width like the inputs above it
+.fullWidth {
+  width: 100%;
 }
 
 .divider {
@@ -157,31 +147,6 @@
   }
 }
 
-.switchButton {
-  display: block;
-  text-align: center;
-  text-decoration: none;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--subtle);
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
-
-  &:hover:not(:disabled) {
-    color: var(--text);
-    border-color: var(--subtle);
-    background-color: var(--bg-accent);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-}
 .footerLink {
   margin-top: 1.5rem;
   text-align: center;

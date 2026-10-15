@@ -148,7 +148,7 @@ export default function Carousel({
 
       {viewAllLink && (
         <div className={styles.viewAll}>
-          <Button href={viewAllLink} variant="bracket" size="lg">
+          <Button href={viewAllLink} variant="secondary" size="lg">
             {viewAllLabel ? viewAllLabel : "View All"}
           </Button>
         </div>

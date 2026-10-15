@@ -13,7 +13,8 @@
 - [ ] improve: change border/hover state of blog cards? 
 - [ ] improve: combine theme, layout, and card controls as singular cog icon in nav? 
 - [ ] improve: accordion body content overflows container due to height being calculated upon open. This should prevent overflow on open accordions when screensize changes 
-- [ ] improve: make login/signup a modal popup instead of just a page. Then, improve login/signup page, perhaps as fullscreen? 
+- [x] improve: make login/signup a modal popup instead of just a page.
+- [ ] improve login/signup page, perhaps as fullscreen with extra data? 
 - [ ] improve: add hover 'click to copy' option for pages with TOC (e.g. blog posts, about, etc)
 - [ ] improve: don't hide nav on scroll if modal is open
 - [ ] improve: make +Track button on book cards controled with "Display" options to either be on-hover, inline, or hidden completely
@@ -24,6 +25,7 @@
 - [ ] improve: Perhaps change "works" to "publications"? 
 - [ ] improve: update favicon to original artwork
 - [ ] improve: add the "Book N in series, read after…" line to book pages, which gives each page original text that answers reading-order searches directly.
+- [ ] compress svgs from inline to cacheable files?
 
 # seo 
 - [ ] audit for keywords etc 
