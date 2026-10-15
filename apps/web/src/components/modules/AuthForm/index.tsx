@@ -3,12 +3,19 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import OAuthButtons from "./OAuthButtons";
 import VerifyEmailStep from "./VerifyEmailStep";
 import styles from "./styles.module.scss";
 import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
+import Turnstile, {
+  isTurnstileError,
+  TURNSTILE_FAILED_MESSAGE,
+  turnstileBlockedMessage,
+  type TurnstileHandle,
+  type TurnstileState,
+} from "@/components/ui/Turnstile";
 
 type AuthFormProps = {
   mode: "signIn" | "signUp";
@@ -22,6 +29,9 @@ type AuthFormProps = {
 // matches with a sensible fallback per flow.
 function getErrorMessage(err: unknown, mode: AuthFormProps["mode"]) {
   const message = err instanceof Error ? err.message : "";
+  if (isTurnstileError(err)) {
+    return TURNSTILE_FAILED_MESSAGE;
+  }
   if (message.includes("TooManyFailedAttempts")) {
     return "Too many failed attempts. Try again later.";
   }
@@ -44,6 +54,8 @@ export default function AuthForm({ mode, onSuccess, inModal = false }: AuthFormP
     email: string;
     password: string;
   } | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const [turnstile, setTurnstile] = useState<TurnstileState>("pending");
   const isSignIn = mode === "signIn";
   const done = () => (onSuccess ? onSuccess() : router.push("/account"));
   const Heading = inModal ? "h2" : "h1";
@@ -56,6 +68,11 @@ export default function AuthForm({ mode, onSuccess, inModal = false }: AuthFormP
 
     if (!isSignIn && formData.get("password") !== formData.get("confirmPassword")) {
       setError("Passwords do not match.");
+      return;
+    }
+    const blocked = turnstileBlockedMessage(turnstile);
+    if (blocked) {
+      setError(blocked);
       return;
     }
     formData.delete("confirmPassword");
@@ -76,6 +93,7 @@ export default function AuthForm({ mode, onSuccess, inModal = false }: AuthFormP
     } catch (err) {
       setError(getErrorMessage(err, mode));
       setLoading(false);
+      turnstileRef.current?.reset();
     }
   };
 
@@ -153,6 +171,8 @@ export default function AuthForm({ mode, onSuccess, inModal = false }: AuthFormP
         )}
 
         <input name="flow" type="hidden" value={mode} />
+
+        <Turnstile ref={turnstileRef} onChange={setTurnstile} />
 
         {error && <p className={styles.error}>{error}</p>}
 

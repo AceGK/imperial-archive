@@ -92,7 +92,8 @@ Same Convex project, separate **production deployment**: its own data, functions
 - [ ] Remove the "access the site using the password **emperorprotects**" line from `README.md`
 
 ### Future improvements
-- [ ] Bot protection on signup (e.g. Cloudflare Turnstile)
+- [x] Bot protection on signup (e.g. Cloudflare Turnstile): signup, login, the password reset request, and "Send a new code" on the verify-email step
+- [ ] Rate-limit "Send Code" on the account page's Verify Your Email card (sends email without a Turnstile check, but needs a signed-in session)
 - [ ] Two-factor auth: authenticator app (TOTP) as the main method, SMS as an optional backup (verify the phone first by setting `phoneVerificationTime`, e.g. with a Twilio-backed Phone provider)
 - [ ] **SMS reset codes (later, only if the site grows and it's worth paying for)**. Decided to stay email-only for now: Resend only sends email, and SMS costs money and adds fraud risk. Requirements when revisiting:
   - SMS provider (Twilio, Vonage, AWS SNS, or Plivo). Rough US costs: about $0.01/text (much more internationally), or about $0.05/code with Twilio Verify, plus about $1–2/month for a number

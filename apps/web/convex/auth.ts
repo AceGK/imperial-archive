@@ -3,11 +3,12 @@ import { Password } from "@convex-dev/auth/providers/Password";
 import { ConvexError } from "convex/values";
 import { PasswordResetEmail, VerificationEmail } from "./authEmails";
 import { oauthProviders } from "./oauth";
+import { withTurnstile } from "./turnstile";
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [
     ...oauthProviders,
-    Password({
+    withTurnstile(Password({
       // Lowercase so the same address always maps to one account (and matches OAuth emails later).
       // Runs for every flow, so sign-in, reset, and verification are normalized too.
       profile(params) {
@@ -18,6 +19,6 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
       },
       reset: PasswordResetEmail,
       verify: VerificationEmail,
-    }),
+    })),
   ],
 });

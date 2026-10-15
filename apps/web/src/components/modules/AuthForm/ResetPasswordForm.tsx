@@ -3,10 +3,17 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
+import Turnstile, {
+  isTurnstileError,
+  TURNSTILE_FAILED_MESSAGE,
+  turnstileBlockedMessage,
+  type TurnstileHandle,
+  type TurnstileState,
+} from "@/components/ui/Turnstile";
 
 export default function ResetPasswordForm() {
   const { signIn } = useAuthActions();
@@ -14,10 +21,17 @@ export default function ResetPasswordForm() {
   const [step, setStep] = useState<"request" | { email: string }>("request");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const [turnstile, setTurnstile] = useState<TurnstileState>("pending");
 
   const handleRequest = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+    const blocked = turnstileBlockedMessage(turnstile);
+    if (blocked) {
+      setError(blocked);
+      return;
+    }
     setLoading(true);
 
     const formData = new FormData(event.currentTarget);
@@ -28,6 +42,12 @@ export default function ResetPasswordForm() {
     try {
       await signIn("password", formData);
     } catch (err) {
+      if (isTurnstileError(err)) {
+        setError(TURNSTILE_FAILED_MESSAGE);
+        setLoading(false);
+        turnstileRef.current?.reset();
+        return;
+      }
       // Don't reveal whether an account exists for this email.
       console.error(err);
     }
@@ -83,6 +103,10 @@ export default function ResetPasswordForm() {
           </div>
 
           <input name="flow" type="hidden" value="reset" />
+
+          <Turnstile ref={turnstileRef} onChange={setTurnstile} />
+
+          {error && <p className={styles.error}>{error}</p>}
 
           <Button type="submit" variant="primary" size="lg" className={styles.fullWidth} disabled={loading}>
             {loading ? "Sending..." : "Send Code"}

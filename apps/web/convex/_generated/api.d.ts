@@ -21,6 +21,7 @@ import type * as http from "../http.js";
 import type * as migrations from "../migrations.js";
 import type * as oauth from "../oauth.js";
 import type * as tracking from "../tracking.js";
+import type * as turnstile from "../turnstile.js";
 import type * as users from "../users.js";
 
 /**
@@ -40,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   migrations: typeof migrations;
   oauth: typeof oauth;
   tracking: typeof tracking;
+  turnstile: typeof turnstile;
   users: typeof users;
 }>;
 export declare const api: FilterApi<
