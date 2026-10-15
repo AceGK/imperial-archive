@@ -1,9 +1,16 @@
 'use client';
 
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import Button from "@/components/ui/Button";
+import Turnstile, {
+  isTurnstileError,
+  TURNSTILE_FAILED_MESSAGE,
+  turnstileBlockedMessage,
+  type TurnstileHandle,
+  type TurnstileState,
+} from "@/components/ui/Turnstile";
 
 type VerifyEmailStepProps = {
   email: string;
@@ -20,6 +27,9 @@ export default function VerifyEmailStep({ email, password, isNewAccount, onBack,
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  // Only "Send a new code" needs this: it signs in again, which the server checks
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const [turnstile, setTurnstile] = useState<TurnstileState>("pending");
 
   const handleVerify = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,14 +51,19 @@ export default function VerifyEmailStep({ email, password, isNewAccount, onBack,
   const handleResend = async () => {
     setError(null);
     setNotice(null);
+    if (typeof turnstile !== "object") {
+      setError(turnstileBlockedMessage(turnstile));
+      return;
+    }
     setLoading(true);
     try {
-      await signIn("password", { email, password, flow: "signIn" });
+      await signIn("password", { email, password, flow: "signIn", turnstileToken: turnstile.token });
       setNotice("We sent you a new code.");
-    } catch {
-      setError("Couldn't send a new code. Try again in a minute.");
+    } catch (err) {
+      setError(isTurnstileError(err) ? TURNSTILE_FAILED_MESSAGE : "Couldn't send a new code. Try again in a minute.");
     } finally {
       setLoading(false);
+      turnstileRef.current?.reset();
     }
   };
 
@@ -79,6 +94,8 @@ export default function VerifyEmailStep({ email, password, isNewAccount, onBack,
             disabled={loading}
           />
         </div>
+
+        <Turnstile ref={turnstileRef} onChange={setTurnstile} />
 
         {notice && <p className={styles.success}>{notice}</p>}
         {error && <p className={styles.error}>{error}</p>}
