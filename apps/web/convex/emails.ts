@@ -16,14 +16,30 @@ export async function hashCode(code: string) {
   return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+const SITE = "imperialarchive.com";
+
+// Each email says where it came from and why, so a recipient who didn't ask for
+// it knows it's safe to ignore (rather than reporting it as spam)
 export const codeEmails = {
   passwordReset: (code: string) => ({
-    subject: "Your Imperial Archive password reset code",
-    text: `Your password reset code is ${code}\n\nThis code expires in ${CODE_TTL_MINUTES} minutes. If you didn't request a reset, you can ignore this email.`,
+    subject: `${code} is your Imperial Archive password reset code`,
+    text: [
+      `Someone asked to reset the password for the Imperial Archive account using this email address (${SITE}).`,
+      `Your password reset code is: ${code}`,
+      `Enter it on the reset page within ${CODE_TTL_MINUTES} minutes.`,
+      `If you didn't ask for this, you can ignore this email. Your password won't change unless this code is used.`,
+      `Imperial Archive\nhttps://${SITE}`,
+    ].join("\n\n"),
   }),
   verification: (code: string) => ({
-    subject: "Verify your Imperial Archive email",
-    text: `Your verification code is ${code}\n\nThis code expires in ${CODE_TTL_MINUTES} minutes. If you didn't request this, you can ignore this email.`,
+    subject: `${code} is your Imperial Archive verification code`,
+    text: [
+      `Someone used this email address with an Imperial Archive account (${SITE}), the Warhammer 40,000 Black Library catalog and reading tracker.`,
+      `Your verification code is: ${code}`,
+      `Enter it on the site within ${CODE_TTL_MINUTES} minutes to confirm this address.`,
+      `If this wasn't you, you can ignore this email. The address won't be verified without this code, and you won't get further emails unless someone requests another code.`,
+      `Imperial Archive\nhttps://${SITE}`,
+    ].join("\n\n"),
   }),
 };
 

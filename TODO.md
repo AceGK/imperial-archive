@@ -1,9 +1,12 @@
 # TODO
 
 # ui 
-- [ ] fix: initial opening of the account dropdown in nav will render "Dashboard" in its hovered state 
-- [ ] fix nav a11y keyboard controls
+- [x] fix: initial opening of the account dropdown in nav will render "Dashboard" in its hovered state 
+- [x] fix nav a11y keyboard controls
+- [x] fix catalog filters for a11y keyboard controls
+- [ ] accordion content should not be tabbable unless opened
 - [ ] implement: highlight the currently selected page in the account dropdown in nav
+- [ ] switch active filters to more visible styling
 - [ ] fix: the "track" modal moves when scrolling the page, it should stay "locked" to its button/card 
 - [ ] reconfigure: perhaps change primary nav to "browse", "resources", "about", and "support". With resources having more sub pages, such as "guides", "Where to start", "reading orders", and support having "donate", "contribute", "report issue", etc
   - [ ] make footer match, move legal to bottom bar
