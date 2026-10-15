@@ -26,8 +26,9 @@ const sitemapQuery = groq`{
   "pages": *[_type == "page" && defined(slug.current) && noindex != true && !(_id in path("drafts.**"))]{ "slug": slug.current, "updatedAt": _updatedAt }
 }`;
 
-// Only pages meant to rank: placeholder ("coming soon"), account, and auth
-// pages are noindexed and left out on purpose
+// Only pages meant to rank. Placeholder ("coming soon") pages are noindexed and
+// left out until they have content; account pages are noindexed and redirect
+// signed-out visitors to /login; login and signup are indexable but not worth listing
 const STATIC_PAGES: { path: string; priority: number }[] = [
   { path: "/", priority: 1 },
   { path: "/books", priority: 0.9 },
