@@ -414,8 +414,11 @@ function Content({
       onKeyDown={onMenuKeyDown}
       onBlur={(e) => {
         const next = e.relatedTarget as Node | null;
-        const inMenu = next && menuRef.current?.contains(next);
-        const inTrigger = next && triggerRef.current?.contains(next as Node);
+        // focus going nowhere: a click on empty space in the menu (or the window
+        // losing focus); clicks outside are handled by the mousedown listener
+        if (!next) return;
+        const inMenu = menuRef.current?.contains(next);
+        const inTrigger = triggerRef.current?.contains(next);
         if (!inMenu && !inTrigger) setOpen(false);
       }}
       data-portal
