@@ -168,6 +168,7 @@ export default function AuthForm({ mode, onSuccess, inModal = false }: AuthFormP
         <Button
           href={isSignIn ? "/signup" : "/login"}
           replace
+          prefetch
           variant="tertiary"
           size="lg"
           className={styles.fullWidth}

@@ -18,6 +18,8 @@ type ButtonProps = {
   rel?: string;
   /** Links only: replace the current history entry instead of adding one */
   replace?: boolean;
+  /** Links only: load the page ahead of time (Next's prefetch); true loads it in full */
+  prefetch?: boolean;
 };
 
 /**
@@ -38,6 +40,7 @@ export default function Button({
   target,
   rel,
   replace,
+  prefetch,
 }: ButtonProps) {
   const classes = `
     ${styles.button}
@@ -49,7 +52,7 @@ export default function Button({
 
   if (href) {
     return (
-      <Link href={href} className={classes} target={target} rel={rel} title={title} replace={replace}>
+      <Link href={href} className={classes} target={target} rel={rel} title={title} replace={replace} prefetch={prefetch}>
         {children}
       </Link>
     );

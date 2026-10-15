@@ -9,8 +9,8 @@ import styles from "./AuthModal.module.scss";
 /**
  * The login/signup form in a modal over the current page, shown when a link to
  * /login or /signup is followed inside the site (app/@modal intercepts it).
- * Closing, or signing in, steps back to the page underneath; visiting /login
- * directly still shows the full page.
+ * Closing steps back to the page underneath, and signing in goes to the
+ * dashboard; visiting /login directly still shows the full page.
  */
 export default function AuthModal({ mode }: { mode: "signIn" | "signUp" }) {
   const router = useRouter();
@@ -32,6 +32,9 @@ export default function AuthModal({ mode }: { mode: "signIn" | "signUp" }) {
   }, []);
 
   const close = () => router.back();
+  // replace, not push: Back from the dashboard returns to the page the modal
+  // was opened over, rather than reopening the modal
+  const goToDashboard = () => router.replace("/account");
 
   return (
     <dialog
@@ -52,7 +55,7 @@ export default function AuthModal({ mode }: { mode: "signIn" | "signUp" }) {
         <button type="button" className={styles.close} onClick={close} aria-label="Close">
           <XmarkIcon aria-hidden="true" />
         </button>
-        <AuthForm mode={mode} inModal onSuccess={close} />
+        <AuthForm mode={mode} inModal onSuccess={goToDashboard} />
       </div>
     </dialog>
   );
