@@ -51,7 +51,6 @@ export const accountNav: { label?: string; items: AccountNavItem[] }[] = [
         label: "Reading Lists",
         description: "Curate your own reading lists and orders",
         icon: ReadingListsIcon,
-        comingSoon: true,
       },
       {
         href: "/account/favorites",

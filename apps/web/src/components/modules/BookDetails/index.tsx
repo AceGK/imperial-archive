@@ -12,6 +12,7 @@ import Authors from "./Authors";
 import styles from "./styles.module.scss";
 import FavoriteButton from "@/components/modules/FavoriteButton";
 import TrackButtons from "@/components/modules/TrackButtons";
+import AddToListButton from "@/components/modules/ReadingLists/AddToListButton";
 import { ShareButton } from "@/components/modules/Share";
 import type { BookDetailData } from "@/types/books";
 import Series from "./Series";
@@ -121,6 +122,7 @@ export default function BookDetails({ book }: BookDetailProps) {
               <ShareButton url={`/books/${book.slug}`} title={shareTitle} iconOnly align="end" />
             </div>
           </div>
+          <AddToListButton bookId={book._id} bookTitle={book.title} />
 
           {(book.description ||
             book.story ||

@@ -2,7 +2,11 @@
 
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import HeartIcon from "@/components/icons/account/favorites.svg";
+import ListIcon from "@/components/icons/account/reading-lists.svg";
+import AddToListDialog from "@/components/modules/ReadingLists/AddToListDialog";
+import { useReadingLists } from "@/components/modules/ReadingLists/useReadingLists";
 import BookIcon from "@/components/icons/book.svg";
 import PlusIcon from "@/components/icons/plus.svg";
 import { STATUS_STEPS, type ReadingStatus } from "@/components/modules/TrackButtons/steps";
@@ -39,10 +43,26 @@ export default function TrackMenu({ bookId, title, variant = "overlay", onOpenCh
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
+  const router = useRouter();
+  const [listDialogOpen, setListDialogOpen] = useState(false);
+  // the reader's lists load only once the menu opens: most catalog visits never
+  // open it, and each load counts against the Convex plan
+  const readingLists = useReadingLists(open);
+  const inLists = readingLists.lists.filter((l) => l.bookIds.includes(bookId)).length;
 
   const setOpen = (next: boolean) => {
     setOpenState(next);
     onOpenChange?.(next);
+  };
+
+  // the menu closes and the list picker opens in its place
+  const openListDialog = () => {
+    setOpen(false);
+    if (!readingLists.isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+    setListDialogOpen(true);
   };
 
   const close = (returnFocus: boolean) => {
@@ -184,10 +204,33 @@ export default function TrackMenu({ bookId, title, variant = "overlay", onOpenCh
               <HeartIcon className={styles.menuIcon} aria-hidden="true" />
               <span>Favorite</span>
             </button>
+            <hr className={styles.menuDivider} />
+            <button
+              type="button"
+              role="menuitem"
+              aria-haspopup="dialog"
+              className={styles.menuItem}
+              onClick={openListDialog}
+            >
+              <ListIcon className={styles.menuIcon} aria-hidden="true" />
+              <span>Add to list</span>
+              {inLists > 0 && <span className={styles.menuCount}>{inLists}</span>}
+            </button>
             {error && <p className={styles.menuError}>Couldn&apos;t save. Try again.</p>}
           </div>,
           document.body,
         )}
+
+      {listDialogOpen && (
+        <AddToListDialog
+          bookId={bookId}
+          bookTitle={title}
+          onClose={() => {
+            setListDialogOpen(false);
+            triggerRef.current?.focus();
+          }}
+        />
+      )}
     </>
   );
 }
