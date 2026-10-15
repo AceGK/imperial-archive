@@ -2,12 +2,14 @@
 
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { api } from "@convex/_generated/api";
 import SignOutIcon from "@/components/icons/account/sign-out.svg";
 import { accountNav } from "@/components/modules/Account/nav";
 import Avatar from "@/components/ui/Avatar";
 import { Dropdown } from "@/components/ui/Dropdown";
+import { useNavPin } from "@/hooks/useScrollVisibility";
 import styles from "./AccountMenu.module.scss";
 
 /** Avatar button that opens the account menu. Renders nothing when signed out. */
@@ -16,6 +18,13 @@ export default function AccountMenu() {
   const viewer = useQuery(api.users.viewer, isAuthenticated ? {} : "skip");
   const { signOut } = useAuthActions();
   const router = useRouter();
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  useNavPin(open);
+
+  // same rule as the account sidebar: the dashboard only on its own page
+  const isActive = (href: string) =>
+    href === "/account" ? pathname === href : pathname.startsWith(href);
 
   if (!isAuthenticated) return null;
 
@@ -25,7 +34,7 @@ export default function AccountMenu() {
   };
 
   return (
-    <Dropdown.Root modalTitle="Account">
+    <Dropdown.Root modalTitle="Account" onOpenChange={setOpen}>
       <Dropdown.Trigger asChild aria-label="Open account menu">
         <button type="button" className={styles.trigger}>
           <Avatar name={viewer?.email} image={viewer?.image} size="sm" />
@@ -45,7 +54,12 @@ export default function AccountMenu() {
           <div key={group.label ?? i}>
             <Dropdown.Separator />
             {group.items.map(({ href, label, icon: Icon, comingSoon }) => (
-              <Dropdown.Item key={href} onSelect={() => router.push(href)}>
+              <Dropdown.Item
+                key={href}
+                className={styles.item}
+                active={isActive(href)}
+                onSelect={() => router.push(href)}
+              >
                 <Icon className={styles.icon} />
                 <span>{label}</span>
                 {comingSoon && <span className={styles.soon}>Soon</span>}
@@ -55,7 +69,7 @@ export default function AccountMenu() {
         ))}
 
         <Dropdown.Separator />
-        <Dropdown.Item onSelect={handleSignOut}>
+        <Dropdown.Item className={`${styles.item} ${styles.signOut}`} onSelect={handleSignOut}>
           <SignOutIcon className={styles.icon} />
           <span>Sign Out</span>
         </Dropdown.Item>

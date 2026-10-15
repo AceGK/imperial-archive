@@ -5,10 +5,8 @@
 .filterButton {
   @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
 
-  // dropdown open: keep the brackets showing
-  &[aria-expanded="true"]::before {
-    opacity: 1;
-  }
+  // dropdown open: the brackets join into a full gold outline
+  @include open-outline;
 
   display: flex;
   align-items: center;
@@ -144,19 +142,30 @@
 .items {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   overflow-y: auto; // Scroll only the items
+  // gold thumb (and, on Windows, arrows) so it's clear the list scrolls;
+  // overrides the site-wide border-colored scrollbar from globals.scss
+  scrollbar-color: var(--primary) transparent;
+
+  // Safari, which ignores scrollbar-color
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+  }
   flex: 1; // Take remaining space
   min-height: 0; // Important for flex scrolling
 }
 
+// marks sit inside the item (no offset): the scrolling list would clip them
 .checkbox {
+  @include corner-brackets($size: 6px, $thickness: 1px, $color: var(--primary), $hover-only: true);
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   font-size: 0.9rem;
-  padding: 4px;
+  // rows touch (no gap), so the whole list is clickable with no dead space
+  // between items; same text spacing as before
+  padding: 8px 6px;
   transition: background-color 0.15s ease;
 
   &:hover {

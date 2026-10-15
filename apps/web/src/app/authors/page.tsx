@@ -40,7 +40,7 @@ export default function AuthorsPage() {
         sortOptions={[
           { label: "Name A-Z", value: "authors40k" },
           { label: "Name Z-A", value: "authors40k_name_desc" },
-          { label: "Most Works", value: "authors40k_bookcount_desc" },
+          { label: "Most Publications", value: "authors40k_bookcount_desc" },
         ]}
         filters={[
           { attribute: "format", label: "Format" },

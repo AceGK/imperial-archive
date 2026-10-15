@@ -19,9 +19,9 @@ export type SearchShortcut = {
   kind: "author" | "series" | "faction" | "factionGroup" | "era";
   title: string;
   href: string;
-  /** Shown under the title, e.g. a faction's group or an author's work count */
+  /** Shown under the title, e.g. a faction's group or an author's publication count */
   context?: string;
-  /** Works linked to it; breaks ties between equally good matches, and 0 hides it */
+  /** Publications linked to it; breaks ties between equally good matches, and 0 hides it */
   count?: number;
 };
 
@@ -30,7 +30,7 @@ export type ResultRow = {
   key: string;
   href: string;
   title: string;
-  /** Secondary line, e.g. a book's authors or an author's work count */
+  /** Secondary line, e.g. a book's authors or an author's publication count */
   meta?: string;
   /** Pill on the right: the book's format, or Author, Series, Faction, Era */
   badge?: string;

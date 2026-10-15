@@ -6,7 +6,7 @@ import styles from "./styles.module.scss";
 
 type ButtonProps = {
   children: React.ReactNode;
-  variant?: "primary" | "secondary" | "tertiary" | "outline-primary" | "destructive" | "ghost" | "link";
+  variant?: "primary" | "secondary" | "tertiary" | "outline-primary" | "destructive" | "ghost" | "ghost-destructive" | "link";
   size?: "sm" | "md" | "lg" | "icon";
   className?: string;
   href?: string; // <— if present, renders a Link

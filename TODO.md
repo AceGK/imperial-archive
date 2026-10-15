@@ -1,13 +1,6 @@
 # TODO
 
 # ui 
-- [x] fix: initial opening of the account dropdown in nav will render "Dashboard" in its hovered state 
-- [x] fix nav a11y keyboard controls
-- [x] fix catalog filters for a11y keyboard controls
-- [ ] accordion content should not be tabbable unless opened
-- [ ] implement: highlight the currently selected page in the account dropdown in nav
-- [ ] switch active filters to more visible styling
-- [ ] fix: the "track" modal moves when scrolling the page, it should stay "locked" to its button/card 
 - [ ] reconfigure: perhaps change primary nav to "browse", "resources", "about", and "support". With resources having more sub pages, such as "guides", "Where to start", "reading orders", and support having "donate", "contribute", "report issue", etc
   - [ ] make footer match, move legal to bottom bar
 - [ ] implement: add icons to pages in nav (about, faq, etc)
@@ -17,9 +10,8 @@
 - [ ] improve: change border/hover state of blog cards? 
 - [ ] improve: combine theme, layout, and card controls as singular cog icon in nav? 
 - [ ] improve: accordion body content overflows container due to height being calculated upon open. This should prevent overflow on open accordions when screensize changes 
-- [x] improve: make login/signup a modal popup instead of just a page.
 - [ ] improve login/signup page, perhaps as fullscreen with extra data? 
-- [ ] improve: add hover 'click to copy' option for pages with TOC (e.g. blog posts, about, etc)
+- [ ] improve: add hover 'click to copy link' option for pages with TOC (e.g. blog posts, about, etc)
 - [ ] improve: don't hide nav on scroll if modal is open
 - [ ] improve: make +Track button on book cards controled with "Display" options to either be on-hover, inline, or hidden completely
 - [ ] fix: book count limit for infinite loading (so there's always full rows)
@@ -41,7 +33,6 @@
 ## Auth (Convex Auth)
 
 - [ ] remove unverified accounts after X amount of time
-- [ ] captcha for signup/login? 
 
 ### Emails (Resend)
 Emails (plain text, defined in `apps/web/convex/emails.ts`): password reset code and email verification code. Test with `npx convex run emails:sendTest '{"to": "delivered@resend.dev"}'`.
@@ -87,12 +78,8 @@ Same Convex project, separate **production deployment**: its own data, functions
 - [ ] Sign up, sign in, and run `/reset-password` on the live site
 - [ ] Confirm the new user appears in the **prod** deployment's `users` table, not dev
 
-### Cleanup
-- [ ] Remove `SITE_PASSWORD` from `apps/web/.env.local` and from hosting env vars (the password gate was deleted)
-- [ ] Remove the "access the site using the password **emperorprotects**" line from `README.md`
 
 ### Future improvements
-- [x] Bot protection on signup (e.g. Cloudflare Turnstile): signup, login, the password reset request, and "Send a new code" on the verify-email step
 - [ ] Rate-limit "Send Code" on the account page's Verify Your Email card (sends email without a Turnstile check, but needs a signed-in session)
 - [ ] Two-factor auth: authenticator app (TOTP) as the main method, SMS as an optional backup (verify the phone first by setting `phoneVerificationTime`, e.g. with a Twilio-backed Phone provider)
 - [ ] **SMS reset codes (later, only if the site grows and it's worth paying for)**. Decided to stay email-only for now: Resend only sends email, and SMS costs money and adds fraud risk. Requirements when revisiting:

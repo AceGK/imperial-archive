@@ -50,29 +50,37 @@ export default function TrackMenu({ bookId, title, variant = "overlay", onOpenCh
     if (returnFocus) triggerRef.current?.focus();
   };
 
-  // below the button, lined up with its right edge; above it when there's no
-  // room below; always inside the screen
+  // below the button, lined up with its right edge; above it when there's only
+  // room there (decided once on opening, so it doesn't flip while scrolling);
+  // inside the screen horizontally. Positioned in page coordinates, so the page
+  // scrolling carries it along with the button rather than it trailing a frame behind.
   useLayoutEffect(() => {
     if (!open) {
       setPosition(null);
       return;
     }
+    let above: boolean | null = null;
     const place = () => {
       const button = triggerRef.current?.getBoundingClientRect();
       const menu = menuRef.current;
       if (!button || !menu) return;
       const { offsetWidth: width, offsetHeight: height } = menu;
-      const below = button.bottom + 6;
-      const top = below + height > window.innerHeight - EDGE ? Math.max(EDGE, button.top - 6 - height) : below;
-      const left = Math.max(EDGE, Math.min(button.right - width, window.innerWidth - width - EDGE));
+      above ??= button.bottom + 6 + height > window.innerHeight - EDGE && button.top - 6 - height >= EDGE;
+      const top = (above ? button.top - 6 - height : button.bottom + 6) + window.scrollY;
+      const left = Math.max(EDGE, Math.min(button.right - width, window.innerWidth - width - EDGE)) + window.scrollX;
       setPosition({ top, left });
+    };
+    // the page's own scrolling needs no update; scrolling inside an element
+    // (e.g. a scrollable panel holding the card) moves the button relative to the page
+    const onScroll = (e: Event) => {
+      if (e.target !== document) place();
     };
     place();
     window.addEventListener("resize", place);
-    window.addEventListener("scroll", place, true);
+    window.addEventListener("scroll", onScroll, true);
     return () => {
       window.removeEventListener("resize", place);
-      window.removeEventListener("scroll", place, true);
+      window.removeEventListener("scroll", onScroll, true);
     };
   }, [open]);
 

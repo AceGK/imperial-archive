@@ -67,6 +67,7 @@ export function CurrentRefinements({
           className={styles.pill}
           onClick={() => refine(refinement)}
           type="button"
+          aria-label={`Remove filter ${transformLabel(item.attribute)}: ${refinement.label || String(refinement.value)}`}
         >
           <span className={styles.attribute}>
             {transformLabel(item.attribute)}:

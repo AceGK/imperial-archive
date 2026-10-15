@@ -163,6 +163,13 @@
   }
 }
 
+// .ghost at rest; red fill and corner marks on hover (Sign out)
+.ghost-destructive {
+  @include destructive-hover($bracket-size: 10px, $offset: 1px);
+  background: transparent;
+  color: var(--subtle);
+}
+
 .link {
   background: transparent;
   border: none;

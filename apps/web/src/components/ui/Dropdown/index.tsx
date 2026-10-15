@@ -71,16 +71,25 @@ const useDropdown = () => {
 
 /** ---------- Root ---------- */
 
-function Root({ 
+function Root({
   children,
   mobileBreakpoint = 576, // modal dropdown breakpoint
-  modalTitle = "Select an option"
-}: { 
+  modalTitle = "Select an option",
+  onOpenChange,
+}: {
   children: React.ReactNode;
   mobileBreakpoint?: number;
   modalTitle?: string;
+  /** Called as the menu opens and closes */
+  onOpenChange?: (open: boolean) => void;
 }) {
   const [open, setOpen] = useState(false);
+
+  const onOpenChangeRef = useRef(onOpenChange);
+  onOpenChangeRef.current = onOpenChange;
+  useEffect(() => {
+    onOpenChangeRef.current?.(open);
+  }, [open]);
   const [isMobile, setIsMobile] = useState(false);
   const triggerRef = useRef<HTMLElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -311,44 +320,15 @@ function Content({
   } = useDropdown();
 
   const popId = useId();
-  const [pos, setPos] = useState<{ top: number; left: number }>({
-    top: 0,
-    left: 0,
-  });
 
-  const updatePosition = useCallback(() => {
-    const triggerEl = triggerRef.current;
-    const menuEl = menuRef.current;
-    if (!triggerEl || !menuEl) return;
-
-    const t = triggerEl.getBoundingClientRect();
-    let left = t.left;
-    if (align === "end") {
-      left = Math.max(0, t.right - menuEl.offsetWidth);
-    }
-    const top = t.bottom + sideOffset;
-    setPos({ top, left });
-  }, [align, sideOffset, triggerRef, menuRef]);
-
-  // Focus first item and position on open (desktop only)
+  // Focus first item on open (desktop only)
   useLayoutEffect(() => {
     if (!open || isMobile) return;
     const raf = requestAnimationFrame(() => {
       menuItems(menuRef.current)[0]?.focus();
-      updatePosition();
     });
-
-    const onScroll = () => updatePosition();
-    const onResize = () => updatePosition();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
-    };
-  }, [open, isMobile, menuRef, updatePosition]);
+    return () => cancelAnimationFrame(raf);
+  }, [open, isMobile, menuRef]);
 
   if (!open) return null;
 
@@ -393,8 +373,11 @@ function Content({
     return createPortal(modal, document.body);
   }
 
-  // Desktop: Render as dropdown
-  const menu = (
+  // Desktop: rendered in place, positioned under the trigger by CSS rather than
+  // measured and placed by script. The triggers sit in sticky bars that slide
+  // (the catalog filters, the nav), and a measured position lags behind that
+  // movement; in place, the menu moves with its trigger.
+  return (
     <div
       id={popId}
       ref={menuRef}
@@ -405,27 +388,22 @@ function Content({
         align === "end" ? styles.alignEnd : styles.alignStart,
         className || "",
       ].join(" ")}
-      style={{
-        position: "fixed",
-        top: pos.top,
-        left: pos.left,
-        zIndex: 1000,
-      }}
+      style={{ top: `calc(100% + ${sideOffset}px)` }}
       onKeyDown={onMenuKeyDown}
       onBlur={(e) => {
         const next = e.relatedTarget as Node | null;
-        const inMenu = next && menuRef.current?.contains(next);
-        const inTrigger = next && triggerRef.current?.contains(next as Node);
+        // focus going nowhere: a click on empty space in the menu (or the window
+        // losing focus); clicks outside are handled by the mousedown listener
+        if (!next) return;
+        const inMenu = menuRef.current?.contains(next);
+        const inTrigger = triggerRef.current?.contains(next);
         if (!inMenu && !inTrigger) setOpen(false);
       }}
-      data-portal
     >
       {children}
       <span className={styles.arrow} aria-hidden="true" />
     </div>
   );
-
-  return createPortal(menu, document.body);
 }
 
 /** ---------- Item / Separator / Label ---------- */
@@ -435,11 +413,16 @@ function Item({
   onSelect,
   disabled = false,
   destructive = false,
+  active = false,
+  className,
 }: {
   children: React.ReactNode;
   onSelect?: () => void;
   disabled?: boolean;
   destructive?: boolean;
+  /** the item for the page being viewed (marked aria-current="page") */
+  active?: boolean;
+  className?: string;
 }) {
   const { setOpen, triggerRef } = useDropdown();
 
@@ -457,7 +440,9 @@ function Item({
         styles.item,
         disabled ? styles.disabled : "",
         destructive ? styles.destructive : "",
+        className || "",
       ].join(" ")}
+      aria-current={active ? "page" : undefined}
       tabIndex={-1}
       type="button"
       disabled={disabled}

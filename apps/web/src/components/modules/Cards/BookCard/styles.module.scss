@@ -228,6 +228,8 @@
   background: rgba(10, 10, 12, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 0;
+  // centered, so it lifts every edge off busy cover art; a touch darker than the tags'
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7), 0 0 1px rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(6px);
   cursor: pointer;
 
@@ -249,13 +251,7 @@
     outline-offset: 2px;
   }
 
-  &[aria-expanded="true"] {
-    color: var(--primary);
-
-    &::before {
-      opacity: 1;
-    }
-  }
+  @include open-outline;
 }
 
 .trackIcon {
@@ -337,13 +333,7 @@
     outline-offset: 2px;
   }
 
-  &[aria-expanded="true"] {
-    color: var(--primary);
-
-    &::before {
-      opacity: 1;
-    }
-  }
+  @include open-outline;
 }
 
 .tagsInline {
@@ -392,11 +382,12 @@
   }
 }
 
-// The menu renders at the end of <body>; CardActions sets top/left and keeps
-// it on screen
+// The menu renders at the end of <body>; TrackMenu sets top/left in page
+// coordinates so it scrolls with its button. Stacks under the sticky bars
+// (nav 100, mobile nav 48–49, catalog filters 50) so it slides under them.
 .trackMenu {
-  position: fixed;
-  z-index: 50;
+  position: absolute;
+  z-index: 45;
   min-width: 12rem;
   padding: 0.375rem;
   color: var(--text);
@@ -416,6 +407,7 @@
 }
 
 .menuItem {
+  @include corner-brackets($size: 6px, $thickness: 1px, $color: var(--primary), $hover-only: true);
   display: flex;
   align-items: center;
   gap: 0.625rem;

@@ -152,6 +152,8 @@ export function AccordionContent({
     <div
       ref={contentRef}
       className={`${styles.content} ${isOpen ? styles.open : ""} ${className || ""}`}
+      // Collapsed content is only clipped, so keep its links out of the tab order and screen readers
+      inert={!isOpen}
       style={{
         maxHeight: isOpen ? contentRef.current?.scrollHeight : 0,
       }}

@@ -191,13 +191,7 @@
     stroke-linecap: round;
   }
 
-  &[aria-expanded="true"] {
-    color: var(--primary);
-
-    &::before {
-      opacity: 1;
-    }
-  }
+  @include open-outline;
 
   &:focus-visible {
     outline: 2px solid var(--primary);

@@ -32,7 +32,7 @@ export default function SeriesCarousel({
       image={s.image}
       countLabel={
         s.totalCount != null
-          ? `${s.totalCount} ${s.totalCount === 1 ? "Work" : "Works"}`
+          ? `${s.totalCount} ${s.totalCount === 1 ? "Publication" : "Publications"}`
           : undefined
       }
     />
