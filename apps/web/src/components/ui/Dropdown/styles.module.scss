@@ -1,7 +1,9 @@
 // components/ui/Dropdown/styles.module.scss
 @use "@/styles/breakpoints" as *;
 
+// the desktop menu is positioned against this, just under the trigger
 .root {
+  position: relative;
   display: inline-block;
 }
 
@@ -34,8 +36,11 @@
   }
 }
 
-/* Desktop dropdown */
+/* Desktop dropdown: top is set inline (trigger height + sideOffset) */
 .content {
+  position: absolute;
+  // sized to its content, not squeezed to the narrow .root it's positioned in
+  width: max-content;
   min-width: 180px;
   padding: 6px;
   border-radius: var(--radius-200, 10px);
@@ -48,6 +53,9 @@
   z-index: 1000;
   animation: ddIn 120ms ease-out;
 }
+
+.alignEnd { right: 0; }
+.alignStart { left: 0; }
 
 /* Mobile modal */
 .backdrop {
