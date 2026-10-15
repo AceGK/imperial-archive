@@ -93,7 +93,7 @@ export default function Favorites() {
           <p className={styles.cardDescription}>
             Tap the Favorite button on any book, series, author, faction, or era to save it here.
           </p>
-          <Button href="/books" variant="secondary">
+          <Button href="/books" variant="tertiary">
             Browse Books
           </Button>
         </section>

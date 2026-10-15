@@ -28,7 +28,7 @@ export default function ComingSoon({ title, description, icon: Icon, features }:
             <li key={feature}>{feature}</li>
           ))}
         </ul>
-        <Button href="/books" variant="secondary">
+        <Button href="/books" variant="tertiary">
           Browse Books
         </Button>
       </section>

@@ -24,7 +24,7 @@ export default function TrackerPromo() {
           <Button href="/track" variant="primary">
             How the reading tracker works
           </Button>
-          <Button href="/books" variant="outline">
+          <Button href="/books" variant="tertiary">
             Browse books
           </Button>
         </div>

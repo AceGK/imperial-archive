@@ -55,7 +55,7 @@
 }
 
 /* Variants */
-// solid gold at rest; on hover it takes the .bracket button's look: its dark
+// solid gold at rest; on hover it takes the .secondary button's look: its dark
 // fill, gold text and the corner marks
 .primary {
   @include corner-brackets(
@@ -77,17 +77,9 @@
   }
 }
 
+// dark fill, gold text and a faint gold border; the corner marks appear on hover
+// ("View all" buttons, Open your tracker, Create account)
 .secondary {
-  background: var(--secondary);
-  color: var(--on-secondary);
-  border: 1px solid var(--border);
-
-  &:hover {
-    background: color-mix(in srgb, var(--secondary) 95%, #000);
-  }
-}
-
-.secondary-bracket {
   @include corner-brackets(
     $size: 10px,
     $thickness: 1px,
@@ -95,24 +87,14 @@
     $offset: 1px,
     $hover-only: true
   );
-  background: var(--secondary);
-  color: var(--on-secondary);
-  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-accent) 98%, var(--subtle));
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  color: var(--primary);
 }
 
-.outline {
-  background: transparent;
-  color: var(--foreground);
-  border-color: var(--border);
-
-  &:hover {
-    background: var(--accent);
-    color: var(--on-accent);
-  }
-}
-
-// .outline with the corner marks on hover instead of a fill
-.outline-bracket {
+// .secondary's frame with plain text that turns gold on hover: the quieter
+// of the two, e.g. beside a primary button
+.tertiary {
   @include corner-brackets(
     $size: 10px,
     $thickness: 1px,
@@ -120,9 +102,14 @@
     $offset: 1px,
     $hover-only: true
   );
-  background: transparent;
+  background: color-mix(in srgb, var(--bg-accent) 98%, var(--subtle));
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
   color: var(--foreground);
-  border-color: var(--border);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--primary);
+  }
 }
 
 .outline-primary {
@@ -136,62 +123,30 @@
   }
 }
 
-.bracket {
-  background: color-mix(in srgb, var(--bg-accent) 98%, var(--subtle));
-  border: 1px solid  color-mix(in srgb, var(--primary) 25%, transparent);
-  color: var(--primary);
-
-  &:hover {
-      @include corner-brackets(
-    $size: 10px,
-    $thickness: 1px,
-    $color: var(--primary),
-    $offset: 1px
-  );
-  }
-}
-
-.bracket-diagonal {
+// solid red at rest; on hover a see-through red fill and red corner marks,
+// mirroring .primary. The text stays white in both states for contrast.
+.destructive {
   @include corner-brackets(
     $size: 10px,
     $thickness: 1px,
-    $color: var(--primary),
+    $color: var(--destructive),
     $offset: 1px,
-    $corners: (
-      top-left,
-      bottom-right,
-    )
+    $hover-only: true
   );
-  background: color-mix(in srgb, var(--bg-accent) 98%, var(--subtle));
-  border: 1px solid var(--border);
-  color: var(--primary);
-
-  &:hover {
-    background: var(--primary);
-    color: var(--on-primary);
-  }
-}
-
-.destructive {
   background: var(--destructive);
   color: var(--on-destructive);
+  border-color: var(--destructive);
 
-  &:hover {
-    background: color-mix(in srgb, var(--destructive) 90%, #000);
+  &:hover,
+  &:focus-visible {
+    background: color-mix(in srgb, var(--destructive) 15%, transparent);
+    border-color: color-mix(in srgb, var(--destructive) 35%, transparent);
   }
 }
 
+// no fill or border: muted text that turns gold, with the corner marks, on
+// hover (the nav's theme and site-width toggles)
 .ghost {
-  background: transparent;
-  color: var(--subtle);
-
-  &:hover {
-    background: var(--accent);
-    color: var(--text);
-  }
-}
-
-.bracket-ghost {
   @include corner-brackets(
     $size: 10px,
     $thickness: 1px,

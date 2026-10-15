@@ -248,7 +248,7 @@ function SessionsCard() {
       </p>
       <div className={styles.form}>
         {status && <p className={styles[status.type]}>{status.message}</p>}
-        <Button variant="secondary" onClick={handleClick} disabled={loading}>
+        <Button variant="tertiary" onClick={handleClick} disabled={loading}>
           {loading ? "Signing out..." : "Sign Out Other Devices"}
         </Button>
       </div>

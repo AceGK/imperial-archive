@@ -15,10 +15,10 @@ import styles from "./AuthSlot.module.scss";
  * resolves. `data-auth` on <html> decides which is visible.
  */
 export default function AuthSlot({
-  signupVariant,
+  showSignup = false,
 }: {
-  /** Omit to show Login only (mobile top bar) */
-  signupVariant?: "secondary" | "secondary-bracket";
+  /** Leave off to show Login only (mobile top bar) */
+  showSignup?: boolean;
 }) {
   const { isAuthenticated, isLoading } = useConvexAuth();
 
@@ -35,8 +35,8 @@ export default function AuthSlot({
   return (
     <div className={styles.slot}>
       <span className={styles.out}>
-        {signupVariant && (
-          <Button href="/signup" variant={signupVariant} size="sm" className={styles.signup}>
+        {showSignup && (
+          <Button href="/signup" variant="tertiary" size="sm" className={styles.signup}>
             Signup
           </Button>
         )}

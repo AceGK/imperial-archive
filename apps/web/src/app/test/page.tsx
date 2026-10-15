@@ -18,6 +18,11 @@ const TEST_PAGES = [
     description: "The FAQ page with sample questions, for previewing before real FAQs are added in Sanity.",
   },
   {
+    href: "/test/buttons",
+    title: "Buttons",
+    description: "Every Button variant in every size, plus the icon, disabled and link versions.",
+  },
+  {
     href: "/test/loading",
     title: "Catalog loading states",
     description: "The skeleton cards, filter buttons and count shown while each catalog's first results load.",
