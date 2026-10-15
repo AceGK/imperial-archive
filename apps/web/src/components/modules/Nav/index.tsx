@@ -7,7 +7,7 @@ import type { ComponentType, KeyboardEvent as ReactKeyboardEvent, MouseEvent, SV
 import { usePathname, useRouter } from "next/navigation";
 import { useConvexAuth } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useScrollVisibility } from "@/hooks/useScrollVisibility";
+import { useNavPin, useScrollVisibility } from "@/hooks/useScrollVisibility";
 import styles from "./styles.module.scss";
 import ThemeToggle from "@/components/modules/ThemeToggle";
 import ThemeSwitch from "@/components/modules/ThemeSwitch";
@@ -126,6 +126,7 @@ export default function Nav() {
   const panelRef = useRef<HTMLDivElement | null>(null);
 
   const isOpen = activeIndex !== null;
+  useNavPin(isOpen);
 
   const isLinkActive = (href: string) => pathname === href;
   const isGroupActive = (item: NavItem) => "links" in item && item.links.some((l) => pathname === l.href);

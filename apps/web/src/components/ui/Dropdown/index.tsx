@@ -71,16 +71,25 @@ const useDropdown = () => {
 
 /** ---------- Root ---------- */
 
-function Root({ 
+function Root({
   children,
   mobileBreakpoint = 576, // modal dropdown breakpoint
-  modalTitle = "Select an option"
-}: { 
+  modalTitle = "Select an option",
+  onOpenChange,
+}: {
   children: React.ReactNode;
   mobileBreakpoint?: number;
   modalTitle?: string;
+  /** Called as the menu opens and closes */
+  onOpenChange?: (open: boolean) => void;
 }) {
   const [open, setOpen] = useState(false);
+
+  const onOpenChangeRef = useRef(onOpenChange);
+  onOpenChangeRef.current = onOpenChange;
+  useEffect(() => {
+    onOpenChangeRef.current?.(open);
+  }, [open]);
   const [isMobile, setIsMobile] = useState(false);
   const triggerRef = useRef<HTMLElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);

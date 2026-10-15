@@ -3,11 +3,13 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { api } from "@convex/_generated/api";
 import SignOutIcon from "@/components/icons/account/sign-out.svg";
 import { accountNav } from "@/components/modules/Account/nav";
 import Avatar from "@/components/ui/Avatar";
 import { Dropdown } from "@/components/ui/Dropdown";
+import { useNavPin } from "@/hooks/useScrollVisibility";
 import styles from "./AccountMenu.module.scss";
 
 /** Avatar button that opens the account menu. Renders nothing when signed out. */
@@ -17,6 +19,8 @@ export default function AccountMenu() {
   const { signOut } = useAuthActions();
   const router = useRouter();
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  useNavPin(open);
 
   // same rule as the account sidebar: the dashboard only on its own page
   const isActive = (href: string) =>
@@ -30,7 +34,7 @@ export default function AccountMenu() {
   };
 
   return (
-    <Dropdown.Root modalTitle="Account">
+    <Dropdown.Root modalTitle="Account" onOpenChange={setOpen}>
       <Dropdown.Trigger asChild aria-label="Open account menu">
         <button type="button" className={styles.trigger}>
           <Avatar name={viewer?.email} image={viewer?.image} size="sm" />
