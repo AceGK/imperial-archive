@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { toPlainText } from "@portabletext/react";
 import InfoHeader from "@/components/modules/InfoHeader";
 import RichText from "@/components/ui/RichText";
+import ArrowLeftIcon from "@/components/icons/arrow-left.svg";
 import JsonLd from "@/components/seo/JsonLd";
 import { client } from "@/lib/sanity/sanity.client";
 import { blogPostBySlugQuery, blogPostSlugsQuery } from "@/lib/sanity/queries";
@@ -65,7 +66,8 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
   const header = (
     <div>
       <Link href="/blog" className={styles.back}>
-        ← All dispatches
+        <ArrowLeftIcon aria-hidden="true" />
+        <span>All dispatches</span>
       </Link>
 
       <InfoHeader
