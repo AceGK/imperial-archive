@@ -21,7 +21,7 @@ import styles from "./styles.module.scss";
  * behavior lives in ./useDropdownMenu, their panel in ./DesktopDropdown, and
  * the phone menu in ./MobileMenu.
  */
-export default function Nav() {
+export default function Nav({ showThemeToggle = true }: { showThemeToggle?: boolean }) {
   const pathname = usePathname();
   const isVisible = useScrollVisibility();
   const menu = useDropdownMenu();
@@ -122,7 +122,7 @@ export default function Nav() {
           <div className={styles.secondary}>
             <AuthSlot showSignup />
             <SiteWidthToggle />
-            <ThemeToggle />
+            {showThemeToggle && <ThemeToggle />}
           </div>
 
           {/* mobile: account avatar (or Login when signed out) beside the hamburger */}
@@ -147,7 +147,12 @@ export default function Nav() {
       </div>
 
       <DesktopDropdown menu={menu} isLinkActive={isLinkActive} />
-      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} isLinkActive={isLinkActive} />
+      <MobileMenu
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        isLinkActive={isLinkActive}
+        showThemeSwitch={showThemeToggle}
+      />
     </nav>
   );
 }

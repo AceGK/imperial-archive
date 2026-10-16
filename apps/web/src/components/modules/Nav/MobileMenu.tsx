@@ -18,10 +18,12 @@ export default function MobileMenu({
   open,
   onClose,
   isLinkActive,
+  showThemeSwitch,
 }: {
   open: boolean;
   onClose: () => void;
   isLinkActive: (href: string) => boolean;
+  showThemeSwitch: boolean;
 }) {
   // lock scroll while the panel is open
   useEffect(() => {
@@ -68,10 +70,12 @@ export default function MobileMenu({
         <div className={styles.mobileActions}>
           <AuthButtons />
           {/* SiteWidthToggle omitted — it's desktop-only (hidden below 1250px) */}
-          <div className={styles.mobileTheme}>
-            <span>Theme</span>
-            <ThemeSwitch />
-          </div>
+          {showThemeSwitch && (
+            <div className={styles.mobileTheme}>
+              <span>Theme</span>
+              <ThemeSwitch />
+            </div>
+          )}
         </div>
       </div>
 
