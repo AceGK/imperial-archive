@@ -95,7 +95,7 @@ export default async function RootLayout({
 
   return (
     <ConvexAuthNextjsServerProvider>
-      <html lang="en" data-layout={initialLayout} suppressHydrationWarning>
+      <html lang="en" data-layout={initialLayout} data-scroll-behavior="smooth" suppressHydrationWarning>
         <head>
           {/* sets data-auth before first paint so the nav's auth controls don't shift */}
           <script dangerouslySetInnerHTML={{ __html: authHintScript }} />

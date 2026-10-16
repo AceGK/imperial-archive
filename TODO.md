@@ -3,25 +3,19 @@
 # ui 
 - [ ] reconfigure: perhaps change primary nav to "browse", "resources", "about", and "support". With resources having more sub pages, such as "guides", "Where to start", "reading orders", and support having "donate", "contribute", "report issue", etc
   - [ ] make footer match, move legal to bottom bar
-- [ ] implement: add icons to pages in nav (about, faq, etc)
+- [x] implement: add icons to pages in nav (about, faq, etc)
 - [ ] fix: account icon CLS on load 
 - [ ] improve: hero scroll down button (perhaps ditch "scroll", or fade out gradually on scroll state rather than scroll thresold)
 - [ ] improve: reading tracker image/example section on homepage 
-- [ ] improve: change border/hover state of blog cards? 
 - [ ] improve: combine theme, layout, and card controls as singular cog icon in nav? 
 - [ ] improve login/signup page, perhaps as fullscreen with extra data? 
 - [ ] improve: make +Track button on book cards controled with "Display" options to either be on-hover, inline, or hidden completely
 - [ ] fix: book count limit for infinite loading (so there's always full rows)
 - [ ] fix: catalog nav from resetting into place based on scroll threshold (perhaps see how I managed this on PL-next)
-- [ ] fix: create my own header image for /books instead of the black library owned image
-- [ ] improve: series cards should maybe say how many lists + works?
-- [ ] improve: Perhaps change "works" to "publications"? 
 - [ ] improve: update favicon to original artwork
 - [ ] improve: add the "Book N in series, read after…" line to book pages, which gives each page original text that answers reading-order searches directly.
 - [ ] compress svgs from inline to cacheable files?
-
-# seo 
-- [ ] audit for keywords etc 
+- [ ] move view all faq to bottom of faqs in single column layout
 
 # ideas 
 - [ ] book reviews from APIs, combined into aggregate review count + let users write IA book reviews
@@ -32,15 +26,9 @@
 - [ ] remove unverified accounts after X amount of time
 
 ### Emails (Resend)
-Emails (plain text, defined in `apps/web/convex/emails.ts`): password reset code and email verification code. Test with `npx convex run emails:sendTest '{"to": "delivered@resend.dev"}'`.
-- [ ] Verify the sending domain (`imperialarchive.com`) in Resend, if not done yet (check Resend → Domains)
 - [ ] Later, once emails are styled: switch to [React Email](https://react.email) templates and preview them locally with its dev server
 
 ### Manual test checklist
-- [ ] Sign up at `/signup` → lands on `/account`
-- [ ] Sign out → sign back in at `/login`
-- [ ] Visiting `/account` while signed out redirects to `/login`
-- [ ] Sign up with a new email → code email arrives → enter code → lands on `/account` (also try a wrong code and "Send a new code")
 - [ ] Sign in with an existing (unverified) account → asked for a code → verified afterwards
 - [ ] Signed-in unverified user: "Verify Your Email" card on `/account/profile` → Send Code → Confirm → badge shows Verified
 - [ ] Change email on `/account/profile` → code sent to the new address → confirm → sign out → sign in with the new email
@@ -56,24 +44,16 @@ Emails (plain text, defined in `apps/web/convex/emails.ts`): password reset code
 Same Convex project, separate **production deployment**: its own data, functions, and env vars. Prod starts with an empty database. After setup, pushing to `main` deploys the site and the prod Convex functions together; local dev keeps using `npx convex dev` against dev.
 
 **Before launch: check the existing signups**
-- [ ] In Vercel, check which `NEXT_PUBLIC_CONVEX_URL` the live site uses. If it's `oceanic-crow-954` (dev), the current real signups live in the dev database
-- [ ] Review those dev `users` / `authAccounts` rows for bots or junk accounts
-- [ ] Decide: copy them to prod (`npx convex export` from dev, then `npx convex import --prod <file>`), or start prod fresh and let them sign up again
 
-**Convex prod deployment** (run from `apps/web`)
-- [ ] Confirm the prod `AUTH_RESEND_KEY` is a separate prod key (`imperial-archive-convex-prod`, Sending access only, limited to `imperialarchive.com`), not the dev one
+**Convex prod deployment** 
 - [ ] Later: OAuth client IDs and secrets on prod (`AUTH_GOOGLE_ID`, etc.), using prod OAuth apps whose callback URLs point at the prod `.convex.site` domain
 
 **Vercel**
-- [ ] Root directory: `apps/web`
-- [ ] In the Convex dashboard (Production → Settings), generate a **production deploy key** and add it in Vercel as `CONVEX_DEPLOY_KEY`, scoped to the Production environment only
-- [ ] Build command: `npx convex deploy --cmd 'npm run build'` (pushes Convex functions to prod and sets `NEXT_PUBLIC_CONVEX_URL` for the build automatically)
-- [ ] Remove any manually set `NEXT_PUBLIC_CONVEX_URL` / `CONVEX_DEPLOYMENT` pointing at dev from Vercel's Production env
 - [ ] Optional: preview deploy key for Vercel Preview builds, so each PR gets its own throwaway Convex backend instead of touching prod or dev
 
 **After the first prod deploy**
 - [ ] Sign up, sign in, and run `/reset-password` on the live site
-- [ ] Confirm the new user appears in the **prod** deployment's `users` table, not dev
+
 
 
 ### Future improvements
@@ -117,7 +97,7 @@ New sections go in `apps/web/src/components/modules/Account/nav.ts` plus a page 
 
 ### Profile
 - [ ] Display name (needed for reviews); add custom fields via a `users` table in `convex/schema.ts`
-- [ ] Avatar upload with Convex file storage, or pick a faction icon from the existing set as a cheaper first version (replace the email-initial avatar in the sidebar)
+- [ ] Avatar upload with Convex (or sanity?) file storage, or pick a faction icon from the existing set as a cheaper first version (replace the email-initial avatar in the sidebar)
 
 ### Library
 - [ ] **Track, next steps** (tracking itself is built: the `tracked` table, want/reading/read plus owned, `/account/track`): series progress, reading stats by faction, era, and author, and achievements (previewed on `/track`); optional started/finished dates

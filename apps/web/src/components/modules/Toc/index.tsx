@@ -52,9 +52,12 @@ export default function Toc({ items }: { items: TocItem[] }) {
     };
 
     // no recompute on unlock: near the bottom of the page that would move the
-    // highlight off the entry the reader just clicked
+    // highlight off the entry the reader just clicked. That includes an update
+    // still queued from the scroll (an instant scroll ends before it runs).
     const unlock = () => {
       clearTimeout(lockTimer.current);
+      cancelAnimationFrame(frame);
+      frame = 0;
       clickLock.current = false;
     };
 
@@ -72,7 +75,8 @@ export default function Toc({ items }: { items: TocItem[] }) {
   }, [items]);
 
   // highlight the clicked entry right away and hold it while the page scrolls
-  // there, so the highlight doesn't flicker through the sections in between
+  // there (smoothly, from the html element's scroll-behavior), so the
+  // highlight doesn't flicker through the sections in between
   const handleClick = (id: string) => () => {
     setActiveId(id);
     clickLock.current = true;

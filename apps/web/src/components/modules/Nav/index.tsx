@@ -22,6 +22,12 @@ import LayersIcon from "@/components/icons/layers.svg";
 import ShieldIcon from "@/components/icons/shield.svg";
 import HourglassIcon from "@/components/icons/hourglass.svg";
 import SwordsIcon from "@/components/icons/swords.svg";
+import ArchiveIcon from "@/components/icons/archive.svg";
+import SignpostIcon from "@/components/icons/signpost.svg";
+import NewspaperIcon from "@/components/icons/newspaper.svg";
+import QuestionIcon from "@/components/icons/question.svg";
+import BookOpenIcon from "@/components/icons/book-open.svg";
+import CoinsIcon from "@/components/icons/coins.svg";
 import AuthSlot from "./AuthSlot";
 import Logo from "../../../../public/imperial-archive-logo.svg";
 
@@ -60,10 +66,10 @@ const NAV_ITEMS: NavItem[] = [
   {
     label: "Info",
     links: [
-      { href: "/about", label: "About", description: "The charter behind this archive" },
-      { href: "/resources", label: "Resources", description: "Reading orders and community guides" },
-      { href: "/blog", label: "Blog", description: "News and dispatches from the Archive" },
-      { href: "/faq", label: "FAQ", description: "Common questions, answered" },
+      { href: "/about", label: "About", description: "The charter behind this archive", icon: ArchiveIcon },
+      { href: "/resources", label: "Resources", description: "Reading orders and community guides", icon: SignpostIcon },
+      { href: "/blog", label: "Blog", description: "News and dispatches from the Archive", icon: NewspaperIcon },
+      { href: "/faq", label: "FAQ", description: "Common questions, answered", icon: QuestionIcon },
     ],
   },
   { href: "/support", label: "Support" },
@@ -81,9 +87,9 @@ const mobileItems: NavGroup[] = [
     ...infoGroup,
     links: [
       infoGroup.links[0],
-      { href: "/track", label: "Reading Tracker" },
+      { href: "/track", label: "Reading Tracker", icon: BookOpenIcon },
       ...infoGroup.links.slice(1),
-      { href: "/support", label: "Support" },
+      { href: "/support", label: "Support", icon: CoinsIcon },
     ],
   },
 ];
