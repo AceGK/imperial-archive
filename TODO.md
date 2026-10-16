@@ -10,7 +10,6 @@
 - [ ] improve: change border/hover state of blog cards? 
 - [ ] improve: combine theme, layout, and card controls as singular cog icon in nav? 
 - [ ] improve login/signup page, perhaps as fullscreen with extra data? 
-- [x] improve: add hover 'click to copy link' option for pages with TOC (e.g. blog posts, about, etc)
 - [ ] improve: make +Track button on book cards controled with "Display" options to either be on-hover, inline, or hidden completely
 - [ ] fix: book count limit for infinite loading (so there's always full rows)
 - [ ] fix: catalog nav from resetting into place based on scroll threshold (perhaps see how I managed this on PL-next)
