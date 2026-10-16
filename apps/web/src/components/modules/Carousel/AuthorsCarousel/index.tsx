@@ -4,7 +4,7 @@ import React from "react";
 import Carousel from "@/components/modules/Carousel/base";
 import AuthorCard from "@/components/modules/Cards/AuthorCard";
 import type { Author40k } from "@/types/sanity";
-import UserIcon from "@/components/icons/user.svg";
+import QuillPenIcon from "@/components/icons/quill-pen.svg";
 
 export type Author = {
   id: string | number;
@@ -51,7 +51,7 @@ export default function AuthorCarousel({
         pagination={false}
         className={className}
         viewAllLink="/authors"
-        viewAllIcon={UserIcon}
+        viewAllIcon={QuillPenIcon}
         lastSlideTitle="All Authors"
         viewAllLabel="View All Authors" 
       />

@@ -4,7 +4,7 @@ import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api } from "@convex/_generated/api";
-import BookIcon from "@/components/icons/book.svg";
+import BookIcon from "@/components/icons/book-spine.svg";
 import favoriteStyles from "@/components/modules/FavoriteButton/styles.module.scss";
 import styles from "./styles.module.scss";
 import { STATUS_STEPS, statusSteps, type ReadingStatus } from "./steps";

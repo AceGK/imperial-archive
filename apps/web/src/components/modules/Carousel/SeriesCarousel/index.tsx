@@ -5,7 +5,7 @@ import React from "react";
 import Carousel from "@/components/modules/Carousel/base";
 import SeriesCard from "@/components/modules/Cards/SeriesCard";
 import type { Series40kDoc } from "@/types/sanity";
-import LayersIcon from "@/components/icons/layers.svg";
+import BooksIcon from "@/components/icons/books.svg";
 
 type Props = {
   title?: React.ReactNode;
@@ -50,7 +50,7 @@ export default function SeriesCarousel({
       pagination={false}
       className={className}
       viewAllLink={viewAllLink}
-      viewAllIcon={LayersIcon}
+      viewAllIcon={BooksIcon}
       viewAllLabel={viewAllLabel}
       lastSlideTitle="All Series"
     />

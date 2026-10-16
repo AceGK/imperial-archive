@@ -16,17 +16,17 @@ import SignOutIcon from "@/components/icons/account/sign-out.svg";
 import SiteWidthToggle from "@/components/modules/SiteWidthToggle";
 import Button from "@/components/ui/Button";
 import ChevronDown from "@/components/icons/chevron-down.svg";
-import BookIcon from "@/components/icons/book.svg";
-import UserIcon from "@/components/icons/user.svg";
-import LayersIcon from "@/components/icons/layers.svg";
+import BookIcon from "@/components/icons/book-spine.svg";
+import QuillPenIcon from "@/components/icons/quill-pen.svg";
+import BooksIcon from "@/components/icons/books.svg";
 import ShieldIcon from "@/components/icons/shield.svg";
 import HourglassIcon from "@/components/icons/hourglass.svg";
 import SwordsIcon from "@/components/icons/swords.svg";
-import ArchiveIcon from "@/components/icons/archive.svg";
-import SignpostIcon from "@/components/icons/signpost.svg";
+import InfoIcon from "@/components/icons/square-info.svg";
+import ScrollIcon from "@/components/icons/scroll.svg";
 import NewspaperIcon from "@/components/icons/newspaper.svg";
-import QuestionIcon from "@/components/icons/question.svg";
-import BookOpenIcon from "@/components/icons/book-open.svg";
+import QuestionIcon from "@/components/icons/circle-question.svg";
+import BookBookmarkIcon from "@/components/icons/book-bookmark.svg";
 import CoinsIcon from "@/components/icons/coins.svg";
 import AuthSlot from "./AuthSlot";
 import Logo from "../../../../public/imperial-archive-logo.svg";
@@ -49,8 +49,8 @@ const NAV_ITEMS: NavItem[] = [
     columns: 2,
     links: [
       { href: "/books", label: "Books", description: "The full catalog, cover to cover", icon: BookIcon },
-      { href: "/authors", label: "Authors", description: "Writers of the Black Library", icon: UserIcon },
-      { href: "/series", label: "Series", description: "Ongoing sagas and campaigns", icon: LayersIcon },
+      { href: "/authors", label: "Authors", description: "Writers of the Black Library", icon: QuillPenIcon },
+      { href: "/series", label: "Series", description: "Ongoing sagas and campaigns", icon: BooksIcon },
       { href: "/factions", label: "Factions", description: "Armies, legions, and chapters", icon: ShieldIcon },
       { href: "/eras", label: "Eras", description: "Epochs of the 41st millennium", icon: HourglassIcon },
       {
@@ -66,8 +66,8 @@ const NAV_ITEMS: NavItem[] = [
   {
     label: "Info",
     links: [
-      { href: "/about", label: "About", description: "The charter behind this archive", icon: ArchiveIcon },
-      { href: "/resources", label: "Resources", description: "Reading orders and community guides", icon: SignpostIcon },
+      { href: "/about", label: "About", description: "The charter behind this archive", icon: InfoIcon },
+      { href: "/resources", label: "Resources", description: "Reading orders and community guides", icon: ScrollIcon },
       { href: "/blog", label: "Blog", description: "News and dispatches from the Archive", icon: NewspaperIcon },
       { href: "/faq", label: "FAQ", description: "Common questions, answered", icon: QuestionIcon },
     ],
@@ -87,7 +87,7 @@ const mobileItems: NavGroup[] = [
     ...infoGroup,
     links: [
       infoGroup.links[0],
-      { href: "/track", label: "Reading Tracker", icon: BookOpenIcon },
+      { href: "/track", label: "Reading Tracker", icon: BookBookmarkIcon },
       ...infoGroup.links.slice(1),
       { href: "/support", label: "Support", icon: CoinsIcon },
     ],

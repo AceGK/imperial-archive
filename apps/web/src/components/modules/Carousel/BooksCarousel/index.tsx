@@ -5,7 +5,7 @@ import React from "react";
 import Carousel from "@/components/modules/Carousel/base";
 import BookCard from "@/components/modules/Cards/BookCard";
 import type { Book40k } from "@/types/sanity";
-import BookIcon from "@/components/icons/book.svg";
+import BookIcon from "@/components/icons/book-spine.svg";
 
 type Props = {
   title?: React.ReactNode;
