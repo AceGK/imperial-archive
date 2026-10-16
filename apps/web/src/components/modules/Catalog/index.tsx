@@ -50,7 +50,7 @@ export interface CatalogProps<THit extends BaseHit> {
   indexName: string;
   /** Component to render each hit, as a grid card or a list row */
   renderHit: (hit: THit, view: CatalogView, display: BookDisplay) => React.ReactNode;
-  /** Offer the book card Display menu (which parts of each card show) */
+  /** Offer the book card Cards menu (which parts of each card show) */
   bookDisplay?: boolean;
   /** Grid layout variant */
   gridVariant?: GridVariant;

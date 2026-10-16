@@ -34,7 +34,7 @@ type Props = {
   href?: string;
   compact?: boolean;
   className?: string;
-  /** Which parts to show (the catalog's Display menu); everything by default */
+  /** Which parts to show (the catalog's Cards menu); everything by default */
   display?: BookDisplay;
 };
 

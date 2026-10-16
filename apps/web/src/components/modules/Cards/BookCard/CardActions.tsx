@@ -16,7 +16,7 @@ export default function CardActions({
 }: {
   bookId: string;
   title: string;
-  /** The reader can hide the tags (catalog Display menu); the Track button always stays */
+  /** The reader can hide the tags (catalog Cards menu); the Track button always stays */
   showTags?: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
