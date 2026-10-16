@@ -18,12 +18,12 @@ export type FooterProps = {
 };
 
 const defaultPrimary: FooterLink[] = [
-  { href: "/books", label: "All Books" },
-  { href: "/authors", label: "By Author" },
-  { href: "/series", label: "By Series" },
-  { href: "/factions", label: "By Faction" },
-  { href: "/eras", label: "By Era" },
-  { href: "/characters", label: "By Character", comingSoon: true },
+  { href: "/books", label: "Books" },
+  { href: "/authors", label: "Authors" },
+  { href: "/series", label: "Series" },
+  { href: "/factions", label: "Factions" },
+  { href: "/eras", label: "Eras" },
+  { href: "/characters", label: "Characters", comingSoon: true },
 ];
 
 const defaultSecondary: FooterLink[] = [
