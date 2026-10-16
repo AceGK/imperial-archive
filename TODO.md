@@ -7,21 +7,15 @@
 - [ ] fix: account icon CLS on load 
 - [ ] improve: hero scroll down button (perhaps ditch "scroll", or fade out gradually on scroll state rather than scroll thresold)
 - [ ] improve: reading tracker image/example section on homepage 
-- [ ] improve: change border/hover state of blog cards? 
 - [ ] improve: combine theme, layout, and card controls as singular cog icon in nav? 
 - [ ] improve login/signup page, perhaps as fullscreen with extra data? 
 - [ ] improve: make +Track button on book cards controled with "Display" options to either be on-hover, inline, or hidden completely
 - [ ] fix: book count limit for infinite loading (so there's always full rows)
 - [ ] fix: catalog nav from resetting into place based on scroll threshold (perhaps see how I managed this on PL-next)
-- [ ] fix: create my own header image for /books instead of the black library owned image
-- [ ] improve: series cards should maybe say how many lists + works?
-- [ ] improve: Perhaps change "works" to "publications"? 
 - [ ] improve: update favicon to original artwork
 - [ ] improve: add the "Book N in series, read after…" line to book pages, which gives each page original text that answers reading-order searches directly.
 - [ ] compress svgs from inline to cacheable files?
-
-# seo 
-- [ ] audit for keywords etc 
+- [ ] move view all faq to bottom of faqs in single column layout
 
 # ideas 
 - [ ] book reviews from APIs, combined into aggregate review count + let users write IA book reviews

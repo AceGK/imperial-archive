@@ -38,16 +38,19 @@ $icon-size: 0.6em;
     opacity 0.15s ease,
     color 0.15s ease;
 
-  .anchor:hover &,
   .anchor:focus-visible &,
   .copied & {
     opacity: 1;
     color: var(--primary);
   }
 
-  // touch screens can't hover: keep it faintly visible so it can be found
-  @media (hover: none) {
-    opacity: 0.5;
+  // only where hovering is real: on touch screens a tap leaves :hover stuck,
+  // which would keep the icon showing after the brief "copied" flash
+  @media (hover: hover) {
+    .anchor:hover & {
+      opacity: 1;
+      color: var(--primary);
+    }
   }
 }
 
