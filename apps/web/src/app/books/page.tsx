@@ -18,8 +18,8 @@ export default function BooksPage() {
         strongOverlay
         height="sm"
         priority
-        image="/images/black-library-books.jpg"
-        credit="Black Library © Games Workshop"
+        image="/images/book-wall.jpg"
+        credit="Cover art © Games Workshop"
       />
 
       <Catalog<BookHit>

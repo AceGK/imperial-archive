@@ -177,7 +177,7 @@ export default async function Home() {
     <main style={{paddingBottom:'0px'}}>
       <JsonLd data={siteJsonLd()} />
       <Hero
-        image="/images/black-library-books.jpg"
+        image="/images/book-wall.jpg"
         background={heroCovers.length > 0 ? <BookWall covers={heroCovers} /> : undefined}
         title={<>Explore the Black Library<sup>™</sup></>}
         subtitle="Browse & track Warhammer 40,000 publications by author, faction, era, and series."
