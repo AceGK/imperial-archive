@@ -8,6 +8,16 @@
   position: relative;
 }
 
+// the catalog's own width choice (WidthToggle), set on just its containers;
+// the boxed value matches the site's boxed layout
+.boxedWidth {
+  --site-width: 1200px;
+}
+
+.fullWidth {
+  --site-width: 100%;
+}
+
 .mainContent {
   min-width: 0;
 }
@@ -151,6 +161,14 @@
   &:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
+  }
+}
+
+// below this the catalog already fills the screen, so there's nothing to
+// switch (the same cut-off as the nav's layout button)
+.widthToggle {
+  @include max(xl, 50px) {
+    display: none;
   }
 }
 

@@ -20,6 +20,7 @@ import {
 } from "@/components/algolia";
 import StickyControls from "./StickyControls";
 import { useCatalogView, ViewToggle, type CatalogView } from "./ViewToggle";
+import { useCatalogWidth, WidthToggle } from "./WidthToggle";
 import { DisplayMenu, useBookDisplay } from "./DisplayMenu";
 import type { BookDisplay } from "@/components/modules/Cards/BookCard/display";
 import styles from "./styles.module.scss";
@@ -188,6 +189,7 @@ export default function Catalog<THit extends BaseHit>({
   const resolvedCacheKey = cacheKey ?? indexName;
   const [view, setView] = useCatalogView();
   const [display, setDisplay] = useBookDisplay();
+  const [width, setWidth] = useCatalogWidth();
 
   const routing = React.useMemo(
     () => createAlgoliaRouting(indexName, defaultSort),
@@ -208,7 +210,9 @@ export default function Catalog<THit extends BaseHit>({
     >
       <Configure hitsPerPage={hitsPerPage} filters={baseFilters} />
 
-      <div className={styles.contentWrapper}>
+      <div
+        className={`${styles.contentWrapper} ${width === "full" ? styles.fullWidth : styles.boxedWidth}`}
+      >
         <StickyControls>
           <SearchBox placeholder={placeholder} />
 
@@ -238,7 +242,7 @@ export default function Catalog<THit extends BaseHit>({
 
         <section className="container">
           <div className={styles.mainContent}>
-            {/* the count, with the grid/list switch on the right */}
+            {/* the count, with the display, width and grid/list switches on the right */}
             <div className={styles.resultsHeader}>
               <Stats
                 singularLabel={stats.singular}
@@ -246,6 +250,7 @@ export default function Catalog<THit extends BaseHit>({
               />
               <div className={styles.resultsTools}>
                 {bookDisplay && <DisplayMenu display={display} onChange={setDisplay} />}
+                <WidthToggle width={width} onChange={setWidth} />
                 <ViewToggle view={view} onChange={setView} />
               </div>
             </div>
