@@ -345,6 +345,7 @@ $collapsed-width: 2.75rem;
 
   p {
     margin: 0.375rem 0 0;
+    padding-bottom: 0;
     color: var(--subtle);
   }
 }
@@ -368,6 +369,7 @@ $collapsed-width: 2.75rem;
 
 .cardDescription {
   margin: 0 0 1.25rem;
+  padding-bottom: 0;
   font-size: 0.875rem;
   color: var(--subtle);
 }

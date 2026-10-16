@@ -54,7 +54,7 @@ const SlidersIcon = () => (
   </svg>
 );
 
-/** "Display" button opening a panel to choose which parts of each book card show */
+/** "Cards" button opening a panel to choose which parts of each book card show */
 export function DisplayMenu({ display, onChange }: { display: BookDisplay; onChange: (display: BookDisplay) => void }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -98,7 +98,7 @@ export function DisplayMenu({ display, onChange }: { display: BookDisplay; onCha
         aria-controls={open ? panelId : undefined}
       >
         <SlidersIcon />
-        <span>Display</span>
+        <span>Cards</span>
       </button>
 
       {open && (

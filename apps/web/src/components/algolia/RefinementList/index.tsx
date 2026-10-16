@@ -6,6 +6,7 @@ import { useRefinementList, UseRefinementListProps } from "react-instantsearch";
 import { Dropdown } from "@/components/ui/Dropdown";
 import styles from "./styles.module.scss";
 import ChevronDown from "@/components/icons/chevron-down.svg";
+import { FilterSearch } from "@/components/algolia/FilterSearch";
 import { useAwaitingFirstResults } from "@/lib/algolia/useAwaitingFirstResults";
 import { FilterButtonSkeleton } from "./FilterButtonSkeleton";
 
@@ -58,13 +59,7 @@ export function RefinementList({
       <Dropdown.Content className={styles.dropdown}>
         {searchable && (
           <div className={styles.searchHeader}>
-            <input
-              type="search"
-              placeholder={`Search ${title.toLowerCase()}...`}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={styles.searchInput}
-            />
+            <FilterSearch label={title} value={searchQuery} onChange={setSearchQuery} />
           </div>
         )}
         <div className={styles.items}>

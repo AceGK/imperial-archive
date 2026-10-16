@@ -2,358 +2,47 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { ComponentType, KeyboardEvent as ReactKeyboardEvent, MouseEvent, SVGProps } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { useConvexAuth } from "convex/react";
-import { useAuthActions } from "@convex-dev/auth/react";
-import { useNavPin, useScrollVisibility } from "@/hooks/useScrollVisibility";
-import styles from "./styles.module.scss";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import ThemeToggle from "@/components/modules/ThemeToggle";
-import ThemeSwitch from "@/components/modules/ThemeSwitch";
-import { accountNav } from "@/components/modules/Account/nav";
-import SignOutIcon from "@/components/icons/account/sign-out.svg";
 import SiteWidthToggle from "@/components/modules/SiteWidthToggle";
-import Button from "@/components/ui/Button";
 import ChevronDown from "@/components/icons/chevron-down.svg";
-import BookIcon from "@/components/icons/book.svg";
-import UserIcon from "@/components/icons/user.svg";
-import LayersIcon from "@/components/icons/layers.svg";
-import ShieldIcon from "@/components/icons/shield.svg";
-import HourglassIcon from "@/components/icons/hourglass.svg";
-import SwordsIcon from "@/components/icons/swords.svg";
-import ArchiveIcon from "@/components/icons/archive.svg";
-import SignpostIcon from "@/components/icons/signpost.svg";
-import NewspaperIcon from "@/components/icons/newspaper.svg";
-import QuestionIcon from "@/components/icons/question.svg";
-import BookOpenIcon from "@/components/icons/book-open.svg";
-import CoinsIcon from "@/components/icons/coins.svg";
 import AuthSlot from "./AuthSlot";
+import DesktopDropdown from "./DesktopDropdown";
+import MobileMenu from "./MobileMenu";
+import { NAV_ITEMS, dropdownItems, type NavItem } from "./nav";
+import { useDropdownMenu } from "./useDropdownMenu";
 import Logo from "../../../../public/imperial-archive-logo.svg";
+import styles from "./styles.module.scss";
 
-type NavIcon = ComponentType<SVGProps<SVGSVGElement>>;
-type NavLink = {
-  href: string;
-  label: string;
-  description?: string;
-  icon?: NavIcon;
-  comingSoon?: boolean;
-};
-type NavGroup = { label: string; links: NavLink[]; columns?: number };
-type NavPlain = { href: string; label: string; comingSoon?: boolean };
-type NavItem = NavGroup | NavPlain;
-
-const NAV_ITEMS: NavItem[] = [
-  {
-    label: "Browse",
-    columns: 2,
-    links: [
-      { href: "/books", label: "Books", description: "The full catalog, cover to cover", icon: BookIcon },
-      { href: "/authors", label: "Authors", description: "Writers of the Black Library", icon: UserIcon },
-      { href: "/series", label: "Series", description: "Ongoing sagas and campaigns", icon: LayersIcon },
-      { href: "/factions", label: "Factions", description: "Armies, legions, and chapters", icon: ShieldIcon },
-      { href: "/eras", label: "Eras", description: "Epochs of the 41st millennium", icon: HourglassIcon },
-      {
-        href: "/characters",
-        label: "Characters",
-        description: "Heroes and villains across the books",
-        icon: SwordsIcon,
-        comingSoon: true,
-      },
-    ],
-  },
-  { href: "/track", label: "Track" },
-  {
-    label: "Info",
-    links: [
-      { href: "/about", label: "About", description: "The charter behind this archive", icon: ArchiveIcon },
-      { href: "/resources", label: "Resources", description: "Reading orders and community guides", icon: SignpostIcon },
-      { href: "/blog", label: "Blog", description: "News and dispatches from the Archive", icon: NewspaperIcon },
-      { href: "/faq", label: "FAQ", description: "Common questions, answered", icon: QuestionIcon },
-    ],
-  },
-  { href: "/support", label: "Support" },
-];
-
-const dropdownItems = NAV_ITEMS.filter((item): item is NavGroup => !("href" in item));
-
-// The mobile menu has just the two sections, each a two-column grid: the
-// single links (Track, Support) join Info there, with the tracker second
-const browseGroup = dropdownItems.find((g) => g.label === "Browse")!;
-const infoGroup = dropdownItems.find((g) => g.label === "Info")!;
-const mobileItems: NavGroup[] = [
-  browseGroup,
-  {
-    ...infoGroup,
-    links: [
-      infoGroup.links[0],
-      { href: "/track", label: "Reading Tracker", icon: BookOpenIcon },
-      ...infoGroup.links.slice(1),
-      { href: "/support", label: "Support", icon: CoinsIcon },
-    ],
-  },
-];
-
-type IndicatorStyle = { opacity: number; width?: number; transform?: string };
-type HighlightStyle = {
-  opacity: number;
-  width?: number;
-  height?: number;
-  transform?: string;
-  skipTransition?: boolean;
-};
-type ViewportSize = { width: number; height: number; left: number };
-
-const CLOSE_DELAY = 150;
-
-const TABBABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-export default function Nav() {
+/**
+ * The site's top bar. Links and groups come from ./nav; the desktop dropdowns'
+ * behavior lives in ./useDropdownMenu, their panel in ./DesktopDropdown, and
+ * the phone menu in ./MobileMenu.
+ */
+export default function Nav({ showThemeToggle = true }: { showThemeToggle?: boolean }) {
   const pathname = usePathname();
   const isVisible = useScrollVisibility();
-
+  const menu = useDropdownMenu();
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  // dropdown state
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [prevIndex, setPrevIndex] = useState<number | null>(null);
-  const [indicatorStyle, setIndicatorStyle] = useState<IndicatorStyle>({ opacity: 0 });
-  const [viewportSize, setViewportSize] = useState<ViewportSize>({ width: 0, height: 0, left: 0 });
-  const [highlightStyle, setHighlightStyle] = useState<HighlightStyle>({ opacity: 0 });
-  const highlightVisible = useRef(false);
-
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const hideHighlightTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const rootRef = useRef<HTMLElement | null>(null);
-  const menuListRef = useRef<HTMLDivElement | null>(null);
-  const panelRef = useRef<HTMLDivElement | null>(null);
-
-  const isOpen = activeIndex !== null;
-  useNavPin(isOpen);
 
   const isLinkActive = (href: string) => pathname === href;
   const isGroupActive = (item: NavItem) => "links" in item && item.links.some((l) => pathname === l.href);
 
-  // slide direction for the content swap animation
-  const getMotion = useCallback(
-    (index: number) => {
-      if (activeIndex !== index) return null;
-      if (prevIndex === null) return null;
-      return index > prevIndex ? "from-end" : "from-start";
-    },
-    [activeIndex, prevIndex]
-  );
-
-  // position the little arrow under the active trigger
-  const updateIndicator = useCallback((index: number) => {
-    const trigger = triggerRefs.current[index];
-    const root = rootRef.current;
-    if (!trigger || !root) return;
-
-    const triggerRect = trigger.getBoundingClientRect();
-    const rootRect = root.getBoundingClientRect();
-
-    setIndicatorStyle({
-      opacity: 1,
-      width: triggerRect.width,
-      transform: `translateX(${triggerRect.left - rootRect.left}px)`,
-    });
-  }, []);
-
-  // measure content and center the panel under the active trigger, clamped
-  // so it never overflows past the nav bar's own edges
-  const updateViewportSize = useCallback((index: number) => {
-    const content = contentRefs.current[index];
-    const trigger = triggerRefs.current[index];
-    const root = rootRef.current;
-    if (!content || !trigger || !root) return;
-
-    requestAnimationFrame(() => {
-      const triggerRect = trigger.getBoundingClientRect();
-      const rootRect = root.getBoundingClientRect();
-      const contentWidth = content.scrollWidth;
-      const padding = 16;
-
-      let left = triggerRect.left + triggerRect.width / 2 - rootRect.left;
-      const minLeft = padding + contentWidth / 2;
-      const maxLeft = rootRect.width - padding - contentWidth / 2;
-      left = Math.max(minLeft, Math.min(maxLeft, left));
-
-      setViewportSize({ width: contentWidth, height: content.scrollHeight, left });
-    });
-  }, []);
-
-  const openDropdown = useCallback(
-    (index: number) => {
-      clearTimeout(closeTimer.current);
-      if (activeIndex === index) return;
-
-      const trigger = triggerRefs.current[index];
-      const root = rootRef.current;
-      if (trigger && root) {
-        const triggerRect = trigger.getBoundingClientRect();
-        const rootRect = root.getBoundingClientRect();
-        const left = triggerRect.left + triggerRect.width / 2 - rootRect.left;
-        setViewportSize((s) => ({ ...s, left }));
-      }
-
-      setPrevIndex(activeIndex);
-      setActiveIndex(index);
-      updateIndicator(index);
-    },
-    [activeIndex, updateIndicator]
-  );
-
-  const startCloseDropdown = useCallback(() => {
-    closeTimer.current = setTimeout(() => {
-      setPrevIndex(activeIndex);
-      setActiveIndex(null);
-      setIndicatorStyle((s) => ({ ...s, opacity: 0 }));
-    }, CLOSE_DELAY);
-  }, [activeIndex]);
-
-  const closeDropdown = useCallback(() => {
-    clearTimeout(closeTimer.current);
-    setPrevIndex(activeIndex);
-    setActiveIndex(null);
-    setIndicatorStyle((s) => ({ ...s, opacity: 0 }));
-  }, [activeIndex]);
-
-  const cancelCloseDropdown = useCallback(() => {
-    clearTimeout(closeTimer.current);
-  }, []);
-
-  const updateHighlight = useCallback((e: MouseEvent<HTMLLIElement>) => {
-    clearTimeout(hideHighlightTimer.current);
-    const el = e.currentTarget.querySelector("button, a");
-    const list = menuListRef.current;
-    if (!el || !list) return;
-
-    const elRect = el.getBoundingClientRect();
-    const listRect = list.getBoundingClientRect();
-    const wasVisible = highlightVisible.current;
-    highlightVisible.current = true;
-
-    setHighlightStyle({
-      opacity: 1,
-      width: elRect.width,
-      height: elRect.height,
-      transform: `translate(${elRect.left - listRect.left}px, ${elRect.top - listRect.top}px)`,
-      skipTransition: !wasVisible,
-    });
-  }, []);
-
-  const hideHighlight = useCallback(() => {
-    clearTimeout(hideHighlightTimer.current);
-    hideHighlightTimer.current = setTimeout(() => {
-      highlightVisible.current = false;
-      setHighlightStyle((s) => ({ ...s, opacity: 0 }));
-    }, 50);
-  }, []);
-
-  // measure the panel once React has rendered the active content
-  useEffect(() => {
-    if (activeIndex !== null) updateViewportSize(activeIndex);
-  }, [activeIndex, updateViewportSize]);
-
-  // close the open dropdown on Escape, returning focus to its trigger if it was in the panel
-  useEffect(() => {
-    if (activeIndex === null) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      if (panelRef.current?.contains(document.activeElement)) triggerRefs.current[activeIndex]?.focus();
-      setActiveIndex(null);
-      setIndicatorStyle((s) => ({ ...s, opacity: 0 }));
-    };
-    document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
-  }, [activeIndex]);
-
-  // close the open dropdown once keyboard focus moves somewhere other than its trigger or panel
-  useEffect(() => {
-    if (activeIndex === null) return;
-    const handleFocus = (e: FocusEvent) => {
-      const t = e.target as Node;
-      if (panelRef.current?.contains(t) || triggerRefs.current[activeIndex]?.contains(t)) return;
-      closeDropdown();
-    };
-    document.addEventListener("focusin", handleFocus);
-    return () => document.removeEventListener("focusin", handleFocus);
-  }, [activeIndex, closeDropdown]);
-
-  // the panel sits at the end of the nav in the DOM, so Tab is steered by hand:
-  // from an open trigger into its links, and from the last link on to the
-  // control after the trigger
-  const panelLinks = (index: number) => [
-    ...(contentRefs.current[index]?.querySelectorAll<HTMLElement>("a[href]") ?? []),
-  ];
-
-  const focusAfterTrigger = (index: number) => {
-    const trigger = triggerRefs.current[index];
-    const root = rootRef.current;
-    if (!trigger || !root) return;
-    const tabbable = [...root.querySelectorAll<HTMLElement>(TABBABLE)].filter(
-      (el) => !panelRef.current?.contains(el) && el.offsetParent !== null
-    );
-    (tabbable[tabbable.indexOf(trigger) + 1] ?? trigger).focus();
-  };
-
-  const onTriggerKeyDown = (e: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
-    const open = activeIndex === index;
-    if ((e.key === "Tab" && !e.shiftKey && open) || e.key === "ArrowDown") {
-      e.preventDefault();
-      if (!open) openDropdown(index);
-      // wait a frame when opening, so the links are displayed and can take focus
-      requestAnimationFrame(() => panelLinks(index)[0]?.focus());
-    }
-  };
-
-  const onPanelKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (activeIndex === null) return;
-    const links = panelLinks(activeIndex);
-    const current = links.indexOf(document.activeElement as HTMLElement);
-    if (current === -1) return;
-
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.preventDefault();
-      const step = e.key === "ArrowDown" ? 1 : -1;
-      links[(current + step + links.length) % links.length]?.focus();
-    } else if (e.key === "Tab" && e.shiftKey && current === 0) {
-      e.preventDefault();
-      triggerRefs.current[activeIndex]?.focus();
-    } else if (e.key === "Tab" && !e.shiftKey && current === links.length - 1) {
-      e.preventDefault();
-      const index = activeIndex;
-      closeDropdown();
-      focusAfterTrigger(index);
-    }
-  };
-
-  // lock scroll while the mobile panel is open
-  useEffect(() => {
-    if (mobileOpen) document.documentElement.style.overflow = "hidden";
-    else document.documentElement.style.overflow = "";
-    return () => {
-      document.documentElement.style.overflow = "";
-    };
-  }, [mobileOpen]);
-
-  // close everything on route change
+  // close the mobile menu on route change (the dropdowns close themselves)
   useEffect(() => {
     setMobileOpen(false);
-    setActiveIndex(null);
-    setIndicatorStyle((s) => ({ ...s, opacity: 0 }));
   }, [pathname]);
+
+  const { highlightStyle } = menu;
 
   return (
     <nav
       className={`${styles.navWrapper} ${!isVisible ? styles.hidden : ""}`}
       aria-label="Primary"
-      ref={rootRef}
-      onMouseLeave={startCloseDropdown}
+      ref={menu.rootRef}
+      onMouseLeave={menu.startCloseDropdown}
     >
       <div className="container">
         <div className={styles.nav}>
@@ -364,7 +53,7 @@ export default function Nav() {
           </div>
 
           {/* desktop links */}
-          <div className={styles.linksWrap} ref={menuListRef} onMouseLeave={hideHighlight}>
+          <div className={styles.linksWrap} ref={menu.menuListRef} onMouseLeave={menu.hideHighlight}>
             <div
               className={styles.highlight}
               style={{
@@ -381,10 +70,10 @@ export default function Nav() {
                     <li
                       key={item.label}
                       onMouseEnter={(e) => {
-                        updateHighlight(e);
-                        startCloseDropdown();
+                        menu.updateHighlight(e);
+                        menu.startCloseDropdown();
                       }}
-                      onMouseLeave={hideHighlight}
+                      onMouseLeave={menu.hideHighlight}
                     >
                       <Link
                         href={item.href}
@@ -397,28 +86,28 @@ export default function Nav() {
                 }
 
                 const index = dropdownItems.indexOf(item);
-                const itemIsActive = activeIndex === index;
+                const itemIsActive = menu.activeIndex === index;
 
                 return (
                   <li
                     key={item.label}
                     onMouseEnter={(e) => {
-                      updateHighlight(e);
-                      openDropdown(index);
+                      menu.updateHighlight(e);
+                      menu.openDropdown(index);
                     }}
-                    onMouseLeave={hideHighlight}
+                    onMouseLeave={menu.hideHighlight}
                   >
                     <button
                       type="button"
                       className={`${styles.trigger} ${isGroupActive(item) ? styles.active : ""}`}
                       ref={(el) => {
-                        triggerRefs.current[index] = el;
+                        menu.triggerRefs.current[index] = el;
                       }}
                       data-state={itemIsActive ? "open" : "closed"}
                       aria-expanded={itemIsActive}
                       aria-controls={`nav-panel-${index}`}
-                      onClick={() => (itemIsActive ? startCloseDropdown() : openDropdown(index))}
-                      onKeyDown={(e) => onTriggerKeyDown(e, index)}
+                      onClick={() => (itemIsActive ? menu.startCloseDropdown() : menu.openDropdown(index))}
+                      onKeyDown={(e) => menu.onTriggerKeyDown(e, index)}
                     >
                       {item.label}
                       <ChevronDown className={styles.caret} aria-hidden="true" />
@@ -433,7 +122,7 @@ export default function Nav() {
           <div className={styles.secondary}>
             <AuthSlot showSignup />
             <SiteWidthToggle />
-            <ThemeToggle />
+            {showThemeToggle && <ThemeToggle />}
           </div>
 
           {/* mobile: account avatar (or Login when signed out) beside the hamburger */}
@@ -457,205 +146,13 @@ export default function Nav() {
         </div>
       </div>
 
-      {/* dropdown indicator arrow */}
-      <div
-        className={styles.indicator}
-        style={{
-          ...indicatorStyle,
-          transition:
-            prevIndex === null && isOpen
-              ? "opacity 200ms ease"
-              : "transform 250ms ease, width 250ms ease, opacity 200ms ease",
-        }}
-      >
-        <div className={styles.arrow} />
-      </div>
-
-      {/* dropdown panel */}
-      <div
-        className={styles.viewportPosition}
-        ref={panelRef}
-        onKeyDown={onPanelKeyDown}
-        style={{
-          left: viewportSize.left,
-          pointerEvents: isOpen ? "auto" : "none",
-          transition: prevIndex === null && isOpen ? "none" : undefined,
-        }}
-        onMouseEnter={cancelCloseDropdown}
-        onMouseLeave={startCloseDropdown}
-      >
-        <div className={styles.bridge} />
-        <div
-          className={styles.viewport}
-          data-state={isOpen ? "open" : "closed"}
-          style={{
-            width: isOpen ? viewportSize.width : 0,
-            height: isOpen ? viewportSize.height : 0,
-          }}
-        >
-          {dropdownItems.map((item, index) => {
-            const itemIsActive = activeIndex === index;
-            const motion = getMotion(index);
-
-            return (
-              <div
-                key={item.label}
-                id={`nav-panel-${index}`}
-                className={styles.content}
-                ref={(el) => {
-                  contentRefs.current[index] = el;
-                }}
-                data-motion={motion}
-                style={{ display: itemIsActive ? "block" : "none" }}
-              >
-                <ul
-                  className={`${styles.linkList} ${item.columns === 2 ? styles.twoCol : ""}`}
-                >
-                  {item.links.map((link) => {
-                    const Icon = link.icon;
-                    return (
-                      <li key={link.href}>
-                        <Link
-                          href={link.href}
-                          className={`${styles.listItemLink} ${isLinkActive(link.href) ? styles.active : ""}`}
-                          onClick={closeDropdown}
-                        >
-                          {Icon && (
-                            <span className={styles.listItemIcon}>
-                              <Icon aria-hidden="true" />
-                            </span>
-                          )}
-                          <span className={styles.listItemText}>
-                            <span className={styles.listItemLabel}>
-                              {link.label}
-                              {link.comingSoon && <span className={styles.soonTag}>Soon</span>}
-                            </span>
-                            {link.description && (
-                              <span className={styles.listItemDesc}>{link.description}</span>
-                            )}
-                          </span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* mobile panel */}
-      <div id="mobile-menu" className={`${styles.mobile} ${mobileOpen ? styles.show : ""}`}>
-        <ul className={styles.mobileLinks}>
-          {mobileItems.map((item) => (
-            <li key={item.label} className={styles.mobileGroup}>
-              <div className={styles.mobileGroupLabel}>{item.label}</div>
-              <ul className={`${styles.mobileSubLinks} ${styles.mobileTwoCol}`}>
-                {item.links.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <li key={link.href}>
-                      <Link
-                        href={link.href}
-                        className={`${styles.mobileLink} ${isLinkActive(link.href) ? styles.active : ""}`}
-                      >
-                        {Icon && (
-                          <span className={styles.mobileLinkIcon}>
-                            <Icon aria-hidden="true" />
-                          </span>
-                        )}
-                        {link.label}
-                        {link.comingSoon && <span className={styles.mobileSoon}>Soon</span>}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </li>
-          ))}
-          <MobileAccountGroup isLinkActive={isLinkActive} />
-        </ul>
-
-        <div className={styles.mobileActions}>
-          <MobileAuthButtons />
-          {/* SiteWidthToggle omitted — it's desktop-only (hidden below 1250px) */}
-          <div className={styles.mobileTheme}>
-            <span>Theme</span>
-            <ThemeSwitch />
-          </div>
-        </div>
-      </div>
-
-      {/* dim backdrop */}
-      <div
-        className={`${styles.backdrop} ${mobileOpen ? styles.show : ""}`}
-        onClick={() => setMobileOpen(false)}
-        aria-hidden="true"
+      <DesktopDropdown menu={menu} isLinkActive={isLinkActive} />
+      <MobileMenu
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        isLinkActive={isLinkActive}
+        showThemeSwitch={showThemeToggle}
       />
     </nav>
-  );
-}
-
-
-/** Full-width Login / Signup in the mobile panel; signed-in users get the Account group instead */
-function MobileAuthButtons() {
-  const { isAuthenticated, isLoading } = useConvexAuth();
-  if (isLoading || isAuthenticated) return null;
-
-  return (
-    <>
-      <Button href="/login" variant="primary" size="lg" className={styles.mobileLoginButton} prefetch>
-        Login
-      </Button>
-      <Button href="/signup" variant="secondary" size="lg" className={styles.mobileLoginButton} prefetch>
-        Signup
-      </Button>
-    </>
-  );
-}
-
-function MobileAccountGroup({ isLinkActive }: { isLinkActive: (href: string) => boolean }) {
-  const { isAuthenticated } = useConvexAuth();
-  const { signOut } = useAuthActions();
-  const router = useRouter();
-
-  if (!isAuthenticated) return null;
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-  };
-
-  return (
-    <li className={styles.mobileGroup}>
-      <div className={styles.mobileGroupLabel}>Account</div>
-      <ul className={`${styles.mobileSubLinks} ${styles.mobileTwoCol}`}>
-        {accountNav
-          .flatMap((group) => group.items)
-          .map(({ href, label, icon: Icon, comingSoon }) => (
-            <li key={href}>
-              <Link
-                href={href}
-                className={`${styles.mobileLink} ${isLinkActive(href) ? styles.active : ""}`}
-              >
-                <span className={styles.mobileLinkIcon}>
-                  <Icon aria-hidden="true" />
-                </span>
-                {label}
-                {comingSoon && <span className={styles.mobileSoon}>Soon</span>}
-              </Link>
-            </li>
-          ))}
-        <li>
-          <button type="button" className={styles.mobileLink} onClick={handleSignOut}>
-            <span className={styles.mobileLinkIcon}>
-              <SignOutIcon aria-hidden="true" />
-            </span>
-            Sign Out
-          </button>
-        </li>
-      </ul>
-    </li>
   );
 }

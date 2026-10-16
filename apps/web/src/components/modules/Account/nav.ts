@@ -2,7 +2,7 @@ import type { ComponentType, SVGProps } from "react";
 import OverviewIcon from "@/components/icons/account/overview.svg";
 import ProfileIcon from "@/components/icons/account/profile.svg";
 import SecurityIcon from "@/components/icons/account/security.svg";
-import TrackIcon from "@/components/icons/account/track.svg";
+import TrackIcon from "@/components/icons/book-bookmark.svg";
 import ReadingListsIcon from "@/components/icons/account/reading-lists.svg";
 import FavoritesIcon from "@/components/icons/account/favorites.svg";
 

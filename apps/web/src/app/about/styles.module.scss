@@ -79,6 +79,57 @@
   }
 }
 
+/* one credit per row: a gold label over its text, between thin rules */
+.credits {
+  margin: 0 0 1.25rem;
+  border-top: 1px solid var(--border);
+
+  > div {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  dt {
+    margin-bottom: 0.375rem;
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--primary);
+  }
+
+  dd {
+    margin: 0;
+    line-height: var(--leading-body);
+    color: var(--subtle);
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+/* set off like the blog's quotes: gold rule, italic */
+.quote {
+  margin: 0 0 1rem;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  border-left: 2px solid var(--primary);
+  font-style: italic;
+
+  p {
+    padding-bottom: 0;
+    color: color-mix(in oklab, var(--text), transparent 20%);
+    
+  }
+}
+
 /* a coming-soon note set off at the foot of a card */
 .upcoming {
   margin-top: 1.25rem;

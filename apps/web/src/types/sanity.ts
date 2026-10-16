@@ -186,4 +186,10 @@ export interface BlogPostDoc extends BlogPost {
   metaTitle?: string | null;
   body?: import("@portabletext/types").PortableTextBlock[] | null;
   _updatedAt: string;
+  /** the next older post, by publish date */
+  prev?: BlogPostNeighbor | null;
+  /** the next newer post, by publish date */
+  next?: BlogPostNeighbor | null;
 }
+
+export type BlogPostNeighbor = Pick<BlogPost, "_id" | "title" | "slug" | "mainImage">;

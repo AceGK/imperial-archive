@@ -1,5 +1,5 @@
 /**
- * Which parts of a book card a reader has chosen to show (catalog "Display"
+ * Which parts of a book card a reader has chosen to show (catalog "Cards"
  * menu). Cover and title are one setting with three choices, so at least one
  * of them is always shown.
  */

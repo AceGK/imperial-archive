@@ -1,0 +1,45 @@
+// components/algolia/FilterSearch/styles.module.scss
+
+.search {
+  position: relative;
+  width: 100%;
+}
+
+// sits inside the input, on the left
+.icon {
+  position: absolute;
+  top: 50%;
+  left: 0.625rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  fill: currentColor;
+  color: var(--subtle);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+  font: inherit;
+  font-size: 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: color-mix(in oklab, var(--bg), black 2%);
+  color: var(--foreground);
+  outline: none;
+  transition: border-color 0.15s ease;
+
+  &:focus {
+    border-color: var(--primary);
+  }
+
+  &::placeholder {
+    color: var(--subtle);
+  }
+}
+
+// the icon brightens with the text once the box is in use
+.search:focus-within .icon {
+  color: var(--text);
+}

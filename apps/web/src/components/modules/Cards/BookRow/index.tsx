@@ -16,7 +16,7 @@ import styles from "@/components/modules/Cards/ListRow/styles.module.scss";
 
 type Props = {
   book: BookCardData & { description?: string | null };
-  /** Which parts to show (the catalog's Display menu); everything by default */
+  /** Which parts to show (the catalog's Cards menu); everything by default */
   display?: BookDisplay;
 };
 

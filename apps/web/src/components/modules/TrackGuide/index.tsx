@@ -4,7 +4,7 @@ import PlusIcon from "@/components/icons/plus.svg";
 import HourglassIcon from "@/components/icons/hourglass.svg";
 import HalfCircleIcon from "@/components/icons/half-circle.svg";
 import CheckIcon from "@/components/icons/check.svg";
-import BookIcon from "@/components/icons/book.svg";
+import BookIcon from "@/components/icons/book-spine.svg";
 import ShareIcon from "@/components/icons/share.svg";
 import HeartIcon from "@/components/icons/account/favorites.svg";
 import BookWall from "@/components/modules/Hero/BookWall";

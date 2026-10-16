@@ -7,7 +7,7 @@ import HeartIcon from "@/components/icons/account/favorites.svg";
 import ListIcon from "@/components/icons/account/reading-lists.svg";
 import AddToListDialog from "@/components/modules/ReadingLists/AddToListDialog";
 import { useReadingLists } from "@/components/modules/ReadingLists/useReadingLists";
-import BookIcon from "@/components/icons/book.svg";
+import BookIcon from "@/components/icons/book-spine.svg";
 import PlusIcon from "@/components/icons/plus.svg";
 import { STATUS_STEPS, type ReadingStatus } from "@/components/modules/TrackButtons/steps";
 import { useBookLibrary } from "./useBookLibrary";

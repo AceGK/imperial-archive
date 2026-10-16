@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "./styles.module.scss";
 import Logo from "../../../../public/imperial-archive-logo.svg";
 import ThemeSwitch from "@/components/modules/ThemeSwitch";
+import { isProduction } from "@/lib/env";
 import { accountNav } from "@/components/modules/Account/nav";
 
 type FooterLink = { href: string; label: string; comingSoon?: boolean };
@@ -97,7 +98,8 @@ export default function Footer({
               </small>
 
               <div className={styles.bottomLinks}>
-                <ThemeSwitch />
+                {/* hidden in production until light mode is finished */}
+                {!isProduction && <ThemeSwitch />}
               </div>
             </div>
           </div>

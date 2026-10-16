@@ -14,7 +14,13 @@ export const metadata = pageMetadata({
   path: "/about",
 });
 
-function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
+function ExternalLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: ReactNode;
+}) {
   return (
     <a href={href} target="_blank" rel="noopener noreferrer">
       {children}
@@ -26,7 +32,9 @@ const BlackLibrary = () => (
   <ExternalLink href="https://www.blacklibrary.com">Black Library</ExternalLink>
 );
 const GamesWorkshop = () => (
-  <ExternalLink href="https://www.games-workshop.com">Games Workshop</ExternalLink>
+  <ExternalLink href="https://www.games-workshop.com">
+    Games Workshop
+  </ExternalLink>
 );
 const Lexicanum = () => (
   <ExternalLink href="https://wh40k.lexicanum.com">Lexicanum</ExternalLink>
@@ -58,18 +66,101 @@ const SECTIONS: TocItem[] = [
 // ];
 
 const STACK = [
-  { name: "Next.js", href: "https://nextjs.org", role: "The front end, rendered with React and TypeScript" },
-  { name: "Sanity", href: "https://www.sanity.io", role: "The data-vault where every record is kept" },
-  { name: "Algolia", href: "https://www.algolia.com", role: "Search and filtering across the catalog" },
-  { name: "Convex", href: "https://www.convex.dev", role: "Accounts, sign-in, and reader data" },
-  { name: "Swiper", href: "https://swiperjs.com", role: "The carousels for books, authors, series, and factions" },
-  { name: "Vercel", href: "https://vercel.com", role: "Hosting and deployment" },
+  {
+    name: "Next.js",
+    href: "https://nextjs.org",
+    role: "The front end, rendered with React and TypeScript",
+  },
+  {
+    name: "Sanity",
+    href: "https://www.sanity.io",
+    role: "The data-vault where every record is kept",
+  },
+  {
+    name: "Algolia",
+    href: "https://www.algolia.com",
+    role: "Search and filtering across the catalog",
+  },
+  {
+    name: "Convex",
+    href: "https://www.convex.dev",
+    role: "Accounts, sign-in, reading tracker, and reading lists",
+  },
+  {
+    name: "Swiper.js",
+    href: "https://swiperjs.com",
+    role: "The carousels for books, authors, series, and factions",
+  },
+  {
+    name: "Vercel",
+    href: "https://vercel.com",
+    role: "Hosting, deployment, and performance monitoring",
+  },
+];
+
+const CREDITS: { label: string; body: ReactNode }[] = [
+  {
+    label: "Cover art & publication data",
+    body: (
+      <>
+        Book cover artwork and publication data are sourced from{" "}
+        <BlackLibrary /> and <GamesWorkshop /> and remain their property.
+      </>
+    ),
+  },
+  {
+    label: "Descriptions & synopses",
+    body: (
+      <>
+        Quoted from their publishers and other sources, including{" "}
+        <BlackLibrary /> book covers and listings, <Lexicanum />, and retailers
+        such as Amazon. They remain the work of their respective authors and
+        publishers.
+      </>
+    ),
+  },
+  {
+    label: "Faction & achievement icons",
+    body: (
+      <>
+        Drawn from{" "}
+        <ExternalLink href="https://github.com/Certseeds/wh40k-icon">
+          wh40k-icon
+        </ExternalLink>
+        , an open-source collection by Certseeds and its contributors, shared
+        under{" "}
+        <ExternalLink href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+          CC BY-NC-SA 4.0
+        </ExternalLink>
+        . Where a faction had no icon there, one was hand-crafted for the
+        Archive. The symbols themselves belong to <GamesWorkshop />.
+      </>
+    ),
+  },
+  {
+    label: "Banner artwork",
+    body: (
+      <>
+        Where the artist behind a banner image is known, their credit is
+        inscribed in the bottom-right corner of that image. Consult it there for
+        provenance.
+      </>
+    ),
+  },
+  {
+    label: "Lore",
+    body: (
+      <>
+        Where available, books, authors, series, and factions link out to their{" "}
+        <Lexicanum /> entry, a community-maintained Warhammer 40,000 wiki, for
+        deeper lore beyond what is catalogued here.
+      </>
+    ),
+  },
 ];
 
 function ComingSoon() {
-  return (
-    <span className={styles.badge}>Coming soon</span>
-  );
+  return <span className={styles.badge}>Coming soon</span>;
 }
 
 function Eyebrow({ id }: { id: string }) {
@@ -90,9 +181,13 @@ export default function AboutPage() {
       <section className="container row__md">
         <TocLayout
           items={SECTIONS}
-          header={<InfoHeader label="Adeptus Administratum · IA-001 // Dossier" title="About the Imperial Archive" />}
+          header={
+            <InfoHeader
+              label="Adeptus Administratum · IA-001 // Dossier"
+              title="About the Imperial Archive"
+            />
+          }
         >
-
           <div className={styles.sections}>
             <Card
               id="charter"
@@ -108,13 +203,13 @@ export default function AboutPage() {
               </p>
               <p>
                 It exists for readers who want to see the shape of the whole
-                library at a glance: what connects to what, which order to
-                read a series in, and what to pick up next.
+                library at a glance: what connects to what, which order to read
+                a series in, and what to pick up next.
               </p>
               <p>
-                This is an unofficial, fan-made resource and is not
-                affiliated with <GamesWorkshop />. All Warhammer 40,000® logos,
-                names, and images are the property of <GamesWorkshop /> Limited.
+                This is an unofficial, fan-made resource and is not affiliated
+                with <GamesWorkshop />. All Warhammer 40,000® logos, names, and
+                images are the property of <GamesWorkshop /> Limited.
               </p>
             </Card>
 
@@ -126,53 +221,27 @@ export default function AboutPage() {
             >
               <p>
                 The Imperial Archive is built and maintained by a single
-                developer and longtime reader of the <BlackLibrary />. Like
-                many who wander into the grim darkness of the far future, I
-                started with one book and soon found myself lost in a library
-                spanning thousands of stories, dozens of series, and ten
-                thousand years of lore.
+                developer and longtime reader of the Black Library, with more
+                than ten years of experience as a full-stack web developer.
               </p>
+              <blockquote className={styles.quote}>
+                <p>
+                  Like many who wander into the grim darkness of the far future,
+                  I started with one book and soon found myself lost in a
+                  library spanning thousands of stories, dozens of series, and
+                  over ten thousand years of lore. The Archive is the guide I
+                  wished I&apos;d had when I started.
+                </p>
+              </blockquote>
               <p>
-                This is a passion side project, built as a resource for the
-                community. The official Black Library website doesn&apos;t
-                list every publication, and detailed book information can be
-                hard to find, so the Archive aims to gather it all in one
-                place. It&apos;s still incomplete and very much a work in
-                progress, with new books, details, and features added over
-                time.
+                This is a passion side project, built as a resource for the community.
+                The official Black Library website doesn&apos;t list every
+                publication, and detailed book information can be hard to find,
+                so the Archive aims to gather it all in one place. It&apos;s
+                still incomplete and very much a work in progress, with new
+                books, details, and features added over time.
               </p>
             </Card>
-
-            {/* Data-Vault section, disabled for now (see the note above CONTENT_SOURCES)
-            <Card
-              id="content"
-              className={styles.anchor}
-              eyebrow={<Eyebrow id="content" />}
-              title="Content & Sources"
-            >
-              <p>
-                Every record in the Archive is compiled from the books as
-                published. Synopses and back-cover text are drawn from
-                official <BlackLibrary /> listings, so each entry reads as
-                the publisher intended, and lore context is cross-referenced
-                against <Lexicanum />.
-              </p>
-              <dl className={styles.readout}>
-                {CONTENT_SOURCES.map(({ term, source }) => (
-                  <div key={term}>
-                    <dt>{term}</dt>
-                    <dd>{source}</dd>
-                  </div>
-                ))}
-              </dl>
-              <p>
-                Records are compiled and checked by hand, and in a library
-                this vast, gaps and errors are inevitable. Once the vox-channel
-                below is open, reports of missing or incorrect records are
-                welcome.
-              </p>
-            </Card>
-            */}
 
             <Card
               id="machine-spirit"
@@ -202,46 +271,17 @@ export default function AboutPage() {
               eyebrow={<Eyebrow id="attribution" />}
               title="Credits & Sources"
             >
+              <dl className={styles.credits}>
+                {CREDITS.map(({ label, body }) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{body}</dd>
+                  </div>
+                ))}
+              </dl>
               <p>
-                Book cover artwork and publication data are sourced from{" "}
-                <BlackLibrary /> and <GamesWorkshop /> and remain their
-                property.
-              </p>
-              <p>
-                Book descriptions and synopses are quoted from their publishers
-                and other sources, including <BlackLibrary /> book covers and
-                listings, <Lexicanum />, and retailers such as Amazon. They
-                remain the work of their respective authors and publishers.
-              </p>
-              <p>
-                Faction icons are drawn from{" "}
-                <ExternalLink href="https://github.com/Certseeds/wh40k-icon">
-                  wh40k-icon
-                </ExternalLink>
-                , an open-source collection by Certseeds and its contributors,
-                shared under{" "}
-                <ExternalLink href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
-                  CC BY-NC-SA 4.0
-                </ExternalLink>
-                . Where a faction had no icon there, one was hand-crafted for
-                the Archive. The symbols themselves belong to{" "}
-                <GamesWorkshop />.
-              </p>
-              <p>
-                Where the artist behind a page banner is known — the
-                imagery atop the Books, Authors, Series, Factions, and Eras
-                pages — their attribution is inscribed in the bottom-right
-                corner of that banner. Consult it there for provenance.
-              </p>
-              <p>
-                Where available, books, authors, series, and factions link
-                out to their corresponding <Lexicanum /> entry — a
-                community-maintained Warhammer 40,000 wiki — for deeper lore
-                beyond what is catalogued here.
-              </p>
-              <p>
-                In a library this vast, gaps and errors are inevitable. Once
-                the vox-channel below is open, reports of missing or incorrect
+                In a library this vast, gaps and errors are inevitable. Once the
+                vox-channel below is open, reports of missing or incorrect
                 records are welcome.
               </p>
               {/* <div className={styles.upcoming}>
@@ -263,9 +303,9 @@ export default function AboutPage() {
               >
                 <ComingSoon />
                 <p>
-                  The Archive&apos;s vox-channel is still being consecrated.
-                  A contact form will open soon for corrections, missing
-                  records, suggestions, or simply to hail the Archivist.
+                  The Archive&apos;s vox-channel is still being consecrated. A
+                  contact form will open soon for corrections, missing records,
+                  suggestions, or simply to hail the Archivist.
                 </p>
               </Card>
 
@@ -275,11 +315,11 @@ export default function AboutPage() {
                 eyebrow={<Eyebrow id="tithe" />}
                 title="Support"
               >
-                <p>
-                  The Archive is free and ad-free. If it&apos;s helped you,
-                  a tithe toward hosting and upkeep keeps the cogitators
-                  running.
+                <p style={{ marginBottom: "0.5rem" }}>
+                  The Archive is free and ad-free. If it&apos;s helped you, a
+                  tithe toward hosting and upkeep keeps the cogitators running.
                 </p>
+
                 <Button href="/support" variant="secondary" size="sm">
                   Offer a Tithe
                 </Button>

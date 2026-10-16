@@ -49,7 +49,8 @@
 // clears the title's rule
 .subtitle {
   margin: 1.5rem 0 0;
-  line-height: 1.6;
+  padding-bottom: 0;
+  line-height: var(--leading-body);
   color: var(--subtle);
 }
 
@@ -100,15 +101,11 @@
 }
 
 .answer {
-  line-height: 1.65;
+  line-height: var(--leading-body);
   color: var(--subtle);
 
-  p {
-    margin: 0 0 0.75rem;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
+  p:last-child {
+    padding-bottom: 0;
   }
 
   ul,

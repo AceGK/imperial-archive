@@ -597,6 +597,17 @@ const blogCardFields = `
   "categories": categories[]->title
 `;
 
+// the older and newer posts linked at the bottom of a post
+const blogNeighborFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  mainImage{
+    alt,
+    asset->{ _id, url, metadata{ lqip, dimensions } }
+  }
+`;
+
 export const blogPostsQuery = groq`
   *[${blogPostFilter}] | order(publishedAt desc){
     ${blogCardFields}
@@ -612,7 +623,13 @@ export const blogPostBySlugQuery = groq`
     ${blogCardFields},
     metaTitle,
     body,
-    _updatedAt
+    _updatedAt,
+    "prev": *[${blogPostFilter} && publishedAt < ^.publishedAt] | order(publishedAt desc)[0]{
+      ${blogNeighborFields}
+    },
+    "next": *[${blogPostFilter} && publishedAt > ^.publishedAt] | order(publishedAt asc)[0]{
+      ${blogNeighborFields}
+    }
   }
 `;
 

@@ -3,12 +3,14 @@
 
 .muted {
   margin: 0;
+  padding-bottom: 0;
   font-size: 0.875rem;
   color: var(--subtle);
 }
 
 .hint {
   margin: 0;
+  padding-bottom: 0;
   font-size: 0.8125rem;
   color: var(--subtle);
 }
@@ -117,6 +119,7 @@
 
 .dialogBook {
   margin: -0.625rem 0 0;
+  padding-bottom: 0;
   font-size: 0.875rem;
   color: var(--subtle);
 }
