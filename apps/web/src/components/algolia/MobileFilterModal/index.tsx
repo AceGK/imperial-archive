@@ -5,6 +5,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { useClearRefinements, useCurrentRefinements, useRefinementList, useStats } from "react-instantsearch";
 import Button from "@/components/ui/Button";
+import { FilterSearch } from "@/components/algolia/FilterSearch";
 import styles from "./styles.module.scss";
 import FilterIcon from "@/components/icons/filter.svg";
 
@@ -51,14 +52,7 @@ function FilterPanel({
       <div className={styles.panelHeader}>
         <span className={styles.panelTitle}>{config.label}</span>
         {config.searchable && items.length > 0 && (
-          <input
-            type="search"
-            placeholder={`Search ${config.label.toLowerCase()}...`}
-            aria-label={`Search ${config.label.toLowerCase()}`}
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className={styles.searchInput}
-          />
+          <FilterSearch label={config.label} value={searchQuery} onChange={onSearchChange} />
         )}
       </div>
 
