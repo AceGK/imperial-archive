@@ -27,6 +27,11 @@ const TEST_PAGES = [
     title: "Catalog loading states",
     description: "The skeleton cards, filter buttons and count shown while each catalog's first results load.",
   },
+  {
+    href: "/test/icons",
+    title: "Icons",
+    description: "Every icon in components/icons, searchable, with the files that use each one.",
+  },
 ];
 
 export default function TestIndexPage() {

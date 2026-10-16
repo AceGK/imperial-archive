@@ -1,0 +1,164 @@
+@use "@/styles/mixins" as *;
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 1.5rem 0 0.5rem;
+  padding-block: 0.75rem;
+  background: var(--bg);
+}
+
+.search {
+  flex: 1 1 18rem;
+
+  input {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: 0;
+    background: var(--bg-card);
+    color: var(--text);
+    font: inherit;
+
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--subtle);
+  cursor: pointer;
+
+  input {
+    accent-color: var(--primary);
+  }
+}
+
+.count {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8125rem;
+  color: var(--subtle);
+}
+
+.group {
+  margin-top: 2rem;
+
+  h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+    text-transform: uppercase;
+  }
+}
+
+.groupCount {
+  font-family: var(--font-condensed);
+  font-size: 0.8125rem;
+  color: var(--subtle);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* square, with the site's hover-only corner brackets */
+.card {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  width: 100%;
+  height: 100%;
+  padding: 1rem 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--bg-card);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+/* the icon at a display size and at 18px, the size the menus use */
+.previews {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.875rem;
+  margin-bottom: 0.25rem;
+  color: var(--primary);
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  // Font Awesome files that don't set their own fill
+  svg:not([fill]) {
+    fill: currentColor;
+  }
+}
+
+.large {
+  width: 40px;
+  height: 40px;
+}
+
+.small {
+  width: 18px;
+  height: 18px;
+}
+
+.name {
+  font-size: 0.875rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.uses,
+.unused {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+}
+
+.uses {
+  color: var(--subtle);
+}
+
+.unused {
+  color: var(--primary);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
