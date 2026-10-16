@@ -15,6 +15,7 @@ import { ShareLinks } from "@/components/modules/Share";
 import { formatPostDate, postSections } from "@/lib/blog";
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata, SITE_NAME, truncate } from "@/lib/seo";
 import type { BlogPostDoc } from "@/types/sanity";
+import PostNav from "./PostNav";
 import styles from "./styles.module.scss";
 
 export const revalidate = 60;
@@ -82,8 +83,10 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
     </div>
   );
 
-  // with a contents rail the header goes above it (see TocLayout); without one
-  // it stays at the top of the article
+  const postNav = <PostNav prev={post.prev} next={post.next} />;
+
+  // with a contents rail the header and post links span it and the article
+  // (see TocLayout); without one they stay in the article column
   const article = (
     <article className={styles.content}>
       {!showToc && header}
@@ -111,6 +114,8 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
         <h2 className={styles.shareHeading}>Share this dispatch</h2>
         <ShareLinks url={path} title={post.title} />
       </footer>
+
+      {!showToc && postNav}
     </article>
   );
 
@@ -141,7 +146,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
 
       <section className="container row__md">
         {showToc ? (
-          <TocLayout items={sections.items} header={header}>
+          <TocLayout items={sections.items} header={header} footer={postNav}>
             {article}
           </TocLayout>
         ) : (
