@@ -21,7 +21,13 @@ import styles from "./styles.module.scss";
  * behavior lives in ./useDropdownMenu, their panel in ./DesktopDropdown, and
  * the phone menu in ./MobileMenu.
  */
-export default function Nav({ showThemeToggle = true }: { showThemeToggle?: boolean }) {
+export default function Nav({
+  showThemeToggle = true,
+  showLayoutToggle = true,
+}: {
+  showThemeToggle?: boolean;
+  showLayoutToggle?: boolean;
+}) {
   const pathname = usePathname();
   const isVisible = useScrollVisibility();
   const menu = useDropdownMenu();
@@ -121,7 +127,7 @@ export default function Nav({ showThemeToggle = true }: { showThemeToggle?: bool
           {/* desktop right controls */}
           <div className={styles.secondary}>
             <AuthSlot showSignup />
-            <SiteWidthToggle />
+            {showLayoutToggle && <SiteWidthToggle />}
             {showThemeToggle && <ThemeToggle />}
           </div>
 

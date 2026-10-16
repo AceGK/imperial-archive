@@ -88,8 +88,9 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const layoutCookie = cookieStore.get("site-layout")?.value;
+  // full width isn't finished, so production stays boxed whatever the cookie says
   const initialLayout =
-    layoutCookie === "full" || layoutCookie === "boxed"
+    !isProduction && (layoutCookie === "full" || layoutCookie === "boxed")
       ? layoutCookie
       : "boxed";
 
@@ -112,7 +113,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <ConvexClientProvider>
-              <Nav showThemeToggle={!isProduction} />
+              <Nav showThemeToggle={!isProduction} showLayoutToggle={!isProduction} />
               {children}
               <Footer />
               {modal}
