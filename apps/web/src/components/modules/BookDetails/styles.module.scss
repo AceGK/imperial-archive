@@ -189,6 +189,7 @@
   }
   p {
     margin: 0;
+    padding-bottom: 0;
   }
 }
 
@@ -262,7 +263,6 @@
 // text become paragraphs, single line breaks are kept
 .paragraphs p {
   white-space: pre-line;
-  padding-bottom: 0.75rem;
 
   &:last-child {
     padding-bottom: 0;
@@ -270,6 +270,6 @@
 }
 
 .bio {
-  line-height: 1.6;
+  line-height: var(--leading-body);
   // color: var(--text-secondary, rgba(255, 255, 255, 0.7));
 }

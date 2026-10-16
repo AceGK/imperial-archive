@@ -99,8 +99,8 @@
 .text {
   max-width: 38rem;
   margin: 1rem 0 0;
+  padding-bottom: 0;
   font-size: 1.0625rem;
-  line-height: 1.65;
   color: color-mix(in oklab, var(--text), transparent 12%);
   text-wrap: pretty;
 }
@@ -165,6 +165,7 @@
 
 .login {
   margin: 1rem 0 0;
+  padding-bottom: 0;
   font-size: 0.9375rem;
   color: var(--subtle);
 

@@ -77,7 +77,7 @@
 }
 
 .description {
-  line-height: 1.6;
+  line-height: var(--leading-body);
   color: var(--subtle);
 }
 

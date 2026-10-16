@@ -206,11 +206,8 @@
 /* article typography */
 .body {
   font-size: 1.0625rem;
-  line-height: 1.75;
-
-  p {
-    padding-bottom: 1.25rem;
-  }
+  line-height: var(--leading-body);
+  --paragraph-gap: 1.25rem;
 
   h2,
   h3 {

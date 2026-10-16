@@ -6,6 +6,10 @@
   --site-width: 1200px;
   // .container's side padding; carousels bleed past it to reach the screen edge
   --container-pad: 1rem;
+  // running text; small print such as card excerpts sets 1.5 itself
+  --leading-body: 1.5;
+  // space after a paragraph; long-form articles raise it to 1.25rem
+  --paragraph-gap: 1rem;
 }
 
 [data-theme="dark"] {
@@ -166,8 +170,12 @@ main {
   width: 1px;
 }
 
+// Paragraph spacing is padding, so it never collapses into a following
+// heading's margin. A component that spaces its paragraphs with margin must
+// also set padding-bottom: 0, or the two add up.
 p {
-  padding-bottom:0.5rem;
-  color:var(--subtle);
+  padding-bottom: var(--paragraph-gap);
+  line-height: var(--leading-body);
+  color: var(--subtle);
   text-wrap: pretty;
 }
