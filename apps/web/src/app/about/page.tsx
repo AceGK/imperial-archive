@@ -234,7 +234,7 @@ export default function AboutPage() {
                 </p>
               </blockquote>
               <p>
-                This is a side project, built as a resource for the community.
+                This is a passion side project, built as a resource for the community.
                 The official Black Library website doesn&apos;t list every
                 publication, and detailed book information can be hard to find,
                 so the Archive aims to gather it all in one place. It&apos;s
