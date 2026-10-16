@@ -27,6 +27,13 @@ html {
   // overflow:hidden for the mobile menu/modals still shifts the layout.
   overflow-y: auto;
   scrollbar-gutter: stable;
+  // same-page anchor links (contents rails, citations) glide to their target;
+  // route changes stay instant (data-scroll-behavior="smooth" on <html>)
+  scroll-behavior: smooth;
+
+  @media (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
 }
 
 // Custom scrollbar, themed to match the site's color variables.
@@ -129,7 +136,6 @@ h6 {
   margin-inline: auto;
   padding-inline: var(--container-pad);
 }
-
 section {
   padding-block: 2rem;
   &.row {
