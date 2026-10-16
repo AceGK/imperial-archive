@@ -6,28 +6,31 @@ import { formatPostDate } from "@/lib/blog";
 import ArrowRight from "@/components/icons/arrow-right.svg";
 import styles from "./styles.module.scss";
 
-/** Post preview for the /blog grid: cover, category, title, date, and excerpt */
+/** Post preview for the /blog grid or list: cover, category, title, date, and excerpt */
 export default function BlogCard({
   post,
   headingLevel = 2,
+  layout = "grid",
 }: {
   post: BlogPost;
   /** 3 when the card sits under a section heading, e.g. the homepage carousel */
   headingLevel?: 2 | 3;
+  /** "list": a full-width row with the cover on the left */
+  layout?: "grid" | "list";
 }) {
   const image = post.mainImage?.asset ? post.mainImage : null;
   const Heading = headingLevel === 3 ? "h3" : "h2";
   const category = post.categories?.find((c) => c !== "Blog") ?? null;
 
   return (
-    <Link href={`/blog/${post.slug}`} className={styles.card}>
+    <Link href={`/blog/${post.slug}`} className={`${styles.card} ${layout === "list" ? styles.list : ""}`}>
       <div className={styles.media}>
         {image ? (
           <Image
             src={urlFor(image).width(800).height(450).fit("crop").auto("format").url()}
             alt={image.alt || ""}
             fill
-            sizes="(max-width: 576px) 100vw, 380px"
+            sizes={layout === "list" ? "(max-width: 576px) 128px, 320px" : "(max-width: 576px) 100vw, 380px"}
             placeholder={image.asset?.metadata?.lqip ? "blur" : "empty"}
             blurDataURL={image.asset?.metadata?.lqip}
             className={styles.image}

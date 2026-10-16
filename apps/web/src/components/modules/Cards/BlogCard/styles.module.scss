@@ -1,14 +1,9 @@
+@use "@/styles/breakpoints" as *;
 @use "@/styles/mixins" as *;
 
-// matches the site's Card: dark panel, thin border, gold corner brackets
+// dark panel, thin border, gold corner brackets on hover like the site's buttons
 .card {
-  @include corner-brackets(
-    $size: 18px,
-    $thickness: 1px,
-    $color: var(--primary),
-    $offset: 1px,
-    $corners: (top-left, bottom-right)
-  );
+  @include corner-brackets($size: 18px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -16,11 +11,8 @@
   background: var(--bg-card);
   color: inherit;
   text-decoration: none;
-  transition: border-color 160ms ease;
 
   &:hover {
-    border-color: color-mix(in oklab, var(--primary), transparent 50%);
-
     .title {
       color: var(--primary);
     }
@@ -129,5 +121,70 @@
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+  }
+}
+
+// list view: [cover] [date, title, excerpt, read more] in one row
+.list {
+  flex-direction: row;
+  height: auto;
+
+  .media {
+    flex: 0 0 20rem;
+    align-self: stretch;
+    aspect-ratio: auto;
+    min-height: 11.25rem; // 16:9 at 20rem
+    border-bottom: 0;
+    border-right: 1px solid var(--border);
+  }
+
+  .body {
+    justify-content: center;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .excerpt {
+    -webkit-line-clamp: 2;
+  }
+
+  .readMore {
+    margin-top: 0;
+  }
+
+  @include max(md) {
+    .media {
+      flex-basis: 14rem;
+      min-height: 7.875rem;
+    }
+  }
+
+  // phones: a small cover beside the date and title, no excerpt
+  @include max(sm) {
+    .media {
+      flex-basis: 7.5rem;
+      align-self: flex-start;
+      aspect-ratio: 16 / 9;
+      min-height: 0;
+      margin: 0.75rem 0 0.75rem 0.75rem;
+      border: 1px solid var(--border);
+    }
+
+    .body {
+      gap: 0.4rem;
+      padding: 0.75rem;
+    }
+
+    .title {
+      font-size: 1rem;
+    }
+
+    .excerpt,
+    .readMore {
+      display: none;
+    }
   }
 }
