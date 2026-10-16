@@ -1,20 +1,6 @@
 import type { PortableTextBlock } from "@portabletext/types";
 import type { TocItem } from "@/components/modules/Toc";
-
-const ROMAN: [number, string][] = [
-  [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"],
-];
-
-function toRoman(n: number) {
-  let out = "";
-  for (const [value, numeral] of ROMAN) {
-    while (n >= value) {
-      out += numeral;
-      n -= value;
-    }
-  }
-  return out;
-}
+import { sectionIndex } from "@/lib/sectionIndex";
 
 function slugify(text: string) {
   return text
@@ -44,7 +30,7 @@ export function postSections(body: PortableTextBlock[] | undefined | null) {
     used.add(id);
 
     headingIds[block._key] = id;
-    items.push({ id, index: `§ ${toRoman(items.length + 1)}`, label });
+    items.push({ id, index: sectionIndex(items.length + 1), label });
   }
 
   return { items, headingIds };

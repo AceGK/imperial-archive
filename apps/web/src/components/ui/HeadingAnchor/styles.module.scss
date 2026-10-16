@@ -1,0 +1,61 @@
+// The heading text itself is the button: it looks exactly like the heading,
+// and the link icon after it appears on hover or keyboard focus
+.anchor {
+  display: inline;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  text-transform: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+  }
+}
+
+// Centred on the capitals rather than the lowercase letters (the headings are
+// mostly uppercase): its bottom edge is raised by half the cap height less half
+// its own height. Inline, so it follows the last word when a title wraps.
+// Stays lit for a moment after a click, as the "copied" confirmation.
+$icon-size: 0.6em;
+
+.icon {
+  display: inline-block;
+  width: $icon-size;
+  height: $icon-size;
+  margin-left: 0.5em;
+  vertical-align: calc(0.5cap - #{$icon-size} / 2);
+  fill: currentColor;
+  color: var(--subtle);
+  opacity: 0;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease;
+
+  .anchor:hover &,
+  .anchor:focus-visible &,
+  .copied & {
+    opacity: 1;
+    color: var(--primary);
+  }
+
+  // touch screens can't hover: keep it faintly visible so it can be found
+  @media (hover: none) {
+    opacity: 0.5;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

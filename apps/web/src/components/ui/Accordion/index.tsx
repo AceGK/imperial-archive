@@ -146,19 +146,18 @@ export function AccordionContent({
   const { openItems } = useAccordionContext();
   const value = useAccordionItem();
   const isOpen = openItems.has(value);
-  const contentRef = React.useRef<HTMLDivElement>(null);
 
+  // The open height comes from CSS (a grid row growing from 0fr to 1fr), not
+  // a measured value, so it follows the content when the screen is resized
   return (
     <div
-      ref={contentRef}
       className={`${styles.content} ${isOpen ? styles.open : ""} ${className || ""}`}
       // Collapsed content is only clipped, so keep its links out of the tab order and screen readers
       inert={!isOpen}
-      style={{
-        maxHeight: isOpen ? contentRef.current?.scrollHeight : 0,
-      }}
     >
-      <div className={styles.contentInner}>{children}</div>
+      <div className={styles.contentClip}>
+        <div className={styles.contentInner}>{children}</div>
+      </div>
     </div>
   );
 }

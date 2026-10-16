@@ -8,7 +8,8 @@
 }
 
 /* page layout: sticky contents rail beside a 760px content column;
-   the rail is hidden and the content centred on smaller screens */
+   the rail is hidden and the content centred on smaller screens. In the
+   full-width layout the content column takes the rest of the width. */
 .layout {
   display: grid;
   grid-template-columns: 180px minmax(0, 760px);
@@ -17,6 +18,14 @@
 
   @include max(lg) {
     grid-template-columns: minmax(0, 760px);
+  }
+
+  @include full-layout {
+    grid-template-columns: 180px minmax(0, 1fr);
+
+    @include max(lg) {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 }
 

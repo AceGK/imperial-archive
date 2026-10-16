@@ -5,6 +5,7 @@ import { urlFor } from "@/lib/sanity/sanity.image";
 import { PortableText, type PortableTextBlockComponent, type PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import { SITE_URL } from "@/lib/seo";
+import HeadingAnchor from "@/components/ui/HeadingAnchor";
 
 /**
  * Site-wide link rule:
@@ -76,6 +77,15 @@ export const richTextComponents: PortableTextComponents = {
   },
 };
 
+function SectionHeading({ id, children }: { id?: string; children: ReactNode }) {
+  if (!id) return <h2>{children}</h2>;
+  return (
+    <h2 id={id}>
+      <HeadingAnchor id={id}>{children}</HeadingAnchor>
+    </h2>
+  );
+}
+
 /**
  * Renders Portable Text from Sanity with the site's shared link handling.
  * `headingIds` maps a heading block's `_key` to the anchor id it should get.
@@ -100,9 +110,10 @@ export default function RichText({
     ...richTextComponents,
     block: {
       ...blockComponents,
+      // section headings the contents rail links to, each with a copy-link button
       ...(headingIds && {
-        h1: ({ value, children }) => <h2 id={headingIds[value._key ?? ""]}>{children}</h2>,
-        h2: ({ value, children }) => <h2 id={headingIds[value._key ?? ""]}>{children}</h2>,
+        h1: ({ value, children }) => <SectionHeading id={headingIds[value._key ?? ""]}>{children}</SectionHeading>,
+        h2: ({ value, children }) => <SectionHeading id={headingIds[value._key ?? ""]}>{children}</SectionHeading>,
       }),
       ...(lastParagraph && {
         normal: ({ value, children }) => (

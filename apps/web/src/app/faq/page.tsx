@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { toPlainText } from "@portabletext/react";
 import ComingSoon from "@/components/modules/ComingSoon";
-import FaqList, { faqCategoryCode, type FaqCategory } from "@/components/modules/FaqList";
+import FaqList, { type FaqCategory } from "@/components/modules/FaqList";
+import { sectionIndex } from "@/lib/sectionIndex";
 import TocLayout from "@/components/modules/Toc/TocLayout";
 import JsonLd from "@/components/seo/JsonLd";
 import { client } from "@/lib/sanity/sanity.client";
@@ -66,7 +67,7 @@ export default async function FaqPage() {
 
       <section className="container row__md">
         <TocLayout
-          items={categories.map((c, i) => ({ id: c.slug, index: faqCategoryCode(i), label: c.title }))}
+          items={categories.map((c, i) => ({ id: c.slug, index: sectionIndex(i + 1), label: c.title }))}
           header={<InfoHeader label={LABEL} title={TITLE} />}
         >
 

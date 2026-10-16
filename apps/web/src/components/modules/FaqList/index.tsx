@@ -2,6 +2,7 @@ import type { PortableTextBlock } from "@portabletext/types";
 import RichText from "@/components/ui/RichText";
 import Card from "@/components/ui/Card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/Accordion";
+import { sectionIndex } from "@/lib/sectionIndex";
 import styles from "./styles.module.scss";
 
 export type Faq = { _id: string; question: string; answer: PortableTextBlock[] };
@@ -13,10 +14,7 @@ export type FaqCategory = {
   faqs: Faq[];
 };
 
-/** Reference code for the nth category (0-based), e.g. "CA-01" */
-export const faqCategoryCode = (i: number) => `CA-${String(i + 1).padStart(2, "0")}`;
-
-/** FAQ categories as cards (CA-01, CA-02, …), each with its questions in an accordion */
+/** FAQ categories as cards (§ I, § II, …, matching the page's contents), each with its questions in an accordion */
 export default function FaqList({ categories }: { categories: FaqCategory[] }) {
   return (
     <div className={styles.sections}>
@@ -28,7 +26,7 @@ export default function FaqList({ categories }: { categories: FaqCategory[] }) {
           eyebrow={
             <span className={styles.eyebrow}>
               <span>
-                <span className={styles.eyebrowCode}>{faqCategoryCode(i)}</span> ·{" "}
+                <span className={styles.eyebrowCode}>{sectionIndex(i + 1)}</span> ·{" "}
                 {category.faqs.length} {category.faqs.length === 1 ? "Question" : "Questions"}
               </span>
             </span>

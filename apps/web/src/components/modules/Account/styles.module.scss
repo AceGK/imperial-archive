@@ -227,6 +227,11 @@ $sidebar-gap: 1.5rem;
   gap: 1.5rem;
   min-width: 0;
   max-width: 720px;
+
+  // the site's full-width layout (nav's layout toggle): use the whole width
+  @include full-layout {
+    max-width: none;
+  }
 }
 
 /* ---------- Collapsible sidebar (desktop) ---------- */
@@ -313,6 +318,10 @@ $collapsed-width: 2.75rem;
 
     .content {
       max-width: 960px;
+
+      @include full-layout {
+        max-width: none;
+      }
     }
   }
 }
@@ -526,6 +535,9 @@ $collapsed-width: 2.75rem;
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
+  // the width forms have in the contained layout, so fields don't stretch
+  // across the screen in the full-width one
+  max-width: 42rem;
 }
 
 .inputGroup {

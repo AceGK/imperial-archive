@@ -162,14 +162,26 @@ $_corner-positions: (
   }
 }
 
+// Styles for the site's full-width layout (the nav's layout toggle sets
+// data-layout="full" on <html>). Use inside a selector in a CSS module.
+@mixin full-layout {
+  :global(:root[data-layout="full"]) & {
+    @content;
+  }
+}
+
 // Width of the info pages (about, FAQ, support, blog): a 180px contents rail,
 // a 3.5rem gap and a 760px content column, or just the column once the rail
-// hides on smaller screens. Centered.
+// hides on smaller screens. Centered. The full-width layout lifts the cap.
 @mixin page-width {
   max-width: calc(180px + 3.5rem + 760px);
   margin-inline: auto;
 
   @include max(lg) {
     max-width: 760px;
+  }
+
+  @include full-layout {
+    max-width: none;
   }
 }

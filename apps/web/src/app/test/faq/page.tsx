@@ -1,4 +1,5 @@
-import FaqList, { faqCategoryCode, type FaqCategory } from "@/components/modules/FaqList";
+import FaqList, { type FaqCategory } from "@/components/modules/FaqList";
+import { sectionIndex } from "@/lib/sectionIndex";
 import TocLayout from "@/components/modules/Toc/TocLayout";
 import styles from "@/app/faq/styles.module.scss";
 import InfoHeader from "@/components/modules/InfoHeader";
@@ -54,7 +55,7 @@ export default function FaqTestPage() {
     <main>
       <section className="container row__md">
         <TocLayout
-          items={SAMPLE.map((c, i) => ({ id: c.slug, index: faqCategoryCode(i), label: c.title }))}
+          items={SAMPLE.map((c, i) => ({ id: c.slug, index: sectionIndex(i + 1), label: c.title }))}
           header={<InfoHeader label="Adeptus Administratum · IA-003 // Catechism" title="Frequently Asked Questions" />}
         >
           <FaqList categories={SAMPLE} />

@@ -1,6 +1,6 @@
 import ComingSoon from "@/components/modules/ComingSoon";
 import InfoHeader from "@/components/modules/InfoHeader";
-import BlogCard from "@/components/modules/Cards/BlogCard";
+import BlogPosts from "./BlogPosts";
 import { client } from "@/lib/sanity/sanity.client";
 import { blogPostsQuery } from "@/lib/sanity/queries";
 import { pageMetadata } from "@/lib/seo";
@@ -46,11 +46,7 @@ export default async function BlogPage() {
       <section className="container row__md">
         <div className={styles.content}>
           <InfoHeader label={LABEL} title={TITLE} />
-          <div className={styles.grid}>
-            {posts.map((post) => (
-              <BlogCard key={post._id} post={post} />
-            ))}
-          </div>
+          <BlogPosts posts={posts} />
         </div>
       </section>
     </main>
