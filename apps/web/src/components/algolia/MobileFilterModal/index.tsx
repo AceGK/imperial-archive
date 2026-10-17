@@ -93,14 +93,14 @@ export function MobileFilterModal({ filters, buttonLabel = "Filter" }: MobileFil
     setMounted(true);
   }, []);
 
+  // lock scroll while open; <html> is the scroller (globals.scss), so lock it, not <body>
   React.useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    if (!isOpen) return;
+    const root = document.documentElement;
+    const previous = root.style.overflow;
+    root.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      root.style.overflow = previous;
     };
   }, [isOpen]);
 
