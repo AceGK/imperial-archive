@@ -1,0 +1,178 @@
+@use "@/styles/breakpoints" as *;
+
+.inbox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.note {
+  color: var(--subtle);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+// a segmented control, like the catalog's view switches
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--border);
+}
+
+.tab {
+  padding: 0.5rem 0.875rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--subtle);
+  font-family: var(--font-condensed);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  & + & {
+    border-left: 1px solid var(--border);
+  }
+
+  &:hover {
+    color: var(--text);
+  }
+
+  &[aria-pressed="true"] {
+    color: var(--primary);
+    background: color-mix(in oklab, var(--primary), transparent 88%);
+  }
+}
+
+.typeFilter select,
+.status {
+  padding: 0.45rem 0.75rem;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+
+  option {
+    background-color: var(--bg);
+    color: var(--text);
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.report {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.reportHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.type {
+  font-family: var(--font-condensed);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.date {
+  font-size: 0.8125rem;
+  color: var(--subtle);
+}
+
+.statusLabel {
+  margin-left: auto;
+}
+
+// gold while it still needs attention
+.status[data-status="new"],
+.status[data-status="inProgress"] {
+  border-color: color-mix(in oklab, var(--primary), transparent 40%);
+  color: var(--primary);
+}
+
+.details {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.35rem 1rem;
+  margin: 0;
+  font-size: 0.9375rem;
+
+  > div {
+    display: contents;
+  }
+
+  dt {
+    color: var(--subtle);
+  }
+
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  a {
+    color: var(--primary);
+  }
+}
+
+.message {
+  padding-bottom: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text);
+}
+
+.sender {
+  padding-bottom: 0;
+  font-size: 0.875rem;
+  color: var(--subtle);
+
+  a {
+    color: var(--primary);
+  }
+}
+
+.account {
+  color: var(--subtle);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
