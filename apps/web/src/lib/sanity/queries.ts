@@ -470,7 +470,7 @@ export const featuredSeries40kQuery = groq`
     hotspot,
     asset->{ _id, url, metadata{ lqip, dimensions } }
   },
-  "totalCount": count(lists[].items[])
+  "totalCount": count(lists[].items[defined(work)])
 }
 `;
 
@@ -488,7 +488,7 @@ export const allSeries40kQuery = groq`
     hotspot,
     asset->{ _id, url, metadata{ lqip, dimensions } }
   },
-  "totalCount": count(lists[].items[]),
+  "totalCount": count(lists[].items[defined(work)]),
   lists[]{
     title,
     "key": key.current,
@@ -508,7 +508,7 @@ export const booksBySeriesSlug40kQuery = groq`
 ][0]{
   title,
   "slug": slug.current,
-  "books": lists[].items[].work->{
+  "books": lists[].items[defined(work)].work->{
     ${bookCardFields}
   }
 }
@@ -528,7 +528,7 @@ export const series40kBySlugQuery = groq`
     hotspot,
     asset->{ _id, url, metadata{ lqip, dimensions } }
   },
-  "totalCount": count(lists[].items[]),
+  "totalCount": count(lists[].items[defined(work)]),
   lists[]{
     title,
     "key": key.current,
@@ -749,7 +749,7 @@ export const favoriteItems40kQuery = groq`
     "slug": slug.current,
     image{ alt, credit, crop, hotspot, asset->{ _id, url, metadata{ lqip, dimensions } } },
     // Series keep books in items or in grouped lists[].items
-    "totalCount": coalesce(count(items), 0) + coalesce(count(lists[].items[]), 0)
+    "totalCount": coalesce(count(items), 0) + coalesce(count(lists[].items[defined(work)]), 0)
   },
   _type == "author40k" => {
     _id,

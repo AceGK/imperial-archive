@@ -75,12 +75,14 @@ function Root({
   defaultValue,
   onValueChange,
   onOpenChange,
+  className,
   children,
 }: {
   value?: string;
   defaultValue?: string;
   onValueChange?: (v: string) => void;
   onOpenChange?: (o: boolean) => void;
+  className?: string;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -167,7 +169,7 @@ function Root({
 
   return (
     <SelectCtx.Provider value={valueObj}>
-      <div className={styles.root}>{children}</div>
+      <div className={className ? `${styles.root} ${className}` : styles.root}>{children}</div>
     </SelectCtx.Provider>
   );
 }
@@ -178,9 +180,12 @@ function Trigger({
   asChild = false,
   children,
   placeholder = "Select an option",
+  id,
   "aria-label": ariaLabel = "Select",
 }: {
   asChild?: boolean;
+  /** Set it so a <label htmlFor> can point at the trigger */
+  id?: string;
   // Accept any element props to satisfy cloneElement typing
   children: React.ReactElement<any>;
   placeholder?: string;
@@ -203,7 +208,7 @@ function Trigger({
   };
 
   const commonProps = {
-    id: btnId,
+    id: id ?? btnId,
     role: "combobox" as const,
     "aria-haspopup": "listbox" as const,
     "aria-expanded": open,
@@ -219,15 +224,16 @@ function Trigger({
     const childChildren = (children.props as any)?.children;
 
     return (
-      <span
-        className={styles.triggerWrap}
-        ref={(el) => {
-          (triggerRef as any).current = el;
-        }}
-      >
+      <span className={styles.triggerWrap}>
         {cloneElement(
           children as React.ReactElement<any>,
-          commonProps as any, // <-- relax typing for cloneElement
+          {
+            ...commonProps,
+            // the child itself, not the wrapper, so focus can return to it after a choice or Escape
+            ref: (el: HTMLElement | null) => {
+              (triggerRef as any).current = el;
+            },
+          } as any, // <-- relax typing for cloneElement
           <span className={styles.triggerInner}>
             {childChildren ?? valueNode}
           </span>
@@ -362,9 +368,12 @@ function Item({ value, children, disabled = false, textValue, }: {
   const ref = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    itemsRef.current.push(ref.current);
+    // captured here: by cleanup time React has already cleared ref.current, and
+    // filtering on it would leave this option behind after the list closes
+    const el = ref.current;
+    itemsRef.current.push(el);
     return () => {
-      itemsRef.current = itemsRef.current.filter((el) => el !== ref.current);
+      itemsRef.current = itemsRef.current.filter((item) => item !== el);
     };
   }, []);
 
