@@ -11,6 +11,16 @@ dotenv.config({ path: path.resolve(__dirname, "../.env.local") });
 const { ALGOLIA_APP_ID = "", ALGOLIA_WRITE_API_KEY = "" } = env;
 const ALGOLIA_INDEX_NAME = "books40k";
 
+// What the catalog search box matches, most important first. Every index needs
+// it: a replica without its own list searches every field, descriptions and all
+const SEARCHABLE_ATTRIBUTES = [
+  "title",
+  "authors.name",
+  "factions.name",
+  "era.name",
+  "series.title",
+];
+
 async function setupReplicas() {
   console.log("🔧 Setting up Algolia index replicas for sorting...");
 
@@ -28,14 +38,7 @@ async function setupReplicas() {
     await client.setSettings({
       indexName: ALGOLIA_INDEX_NAME,
       indexSettings: {
-        searchableAttributes: [
-          "title",
-          "authors.name",
-          "description",
-          "factions.name",
-          "era.name",
-          "series.title",
-        ],
+        searchableAttributes: SEARCHABLE_ATTRIBUTES,
         attributesForFaceting: [
           "searchable(format)",
           "searchable(authors.name)",
@@ -61,6 +64,7 @@ async function setupReplicas() {
     await client.setSettings({
       indexName: "books40k_title_asc",
       indexSettings: {
+        searchableAttributes: SEARCHABLE_ATTRIBUTES,
         attributesForFaceting: [
           "searchable(format)",
           "searchable(authors.name)",
@@ -86,6 +90,7 @@ async function setupReplicas() {
     await client.setSettings({
       indexName: "books40k_title_desc",
       indexSettings: {
+        searchableAttributes: SEARCHABLE_ATTRIBUTES,
         attributesForFaceting: [
           "searchable(format)",
           "searchable(authors.name)",
@@ -111,6 +116,7 @@ async function setupReplicas() {
     await client.setSettings({
       indexName: "books40k_date_desc",
       indexSettings: {
+        searchableAttributes: SEARCHABLE_ATTRIBUTES,
         attributesForFaceting: [
           "searchable(format)",
           "searchable(authors.name)",
@@ -136,6 +142,7 @@ async function setupReplicas() {
     await client.setSettings({
       indexName: "books40k_date_asc",
       indexSettings: {
+        searchableAttributes: SEARCHABLE_ATTRIBUTES,
         attributesForFaceting: [
           "searchable(format)",
           "searchable(authors.name)",

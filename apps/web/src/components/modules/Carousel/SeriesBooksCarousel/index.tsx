@@ -23,8 +23,8 @@ export default async function SeriesBooksCarousel({
     return null;
   }
 
-  // Filter out the current book
-  const filteredBooks = result.books.filter((b: Book40k) => b._id !== currentBookId);
+  // Filter out the current book, and any entry whose book isn't published
+  const filteredBooks = result.books.filter((b: Book40k | null) => b && b._id !== currentBookId);
 
   // Don't render if there are no other books
   if (filteredBooks.length === 0) {
