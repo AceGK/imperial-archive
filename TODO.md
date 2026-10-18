@@ -15,7 +15,8 @@
 - [ ] improve: update favicon to original artwork
 - [ ] improve: add the "Book N in series, read after…" line to book pages, which gives each page original text that answers reading-order searches directly.
 - [ ] compress svgs from inline to cacheable files?
-- [ ] move view all faq to bottom of faqs in single column layout
+- [ ] move "view all faq" button to bottom of faqs component in single column layout
+- [ ] improve account mobile menu (it's too short right now instead of being full height)
 
 # ideas 
 - [ ] book reviews from APIs, combined into aggregate review count + let users write IA book reviews

@@ -10,7 +10,7 @@ import { faqCategoryBySlugQuery } from "@/lib/sanity/queries";
 export const revalidate = 60;
 
 const DESCRIPTION =
-  "Track your Warhammer 40k reading for free: mark Black Library books as want to read, reading, read, or owned, straight from any book card or book page.";
+  "Track your Warhammer reading for free: mark Black Library books as want to read, reading, read, or owned, straight from any book card or book page.";
 
 export const metadata = pageMetadata({
   title: "Warhammer 40k Reading Tracker",
