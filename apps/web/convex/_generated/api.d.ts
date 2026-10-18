@@ -22,6 +22,8 @@ import type * as migrations from "../migrations.js";
 import type * as oauth from "../oauth.js";
 import type * as readingListLimits from "../readingListLimits.js";
 import type * as readingLists from "../readingLists.js";
+import type * as reportFields from "../reportFields.js";
+import type * as reports from "../reports.js";
 import type * as tracking from "../tracking.js";
 import type * as turnstile from "../turnstile.js";
 import type * as users from "../users.js";
@@ -44,6 +46,8 @@ declare const fullApi: ApiFromModules<{
   oauth: typeof oauth;
   readingListLimits: typeof readingListLimits;
   readingLists: typeof readingLists;
+  reportFields: typeof reportFields;
+  reports: typeof reports;
   tracking: typeof tracking;
   turnstile: typeof turnstile;
   users: typeof users;
