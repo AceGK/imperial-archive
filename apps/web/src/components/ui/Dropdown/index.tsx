@@ -321,6 +321,39 @@ function Content({
 
   const popId = useId();
 
+  // Keep the menu on screen: it opens aligned to its trigger, then slides back in
+  // if that would cross a viewport edge (e.g. an end-aligned menu under a trigger
+  // near the left of a narrow screen). The arrow is placed under the trigger's
+  // centre, wherever the menu ends up. Horizontal only, so it stays correct as
+  // a sticky bar moves the menu up and down.
+  useLayoutEffect(() => {
+    if (!open || isMobile) return;
+    const menu = menuRef.current;
+    const trigger = triggerRef.current;
+    if (!menu || !trigger) return;
+    const EDGE = 8;
+    const place = () => {
+      menu.style.setProperty("--dropdown-shift", "0px");
+      // the box at full size: the entrance animation starts it slightly scaled
+      // down (from its centre), which getBoundingClientRect would report
+      const scaled = menu.getBoundingClientRect();
+      const width = menu.offsetWidth;
+      const left = scaled.left + scaled.width / 2 - width / 2;
+      const right = left + width;
+      const viewport = document.documentElement.clientWidth;
+      let shift = 0;
+      if (left < EDGE) shift = EDGE - left;
+      else if (right > viewport - EDGE) shift = Math.max(viewport - EDGE - right, EDGE - left);
+      menu.style.setProperty("--dropdown-shift", `${shift}px`);
+      const t = trigger.getBoundingClientRect();
+      const arrowLeft = t.left + t.width / 2 - (left + shift) - 5; // the arrow is 10px wide
+      menu.style.setProperty("--dropdown-arrow-left", `${Math.min(Math.max(arrowLeft, 10), width - 20)}px`);
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [open, isMobile, menuRef, triggerRef]);
+
   // Focus first item on open (desktop only)
   useLayoutEffect(() => {
     if (!open || isMobile) return;

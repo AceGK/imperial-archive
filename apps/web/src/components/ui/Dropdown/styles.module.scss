@@ -52,6 +52,9 @@
     0 4px  6px -4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   animation: ddIn 120ms ease-out;
+  // set by script to keep the menu on screen; `translate` so it doesn't fight
+  // the entrance animation's transform
+  translate: var(--dropdown-shift, 0px) 0;
 }
 
 .alignEnd { right: 0; }
@@ -178,7 +181,8 @@
 .arrow {
   position: absolute;
   top: -6px;
-  right: 12px;
+  // under the trigger's centre (set by script); 12px from the right until measured
+  left: var(--dropdown-arrow-left, calc(100% - 22px));
   width: 10px;
   height: 10px;
   background: inherit;
