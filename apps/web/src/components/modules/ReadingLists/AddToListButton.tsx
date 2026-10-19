@@ -37,7 +37,7 @@ export default function AddToListButton({ bookId, bookTitle }: { bookId: string;
         disabled={isLoading}
         aria-haspopup="dialog"
       >
-        Add to list
+        + Add to list
         {inLists > 0 && (
           <span className={styles.addToListCount}>
             {" "}
