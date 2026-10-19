@@ -2,7 +2,7 @@ import styles from "./styles.module.scss";
 import { normalize } from "./rows";
 import type { ResultRow } from "./types";
 
-function highlight(text: string, query: string): React.ReactNode {
+export function highlight(text: string, query: string): React.ReactNode {
   if (!query) return text;
   const qn = normalize(query);
   if (!qn) return text;

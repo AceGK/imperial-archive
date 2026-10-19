@@ -1,0 +1,367 @@
+@use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
+
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.panel {
+  padding-block: 1.25rem 1.75rem;
+}
+
+/* the box */
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.input {
+  width: 100%;
+  height: 2.75rem;
+  appearance: none;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: color-mix(in oklab, var(--bg) 80%, black 4%);
+  color: var(--foreground);
+  // room for the icon and the clear button
+  padding: 0 2.75rem;
+  font-size: 1rem;
+  outline: none;
+  transition:
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+
+  &::placeholder {
+    color: var(--subtle);
+  }
+
+  &:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary), transparent 75%);
+  }
+
+  // replaced by .clear, which can be styled in every browser
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    display: none;
+    -webkit-appearance: none;
+  }
+}
+
+.panel .input {
+  height: 3rem;
+  font-size: 1.0625rem;
+}
+
+.fieldIcon {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  translate: 0 -50%;
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+  color: var(--subtle);
+  pointer-events: none;
+
+  .field:focus-within & {
+    color: var(--primary);
+  }
+}
+
+.clear {
+  position: absolute;
+  top: 50%;
+  right: 0.375rem;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--subtle);
+  cursor: pointer;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: currentColor;
+  }
+
+  &:hover {
+    color: var(--foreground);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+}
+
+// square, with the gold corner marks on hover like the nav's other icon buttons
+.close {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--subtle);
+  cursor: pointer;
+  transition: color 160ms ease;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+/* section labels, in the style of the phone menu's group labels */
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+
+.count {
+  color: var(--subtle);
+  letter-spacing: 0.06em;
+}
+
+/* before typing */
+.idle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 3rem;
+}
+
+.termGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.termHead {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.textButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 0.75rem;
+  color: var(--subtle);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--foreground);
+    text-decoration: underline;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  @include corner-brackets($size: 6px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  // block: text-box only trims block containers
+  display: block;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: color-mix(in oklab, var(--accent), transparent 70%);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: color 160ms ease;
+
+  @supports (text-box: trim-both cap alphabetic) {
+    text-box: trim-both cap alphabetic;
+    padding-block: 0.625rem;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--primary);
+  }
+}
+
+/* results */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.shortcuts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shortcut {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "title kind"
+    "meta  kind";
+  align-items: center;
+  column-gap: 0.75rem;
+  row-gap: 0.125rem;
+  height: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--accent), transparent 75%);
+  color: var(--text);
+  text-decoration: none;
+  transition: background 160ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background: color-mix(in oklab, var(--accent), transparent 50%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  mark {
+    background: color-mix(in oklab, orange, transparent 70%);
+    color: inherit;
+    padding: 0 2px;
+    margin: 0 -2px; // highlight box without pushing the letters apart
+    border-radius: 3px;
+  }
+}
+
+.shortcutTitle {
+  grid-area: title;
+  min-width: 0;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shortcutMeta {
+  grid-area: meta;
+  font-size: 0.8125rem;
+  color: var(--subtle);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shortcutKind {
+  grid-area: kind;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.6875rem;
+  color: var(--subtle);
+}
+
+.booksHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 2.25rem;
+}
+
+// one more card per view than the page carousels, so a row fits under the box
+// (doubled class to win over the carousel's own .books counts)
+.carousel.carousel {
+  @media (min-width: 900px) {
+    --slides: 5;
+  }
+  @media (min-width: 1200px) {
+    --slides: 6;
+  }
+}
+
+// phones: books as rows, cover on the left
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.viewAllWide {
+  width: 100%;
+}
+
+.status {
+  margin: 0;
+  padding: 1rem 0;
+  color: var(--subtle);
+  text-align: center;
+}
+
+/* phone menu: one column of tiles, and room under the last result */
+.menu .shortcuts {
+  grid-template-columns: 1fr;
+}
+
+.menu .results {
+  padding-bottom: 1rem;
+}

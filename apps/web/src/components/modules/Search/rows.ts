@@ -68,18 +68,23 @@ const shortcutRow = (s: SearchShortcut): ResultRow => ({
   badge: BADGES[s.kind],
 });
 
+/** Author, series, faction and era matches, authors first; no Algolia request */
+export function buildLocalRows(query: string, shortcuts: SearchShortcut[]): ResultRow[] {
+  return [
+    ...matchShortcuts(shortcuts, ["author"], query, 3),
+    ...matchShortcuts(shortcuts, ["series"], query, 3),
+    ...matchShortcuts(shortcuts, ["factionGroup", "faction"], query, 3),
+    ...matchShortcuts(shortcuts, ["era"], query, 2),
+  ].map(shortcutRow);
+}
+
 /**
  * One list, authors first: people searching a name usually want the author,
  * and the few author/series/faction/era matches would otherwise sit below a
  * page of books. Only books come from Algolia; the rest are matched here.
  */
 export function buildRows(query: string, books: BookHit[], shortcuts: SearchShortcut[]): ResultRow[] {
-  const local = [
-    ...matchShortcuts(shortcuts, ["author"], query, 3),
-    ...matchShortcuts(shortcuts, ["series"], query, 3),
-    ...matchShortcuts(shortcuts, ["factionGroup", "faction"], query, 3),
-    ...matchShortcuts(shortcuts, ["era"], query, 2),
-  ].map(shortcutRow);
+  const local = buildLocalRows(query, shortcuts);
 
   const bookRows = books.map((hit): ResultRow => {
     const authorsLine = summarize(hit.authors?.map((a) => a.name) ?? [], query);

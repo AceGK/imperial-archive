@@ -177,6 +177,97 @@
   }
 }
 
+/* search: a square icon button with the corner marks on hover; outlined while its panel is open */
+.searchButton {
+  @include corner-brackets($size: 10px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  @include open-outline;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--subtle);
+  cursor: pointer;
+  transition: color 160ms ease;
+
+  svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: currentColor;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.searchPanel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: calc(100vh - 60px);
+  max-height: calc(100dvh - 60px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  transform: translateY(-8px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 160ms;
+  z-index: 49;
+
+  // the button lives in the desktop controls; phones search from the menu
+  @include max(md, 110) {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+  }
+}
+
+.show.searchPanel {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.searchBackdrop {
+  position: fixed;
+  inset: 60px 0 0 0; /* below the nav bar */
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 160ms ease,
+    visibility 160ms;
+  z-index: 48;
+
+  @include max(md, 110) {
+    display: none;
+  }
+}
+
+.show.searchBackdrop {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* account avatar beside the hamburger (mobile only) */
 .mobileAccount {
   display: none;
@@ -459,6 +550,22 @@
   transform: translateY(0);
   opacity: 1;
   visibility: visible;
+}
+
+// search box at the top of the menu; its results replace the links below
+.mobileSearch {
+  padding: 1rem 1rem 0;
+}
+
+.mobileSearchPlaceholder {
+  height: 2.75rem;
+  border: 1px solid var(--border);
+}
+
+// links and actions step aside while search results show
+.mobileLinks[hidden],
+.mobileActions[hidden] {
+  display: none;
 }
 
 .mobileLinks {

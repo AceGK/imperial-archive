@@ -11,17 +11,15 @@ import styles from "./styles.module.scss";
 import XmarkIcon from "@/components/icons/xmark.svg";
 import MagnifyingGlassIcon from "@/components/icons/magnifying-glass.svg";
 import { buildRows } from "./rows";
+import {
+  SUGGESTED_SEARCHES,
+  clearRecentSearches as forgetRecentSearches,
+  readRecentSearches,
+  saveRecentSearch as storeRecentSearch,
+} from "./terms";
 import type { BookHit, ResultRow, SearchShortcut } from "./types";
 
 export type { SearchShortcut } from "./types";
-
-const SUGGESTED_SEARCHES = [
-  "Dan Abnett",
-  "The Horus Heresy",
-  "Graham McNeill",
-  "Aaron Dembski-Bowden",
-  "Gaunt's Ghosts",
-];
 
 function SuggestedSearches() {
   return (
@@ -60,27 +58,10 @@ function CustomSearchBox({ shortcuts }: { shortcuts: SearchShortcut[] }) {
 
   // Load recent searches from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem("recentSearches");
-    if (stored) {
-      try {
-        setRecentSearches(JSON.parse(stored));
-      } catch (e) {
-        console.error("Failed to parse recent searches", e);
-      }
-    }
+    setRecentSearches(readRecentSearches());
   }, []);
 
-  // Save a search to recent searches
-  const saveRecentSearch = (searchTerm: string) => {
-    if (!searchTerm.trim()) return;
-
-    setRecentSearches((prev) => {
-      const filtered = prev.filter((s) => s !== searchTerm);
-      const updated = [searchTerm, ...filtered].slice(0, 5);
-      localStorage.setItem("recentSearches", JSON.stringify(updated));
-      return updated;
-    });
-  };
+  const saveRecentSearch = (searchTerm: string) => setRecentSearches(storeRecentSearch(searchTerm));
 
   useEffect(() => {
     setValue(query);
@@ -137,7 +118,7 @@ function CustomSearchBox({ shortcuts }: { shortcuts: SearchShortcut[] }) {
 
   function clearRecentSearches() {
     setRecentSearches([]);
-    localStorage.removeItem("recentSearches");
+    forgetRecentSearches();
   }
 
   const showRecentSearches = open && !query && recentSearches.length > 0;
