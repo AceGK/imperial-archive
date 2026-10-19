@@ -2,10 +2,14 @@
 @use "@/styles/breakpoints" as *;
 @use "@/styles/mixins" as *;
 
+// in a row of controls, the open search box is the item that gives way: it
+// shrinks to the space left beside the buttons rather than pushing them out
 .searchBox {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .searchButton {
@@ -52,18 +56,20 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  width: 100%;
-  max-width: 400px;
+  width: 15rem;
+  max-width: 100%;
+  min-width: 0;
   height: 48px;
+
+  // phones: the open box has a row of its own (see the catalog's controls)
+  @include max(sm) {
+    width: 100%;
+  }
   padding: 0 1rem;
   border: 1px solid var(--border);
   border-radius: 0;
   background: color-mix(in oklab, var(--bg), black 2%);
   transition: all 0.15s ease;
-  
-  @include max(md) {
-    max-width: 100%;
-  }
 
   &:focus-within {
     border-color: var(--primary);
