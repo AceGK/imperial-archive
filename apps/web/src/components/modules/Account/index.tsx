@@ -9,7 +9,8 @@ import { api } from "@convex/_generated/api";
 import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import Avatar from "@/components/ui/Avatar";
 import SignOutIcon from "@/components/icons/account/sign-out.svg";
-import ChevronLeft from "@/components/icons/chevron-left.svg";
+import SidebarCollapseIcon from "@/components/icons/sidebar-left-collapse.svg";
+import SidebarExpandIcon from "@/components/icons/sidebar-left-expand.svg";
 import { accountNav } from "./nav";
 import { SIDEBAR_COOKIE } from "./sidebar";
 import { formatDate } from "./utils";
@@ -55,7 +56,11 @@ export default function AccountShell({
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          <ChevronLeft className={styles.collapseIcon} aria-hidden="true" />
+          {collapsed ? (
+            <SidebarExpandIcon className={styles.collapseIcon} aria-hidden="true" />
+          ) : (
+            <SidebarCollapseIcon className={styles.collapseIcon} aria-hidden="true" />
+          )}
         </button>
 
         <div className={styles.identity} title={collapsed ? (viewer?.email ?? undefined) : undefined}>
