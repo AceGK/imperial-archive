@@ -65,7 +65,7 @@ export function SearchBox({
   };
 
   return (
-    <div className={styles.searchBox}>
+    <div className={styles.searchBox} data-open={isOpen || undefined}>
       {!isOpen ? (
         <button
           className={styles.searchButton}

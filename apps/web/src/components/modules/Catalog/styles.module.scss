@@ -47,6 +47,29 @@
   }
 }
 
+// the filter and sort buttons keep their size; the search box (first) shrinks
+// to the space left, so opening it never pushes them off the screen
+.controlsInner > * {
+  flex-shrink: 0;
+}
+
+.controlsInner > :first-child {
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+// phones: too narrow for a usable search box beside the buttons, so the open
+// search takes the whole first row and the buttons wrap below it
+@include max(sm) {
+  .controlsInner {
+    flex-wrap: wrap;
+  }
+
+  .controlsInner > [data-open] {
+    flex-basis: 100%;
+  }
+}
+
 .controlsRight {
   display: flex;
   gap: 0.75rem;

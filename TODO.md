@@ -1,6 +1,7 @@
 # TODO
 
 # ui 
+- [ ] add searchbar icon to primary nav, and searchbox to mobile nav menu
 - [ ] reconfigure: perhaps change primary nav to "browse", "resources", "about", and "support". With resources having more sub pages, such as "guides", "Where to start", "reading orders", and support having "donate", "contribute", "report issue", etc
   - [ ] make footer match, move legal to bottom bar
 - [x] implement: add icons to pages in nav (about, faq, etc)

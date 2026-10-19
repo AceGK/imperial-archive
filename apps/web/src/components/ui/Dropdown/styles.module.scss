@@ -52,6 +52,9 @@
     0 4px  6px -4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   animation: ddIn 120ms ease-out;
+  // set by script to keep the menu on screen; `translate` so it doesn't fight
+  // the entrance animation's transform
+  translate: var(--dropdown-shift, 0px) 0;
 }
 
 .alignEnd { right: 0; }
@@ -71,7 +74,10 @@
   bottom: 0;
   left: 0;
   right: 0;
-  max-height: 40vh;
+  // only as tall as its items; room for the account menu without scrolling on
+  // a typical phone. dvh follows the browser's toolbars as they show and hide
+  max-height: 80vh;
+  max-height: 80dvh;
   background: var(--bg);
   z-index: 1000;
   display: flex;
@@ -178,7 +184,8 @@
 .arrow {
   position: absolute;
   top: -6px;
-  right: 12px;
+  // under the trigger's centre (set by script); 12px from the right until measured
+  left: var(--dropdown-arrow-left, calc(100% - 22px));
   width: 10px;
   height: 10px;
   background: inherit;

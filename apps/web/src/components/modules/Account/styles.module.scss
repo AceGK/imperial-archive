@@ -243,7 +243,7 @@ $sidebar-gap: 1.5rem;
 // icons end up centred without being moved there.
 $collapsed-width: 2.75rem;
 
-// top left of the sidebar, just the chevron; sits centred in the collapsed column
+// top left of the sidebar, just the icon; sits centred in the collapsed column
 .collapseToggle {
   @include corner-brackets($size: 6px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
   display: grid;
@@ -275,10 +275,8 @@ $collapsed-width: 2.75rem;
 }
 
 .collapseIcon {
-  width: 1.125rem;
-  height: 1.125rem;
-  fill: currentColor;
-  transition: transform 0.2s ease;
+  width: 1.375rem;
+  height: 1.375rem;
 }
 
 // Collapsed: the sidebar shrinks to its icons and the content takes the freed width
@@ -310,10 +308,6 @@ $collapsed-width: 2.75rem;
     .navText,
     .soon {
       opacity: 0;
-    }
-
-    .collapseIcon {
-      transform: rotate(180deg);
     }
 
     .content {
