@@ -74,7 +74,10 @@
   bottom: 0;
   left: 0;
   right: 0;
-  max-height: 40vh;
+  // only as tall as its items; room for the account menu without scrolling on
+  // a typical phone. dvh follows the browser's toolbars as they show and hide
+  max-height: 80vh;
+  max-height: 80dvh;
   background: var(--bg);
   z-index: 1000;
   display: flex;

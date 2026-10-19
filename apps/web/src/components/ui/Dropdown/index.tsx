@@ -106,16 +106,18 @@ function Root({
     return () => window.removeEventListener("resize", checkMobile);
   }, [mobileBreakpoint]);
 
-  // Prevent body scroll when modal is open
+  // Stop the page scrolling behind the sheet. Locked on <html>, which is the
+  // page's scroller: locking <body> makes it a scroll box of its own, and the
+  // sticky nav then jumps back to the top of the page
   useEffect(() => {
     if (open && isMobile) {
-      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     }
 
     return () => {
-      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
   }, [open, isMobile]);
 
