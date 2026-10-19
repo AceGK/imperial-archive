@@ -3,6 +3,9 @@
 # ui 
 - [ ] add searchbar icon to primary nav, and searchbox to mobile nav menu
 - [ ] reconfigure: perhaps change primary nav to "browse", "resources", "about", and "support". With resources having more sub pages, such as "guides", "Where to start", "reading orders", and support having "donate", "contribute", "report issue", etc
+  - [ ] About / Info -> About, How to Track, 
+  - [ ] Resources -> Where to Start, Reading Guides, Blog, FAQ
+  - [ ] Support -> Donate, Report bug, Report missing book, Feedback 
   - [ ] make footer match, move legal to bottom bar
 - [x] implement: add icons to pages in nav (about, faq, etc)
 - [ ] fix: account icon CLS on load 
@@ -13,7 +16,6 @@
 - [ ] improve: make +Track button on book cards controled with "Display" options to either be on-hover, inline, or hidden completely
 - [ ] fix: book count limit for infinite loading (so there's always full rows)
 - [ ] fix: catalog nav from resetting into place based on scroll threshold (perhaps see how I managed this on PL-next)
-- [ ] improve: update favicon to original artwork
 - [ ] improve: add the "Book N in series, read after…" line to book pages, which gives each page original text that answers reading-order searches directly.
 - [ ] compress svgs from inline to cacheable files?
 - [ ] move "view all faq" button to bottom of faqs component in single column layout
