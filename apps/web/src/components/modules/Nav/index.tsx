@@ -52,6 +52,20 @@ export default function Nav({
     >
       <div className="container">
         <div className={styles.nav}>
+          {/* mobile hamburger */}
+          <button
+            type="button"
+            className={`${styles.burger} ${mobileOpen ? styles.open : ""}`}
+            aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            <span className={styles.bar} />
+            <span className={styles.bar} />
+            <span className={styles.bar} />
+          </button>
+
           <div className={styles.logo}>
             <Link href="/" aria-label="Imperial Archive Home">
               <Logo className={styles.logoImage} />
@@ -136,19 +150,6 @@ export default function Nav({
             <AuthSlot />
           </div>
 
-          {/* mobile hamburger */}
-          <button
-            type="button"
-            className={`${styles.burger} ${mobileOpen ? styles.open : ""}`}
-            aria-label="Toggle menu"
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-menu"
-            onClick={() => setMobileOpen((v) => !v)}
-          >
-            <span className={styles.bar} />
-            <span className={styles.bar} />
-            <span className={styles.bar} />
-          </button>
         </div>
       </div>
 
