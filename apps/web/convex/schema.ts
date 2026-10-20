@@ -81,6 +81,9 @@ const schema = defineSchema({
     bookAuthor: v.optional(v.string()),
     series: v.optional(v.string()),
     format: v.optional(v.string()),
+    // "2024", "2024-03" or "2024-03-15"
+    releaseDate: v.optional(v.string()),
+    // from before release dates replaced years; only early test reports have it
     releaseYear: v.optional(v.string()),
     isbn: v.optional(v.string()),
     link: v.optional(v.string()),

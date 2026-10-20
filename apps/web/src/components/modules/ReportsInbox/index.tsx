@@ -7,6 +7,7 @@ import type { Doc } from "@convex/_generated/dataModel";
 import {
   REPORT_STATUS_LABELS,
   REPORT_TYPE_LABELS,
+  formatReleaseDate,
   type ReportStatus,
   type ReportType,
 } from "@convex/reportFields";
@@ -22,6 +23,7 @@ const DETAIL_LABELS: [keyof Doc<"reports">, string][] = [
   ["bookAuthor", "Author"],
   ["series", "Series"],
   ["format", "Format"],
+  ["releaseDate", "Release date"],
   ["releaseYear", "Release year"],
   ["isbn", "ISBN"],
   ["link", "Link"],
@@ -67,7 +69,7 @@ function ReportItem({ report }: { report: Doc<"reports"> }) {
       {details.length > 0 && (
         <dl className={styles.details}>
           {details.map(([key, label]) => {
-            const value = String(report[key]);
+            const value = key === "releaseDate" ? formatReleaseDate(String(report[key])) : String(report[key]);
             return (
               <div key={key}>
                 <dt>{label}</dt>

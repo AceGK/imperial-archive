@@ -14,6 +14,9 @@ import {
   MAX_LENGTH,
   OS_OPTIONS,
   REPORT_RATE_LIMITED,
+  RELEASE_YEAR_MIN,
+  isValidReleaseDate,
+  releaseYearMax,
   type ReportType,
 } from "@convex/reportFields";
 
@@ -54,7 +57,11 @@ const schemas = {
     bookAuthor: text(MAX_LENGTH.bookAuthor).min(1, "Enter the author."),
     series: optional(MAX_LENGTH.series),
     format: oneOf(FORMAT_OPTIONS),
-    releaseYear: optional(MAX_LENGTH.releaseYear).refine((value) => !value || /^\d{4}$/.test(value), "Use a four-digit year."),
+    // the form puts the year, month and day together; only the year is needed
+    releaseDate: optional(MAX_LENGTH.releaseDate).refine(
+      (value) => !value || isValidReleaseDate(value),
+      `Enter a year from ${RELEASE_YEAR_MIN} to ${releaseYearMax()}, and a day that's in the month.`,
+    ),
     isbn: optional(MAX_LENGTH.isbn),
     link: optional(MAX_LENGTH.link).refine((value) => !value || /^https?:\/\/\S+$/i.test(value), "Enter a full link starting with http:// or https://."),
     message: optional(MAX_LENGTH.message),

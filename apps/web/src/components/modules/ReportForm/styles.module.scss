@@ -66,6 +66,13 @@
   }
 }
 
+// release date: year, month, day side by side; the month gets the room for "September"
+.dateParts {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 1fr) minmax(0, 1.6fr) minmax(4.5rem, 1fr);
+  gap: 0.5rem;
+}
+
 // FormSelect: the shared Select, stretched and styled like the other fields
 .select {
   display: block;
@@ -74,6 +81,12 @@
   > span {
     display: block; // the trigger's wrapper
   }
+}
+
+// month and day wait for the parts before them
+.selectTrigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .selectTrigger {

@@ -5,7 +5,14 @@ import { internal } from "./_generated/api";
 import type { Doc } from "./_generated/dataModel";
 import { internalAction, internalQuery, mutation, query, type QueryCtx } from "./_generated/server";
 import { sendEmail } from "./emails";
-import { MAX_LENGTH, REPORT_RATE_LIMITED, REPORT_TYPE_LABELS, type ReportField } from "./reportFields";
+import {
+  MAX_LENGTH,
+  REPORT_RATE_LIMITED,
+  REPORT_TYPE_LABELS,
+  formatReleaseDate,
+  isValidReleaseDate,
+  type ReportField,
+} from "./reportFields";
 
 // Report and feedback tickets from the site's forms.
 //
@@ -36,7 +43,7 @@ const optionalFields = {
   bookAuthor: v.optional(v.string()),
   series: v.optional(v.string()),
   format: v.optional(v.string()),
-  releaseYear: v.optional(v.string()),
+  releaseDate: v.optional(v.string()),
   isbn: v.optional(v.string()),
   link: v.optional(v.string()),
 };
@@ -53,6 +60,9 @@ export const submit = mutation({
       if (value !== undefined && value.length > MAX_LENGTH[key as ReportField]) {
         throw new Error(`${key} is too long`);
       }
+    }
+    if (fields.releaseDate !== undefined && !isValidReleaseDate(fields.releaseDate)) {
+      throw new Error("releaseDate is not a valid date");
     }
     if (type === "missingBook" && (!fields.bookTitle?.trim() || !fields.bookAuthor?.trim())) {
       throw new Error("A missing book needs a title and author");
@@ -113,6 +123,7 @@ const FIELD_LABELS: [keyof Doc<"reports">, string][] = [
   ["bookAuthor", "Author"],
   ["series", "Series"],
   ["format", "Format"],
+  ["releaseDate", "Release date"],
   ["releaseYear", "Release year"],
   ["isbn", "ISBN"],
   ["link", "Link"],
@@ -129,7 +140,11 @@ function firstLine(text?: string) {
 }
 
 function describe(report: Doc<"reports">) {
-  const lines = FIELD_LABELS.flatMap(([key, label]) => (report[key] ? [`${label}: ${report[key]}`] : []));
+  const lines = FIELD_LABELS.flatMap(([key, label]) => {
+    if (!report[key]) return [];
+    const value = key === "releaseDate" ? formatReleaseDate(String(report[key])) : report[key];
+    return [`${label}: ${value}`];
+  });
   if (report.userId) lines.push(`Account: ${report.userId}`);
   return [
     `New ${REPORT_TYPE_LABELS[report.type].toLowerCase()} report`,

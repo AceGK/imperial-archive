@@ -8,7 +8,9 @@ import {
   FORMAT_OPTIONS,
   HONEYPOT_FIELD,
   MAX_LENGTH,
+  MONTH_NAMES,
   OS_OPTIONS,
+  daysInMonth,
   type ReportType,
 } from "@convex/reportFields";
 import { submitReport } from "@/lib/reports/submit";
@@ -103,35 +105,120 @@ function FormSelect({
   value,
   onChange,
   options,
+  optionLabel = (option) => option,
+  placeholder = "Not sure",
+  disabled,
   describedBy,
 }: {
   id: string;
-  name: string;
+  /** Leave off for a part of a field that's sent some other way (the release date's month and day) */
+  name?: string;
   label: string;
   value: string;
   onChange: (value: string) => void;
   options: readonly string[];
+  /** Shown for each option, e.g. a month's name for "03"; the option itself by default */
+  optionLabel?: (option: string) => string;
+  /** Shown on the button while nothing is chosen */
+  placeholder?: string;
+  disabled?: boolean;
   describedBy?: string;
 }) {
   return (
     <>
       <Select.Root value={value} onValueChange={onChange} className={styles.select}>
         <Select.Trigger asChild id={id} aria-label={label}>
-          <button type="button" className={styles.selectTrigger} aria-describedby={describedBy}>
-            {value || "Not sure"}
+          <button type="button" className={styles.selectTrigger} aria-describedby={describedBy} disabled={disabled}>
+            {value ? optionLabel(value) : placeholder}
           </button>
         </Select.Trigger>
         <Select.Content className={styles.selectList}>
           <Select.Item value="">Not sure</Select.Item>
           {options.map((option) => (
             <Select.Item key={option} value={option}>
-              {option}
+              {optionLabel(option)}
             </Select.Item>
           ))}
         </Select.Content>
       </Select.Root>
-      <input type="hidden" name={name} value={value} />
+      {name && <input type="hidden" name={name} value={value} />}
     </>
+  );
+}
+
+type ReleaseParts = { year: string; month: string; day: string };
+const NO_RELEASE: ReleaseParts = { year: "", month: "", day: "" };
+const MONTHS = MONTH_NAMES.map((_, i) => String(i + 1).padStart(2, "0"));
+const monthName = (month: string) => MONTH_NAMES[Number(month) - 1];
+
+/**
+ * A missing book's release date as a year, with the month and day optional,
+ * since readers often know only the year. Sent as one value: "2024",
+ * "2024-03" or "2024-03-15".
+ */
+function ReleaseDate({
+  id,
+  parts,
+  onChange,
+  describedBy,
+  invalid,
+}: {
+  id: string;
+  parts: ReleaseParts;
+  onChange: (parts: ReleaseParts) => void;
+  describedBy?: string;
+  invalid: boolean;
+}) {
+  const { year, month, day } = parts;
+  const hasYear = /^\d{4}$/.test(year);
+  const dayCount = hasYear && month ? daysInMonth(Number(year), Number(month)) : 31;
+  const days = Array.from({ length: dayCount }, (_, i) => String(i + 1).padStart(2, "0"));
+  // a month or day only counts once the parts before it are filled in
+  const value = !year ? "" : !hasYear || !month ? year : day ? `${year}-${month}-${day}` : `${year}-${month}`;
+
+  // a day the new month or year doesn't have (Feb 30) is cleared
+  const set = (next: Partial<ReleaseParts>) => {
+    const merged = { ...parts, ...next };
+    const max = /^\d{4}$/.test(merged.year) && merged.month ? daysInMonth(Number(merged.year), Number(merged.month)) : 31;
+    onChange(Number(merged.day) > max ? { ...merged, day: "" } : merged);
+  };
+
+  return (
+    <div className={styles.dateParts}>
+      <input
+        id={id}
+        value={year}
+        onChange={(e) => set({ year: e.target.value.replace(/\D/g, "").slice(0, 4) })}
+        inputMode="numeric"
+        autoComplete="off"
+        placeholder="Year"
+        aria-describedby={describedBy}
+        aria-invalid={invalid}
+      />
+      <FormSelect
+        id={`${id}-month`}
+        label="Release month"
+        value={hasYear ? month : ""}
+        onChange={(m) => set({ month: m, ...(m ? {} : { day: "" }) })}
+        options={MONTHS}
+        optionLabel={monthName}
+        placeholder="Month"
+        disabled={!hasYear}
+        describedBy={describedBy}
+      />
+      <FormSelect
+        id={`${id}-day`}
+        label="Release day"
+        value={hasYear && month ? day : ""}
+        onChange={(d) => set({ day: d })}
+        options={days}
+        optionLabel={(d) => String(Number(d))}
+        placeholder="Day"
+        disabled={!hasYear || !month}
+        describedBy={describedBy}
+      />
+      <input type="hidden" name="releaseDate" value={value} />
+    </div>
   );
 }
 
@@ -148,6 +235,7 @@ export default function ReportForm({ type }: { type: ReportType }) {
   const [pageUrl, setPageUrl] = useState("");
   const [email, setEmail] = useState("");
   const [format, setFormat] = useState("");
+  const [release, setRelease] = useState(NO_RELEASE);
   const statusId = useId();
 
   const { isAuthenticated } = useConvexAuth();
@@ -189,6 +277,7 @@ export default function ReportForm({ type }: { type: ReportType }) {
       setSent(true);
       formRef.current?.reset();
       setFormat("");
+      setRelease(NO_RELEASE);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       setError(result.message);
@@ -239,10 +328,8 @@ export default function ReportForm({ type }: { type: ReportType }) {
             </Field>
           </div>
           <div className={styles.row}>
-            <Field name="releaseYear" label="Release year" error={err("releaseYear")}>
-              {(id, d) => (
-                <input id={id} {...counted("releaseYear")} inputMode="numeric" placeholder="e.g. 2024" aria-describedby={d} aria-invalid={!!err("releaseYear")} />
-              )}
+            <Field name="releaseDate" label="Release date" hint="Just the year is fine" error={err("releaseDate")}>
+              {(id, d) => <ReleaseDate id={id} parts={release} onChange={setRelease} describedBy={d} invalid={!!err("releaseDate")} />}
             </Field>
             <Field name="isbn" label="ISBN" error={err("isbn")}>
               {(id, d) => <input id={id} {...counted("isbn")} aria-describedby={d} />}
