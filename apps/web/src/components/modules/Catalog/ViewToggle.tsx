@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "./styles.module.scss";
+import IconToggle from "@/components/ui/IconToggle";
 
 export type CatalogView = "grid" | "list";
 
@@ -87,27 +87,14 @@ const ListIcon = () => (
 /** Grid / list switch for a catalog's results */
 export function ViewToggle({ view, onChange }: { view: CatalogView; onChange: (view: CatalogView) => void }) {
   return (
-    <div className={styles.viewToggle} role="group" aria-label="Layout">
-      <button
-        type="button"
-        className={styles.viewButton}
-        aria-pressed={view === "grid"}
-        aria-label="Grid view"
-        title="Grid view"
-        onClick={() => onChange("grid")}
-      >
-        <GridIcon />
-      </button>
-      <button
-        type="button"
-        className={styles.viewButton}
-        aria-pressed={view === "list"}
-        aria-label="List view"
-        title="List view"
-        onClick={() => onChange("list")}
-      >
-        <ListIcon />
-      </button>
-    </div>
+    <IconToggle
+      label="Layout"
+      value={view}
+      onChange={onChange}
+      options={[
+        { value: "grid", label: "Grid view", icon: <GridIcon /> },
+        { value: "list", label: "List view", icon: <ListIcon /> },
+      ]}
+    />
   );
 }
