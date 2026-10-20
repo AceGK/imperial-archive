@@ -112,8 +112,8 @@ export const handler = documentEventHandler(async ({ event, context }) => {
           "books": *[_type == "book40k" && !(_id in path("drafts.**")) && references($authorId)]{
             format,
             "series": *[
-              _type == "series40k" && ^._id in lists[].items[].work._ref
-            ]{ "title": title, "slug": slug.current }[0],
+              _type == "series40k" && !(_id in path("drafts.**")) && ^._id in lists[].items[].work._ref
+            ]{ "title": title, "slug": slug.current },
             "era": era->{ "name": coalesce(title, name), "slug": slug.current },
             "factions": factions[]->{
               "name": coalesce(title, name),
@@ -148,9 +148,12 @@ export const handler = documentEventHandler(async ({ event, context }) => {
           formats.add(formatBookType(book.format));
         }
 
-        if (book.series?.slug && book.series?.title) {
-          seriesSlugs.add(book.series.slug);
-          seriesTitles.add(book.series.title);
+        // every series the book is in, not just the first
+        for (const s of Array.isArray(book.series) ? book.series : []) {
+          if (s?.slug && s?.title) {
+            seriesSlugs.add(s.slug);
+            seriesTitles.add(s.title);
+          }
         }
 
         if (book.era?.slug && book.era?.name) {

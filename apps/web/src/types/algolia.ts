@@ -45,7 +45,8 @@ export type BookHit = {
   authors: AlgoliaAuthor[];
   factions: AlgoliaFaction[];
   era: AlgoliaEra | null;
-  series: AlgoliaSeries | null;
+  // every series the book is in; older records may still hold a single object or null
+  series: AlgoliaSeries[] | AlgoliaSeries | null;
   _createdAt: string;
   _updatedAt: string;
 };

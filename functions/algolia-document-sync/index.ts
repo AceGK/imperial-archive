@@ -60,7 +60,8 @@ type AlgoliaBook = {
   image: ImageRef;
   description: string;
   story: string;
-  series: SeriesMini | null;
+  // every series the book belongs to, so the series filter finds it under each
+  series: SeriesMini[];
   era: EraRef | null;
   factions: FactionRef[];
   authors: AuthorRef[];
@@ -158,10 +159,9 @@ export const handler = documentEventHandler(async ({ event, context }) => {
             defined($imageAssetId) => *[_id == $imageAssetId][0].url,
             null
           ),
-          "series": *[_type == "series40k" && $bookId in lists[].items[].work._ref][0]{
-            _id,
+          "series": *[_type == "series40k" && !(_id in path("drafts.**")) && $bookId in lists[].items[].work._ref] | order(title asc){
             title,
-            slug
+            "slug": slug.current
           }
         }`,
         {
@@ -220,17 +220,10 @@ export const handler = documentEventHandler(async ({ event, context }) => {
 
       console.log("  ✓ Processed era:", processedEra);
 
-      // Process series
-      const processedSeries: SeriesMini | null =
-        bookData?.series?.title && bookData?.series?.slug
-          ? {
-              title: bookData.series.title,
-              slug:
-                typeof bookData.series.slug === "object"
-                  ? bookData.series.slug?.current || ""
-                  : bookData.series.slug || "",
-            }
-          : null;
+      // Process series (all of them; the series sync keeps this current when a series changes)
+      const processedSeries: SeriesMini[] = Array.isArray(bookData?.series)
+        ? bookData.series.filter((s: any) => s?.title && s?.slug).map((s: any) => ({ title: s.title, slug: s.slug }))
+        : [];
 
       console.log("  ✓ Processed series:", processedSeries);
 
@@ -285,7 +278,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
         processedFactions.map((f) => f.name).join(", ") || "none"
       );
       console.log("  - Image:", processedImage.url ? "✓" : "✗");
-      console.log("  - Series:", processedSeries?.title || "none");
+      console.log("  - Series:", processedSeries.map((s) => s.title).join(", ") || "none");
 
       await algolia.addOrUpdateObject({
         indexName: ALGOLIA_INDEX_NAME,
