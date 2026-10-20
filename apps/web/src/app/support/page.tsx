@@ -19,7 +19,7 @@ export default function SupportPage() {
     <main>
       <section className="container row__md">
         <div className={tiles.page}>
-          <InfoHeader label="Adeptus Administratum · IA-008 // Officio Assistance" title="Support" />
+          <InfoHeader label="Adeptus Administratum · IA-007 // Officio Assistance" title="Support" />
 
           <Card>
             <p className={styles.intro}>

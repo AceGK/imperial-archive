@@ -13,7 +13,12 @@ import styles from "./page.module.scss";
 type ReportPageInfo = {
   href: string;
   title: string;
+  /** The Administratum office in the page header, e.g. "IA-009" and "Errata" */
+  section: string;
+  office: string;
+  /** The card's reference code and record name, e.g. "ER-01" and "Erratum" */
   code: string;
+  record: string;
   blurb: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
@@ -22,21 +27,30 @@ export const REPORT_PAGES: Record<ReportType, ReportPageInfo> = {
   siteIssue: {
     href: "/report/site-issue",
     title: "Report a site issue",
-    code: "VX-01",
+    section: "IA-009",
+    office: "Errata",
+    code: "ER-01",
+    record: "Erratum",
     blurb: "Something broken, confusing, or hard to use",
     icon: BugIcon,
   },
   missingBook: {
     href: "/report/missing",
     title: "Report something missing",
-    code: "VX-02",
+    section: "IA-010",
+    office: "Petitions",
+    code: "PT-01",
+    record: "Petition",
     blurb: "A book, author, or series the Archive doesn't have yet",
     icon: BookQuestionIcon,
   },
   feedback: {
     href: "/feedback",
     title: "Send feedback",
-    code: "VX-03",
+    section: "IA-008",
+    office: "Requisitions",
+    code: "RQ-01",
+    record: "Requisition",
     blurb: "Ideas, requests, suggestions, or anything else",
     icon: FeedbackIcon,
   },
@@ -60,9 +74,9 @@ export default function ReportPage({
     <main>
       <section className="container row__md">
         <div className={styles.page}>
-          <InfoHeader label="Adeptus Administratum · IA-006 // Vox" title={page.title} />
+          <InfoHeader label={`Adeptus Administratum · ${page.section} // ${page.office}`} title={page.title} />
 
-          <Card eyebrow={<span className={styles.eyebrow}>{page.code} · Vox-channel</span>}>
+          <Card eyebrow={<span className={styles.eyebrow}>{page.code} · {page.record}</span>}>
             <div className={styles.intro}>{intro}</div>
             <ReportForm type={type} authors={authors} />
           </Card>

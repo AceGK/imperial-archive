@@ -11,7 +11,7 @@ export default function InfoHeader({
   children,
   className,
 }: {
-  /** e.g. "Adeptus Administratum · IA-007 // Chronicles" */
+  /** e.g. "Adeptus Administratum · IA-003 // Catechism" */
   label?: ReactNode;
   title: ReactNode;
   children?: ReactNode;
