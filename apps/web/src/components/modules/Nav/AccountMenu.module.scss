@@ -51,11 +51,12 @@
   color: var(--subtle);
 }
 
+// gold, like the icons in the main nav's menus
 .icon {
   flex-shrink: 0;
   width: 1rem;
   height: 1rem;
-  color: var(--subtle);
+  color: var(--primary);
 }
 
 // square items with hover-only corner brackets, like the bracket Buttons.
@@ -77,16 +78,18 @@
   // the page being viewed
   &[aria-current="page"] {
     color: var(--primary);
-
-    .icon {
-      color: var(--primary);
-    }
   }
 }
 
 // after .item.item, at the same weight, so the red hover wins
 .item.signOut {
   @include destructive-hover;
+
+  // on the red hover fill the icon follows the text, as gold reads poorly there
+  &:hover .icon,
+  &:focus-visible .icon {
+    color: currentColor;
+  }
 }
 
 .soon {

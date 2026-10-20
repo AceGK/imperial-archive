@@ -12,7 +12,7 @@ file; this folder holds the full license texts.
 | [Feather Icons](https://feathericons.com) | MIT ([feather-icons.txt](feather-icons.txt)) | shield, book-question (question mark added) |
 | [Octicons](https://primer.style/octicons) | MIT ([octicons.txt](octicons.txt)) | bug |
 | [Material Icons](https://fonts.google.com/icons) | Apache 2.0 ([material-icons.txt](material-icons.txt)) | feedback |
-| [Tabler Icons](https://tabler.io/icons) | MIT ([tabler-icons.txt](tabler-icons.txt)) | square-info, history, sidebar-left-collapse, sidebar-left-expand, vocabulary |
+| [Tabler Icons](https://tabler.io/icons) | MIT ([tabler-icons.txt](tabler-icons.txt)) | square-info, sidebar-left-collapse, sidebar-left-expand, timeline (timeline-event-text) |
 | [Simple Icons](https://simpleicons.org) | CC0 | the brand icons marked as such |
 | [wh40k-icon](https://github.com/Certseeds/wh40k-icon) | see the About page credits | factions/, achievements/ |
 
