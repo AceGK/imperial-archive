@@ -8,9 +8,9 @@ import { sendEmail } from "./emails";
 import {
   MAX_LENGTH,
   REPORT_RATE_LIMITED,
-  REPORT_TYPE_LABELS,
   formatReleaseDate,
   isValidReleaseDate,
+  reportLabel,
   type ReportField,
 } from "./reportFields";
 
@@ -33,6 +33,7 @@ const reportType = v.union(v.literal("siteIssue"), v.literal("missingBook"), v.l
 const reportStatus = v.union(v.literal("new"), v.literal("inProgress"), v.literal("done"), v.literal("declined"));
 
 const optionalFields = {
+  missingKind: v.optional(v.union(v.literal("book"), v.literal("author"), v.literal("series"))),
   name: v.optional(v.string()),
   email: v.optional(v.string()),
   message: v.optional(v.string()),
@@ -57,6 +58,7 @@ export const submit = mutation({
 
     // the site validates these too; this keeps oversized values out regardless
     for (const [key, value] of Object.entries(fields)) {
+      if (key === "missingKind") continue;
       if (value !== undefined && value.length > MAX_LENGTH[key as ReportField]) {
         throw new Error(`${key} is too long`);
       }
@@ -64,8 +66,15 @@ export const submit = mutation({
     if (fields.releaseDate !== undefined && !isValidReleaseDate(fields.releaseDate)) {
       throw new Error("releaseDate is not a valid date");
     }
-    if (type === "missingBook" && (!fields.bookTitle?.trim() || !fields.bookAuthor?.trim())) {
-      throw new Error("A missing book needs a title and author");
+    if (type === "missingBook") {
+      const kind = fields.missingKind ?? "book";
+      const named =
+        kind === "book"
+          ? fields.bookTitle?.trim() && fields.bookAuthor?.trim()
+          : kind === "author"
+            ? fields.bookAuthor?.trim()
+            : fields.series?.trim();
+      if (!named) throw new Error(`A missing ${kind} needs its name`);
     }
     if (type !== "missingBook" && !fields.message?.trim()) {
       throw new Error("A message is required");
@@ -106,9 +115,7 @@ export const notify = internalAction({
     const report = await ctx.runQuery(internal.reports.getForEmail, { id });
     if (!report) return;
 
-    const subject = `[${REPORT_TYPE_LABELS[report.type]}] ${
-      report.type === "missingBook" ? `${report.bookTitle} by ${report.bookAuthor}` : firstLine(report.message)
-    }`;
+    const subject = `[${reportLabel(report)}] ${missingName(report) ?? firstLine(report.message)}`;
     await sendEmail({ to, subject, text: describe(report) });
   },
 });
@@ -134,6 +141,15 @@ const FIELD_LABELS: [keyof Doc<"reports">, string][] = [
   ["email", "Email"],
 ];
 
+/** "Horus Rising by Dan Abnett", "Dan Abnett", "Gaunt's Ghosts by Dan Abnett"; undefined for other reports */
+function missingName(report: Doc<"reports">) {
+  if (report.type !== "missingBook") return undefined;
+  const kind = report.missingKind ?? "book";
+  if (kind === "author") return report.bookAuthor;
+  const name = kind === "book" ? report.bookTitle : report.series;
+  return report.bookAuthor ? `${name} by ${report.bookAuthor}` : name;
+}
+
 function firstLine(text?: string) {
   const line = (text ?? "").split("\n")[0].trim();
   return line.length > 70 ? `${line.slice(0, 70)}…` : line || "(no message)";
@@ -147,7 +163,7 @@ function describe(report: Doc<"reports">) {
   });
   if (report.userId) lines.push(`Account: ${report.userId}`);
   return [
-    `New ${REPORT_TYPE_LABELS[report.type].toLowerCase()} report`,
+    `New ${reportLabel(report).toLowerCase()} report`,
     lines.join("\n"),
     report.message ? `Message:\n${report.message}` : "",
     `Triage it at ${process.env.SITE_URL ?? "https://imperialarchive.com"}/admin/reports`,

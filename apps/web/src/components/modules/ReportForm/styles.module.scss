@@ -1,4 +1,5 @@
 @use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
 
 .form {
   display: flex;
@@ -63,6 +64,93 @@
   textarea,
   .selectTrigger {
     border-color: var(--destructive);
+  }
+}
+
+// What's missing: three square options; the chosen one keeps a gold border,
+// the others show the corner marks on hover
+.kinds {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  legend {
+    float: left; // keeps the legend in the fieldset's flow, like the field labels
+    width: 100%;
+    margin-bottom: 0.4rem;
+    padding: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+}
+
+.kindOptions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.kind {
+  position: relative;
+  cursor: pointer;
+
+  // hidden but still focusable and announced; the span below is what shows
+  input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  span {
+    @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 0.5rem;
+    border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--bg), black 2%);
+    text-align: center;
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.9375rem;
+    color: var(--subtle);
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  // gold like the nav's icons, whichever option is chosen
+  svg {
+    flex-shrink: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--primary);
+  }
+
+  &:hover span {
+    color: var(--text);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  input:checked + span {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  input:focus-visible + span {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
   }
 }
 

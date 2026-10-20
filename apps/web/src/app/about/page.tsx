@@ -282,7 +282,7 @@ export default function AboutPage() {
               </dl>
               <p>
                 In a library this vast, gaps and errors are inevitable. Reports
-                of <Link href="/report/missing-book">missing books</Link> and
+                of <Link href="/report/missing">missing books, authors or series</Link> and
                 anything else that&apos;s wrong are welcome through the{" "}
                 <a href="#vox">vox-channel</a> below.
               </p>
@@ -310,7 +310,7 @@ export default function AboutPage() {
                 </p>
                 <ul>
                   <li>
-                    <Link href="/report/missing-book">Report a missing book</Link>
+                    <Link href="/report/missing">Report something missing</Link>
                   </li>
                   <li>
                     <Link href="/report/site-issue">Report a site issue</Link>

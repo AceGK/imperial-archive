@@ -8,6 +8,7 @@ import {
   REPORT_STATUS_LABELS,
   REPORT_TYPE_LABELS,
   formatReleaseDate,
+  reportLabel,
   type ReportStatus,
   type ReportType,
 } from "@convex/reportFields";
@@ -45,7 +46,7 @@ function ReportItem({ report }: { report: Doc<"reports"> }) {
   return (
     <li className={styles.report}>
       <div className={styles.reportHead}>
-        <span className={styles.type}>{REPORT_TYPE_LABELS[report.type]}</span>
+        <span className={styles.type}>{reportLabel(report)}</span>
         <time className={styles.date} dateTime={new Date(report._creationTime).toISOString()}>
           {dateFormat.format(report._creationTime)}
         </time>

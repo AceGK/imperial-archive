@@ -24,7 +24,7 @@ export default function SupportPage() {
           <Card>
             <p className={styles.intro}>
               The Imperial Archive is built and kept by one person. Tips help with the running costs, and reports of
-              broken pages or missing books keep the catalog accurate.
+              broken pages or missing books, authors and series keep the catalog accurate.
             </p>
           </Card>
 

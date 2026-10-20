@@ -6,9 +6,25 @@ export type ReportStatus = "new" | "inProgress" | "done" | "declined";
 
 export const REPORT_TYPE_LABELS: Record<ReportType, string> = {
   siteIssue: "Site issue",
-  missingBook: "Missing book",
+  // books, authors or series (see MissingKind); the name predates authors and series
+  missingBook: "Missing",
   feedback: "Feedback",
 };
+
+/** What a missing report is about; reports without one are books */
+export type MissingKind = "book" | "author" | "series";
+export const MISSING_KINDS = ["book", "author", "series"] as const satisfies readonly MissingKind[];
+export const MISSING_KIND_LABELS: Record<MissingKind, string> = {
+  book: "Book",
+  author: "Author",
+  series: "Series",
+};
+
+/** "Missing author", "Site issue": a report's type, with what's missing */
+export function reportLabel(report: { type: ReportType; missingKind?: MissingKind }): string {
+  if (report.type !== "missingBook") return REPORT_TYPE_LABELS[report.type];
+  return `Missing ${MISSING_KIND_LABELS[report.missingKind ?? "book"].toLowerCase()}`;
+}
 
 export const REPORT_STATUS_LABELS: Record<ReportStatus, string> = {
   new: "New",

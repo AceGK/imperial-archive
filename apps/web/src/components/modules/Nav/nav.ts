@@ -70,9 +70,9 @@ export const NAV_ITEMS: NavItem[] = [
         icon: BugIcon,
       },
       {
-        href: "/report/missing-book",
-        label: "Report Missing Book",
-        description: "A Black Library title the Archive doesn't have yet",
+        href: "/report/missing",
+        label: "Report Missing",
+        description: "A book, author, or series the Archive doesn't have yet",
         icon: BookQuestionIcon,
       },
     ],

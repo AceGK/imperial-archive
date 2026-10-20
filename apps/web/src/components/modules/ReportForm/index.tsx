@@ -8,16 +8,29 @@ import {
   FORMAT_OPTIONS,
   HONEYPOT_FIELD,
   MAX_LENGTH,
+  MISSING_KINDS,
+  MISSING_KIND_LABELS,
   MONTH_NAMES,
   OS_OPTIONS,
   daysInMonth,
+  type MissingKind,
   type ReportType,
 } from "@convex/reportFields";
 import { submitReport } from "@/lib/reports/submit";
 import Button from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import Turnstile, { turnstileBlockedMessage, type TurnstileHandle, type TurnstileState } from "@/components/ui/Turnstile";
+import BookIcon from "@/components/icons/book-spine.svg";
+import QuillPenIcon from "@/components/icons/quill-pen.svg";
+import BooksIcon from "@/components/icons/books.svg";
 import styles from "./styles.module.scss";
+
+// the Browse menu's icons for books, authors and series
+const MISSING_KIND_ICONS: Record<MissingKind, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+  book: BookIcon,
+  author: QuillPenIcon,
+  series: BooksIcon,
+};
 
 const SUBMIT_LABELS: Record<ReportType, string> = {
   siteIssue: "Send report",
@@ -236,6 +249,7 @@ export default function ReportForm({ type }: { type: ReportType }) {
   const [email, setEmail] = useState("");
   const [format, setFormat] = useState("");
   const [release, setRelease] = useState(NO_RELEASE);
+  const [missingKind, setMissingKind] = useState<MissingKind>("book");
   const statusId = useId();
 
   const { isAuthenticated } = useConvexAuth();
@@ -243,6 +257,12 @@ export default function ReportForm({ type }: { type: ReportType }) {
 
   // prefill what can be guessed, once the page is in the browser
   useEffect(() => {
+    if (type === "missingBook") {
+      // links can open the form on an author or series: /report/missing?kind=author
+      const kind = new URLSearchParams(window.location.search).get("kind");
+      if (MISSING_KINDS.includes(kind as MissingKind)) setMissingKind(kind as MissingKind);
+      return;
+    }
     if (type !== "siteIssue") return;
     setPlatform(detectPlatform());
     // only from an explicit ?from= (a "report this page" link): document.referrer
@@ -309,36 +329,97 @@ export default function ReportForm({ type }: { type: ReportType }) {
     <form ref={formRef} className={styles.form} onSubmit={onSubmit} noValidate aria-describedby={error ? statusId : undefined}>
       {type === "missingBook" && (
         <>
-          <div className={styles.row}>
-            <Field name="bookTitle" label="Title" required error={err("bookTitle")}>
-              {(id, d) => <input id={id} {...counted("bookTitle")} required aria-describedby={d} aria-invalid={!!err("bookTitle")} />}
-            </Field>
-            <Field name="bookAuthor" label="Author" required error={err("bookAuthor")}>
+          <fieldset className={styles.kinds}>
+            <legend>What&apos;s missing?</legend>
+            <div className={styles.kindOptions}>
+              {MISSING_KINDS.map((kind) => {
+                const Icon = MISSING_KIND_ICONS[kind];
+                return (
+                  <label key={kind} className={styles.kind}>
+                    <input
+                      type="radio"
+                      name="missingKind"
+                      value={kind}
+                      checked={missingKind === kind}
+                      onChange={() => {
+                        setMissingKind(kind);
+                        setFieldErrors({});
+                      }}
+                    />
+                    <span>
+                      <Icon aria-hidden="true" />
+                      {MISSING_KIND_LABELS[kind]}
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          {missingKind === "book" && (
+            <>
+              <div className={styles.row}>
+                <Field name="bookTitle" label="Title" required error={err("bookTitle")}>
+                  {(id, d) => <input id={id} {...counted("bookTitle")} required aria-describedby={d} aria-invalid={!!err("bookTitle")} />}
+                </Field>
+                <Field name="bookAuthor" label="Author" required error={err("bookAuthor")}>
+                  {(id, d) => <input id={id} {...counted("bookAuthor")} required aria-describedby={d} aria-invalid={!!err("bookAuthor")} />}
+                </Field>
+              </div>
+              <div className={styles.row}>
+                <Field name="series" label="Series" error={err("series")}>
+                  {(id, d) => <input id={id} {...counted("series")} aria-describedby={d} />}
+                </Field>
+                <Field name="format" label="Format" error={err("format")}>
+                  {(id, d) => (
+                    <FormSelect id={id} name="format" label="Format" value={format} onChange={setFormat} options={FORMAT_OPTIONS} describedBy={d} />
+                  )}
+                </Field>
+              </div>
+              <div className={styles.row}>
+                <Field name="releaseDate" label="Release date" hint="Just the year is fine" error={err("releaseDate")}>
+                  {(id, d) => <ReleaseDate id={id} parts={release} onChange={setRelease} describedBy={d} invalid={!!err("releaseDate")} />}
+                </Field>
+                <Field name="isbn" label="ISBN" error={err("isbn")}>
+                  {(id, d) => <input id={id} {...counted("isbn")} aria-describedby={d} />}
+                </Field>
+              </div>
+            </>
+          )}
+
+          {/* an author's name goes in bookAuthor, as it would on a book */}
+          {missingKind === "author" && (
+            <Field name="bookAuthor" label="Author's name" required error={err("bookAuthor")}>
               {(id, d) => <input id={id} {...counted("bookAuthor")} required aria-describedby={d} aria-invalid={!!err("bookAuthor")} />}
             </Field>
-          </div>
-          <div className={styles.row}>
-            <Field name="series" label="Series" error={err("series")}>
-              {(id, d) => <input id={id} {...counted("series")} aria-describedby={d} />}
-            </Field>
-            <Field name="format" label="Format" error={err("format")}>
-              {(id, d) => (
-                <FormSelect id={id} name="format" label="Format" value={format} onChange={setFormat} options={FORMAT_OPTIONS} describedBy={d} />
-              )}
-            </Field>
-          </div>
-          <div className={styles.row}>
-            <Field name="releaseDate" label="Release date" hint="Just the year is fine" error={err("releaseDate")}>
-              {(id, d) => <ReleaseDate id={id} parts={release} onChange={setRelease} describedBy={d} invalid={!!err("releaseDate")} />}
-            </Field>
-            <Field name="isbn" label="ISBN" error={err("isbn")}>
-              {(id, d) => <input id={id} {...counted("isbn")} aria-describedby={d} />}
-            </Field>
-          </div>
-          <Field name="link" label="Link" hint="Black Library, Lexicanum, or any page about the book" error={err("link")}>
+          )}
+
+          {missingKind === "series" && (
+            <div className={styles.row}>
+              <Field name="series" label="Series name" required error={err("series")}>
+                {(id, d) => <input id={id} {...counted("series")} required aria-describedby={d} aria-invalid={!!err("series")} />}
+              </Field>
+              <Field name="bookAuthor" label="Author" hint="Or authors, for a shared series" error={err("bookAuthor")}>
+                {(id, d) => <input id={id} {...counted("bookAuthor")} aria-describedby={d} />}
+              </Field>
+            </div>
+          )}
+
+          <Field name="link" label="Link" hint={`Black Library, Lexicanum, or any page about the ${missingKind}`} error={err("link")}>
             {(id, d) => <input id={id} type="url" {...counted("link")} placeholder="https://" aria-describedby={d} aria-invalid={!!err("link")} />}
           </Field>
-          <Field name="message" label="Anything else" error={err("message")}>
+          <Field
+            name="message"
+            label="Anything else"
+            hint={
+              missingKind === "author"
+                ? "Books they've written, for example"
+                : missingKind === "series"
+                  ? "The books in it, for example"
+                  : undefined
+            }
+            error={err("message")}
+          >
             {(id, d) => <textarea id={id} {...counted("message")} rows={4} aria-describedby={d} />}
           </Field>
         </>

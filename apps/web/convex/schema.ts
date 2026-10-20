@@ -76,7 +76,8 @@ const schema = defineSchema({
     pageUrl: v.optional(v.string()),
     os: v.optional(v.string()),
     browser: v.optional(v.string()),
-    // missingBook
+    // missingBook: what's missing; absent on reports from before authors and series
+    missingKind: v.optional(v.union(v.literal("book"), v.literal("author"), v.literal("series"))),
     bookTitle: v.optional(v.string()),
     bookAuthor: v.optional(v.string()),
     series: v.optional(v.string()),

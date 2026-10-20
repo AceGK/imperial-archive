@@ -12,6 +12,7 @@ import {
   FORMAT_OPTIONS,
   HONEYPOT_FIELD,
   MAX_LENGTH,
+  MISSING_KINDS,
   OS_OPTIONS,
   REPORT_RATE_LIMITED,
   RELEASE_YEAR_MIN,
@@ -51,21 +52,37 @@ const schemas = {
     os: oneOf(OS_OPTIONS),
     browser: oneOf(BROWSER_OPTIONS),
   }),
-  missingBook: z.object({
-    ...contact,
-    bookTitle: text(MAX_LENGTH.bookTitle).min(1, "Enter the book's title."),
-    bookAuthor: text(MAX_LENGTH.bookAuthor).min(1, "Enter the author."),
-    series: optional(MAX_LENGTH.series),
-    format: oneOf(FORMAT_OPTIONS),
-    // the form puts the year, month and day together; only the year is needed
-    releaseDate: optional(MAX_LENGTH.releaseDate).refine(
-      (value) => !value || isValidReleaseDate(value),
-      `Enter a year from ${RELEASE_YEAR_MIN} to ${releaseYearMax()}, and a day that's in the month.`,
-    ),
-    isbn: optional(MAX_LENGTH.isbn),
-    link: optional(MAX_LENGTH.link).refine((value) => !value || /^https?:\/\/\S+$/i.test(value), "Enter a full link starting with http:// or https://."),
-    message: optional(MAX_LENGTH.message),
-  }),
+  // a book, author or series; each needs its own name (checked below)
+  missingBook: z
+    .object({
+      ...contact,
+      missingKind: z.enum(MISSING_KINDS).catch("book"),
+      bookTitle: optional(MAX_LENGTH.bookTitle),
+      bookAuthor: optional(MAX_LENGTH.bookAuthor),
+      series: optional(MAX_LENGTH.series),
+      format: oneOf(FORMAT_OPTIONS),
+      // the form puts the year, month and day together; only the year is needed
+      releaseDate: optional(MAX_LENGTH.releaseDate).refine(
+        (value) => !value || isValidReleaseDate(value),
+        `Enter a year from ${RELEASE_YEAR_MIN} to ${releaseYearMax()}, and a day that's in the month.`,
+      ),
+      isbn: optional(MAX_LENGTH.isbn),
+      link: optional(MAX_LENGTH.link).refine((value) => !value || /^https?:\/\/\S+$/i.test(value), "Enter a full link starting with http:// or https://."),
+      message: optional(MAX_LENGTH.message),
+    })
+    .superRefine((report, ctx) => {
+      const need = (key: "bookTitle" | "bookAuthor" | "series", message: string) => {
+        if (!report[key]) ctx.addIssue({ code: "custom", path: [key], message });
+      };
+      if (report.missingKind === "book") {
+        need("bookTitle", "Enter the book's title.");
+        need("bookAuthor", "Enter the author.");
+      } else if (report.missingKind === "author") {
+        need("bookAuthor", "Enter the author's name.");
+      } else {
+        need("series", "Enter the series name.");
+      }
+    }),
   feedback: z.object({
     ...contact,
     message: text(MAX_LENGTH.message).min(1, "Write your feedback."),

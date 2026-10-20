@@ -26,10 +26,10 @@ export const REPORT_PAGES: Record<ReportType, ReportPageInfo> = {
     icon: BugIcon,
   },
   missingBook: {
-    href: "/report/missing-book",
-    title: "Report a missing book",
+    href: "/report/missing",
+    title: "Report something missing",
     code: "VX-02",
-    blurb: "A Black Library title the Archive doesn't have yet",
+    blurb: "A book, author, or series the Archive doesn't have yet",
     icon: BookQuestionIcon,
   },
   feedback: {
