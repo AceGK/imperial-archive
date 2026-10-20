@@ -7,6 +7,7 @@ import type { PortableTextBlock } from "@portabletext/types";
 import { SITE_URL } from "@/lib/seo";
 import HeadingAnchor from "@/components/ui/HeadingAnchor";
 import { EXTERNAL_REL } from "@/lib/links";
+import { ArchiveLink, BookShelf, SeriesShelf } from "./embeds";
 
 /**
  * Site-wide link rule:
@@ -55,9 +56,12 @@ const blockComponents: Record<string, PortableTextBlockComponent> = {
 export const richTextComponents: PortableTextComponents = {
   marks: {
     link: ({ value, children }) => <SmartLink href={value?.href ?? ""}>{children}</SmartLink>,
+    internalLink: ({ value, children }) => <ArchiveLink value={value}>{children}</ArchiveLink>,
   },
   block: blockComponents,
   types: {
+    bookShelf: ({ value }) => <BookShelf value={value} />,
+    seriesShelf: ({ value }) => <SeriesShelf value={value} />,
     image: ({ value }) => {
       const size = imageSize(value?.asset?._ref);
       if (!value?.asset || !size) return null;

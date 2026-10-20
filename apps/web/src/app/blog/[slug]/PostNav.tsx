@@ -4,7 +4,8 @@ import ChevronLeft from "@/components/icons/chevron-left.svg";
 import ChevronRight from "@/components/icons/chevron-right.svg";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import type { BlogPostNeighbor } from "@/types/sanity";
-import styles from "./styles.module.scss";
+// shares the article's stylesheet, where the post links are styled
+import styles from "@/components/modules/Article/styles.module.scss";
 
 /** Links to the older and newer posts, each with its cover and title */
 export default function PostNav({

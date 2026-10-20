@@ -1,5 +1,6 @@
 // /schemas/objects/blockContent.ts
-import {defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
+import {BookIcon, ThListIcon} from '@sanity/icons'
 
 export default defineType({
   name: 'blockContent',
@@ -27,6 +28,23 @@ export default defineType({
         //   {title: 'Emphasis', value: 'em'},
         // ],
         annotations: [
+          // a book, series, author, faction or era in the catalog; stays
+          // correct if its slug changes, unlike a typed /books/... path
+          {
+            name: 'internalLink',
+            type: 'object',
+            title: 'Archive link',
+            icon: BookIcon,
+            fields: [
+              {
+                name: 'reference',
+                type: 'reference',
+                title: 'Links to',
+                to: [{type: 'book40k'}, {type: 'series40k'}, {type: 'author40k'}, {type: 'faction40k'}, {type: 'era40k'}],
+                validation: (Rule) => Rule.required(),
+              },
+            ],
+          },
           {
             name: 'link',
             type: 'object',
@@ -74,5 +92,82 @@ export default defineType({
         },
       ],
     },
+
+    // book cards from the catalog, as a slider or a grid
+    defineArrayMember({
+      name: 'bookShelf',
+      title: 'Books',
+      type: 'object',
+      icon: BookIcon,
+      fields: [
+        defineField({
+          name: 'books',
+          title: 'Books',
+          type: 'array',
+          of: [{type: 'reference', to: [{type: 'book40k'}]}],
+          validation: (Rule) => Rule.required().min(1),
+        }),
+        defineField({
+          name: 'layout',
+          title: 'Layout',
+          type: 'string',
+          description: 'Grid shows every book at once; a slider scrolls sideways, for longer lists.',
+          options: {
+            list: [
+              {title: 'Grid', value: 'grid'},
+              {title: 'Slider', value: 'slider'},
+            ],
+            layout: 'radio',
+            direction: 'horizontal',
+          },
+          initialValue: 'grid',
+        }),
+      ],
+      preview: {
+        select: {first: 'books.0.title', second: 'books.1.title', layout: 'layout'},
+        prepare: ({first, second, layout}) => ({
+          title: [first, second].filter(Boolean).join(', ') || 'Books',
+          subtitle: `Books · ${layout === 'slider' ? 'Slider' : 'Grid'}`,
+        }),
+      },
+    }),
+
+    // series cards from the catalog
+    defineArrayMember({
+      name: 'seriesShelf',
+      title: 'Series',
+      type: 'object',
+      icon: ThListIcon,
+      fields: [
+        defineField({
+          name: 'series',
+          title: 'Series',
+          type: 'array',
+          of: [{type: 'reference', to: [{type: 'series40k'}]}],
+          validation: (Rule) => Rule.required().min(1),
+        }),
+        defineField({
+          name: 'layout',
+          title: 'Layout',
+          type: 'string',
+          options: {
+            list: [
+              {title: 'Grid', value: 'grid'},
+              {title: 'Slider', value: 'slider'},
+            ],
+            layout: 'radio',
+            direction: 'horizontal',
+          },
+          initialValue: 'grid',
+        }),
+      ],
+      preview: {
+        select: {first: 'series.0.title', second: 'series.1.title', layout: 'layout'},
+        prepare: ({first, second, layout}) => ({
+          title: [first, second].filter(Boolean).join(', ') || 'Series',
+          subtitle: `Series · ${layout === 'slider' ? 'Slider' : 'Grid'}`,
+        }),
+      },
+    }),
   ],
 })

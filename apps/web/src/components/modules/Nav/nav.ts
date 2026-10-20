@@ -69,10 +69,9 @@ export const NAV_ITEMS: NavItem[] = [
         label: "Where to Start",
         description: "First books for new readers",
         icon: SignpostIcon,
-        comingSoon: true,
       },
       {
-        href: "/guides",
+        href: "/reading-guides",
         label: "Reading Guides",
         description: "Reading orders and paths",
         icon: RouteIcon,

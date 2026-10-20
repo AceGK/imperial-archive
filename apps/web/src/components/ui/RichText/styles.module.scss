@@ -1,0 +1,41 @@
+@use "@/styles/breakpoints" as *;
+
+// a shelf of cards between paragraphs; resets the prose spacing and link
+// styling the article body applies to its children
+.embed {
+  margin: 1.75rem 0 2.25rem;
+
+  :global(a) {
+    text-decoration: none;
+  }
+}
+
+// sized by the column, not the viewport: two to a row, three once there's
+// room, never wider than $card-max; a shorter row is centred
+$card-max: 230px;
+
+.bookGrid {
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem 1rem;
+
+  > * {
+    flex: 0 0 calc((100% - 1rem) / 2);
+    max-width: $card-max;
+    min-width: 0;
+  }
+
+  @container (min-width: 560px) {
+    > * {
+      flex-basis: calc((100% - 2rem) / 3);
+    }
+  }
+}
+
+.seriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 1rem;
+}
