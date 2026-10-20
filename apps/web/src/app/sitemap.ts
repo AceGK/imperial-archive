@@ -38,6 +38,7 @@ const STATIC_PAGES: { path: string; priority: number }[] = [
   { path: "/eras", priority: 0.7 },
   { path: "/track", priority: 0.5 },
   { path: "/about", priority: 0.4 },
+  { path: "/where-to-buy", priority: 0.4 },
   { path: "/support", priority: 0.3 },
   { path: "/donate", priority: 0.3 },
   { path: "/feedback", priority: 0.2 },
