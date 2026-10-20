@@ -4,6 +4,7 @@ import { env } from "node:process";
 import { documentEventHandler } from "@sanity/functions";
 import { algoliasearch } from "algoliasearch";
 import { createClient } from "@sanity/client";
+import { BOOK_REFS_QUERY, BOOKS_INDEX, bookRefsParams, toBookRecord } from "./record";
 
 const {
   ALGOLIA_APP_ID = "",
@@ -12,62 +13,7 @@ const {
   SANITY_STUDIO_DATASET = "",
 } = env;
 
-const ALGOLIA_INDEX_NAME = "books40k";
-
-/* ------------------------------ helpers ------------------------------- */
-const hardTrim = (str: unknown, max = 8000): string =>
-  typeof str === "string" ? (str.length > max ? str.slice(0, max) : str) : "";
-
-function formatBookType(format: string | null): string {
-  if (!format) return "Book";
-
-  const formatMap: Record<string, string> = {
-    novel: "Novel",
-    novella: "Novella",
-    short_story: "Short Story",
-    audio_drama: "Audio Drama",
-    anthology: "Anthology",
-    omnibus: "Omnibus",
-    graphic_novel: "Graphic Novel",
-    audio_anthology: "Audio Anthology",
-    other: "Other",
-  };
-
-  return formatMap[format] || format;
-}
-
-/* --------------------------- Algolia types ---------------------------- */
-type AuthorRef = {
-  name: string;
-  slug: string;
-};
-
-type FactionRef = {
-  name: string;
-  slug: string;
-  iconId?: string | null;
-};
-
-type SeriesMini = { title: string; slug: string };
-type EraRef = { name: string; slug: string };
-type ImageRef = { url: string | null; alt: string | null };
-
-type AlgoliaBook = {
-  title: string;
-  slug: string;
-  format: string | null;
-  publicationDate: string | null;
-  image: ImageRef;
-  description: string;
-  story: string;
-  // every series the book belongs to, so the series filter finds it under each
-  series: SeriesMini[];
-  era: EraRef | null;
-  factions: FactionRef[];
-  authors: AuthorRef[];
-  _createdAt: string;
-  _updatedAt: string;
-};
+const ALGOLIA_INDEX_NAME = BOOKS_INDEX;
 
 export const handler = documentEventHandler(async ({ event, context }) => {
   const { _id, operation } = event.data;
@@ -89,20 +35,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
     }
   } else {
     try {
-      const {
-        title,
-        slug,
-        format,
-        publicationDate,
-        description,
-        story,
-        authors,
-        era,
-        factions,
-        image,
-        _createdAt,
-        _updatedAt,
-      } = event.data;
+      const { title } = event.data;
 
       console.log("📦 Processing book:", _id);
       console.log("  - Title:", title);
@@ -119,142 +52,21 @@ export const handler = documentEventHandler(async ({ event, context }) => {
 
       console.log("🔍 Fetching references by ID...");
 
-      // Extract reference IDs
-      const authorIds = Array.isArray(authors)
-        ? authors.map((a: any) => a._ref).filter(Boolean)
-        : [];
-      const eraId = era?._ref || null;
-      const factionIds = Array.isArray(factions)
-        ? factions.map((f: any) => f._ref).filter(Boolean)
-        : [];
-
-      const bookData = await sanityClient.fetch(
-        `{
-          "authors": *[_id in $authorIds]{
-            _id,
-            name,
-            title,
-            "displayName": coalesce(name, title),
-            slug
-          },
-          "era": select(
-            defined($eraId) => *[_id == $eraId][0]{
-              _id,
-              name,
-              title,
-              "displayName": coalesce(title, name),
-              slug
-            },
-            null
-          ),
-          "factions": *[_id in $factionIds]{
-            _id,
-            name,
-            title,
-            "displayName": coalesce(title, name),
-            slug,
-            iconId
-          },
-          "imageUrl": select(
-            defined($imageAssetId) => *[_id == $imageAssetId][0].url,
-            null
-          ),
-          "series": *[_type == "series40k" && !(_id in path("drafts.**")) && $bookId in lists[].items[].work._ref] | order(title asc){
-            title,
-            "slug": slug.current
-          }
-        }`,
-        {
-          authorIds,
-          eraId: era?._ref || null,
-          factionIds,
-          imageAssetId: image?.asset?._ref || null,
-          bookId: _id,
-        }
-      );
+      // the record is built in record.ts, shared with the full rebuild script
+      const bookData = await sanityClient.fetch(BOOK_REFS_QUERY, bookRefsParams(event.data));
 
       console.log("  ✓ Query result:");
       console.log(JSON.stringify(bookData, null, 2));
 
-      // Process authors (return full objects with name and slug)
-      const processedAuthors: AuthorRef[] = Array.isArray(bookData?.authors)
-        ? bookData.authors
-            .map((a: any) => ({
-              name: a?.displayName || a?.name || a?.title || "",
-              slug:
-                typeof a?.slug === "object" ? a.slug?.current : a?.slug || "",
-            }))
-            .filter((a: AuthorRef) => a.name && a.slug)
-        : [];
+      const document = toBookRecord(event.data, bookData);
+      const { authors: processedAuthors, factions: processedFactions, era: processedEra, series: processedSeries, image: processedImage } = document;
+      const limitedTitle = document.title;
 
       console.log("  ✓ Processed authors:", processedAuthors);
-
-      // Process factions
-      const processedFactions: FactionRef[] = Array.isArray(bookData?.factions)
-        ? bookData.factions
-            .map((f: any) => ({
-              name: f?.displayName || f?.title || f?.name || "",
-              slug:
-                typeof f?.slug === "object" ? f.slug?.current : f?.slug || "",
-              iconId: f?.iconId ?? null,
-            }))
-            .filter((f: FactionRef) => f.name && f.slug)
-        : [];
-
       console.log("  ✓ Processed factions:", processedFactions);
-
-      // Process era
-      const processedEra: EraRef | null = bookData?.era
-        ? {
-            name:
-              bookData.era.displayName ||
-              bookData.era.title ||
-              bookData.era.name ||
-              "",
-            slug:
-              typeof bookData.era.slug === "object"
-                ? bookData.era.slug?.current || ""
-                : bookData.era.slug || "",
-          }
-        : null;
-
       console.log("  ✓ Processed era:", processedEra);
-
-      // Process series (all of them; the series sync keeps this current when a series changes)
-      const processedSeries: SeriesMini[] = Array.isArray(bookData?.series)
-        ? bookData.series.filter((s: any) => s?.title && s?.slug).map((s: any) => ({ title: s.title, slug: s.slug }))
-        : [];
-
       console.log("  ✓ Processed series:", processedSeries);
-
-      // Process image
-      const processedImage: ImageRef = {
-        url: bookData?.imageUrl ?? image?.asset?.url ?? null,
-        alt: image?.alt ?? null,
-      };
-
       console.log("  ✓ Processed image:", processedImage);
-
-      // Truncate text fields
-      const limitedDescription = hardTrim(description, 6000);
-      const limitedStory = hardTrim(story, 2000);
-      const limitedTitle = title ? title.slice(0, 500) : "";
-
-      const document: AlgoliaBook = {
-        title: limitedTitle,
-        slug: slug || "",
-        format: formatBookType(format),
-        publicationDate: publicationDate ?? null,
-        image: processedImage,
-        description: limitedDescription,
-        story: limitedStory,
-        series: processedSeries,
-        era: processedEra,
-        factions: processedFactions,
-        authors: processedAuthors,
-        _createdAt,
-        _updatedAt,
-      };
 
       // Check document size
       const documentSize = JSON.stringify(document).length;
@@ -267,7 +79,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       // Log what we're sending
       console.log("\n📤 Sending to Algolia:");
       console.log("  - Title:", limitedTitle);
-      console.log("  - Format:", formatBookType(format));
+      console.log("  - Format:", document.format);
       console.log(
         "  - Authors:",
         processedAuthors.map((a) => a.name).join(", ") || "none"

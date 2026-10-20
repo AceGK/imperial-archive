@@ -1,4 +1,4 @@
-// scripts/backfill-series.ts
+// scripts/algolia/backfill-series.ts
 //
 // Rewrites the series fields in Algolia from Sanity, listing every series a
 // record belongs to:
@@ -8,32 +8,23 @@
 // the indexes drift. Only those fields are touched; records missing from an
 // index are skipped.
 //
-//   npx tsx scripts/backfill-series.ts           preview what would change
-//   npx tsx scripts/backfill-series.ts --write   apply it
+//   npx tsx scripts/algolia/backfill-series.ts           preview what would change
+//   npx tsx scripts/algolia/backfill-series.ts --write   apply it
 //
 // Reads ALGOLIA_APP_ID, ALGOLIA_WRITE_API_KEY, ALGOLIA_SEARCH_API_KEY,
 // SANITY_STUDIO_PROJECT_ID, SANITY_STUDIO_DATASET and SANITY_API_TOKEN from .env.local.
-import { config } from "dotenv";
-import { createClient } from "@sanity/client";
+import type { createClient } from "@sanity/client";
 import { algoliasearch } from "algoliasearch";
-
-config({ path: ".env.local", quiet: true });
+import { seriesOf } from "../../functions/algolia-document-sync/record";
+import { algoliaWriter, need, sanityClient } from "./lib";
 
 const write = process.argv.includes("--write");
-
-const need = (name: string) => {
-  const value = process.env[name];
-  if (!value) throw new Error(`${name} is not set in .env.local`);
-  return value;
-};
 
 type Series = { title: string; slug: string };
 type Algolia = ReturnType<typeof algoliasearch>;
 
-const SERIES_OF = `*[_type == "series40k" && !(_id in path("drafts.**")) && ^._id in lists[].items[].work._ref] | order(title asc){
-  title,
-  "slug": slug.current
-}`;
+// the same series list the book sync stores
+const SERIES_OF = seriesOf("^._id");
 
 const valid = (series: Series[] | null) => (series || []).filter((s) => s?.title && s?.slug);
 const sameSet = (a: unknown[], b: unknown[]) =>
@@ -118,15 +109,8 @@ async function authorChanges(sanity: ReturnType<typeof createClient>, reader: Al
 }
 
 async function main() {
-  const sanity = createClient({
-    projectId: need("SANITY_STUDIO_PROJECT_ID"),
-    dataset: need("SANITY_STUDIO_DATASET"),
-    apiVersion: "2024-01-01",
-    useCdn: false,
-    token: need("SANITY_API_TOKEN"),
-  });
-  const appId = need("ALGOLIA_APP_ID");
-  const reader = algoliasearch(appId, need("ALGOLIA_SEARCH_API_KEY"));
+  const sanity = sanityClient();
+  const reader = algoliasearch(need("ALGOLIA_APP_ID"), need("ALGOLIA_SEARCH_API_KEY"));
 
   const plans: [string, Change[]][] = [
     ["books40k", await bookChanges(sanity, reader)],
@@ -143,7 +127,7 @@ async function main() {
     return;
   }
 
-  const writer = algoliasearch(appId, need("ALGOLIA_WRITE_API_KEY"));
+  const writer = algoliaWriter();
   for (const [indexName, changes] of plans) {
     if (changes.length === 0) continue;
     await writer.partialUpdateObjects({
