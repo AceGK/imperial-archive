@@ -18,7 +18,8 @@ export default function TrackerPromo() {
         <h2 id="reading-tracker">Warhammer 40k Reading Tracker</h2>
         <p>
           Log every Black Library book you want to read, are reading, have finished and own, from any book card
-          or book page. Your reading log is saved to your account, so it follows you to any device.
+          or book page. Make your own lists too, like a wishlist, a reading order or a to-buy pile. Your reading
+          log is saved to your account, so it follows you to any device.
         </p>
         <div className={styles.actions}>
           <Button href="/track" variant="primary">
@@ -30,18 +31,25 @@ export default function TrackerPromo() {
         </div>
       </div>
 
-      {/* the tags tracked books get, as on book cards */}
-      <ul className={styles.tags} aria-label="Tracking statuses">
-        {TAGS.map(({ label, className }) => (
-          <li key={label} className={`${styles.tag} ${className}`}>
-            {label}
+      <div className={styles.example}>
+        {/* the tags tracked books get, as on book cards */}
+        <ul className={styles.tags} aria-label="Tracking statuses">
+          {TAGS.map(({ label, className }) => (
+            <li key={label} className={`${styles.tag} ${className}`}>
+              {label}
+            </li>
+          ))}
+          <li className={styles.heart}>
+            <HeartIcon aria-hidden="true" />
+            <span className={styles.visuallyHidden}>Favorite</span>
           </li>
-        ))}
-        <li className={styles.heart}>
-          <HeartIcon aria-hidden="true" />
-          <span className={styles.visuallyHidden}>Favorite</span>
-        </li>
-      </ul>
+        </ul>
+
+        {/* the book page's list action, shown as an example like the tags above */}
+        <span className={styles.addToList} aria-hidden="true">
+          + Add to list
+        </span>
+      </div>
     </section>
   );
 }
