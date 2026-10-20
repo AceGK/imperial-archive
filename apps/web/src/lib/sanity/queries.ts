@@ -62,6 +62,37 @@ const bookCardFields = `
 `;
 
 /* -------------------------------------------------------------
+   Rich text body, with the catalog documents it embeds or links
+   resolved: book and series shelves get their cards' fields, and
+   archive links get the type and slugs their path is built from
+-------------------------------------------------------------- */
+const bodyProjection = `
+  body[]{
+    ...,
+    _type == "bookShelf" => {
+      ...,
+      "books": books[]->{ ${bookCardFields} }
+    },
+    _type == "seriesShelf" => {
+      ...,
+      "series": series[]->{
+        _id,
+        title,
+        "slug": slug.current,
+        image{ alt, credit, crop, hotspot, asset->{ _id, url, metadata{ lqip, dimensions } } },
+        "totalCount": count(lists[].items[defined(work)])
+      }
+    },
+    markDefs[]{
+      ...,
+      _type == "internalLink" => {
+        "target": reference->{ _type, "slug": slug.current, "group": group->slug.current }
+      }
+    }
+  }
+`;
+
+/* -------------------------------------------------------------
    POSTS
 -------------------------------------------------------------- */
 export const testPostsQuery = groq`
@@ -628,7 +659,7 @@ export const blogPostBySlugQuery = groq`
   *[${blogPostFilter} && slug.current == $slug][0]{
     ${blogCardFields},
     metaTitle,
-    body,
+    ${bodyProjection},
     _updatedAt,
     "prev": *[${blogPostFilter} && publishedAt < ^.publishedAt] | order(publishedAt desc)[0]{
       ${blogNeighborFields}
