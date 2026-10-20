@@ -60,9 +60,10 @@ const STORES: Store[] = [
     ],
     body: (
       <p>
-        Games Workshop&apos;s own store, and the official home of Black Library books since the old Black
-        Library webstore closed. New books are listed here first, and it&apos;s the main place for limited
-        and special editions, which often sell out on release day and don&apos;t reach other stores.
+        Games Workshop&apos;s own store, and the official home of Black Library books since{" "}
+        <Link href="/blog/black-library-website-closed">the old Black Library webstore closed</Link>. New books
+        are listed here first, and it&apos;s the main place for limited and special editions, which often sell
+        out on release day and don&apos;t reach other stores.
       </p>
     ),
   },
@@ -88,7 +89,7 @@ const STORES: Store[] = [
     title: "Warhammer Stores",
     facts: [
       { term: "Formats", value: "Print" },
-      { term: "Best for", value: "Browsing in person and new hardbacks" },
+      { term: "Best for", value: "Browsing in person and new releases" },
       {
         term: "Visit",
         value: <ExternalLink href="https://www.warhammer.com/en-US/store-finder">Find a Warhammer store</ExternalLink>,
@@ -299,12 +300,17 @@ export default function WhereToBuyPage() {
             <Card id="tips" className={styles.anchor} eyebrow={<Eyebrow id="tips" label="Advice" />} title="Before You Buy">
               <ul className={styles.tips}>
                 <li>
-                  <strong>Limited editions go fast.</strong> New pre-orders, including limited editions, usually go
-                  live on <a href="#warhammer">warhammer.com</a> on Saturdays, and limited editions often sell out
-                  the same day. <ExternalLink href="https://www.warhammer-community.com">Warhammer Community</ExternalLink>{" "}
-                  previews each Saturday&apos;s line-up the Sunday before, so check there for what&apos;s coming and
-                  when. Local and independent game stores sometimes open their own pre-orders earlier, so it&apos;s
-                  worth asking yours.
+                  <p>
+                    <strong>Limited editions go fast.</strong> New pre-orders, including limited editions, usually go
+                    live on <a href="#warhammer">warhammer.com</a> on Saturdays, typically at 1:00 PM Eastern (10:00 AM
+                    Pacific), and limited editions often sell out the same day.{" "}
+                    <ExternalLink href="https://www.warhammer-community.com">Warhammer Community</ExternalLink> previews
+                    each Saturday&apos;s line-up the Sunday before, so check there for what&apos;s coming and when.
+                  </p>
+                  <p>
+                    Local and independent game stores sometimes open their own pre-orders earlier, so it&apos;s worth
+                    asking yours.
+                  </p>
                 </li>
                 <li>
                   <strong>Check for an omnibus.</strong> Many series are collected into omnibus editions, which

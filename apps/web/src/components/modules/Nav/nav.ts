@@ -15,7 +15,6 @@ import InfoIcon from "@/components/icons/square-info.svg";
 import BookBookmarkIcon from "@/components/icons/book-bookmark.svg";
 import NewspaperIcon from "@/components/icons/newspaper.svg";
 import QuestionIcon from "@/components/icons/circle-question.svg";
-import MailIcon from "@/components/icons/mail.svg";
 import CoinsIcon from "@/components/icons/coins.svg";
 import BugIcon from "@/components/icons/bug.svg";
 import BookQuestionIcon from "@/components/icons/book-question.svg";
@@ -102,7 +101,6 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/track", label: "Tracking", description: "How to track your reading", icon: BookBookmarkIcon },
       { href: "/blog", label: "Blog", description: "News and dispatches from the Archive", icon: NewspaperIcon },
       { href: "/faq", label: "FAQ", description: "Common questions, answered", icon: QuestionIcon },
-      { href: "/contact", label: "Contact", description: "Reach the Archivist", icon: MailIcon, comingSoon: true },
     ],
   },
   {

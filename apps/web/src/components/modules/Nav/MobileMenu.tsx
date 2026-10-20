@@ -4,12 +4,8 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useConvexAuth } from "convex/react";
-import { useAuthActions } from "@convex-dev/auth/react";
 import ThemeSwitch from "@/components/modules/ThemeSwitch";
-import { accountNav } from "@/components/modules/Account/nav";
-import SignOutIcon from "@/components/icons/account/sign-out.svg";
 import Button from "@/components/ui/Button";
 import { mobileItems } from "./nav";
 import styles from "./styles.module.scss";
@@ -74,8 +70,11 @@ export default function MobileMenu({
                             <Icon aria-hidden="true" />
                           </span>
                         )}
-                        {link.label}
-                        {link.comingSoon && <span className={styles.mobileSoon}>Soon</span>}
+                        {/* label and tag in one wrapping row: the tag moves under the label before the label breaks */}
+                        <span className={styles.mobileLinkText}>
+                          <span>{link.label}</span>
+                          {link.comingSoon && <span className={styles.mobileSoon}>Soon</span>}
+                        </span>
                       </Link>
                     </li>
                   );
@@ -83,7 +82,6 @@ export default function MobileMenu({
               </ul>
             </li>
           ))}
-          <AccountGroup isLinkActive={isLinkActive} />
         </ul>
 
         <div className={styles.mobileActions} hidden={searching}>
@@ -104,7 +102,7 @@ export default function MobileMenu({
   );
 }
 
-/** Full-width Login / Signup; signed-in users get the Account group instead */
+/** Full-width Login / Signup; signed-in users reach their account from the avatar in the bar */
 function AuthButtons() {
   const { isAuthenticated, isLoading } = useConvexAuth();
   if (isLoading || isAuthenticated) return null;
@@ -118,47 +116,5 @@ function AuthButtons() {
         Signup
       </Button>
     </>
-  );
-}
-
-function AccountGroup({ isLinkActive }: { isLinkActive: (href: string) => boolean }) {
-  const { isAuthenticated } = useConvexAuth();
-  const { signOut } = useAuthActions();
-  const router = useRouter();
-
-  if (!isAuthenticated) return null;
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-  };
-
-  return (
-    <li className={styles.mobileGroup}>
-      <div className={styles.mobileGroupLabel}>Account</div>
-      <ul className={`${styles.mobileSubLinks} ${styles.mobileTwoCol}`}>
-        {accountNav
-          .flatMap((group) => group.items)
-          .map(({ href, label, icon: Icon, comingSoon }) => (
-            <li key={href}>
-              <Link href={href} className={`${styles.mobileLink} ${isLinkActive(href) ? styles.active : ""}`}>
-                <span className={styles.mobileLinkIcon}>
-                  <Icon aria-hidden="true" />
-                </span>
-                {label}
-                {comingSoon && <span className={styles.mobileSoon}>Soon</span>}
-              </Link>
-            </li>
-          ))}
-        <li>
-          <button type="button" className={styles.mobileLink} onClick={handleSignOut}>
-            <span className={styles.mobileLinkIcon}>
-              <SignOutIcon aria-hidden="true" />
-            </span>
-            Sign Out
-          </button>
-        </li>
-      </ul>
-    </li>
   );
 }

@@ -91,6 +91,16 @@
     color: var(--primary);
   }
 
+  // a tip in more than one paragraph: a smaller gap between them than between
+  // tips, so they read as one item, and none after the last
+  li p {
+    padding-bottom: 0.5rem;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
   strong {
     color: var(--text);
   }
