@@ -1,0 +1,553 @@
+@use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
+
+// the same list in two layouts: a column with the axis down the left (default),
+// or a track that scrolls sideways with the axis along the top
+
+.timeline {
+  // where the axis line runs, shared by the markers and the line segments
+  --label-w: 5.5rem;
+  --axis-w: 1.5rem;
+  --col-gap: 1rem;
+  --row-gap: 1.75rem;
+  --marker: 0.75rem;
+
+  @include max(sm) {
+    --label-w: 4rem;
+    --col-gap: 0.75rem;
+  }
+}
+
+/* controls */
+
+// one row, the height of the layout toggle, whether or not the track arrows show
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  min-height: 2rem;
+  margin-bottom: 2rem;
+}
+
+.trackButtons {
+  display: flex;
+  gap: 0.5rem;
+
+  button {
+    @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+    display: grid;
+    place-items: center;
+    // the layout toggle's size, so showing them doesn't change the row's height
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--primary);
+    cursor: pointer;
+
+    svg {
+      width: 0.875rem;
+      height: 0.875rem;
+      fill: currentColor;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* the list */
+
+.track {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry,
+.gap {
+  position: relative;
+  scroll-margin-top: 5rem;
+}
+
+.label {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-size: 1.25rem;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+// a gold square on the axis, turned to a diamond
+.marker {
+  width: var(--marker);
+  height: var(--marker);
+  background: var(--primary);
+  transform: rotate(45deg);
+}
+
+.card {
+  @include corner-brackets($size: 10px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  --pad-y: 1.25rem;
+  --pad-x: 1.5rem;
+  padding: var(--pad-y) var(--pad-x);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: background 0.15s ease;
+
+  // collapsed, the whole card is one button: the corner marks show on hover
+  &:not(.open):hover {
+    background: color-mix(in oklab, var(--bg-card), var(--accent) 35%);
+  }
+
+  // open, the card is plain content; only the title row still toggles it
+  &.open::before {
+    display: none;
+  }
+
+  [hidden] {
+    display: none;
+  }
+
+  // keyboard focus on the toggle outlines the whole card
+  &:has(.toggle:focus-visible) {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+// era over title, with the chevron in its own column spanning both rows
+.cardHeader {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  align-items: center;
+
+  .era,
+  .title {
+    grid-column: 1;
+  }
+
+  // space above the blurb, which only shows once the card is open
+  .open & {
+    margin-bottom: 0.75rem;
+  }
+}
+
+.toggle {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  // the click target: the header out to the card's edges. Collapsed, the
+  // header is all there is, so that's the whole card; open, it stops at the
+  // content below, whose links stay clickable
+  &::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--pad-y)) calc(-1 * var(--pad-x));
+    z-index: 3;
+    cursor: pointer;
+  }
+
+  .open &::after {
+    bottom: -0.75rem; // to the content, across the header's gap above it
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.chevron {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: 0.875rem;
+  height: 0.875rem;
+  fill: var(--primary);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  .open & {
+    transform: rotate(180deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// Expand all and the track arrows sit at the right, the layout toggle at the left
+.expandAll {
+  margin-left: auto;
+  padding: 0.35rem 0.65rem;
+  border: 0;
+  background: none;
+  color: var(--subtle);
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+}
+
+.era {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+
+.title {
+  margin: 0;
+
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.blurb {
+  padding-bottom: 0;
+}
+
+/* dated events, read like a cogitator printout */
+.events {
+  margin: 1rem 0 0;
+  border-top: 1px solid var(--border);
+
+  > div {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  dt {
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-size: 0.875rem;
+    color: var(--primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--subtle);
+  }
+}
+
+.note {
+  margin-top: 1rem;
+  padding: 0.6rem 0.75rem;
+  border-left: 2px solid var(--primary);
+  background: color-mix(in oklab, var(--accent), transparent 70%);
+  font-size: 0.875rem;
+}
+
+// a link to a fuller account, above the sources
+.more {
+  margin-top: 1rem;
+  padding-bottom: 0;
+  font-size: 0.9375rem;
+
+  a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.cite {
+  margin-top: 0.75rem;
+  padding-bottom: 0;
+  font-size: 0.8125rem;
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.gapLabel {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-size: 0.9375rem;
+  color: var(--subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.gapText {
+  font-size: 0.875rem;
+  font-style: italic;
+  color: color-mix(in oklab, var(--subtle), transparent 30%);
+}
+
+/* vertical (default): label | axis | card, the axis line drawn by each row */
+
+.vertical {
+  .track {
+    display: flex;
+    flex-direction: column;
+    gap: var(--row-gap);
+  }
+
+  .entry,
+  .gap {
+    display: grid;
+    grid-template-columns: var(--label-w) var(--axis-w) minmax(0, 1fr);
+    column-gap: var(--col-gap);
+    align-items: start;
+
+    // this row's piece of the axis, reaching across the gap to the next row
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: calc(-1 * var(--row-gap));
+      left: calc(var(--label-w) + var(--col-gap) + var(--axis-w) / 2);
+      width: 1px;
+      background: var(--border);
+    }
+
+    &:last-child::before {
+      bottom: 0;
+    }
+  }
+
+  // nothing recorded: the axis dashes past it
+  .gap::before {
+    background: repeating-linear-gradient(to bottom, var(--border) 0 4px, transparent 4px 9px);
+  }
+
+  .label,
+  .gapLabel {
+    grid-column: 1;
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .marker {
+    grid-column: 2;
+    justify-self: center;
+    // centred on the label's first line (1.25rem at line-height 1.6)
+    margin-top: calc((2rem - var(--marker)) / 2);
+    position: relative;
+    z-index: 1;
+  }
+
+  .card,
+  .gapText {
+    grid-column: 3;
+  }
+
+  .gapText {
+    line-height: 1.6;
+  }
+
+  // phones: no label column. The axis runs down the left edge and each
+  // millennium's label sits above its card, beside its marker
+  @include max(sm) {
+    --axis-w: 0.75rem;
+    --col-gap: 0.75rem;
+
+    .entry,
+    .gap {
+      grid-template-columns: var(--axis-w) minmax(0, 1fr);
+      row-gap: 0.35rem;
+
+      &::before {
+        left: calc(var(--axis-w) / 2);
+      }
+    }
+
+    .label,
+    .gapLabel {
+      grid-column: 2;
+      grid-row: 1;
+      text-align: left;
+      line-height: 1.5rem;
+    }
+
+    .label {
+      font-size: 1rem;
+    }
+
+    .gapLabel {
+      font-size: 0.875rem;
+    }
+
+    .marker {
+      grid-column: 1;
+      grid-row: 1;
+      // centred on the label's line
+      margin-top: calc((1.5rem - var(--marker)) / 2);
+    }
+
+    .card,
+    .gapText {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .gapText {
+      line-height: 1.4;
+    }
+
+    .card {
+      --pad-y: 1rem;
+      --pad-x: 1.1rem;
+    }
+
+    .events > div {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
+  }
+}
+
+/* horizontal: label over marker over card, the axis along the top */
+
+.horizontal {
+  container-type: inline-size;
+  --card-w: 21rem;
+  --label-h: 2rem;
+
+  @include max(sm) {
+    --card-w: 82vw;
+  }
+
+  // the track runs to both edges of the screen; the padding keeps the first
+  // card (and wherever it snaps or jumps to) in line with the page content.
+  // Timeline.tsx measures each side's distance to the screen edge into
+  // --bleed-left/right (the page isn't exactly centred, because of the
+  // scrollbar gutter); before that, half the spare width is a close guess.
+  // cqw, not %, as scroll-padding reads % against the track's own box
+  .track {
+    --bleed: calc(50vw - 50cqw);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--col-gap);
+    margin-left: calc(-1 * var(--bleed-left, var(--bleed)));
+    margin-right: calc(-1 * var(--bleed-right, var(--bleed)));
+    padding: 0 var(--bleed-right, var(--bleed)) 1rem var(--bleed-left, var(--bleed));
+    scroll-padding-left: var(--bleed-left, var(--bleed));
+    scroll-padding-right: var(--bleed-right, var(--bleed));
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-color: var(--border) transparent;
+
+    &:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 4px;
+    }
+  }
+
+  .entry,
+  .gap {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+    scroll-margin-left: 0;
+
+    // this item's piece of the axis, reaching across the gap to the next one
+    &::before {
+      content: "";
+      position: absolute;
+      top: calc(var(--label-h) + var(--marker) / 2);
+      left: 0;
+      right: calc(-1 * var(--col-gap));
+      height: 1px;
+      background: var(--border);
+    }
+
+    &:last-child::before {
+      right: 0;
+    }
+  }
+
+  .entry {
+    width: var(--card-w);
+  }
+
+  .gap {
+    width: 7.5rem;
+
+    &::before {
+      background: repeating-linear-gradient(to right, var(--border) 0 4px, transparent 4px 9px);
+    }
+  }
+
+  .label,
+  .gapLabel {
+    height: var(--label-h);
+    line-height: var(--label-h);
+  }
+
+  .marker {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 1.25rem 0.1rem;
+  }
+
+  // gaps have no marker; their text sits where a card would start
+  .gapText {
+    margin-top: calc(var(--marker) + 1.25rem);
+  }
+
+  .events > div {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    scroll-behavior: auto;
+  }
+}

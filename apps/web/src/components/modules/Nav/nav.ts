@@ -83,7 +83,6 @@ export const NAV_ITEMS: NavItem[] = [
         label: "Timeline",
         description: "Key events of the 41st millennium",
         icon: TimelineIcon,
-        comingSoon: true,
       },
       {
         href: "/glossary",
