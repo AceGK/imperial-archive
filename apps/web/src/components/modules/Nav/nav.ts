@@ -8,8 +8,8 @@ import HourglassIcon from "@/components/icons/hourglass.svg";
 import SwordsIcon from "@/components/icons/swords.svg";
 import SignpostIcon from "@/components/icons/signpost.svg";
 import RouteIcon from "@/components/icons/route.svg";
-import HistoryIcon from "@/components/icons/history.svg";
-import VocabularyIcon from "@/components/icons/vocabulary.svg";
+import TimelineIcon from "@/components/icons/timeline.svg";
+import ScrollIcon from "@/components/icons/scroll.svg";
 import ShoppingBagIcon from "@/components/icons/shopping-bag.svg";
 import InfoIcon from "@/components/icons/square-info.svg";
 import BookBookmarkIcon from "@/components/icons/book-bookmark.svg";
@@ -82,14 +82,14 @@ export const NAV_ITEMS: NavItem[] = [
         href: "/timeline",
         label: "Timeline",
         description: "Key events of the 41st millennium",
-        icon: HistoryIcon,
+        icon: TimelineIcon,
         comingSoon: true,
       },
       {
         href: "/glossary",
         label: "Glossary",
         description: "Terms of the 41st millennium",
-        icon: VocabularyIcon,
+        icon: ScrollIcon,
         comingSoon: true,
       },
     ],
