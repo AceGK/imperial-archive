@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
   // Keep every non-production deployment (dev.imperialarchive.com, previews)
   // out of search results — the header covers pages, images and files alike
+  // the Reading Guides placeholder was first published at /guides
+  async redirects() {
+    return [{ source: "/guides/:path*", destination: "/reading-guides/:path*", permanent: true }];
+  },
   async headers() {
     if (process.env.VERCEL_ENV === "production") return [];
     return [

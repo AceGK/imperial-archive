@@ -670,6 +670,27 @@ export const blogPostBySlugQuery = groq`
   }
 `;
 
+// Reading guides: posts in the "Guides" category, kept off the blog
+
+export const readingGuideFilter = `_type == "post" && defined(slug.current) && !(_id in path("drafts.**")) && "Guides" in categories[]->title`;
+
+/** The guide shown as the /where-to-start page */
+export const WHERE_TO_START_SLUG = "where-to-start";
+
+export const readingGuideSlugsQuery = groq`
+  *[${readingGuideFilter}].slug.current
+`;
+
+export const readingGuideBySlugQuery = groq`
+  *[${readingGuideFilter} && slug.current == $slug][0]{
+    ${blogCardFields},
+    metaTitle,
+    guideSection,
+    ${bodyProjection},
+    _updatedAt
+  }
+`;
+
 export const getPostByCategory = groq`
 *[_type == "post" && references(*[_type == "category" && slug.current == $categorySlug]._id)] | order(publishedAt desc) {
   _id,

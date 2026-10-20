@@ -192,4 +192,13 @@ export interface BlogPostDoc extends BlogPost {
   next?: BlogPostNeighbor | null;
 }
 
+/** A reading guide: a post in the "Guides" category */
+export interface ReadingGuideDoc extends BlogPost {
+  metaTitle?: string | null;
+  /** The group it's listed under on /reading-guides */
+  guideSection?: "where-to-start" | "series" | "reading-orders" | null;
+  body?: import("@portabletext/types").PortableTextBlock[] | null;
+  _updatedAt: string;
+}
+
 export type BlogPostNeighbor = Pick<BlogPost, "_id" | "title" | "slug" | "mainImage">;

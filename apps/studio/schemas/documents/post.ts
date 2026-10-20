@@ -69,6 +69,25 @@ export default defineType({
       // ],
     }),
 
+    // Reading guides are posts in the "Guides" category; they appear
+    // under /reading-guides, not the blog. A guide with the slug
+    // "where-to-start" is also shown as the /where-to-start page.
+    defineField({
+      name: 'guideSection',
+      title: 'Reading guide section',
+      type: 'string',
+      description:
+        'Reading guides only: the group it is listed under on the Reading Guides page. Leave empty for blog posts.',
+      options: {
+        list: [
+          {title: 'Where to Start', value: 'where-to-start'},
+          {title: 'Series Guides', value: 'series'},
+          {title: 'Reading Orders', value: 'reading-orders'},
+        ],
+        layout: 'radio',
+      },
+    }),
+
     defineField({
       name: 'mainImage',
       title: 'Main image',
