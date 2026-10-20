@@ -35,6 +35,37 @@ To try the inbox locally, also set ADMIN_EMAILS on your dev deployment.
 # ideas 
 - [ ] book reviews from APIs, combined into aggregate review count + let users write IA book reviews
 - [ ] include ISBNs and additional book images (different formats/editions)
+
+# dx
+Follow-ups from the repo review (October 20). Items 1 and 2 are done: each Algolia function's record building lives in its `record.ts`, shared with the rebuild scripts now in `scripts/algolia/`, and `npm run typecheck` checks the root, web and studio.
+
+**Algolia**
+- [ ] Deploy the functions (`npx sanity blueprints deploy`) so the live sync uses `record.ts`. Behaviour is the same except a book's authors and factions now keep the order they're entered in Studio, and image assets are stored as `{ _ref }` only
+- [ ] Then rebuild the indexes: `npx tsx scripts/algolia/sync-books.ts` to preview, add `--write` to apply (same for `sync-authors.ts`, `sync-series.ts`). Preview on Oct 20: 1,143 books still hold the old single-series format, plus 14 authors and 10 series with stale book counts, factions or eras
+- [ ] fix: editing a book doesn't refresh its authors' and series' records (book counts, formats, factions, eras drift until each author or series is saved). Have the book function re-sync them, or run the rebuild scripts on a schedule
+- [ ] `hardTrim`/`formatBookType` are repeated in each function's `record.ts`, and the series function keeps its own copy of the book-series query: the deploy only bundles a function's own folder, so they can't share a file without a build step
+
+**Tooling**
+- [ ] Add ESLint (`eslint-config-next` for web) and a root `lint` script; the old one ran a script no workspace had, so it's removed for now
+- [ ] Line endings: add `* text=auto eol=lf` to `.gitattributes` (and an `.editorconfig`) to stop the LF/CRLF warnings on every commit
+- [ ] Optional: run `npm run typecheck` in CI (GitHub Actions) on pushes to dev
+
+**Env**
+- [ ] Add a tracked `.env.example` per app (names only) so the needed variables are written down
+- [ ] Make `apps/web/src/lib/env.ts` the one place that reads and checks env vars, failing at startup with the missing names; seven files read `process.env` directly today, several with `!`
+- [ ] Algolia keys are repeated across root, `apps/web` and `apps/studio` `.env.local`; trim each app to what it uses
+
+**Types**
+- [ ] `BookHit` is defined twice (`types/algolia.ts`, `components/modules/Search/types.ts`); make the second a `Pick<>` of the first
+- [ ] Sanity TypeGen (`sanity typegen generate`) to generate the document and GROQ result types instead of maintaining `types/sanity.ts` and `types/books.ts` by hand
+
+**Structure**
+- [ ] Group `components/modules` by feature: `ThemeSwitch`/`ThemeToggle`, `FaqList`/`FaqSection`, `PageHeader`/`InfoHeader`, `Details`/`BookDetails`, `Search`/`NavSearch`, `SiteWidthToggle`/`Catalog/WidthToggle` (e.g. `modules/Theme/{Switch,Toggle}`)
+- [ ] Move shared hooks into `hooks/`: `useStoredView`/`ViewToggle` live in `modules/Catalog` but blog and account pages use them; `useAwaitingFirstResults` is in `lib/algolia`
+- [ ] Split `lib/sanity/queries.ts` (835 lines) by domain (books, series, authors, posts, guides) with the shared field fragments in one file
+- [ ] Remove dead code: `components/ui/Checkbox` and `components/layouts/TwoPane` aren't imported anywhere
+- [ ] `lib/sanity/sanity.config.ts` and `sanity.client.ts` each set the project and API version; have the client use the config (and drop the `sanity.` prefix inside `sanity/`)
+- [ ] Drop the file-path comments at the top of 56 files (`// /components/...`); they go stale when files move
  
 ## Auth (Convex Auth)
 
