@@ -1,0 +1,231 @@
+// the horizontal timeline runs to the screen edges; clip the sliver that falls
+// under the scrollbar gutter so the page never scrolls sideways (clip, not
+// hidden, so nothing sticky inside stops working)
+.page {
+  overflow-x: clip;
+}
+
+// the intro, with links to fuller timelines beside it; stacked on narrow screens
+.introGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+  gap: 1.5rem 3rem;
+  align-items: start;
+  margin-bottom: 2.5rem;
+
+  @media (max-width: 860px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// its column already keeps lines a readable length beside the panel
+.intro p {
+  padding-bottom: 0.75rem;
+}
+
+// gold markers, like the tips on the Where to Buy page
+.introList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--subtle);
+  line-height: var(--leading-body);
+
+  li::marker {
+    color: var(--primary);
+  }
+
+  a {
+    color: var(--primary);
+  }
+}
+
+.further {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.furtherTitle {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+
+.furtherList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li + li {
+    border-top: 1px solid var(--border);
+  }
+}
+
+.furtherLink {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.55rem 0;
+  text-decoration: none;
+
+  &:hover .furtherName,
+  &:focus-visible .furtherName {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.furtherName {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--text);
+}
+
+.furtherMeta {
+  font-size: 0.8125rem;
+  color: var(--subtle);
+}
+
+.sources {
+  margin-top: 4rem;
+  padding: 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.sourcesTitle {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.875rem;
+  color: var(--primary);
+}
+
+.sourcesIntro {
+  font-size: 0.9375rem;
+}
+
+.sourceList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding-left: 1.5rem;
+  color: var(--subtle);
+  font-size: 0.9375rem;
+
+  li {
+    // the numbered footnote links land here; leave room under the sticky nav
+    scroll-margin-top: 6rem;
+
+    &::marker {
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    &:target {
+      color: var(--text);
+    }
+  }
+
+  a {
+    color: var(--primary);
+  }
+
+  cite {
+    font-style: italic;
+  }
+}
+
+.sourceDetail {
+  color: var(--subtle);
+}
+
+// beside the page title: dashed gold, the site's mark for "not finished yet"
+.beta {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1875rem 0.5rem;
+  font-family: var(--font-condensed);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  color: var(--primary);
+  border: 1px dashed var(--primary);
+}
+
+// marks a link that leaves the site
+.externalIcon {
+  display: inline-block;
+  width: 0.8125rem;
+  height: 0.8125rem;
+  margin-left: 0.35rem;
+  vertical-align: -0.05em;
+  color: var(--subtle);
+  transition: color 0.15s ease;
+
+  .furtherLink:hover &,
+  .furtherLink:focus-visible & {
+    color: var(--primary);
+  }
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+// the first thing in the intro: a gold-edged note with a filled tag, the
+// strongest tag style on the site, so it's read before the timeline
+.spoilers.spoilers {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 0 0 1.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid color-mix(in oklab, var(--primary), transparent 55%);
+  border-left: 3px solid var(--primary);
+  background: color-mix(in oklab, var(--primary), transparent 92%);
+  color: var(--text);
+  font-size: 0.9375rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.spoilerTag {
+  flex: none;
+  margin-top: 0.15rem;
+  padding: 0.1875rem 0.5rem;
+  font-family: var(--font-condensed);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-primary);
+  background: var(--primary);
+}

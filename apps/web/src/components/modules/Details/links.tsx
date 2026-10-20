@@ -10,6 +10,7 @@ import BlackLibraryIcon from "@/components/icons/brands/black-library.svg";
 import LexicanumIcon from "@/components/icons/brands/lexicanum.svg";
 import WikipediaIcon from "@/components/icons/brands/wikipedia.svg";
 import WebsiteIcon from "@/components/icons/link.svg";
+import { EXTERNAL_REL } from "@/lib/links";
 
 const LABELS: Record<string, string> = {
   website: "Official site",
@@ -49,7 +50,7 @@ export default function ProfileLinks({ items }: { items: LinkItem[] }) {
               variant="ghost"
               size="icon"
               target="_blank"
-              rel="noopener noreferrer"
+              rel={EXTERNAL_REL}
               aria-label={label}
               title={label}
               type="button"

@@ -854,7 +854,8 @@ $cycle: 12s;
   @include corner-brackets($size: 12px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
   padding: 1.5rem;
   background: var(--bg-card);
-  border: 1px solid var(--border);
+  // dashed: a feature that isn't here yet, unlike the solid cards above
+  border: 1px dashed color-mix(in oklab, var(--primary), transparent 45%);
 
   h3 {
     margin: 0 0 0.5rem;

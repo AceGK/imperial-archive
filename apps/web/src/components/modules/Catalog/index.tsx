@@ -148,7 +148,13 @@ function Results<THit extends BaseHit>({
 
   return (
     <div ref={ref} style={{ minHeight: minHeight || undefined }}>
-      <div className={view === "list" ? styles.list : gridClasses[gridVariant]}>
+      <div
+        className={
+          view === "list"
+            ? styles.list
+            : `${gridClasses[gridVariant]} ${gridVariant === "book" && display.layout === "card" ? styles.wideCards : ""}`
+        }
+      >
         {items.map((hit) => (
           <React.Fragment key={hit.objectID}>
             {renderHit(hit, view, display)}

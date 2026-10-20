@@ -1,8 +1,11 @@
 // sanity.blueprint.ts
 // npx sanity blueprints deploy
 import { defineBlueprint, defineDocumentFunction } from "@sanity/blueprints";
-import "dotenv/config";
+import { config } from "dotenv";
 import process from "node:process";
+
+// keys live in .env.local (a .env, if present, fills anything it lacks)
+config({ path: [".env.local", ".env"], quiet: true });
 
 const {
   ALGOLIA_APP_ID,

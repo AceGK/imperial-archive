@@ -64,6 +64,62 @@ type AlgoliaSeries = {
   _updatedAt: string;
 };
 
+const BOOKS_INDEX_NAME = "books40k";
+
+type SanityClient = ReturnType<typeof createClient>;
+type Algolia = ReturnType<typeof algoliasearch>;
+
+/** Books the books index currently lists under this series title (including any just removed from it) */
+async function booksListedUnder(algolia: Algolia, title: string | undefined): Promise<string[]> {
+  if (!title) return [];
+  try {
+    const res = await algolia.searchSingleIndex({
+      indexName: BOOKS_INDEX_NAME,
+      searchParams: {
+        query: "",
+        facetFilters: [[`series.title:${title}`]],
+        hitsPerPage: 1000,
+        attributesToRetrieve: [],
+      },
+    });
+    return res.hits.map((h) => h.objectID);
+  } catch (error) {
+    // only removed books depend on this; members are refreshed regardless
+    console.warn("  ⚠️  Couldn't look up books listed under this series:", error);
+    return [];
+  }
+}
+
+/**
+ * Rewrites the series list on each book's record, from Sanity. A book's
+ * series live on the series documents, so editing a series doesn't trigger
+ * the book sync; this keeps the books index in step.
+ */
+async function refreshBookSeries(algolia: Algolia, sanityClient: SanityClient, bookIds: string[]) {
+  const ids = [...new Set(bookIds)];
+  if (ids.length === 0) return;
+  const books: { _id: string; series: { title: string; slug: string }[] }[] = await sanityClient.fetch(
+    `*[_type == "book40k" && _id in $ids && !(_id in path("drafts.**"))]{
+      _id,
+      "series": *[_type == "series40k" && !(_id in path("drafts.**")) && ^._id in lists[].items[].work._ref] | order(title asc){
+        title,
+        "slug": slug.current
+      }
+    }`,
+    { ids }
+  );
+  await algolia.partialUpdateObjects({
+    indexName: BOOKS_INDEX_NAME,
+    // only books already in the index; the book sync creates records
+    createIfNotExists: false,
+    objects: books.map((b) => ({
+      objectID: b._id,
+      series: (b.series || []).filter((x) => x?.title && x?.slug),
+    })),
+  });
+  console.log(`  ✓ Refreshed the series on ${books.length} book record(s)`);
+}
+
 export const handler = documentEventHandler(async ({ event, context }) => {
   const { _id, operation } = event.data;
 
@@ -78,6 +134,16 @@ export const handler = documentEventHandler(async ({ event, context }) => {
         objectID: _id,
       });
       console.log(`✅ Successfully deleted series ${_id} from Algolia`);
+
+      // the deleted series' books lose it from their records
+      const sanityClient = createClient({
+        projectId: SANITY_STUDIO_PROJECT_ID,
+        dataset: SANITY_STUDIO_DATASET,
+        apiVersion: "2024-01-01",
+        useCdn: false,
+        token: context.clientOptions.token,
+      });
+      await refreshBookSeries(algolia, sanityClient, await booksListedUnder(algolia, event.data.title));
     } catch (error) {
       console.error("❌ Error deleting from Algolia:", error);
       throw error;
@@ -105,6 +171,7 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       const seriesData = await sanityClient.fetch(
         `{
           "books": *[_type == "book40k" && !(_id in path("drafts.**")) && _id in *[_type == "series40k" && _id == $seriesId].lists[].items[].work._ref]{
+            _id,
             format,
             "authors": authors[]->{
               "name": coalesce(name, title),
@@ -224,6 +291,10 @@ export const handler = documentEventHandler(async ({ event, context }) => {
       });
 
       console.log(`\n✅ Synced series ${_id} ("${document.title}") to Algolia`);
+
+      // its books: current members, and any the books index still lists under it
+      const memberIds: string[] = books.map((b: any) => b._id).filter(Boolean);
+      await refreshBookSeries(algolia, sanityClient, [...memberIds, ...(await booksListedUnder(algolia, title))]);
     } catch (error) {
       console.error("\n❌ Error syncing to Algolia:");
       console.error("Error:", error);

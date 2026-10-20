@@ -6,6 +6,7 @@ import { PortableText, type PortableTextBlockComponent, type PortableTextCompone
 import type { PortableTextBlock } from "@portabletext/types";
 import { SITE_URL } from "@/lib/seo";
 import HeadingAnchor from "@/components/ui/HeadingAnchor";
+import { EXTERNAL_REL } from "@/lib/links";
 
 /**
  * Site-wide link rule:
@@ -34,7 +35,7 @@ export function SmartLink({
   }
 
   return (
-    <a href={href} className={className} target="_blank" rel="noopener noreferrer">
+    <a href={href} className={className} target="_blank" rel={EXTERNAL_REL}>
       {children}
     </a>
   );

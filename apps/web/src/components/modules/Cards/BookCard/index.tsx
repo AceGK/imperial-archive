@@ -91,13 +91,14 @@ export default function BookCard({ book, href, compact, className, display = DEF
 
   const showCover = display.media !== "title";
   const showTitle = display.media !== "cover";
+  const wide = display.layout === "card";
   const chips = (display.format && book.format) || (display.series && seriesList.length > 0);
-  // without the cover, the tags and Track button move into the card body
-  const bodyActions = !showCover && bookId;
+  // on a wide card, or without the cover, the tags and Track button sit in the card body
+  const bodyActions = (wide || !showCover) && bookId;
   const hasBody = showTitle || display.author || (display.date && year) || chips || bodyActions;
 
   return (
-    <div className={`${styles.card} ${className ?? ""} ${compact ? styles.compact : ""}`}>
+    <div className={`${styles.card} ${wide ? styles.wide : ""} ${className ?? ""} ${compact ? styles.compact : ""}`}>
       {showCover && (
         // the action buttons sit beside the cover link, not inside it: buttons
         // nested in a link are invalid and would also follow the link
@@ -112,7 +113,7 @@ export default function BookCard({ book, href, compact, className, display = DEF
                 src={imgUrl}
                 alt={imgAlt}
                 fill
-                sizes="(max-width: 600px) 50vw, 200px"
+                sizes={wide ? "128px" : "(max-width: 600px) 50vw, 200px"}
                 priority={false}
                 unoptimized
               />
@@ -124,7 +125,7 @@ export default function BookCard({ book, href, compact, className, display = DEF
               </div>
             )}
           </Link>
-          {bookId && <CardActions bookId={bookId} title={book.title} showTags={display.tags} />}
+          {bookId && !wide && <CardActions bookId={bookId} title={book.title} showTags={display.tags} />}
         </div>
       )}
 

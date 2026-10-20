@@ -1,9 +1,11 @@
 /**
  * Which parts of a book card a reader has chosen to show (catalog "Cards"
  * menu). Cover and title are one setting with three choices, so at least one
- * of them is always shown.
+ * of them is always shown. Layout is the card's shape: a tall poster with the
+ * cover on top, or a wide card with the cover beside the details.
  */
 export type BookDisplay = {
+  layout: "poster" | "card";
   media: "both" | "cover" | "title";
   author: boolean;
   date: boolean;
@@ -22,6 +24,7 @@ export const BOOK_DISPLAY_DETAILS = [
 ] as const satisfies readonly { key: keyof BookDisplay; label: string }[];
 
 export const DEFAULT_BOOK_DISPLAY: BookDisplay = {
+  layout: "poster",
   media: "both",
   author: true,
   date: true,
@@ -34,6 +37,7 @@ export const DEFAULT_BOOK_DISPLAY: BookDisplay = {
 export function parseBookDisplay(value: unknown): BookDisplay {
   const saved = (value && typeof value === "object" ? value : {}) as Partial<Record<keyof BookDisplay, unknown>>;
   const display = { ...DEFAULT_BOOK_DISPLAY };
+  if (saved.layout === "poster" || saved.layout === "card") display.layout = saved.layout;
   if (saved.media === "both" || saved.media === "cover" || saved.media === "title") display.media = saved.media;
   for (const { key } of BOOK_DISPLAY_DETAILS) {
     if (typeof saved[key] === "boolean") display[key] = saved[key];

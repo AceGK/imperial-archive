@@ -6,7 +6,8 @@ export type BookHit = {
   authors: Array<{ name: string; slug: string }>;
   factions: Array<{ name: string; slug: string }>;
   era: { name: string; slug: string } | null;
-  series: { title: string; slug: string } | null;
+  // every series the book is in; older records may still hold a single object or null
+  series: { title: string; slug: string }[] | { title: string; slug: string } | null;
 };
 
 /**

@@ -61,7 +61,7 @@ export const NAV_ITEMS: NavItem[] = [
       {
         href: "/where-to-buy",
         label: "Where to Buy",
-        description: "Print, ebook, and audiobook options",
+        description: "Print, ebook, and audiobooks",
         icon: ShoppingBagIcon,
       },
       {
@@ -83,7 +83,6 @@ export const NAV_ITEMS: NavItem[] = [
         label: "Timeline",
         description: "Key events of the 41st millennium",
         icon: TimelineIcon,
-        comingSoon: true,
       },
       {
         href: "/glossary",

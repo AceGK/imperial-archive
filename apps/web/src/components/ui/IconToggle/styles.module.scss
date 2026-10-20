@@ -1,0 +1,56 @@
+@use "@/styles/mixins" as *;
+
+// a segmented control: one bordered box per choice, split into its options,
+// with the hover brackets around the whole box
+.toggle {
+  @include corner-brackets($size: 6px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  display: flex;
+  border: 1px solid var(--border);
+}
+
+.button {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: calc(2rem - 2px); // the box's border makes up the rest of the 2rem
+  padding: 0;
+  color: var(--subtle);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+
+  & + & {
+    border-left: 1px solid var(--border);
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+  }
+
+  &:hover {
+    color: var(--text);
+  }
+
+  &[aria-pressed="true"] {
+    color: var(--primary);
+    background: color-mix(in oklab, var(--primary), transparent 88%);
+
+    svg rect {
+      fill: currentColor;
+    }
+  }
+
+  // inside the segment, so it isn't clipped by or drawn over its neighbor
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+}

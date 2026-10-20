@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import IconToggle from "@/components/ui/IconToggle";
 import styles from "./styles.module.scss";
 
 export type CatalogWidth = "boxed" | "full";
@@ -56,27 +57,15 @@ const FullIcon = () => (
 /** Boxed / full-width switch for a catalog's controls and results */
 export function WidthToggle({ width, onChange }: { width: CatalogWidth; onChange: (width: CatalogWidth) => void }) {
   return (
-    <div className={`${styles.viewToggle} ${styles.widthToggle}`} role="group" aria-label="Catalog width">
-      <button
-        type="button"
-        className={styles.viewButton}
-        aria-pressed={width === "boxed"}
-        aria-label="Boxed width"
-        title="Boxed width"
-        onClick={() => onChange("boxed")}
-      >
-        <BoxedIcon />
-      </button>
-      <button
-        type="button"
-        className={styles.viewButton}
-        aria-pressed={width === "full"}
-        aria-label="Full width"
-        title="Full width"
-        onClick={() => onChange("full")}
-      >
-        <FullIcon />
-      </button>
-    </div>
+    <IconToggle
+      label="Catalog width"
+      className={styles.widthToggle}
+      value={width}
+      onChange={onChange}
+      options={[
+        { value: "boxed", label: "Boxed width", icon: <BoxedIcon /> },
+        { value: "full", label: "Full width", icon: <FullIcon /> },
+      ]}
+    />
   );
 }

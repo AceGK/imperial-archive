@@ -11,11 +11,14 @@ $_corner-positions: (
 );
 
 // Small L-shaped accent marks in the corners of an element, HUD/terminal style.
-// Uses a single ::before pseudo-element with 2 stacked background-image layers
-// per corner (a short horizontal + vertical line) since an element only has
-// one ::before to spend. Pass $corners to draw a subset, e.g. (top-left, bottom-right).
-// If the target already has `overflow: hidden`, keep $offset at 0 (default) —
-// a positive offset pushes the marks outside the box and they'll get clipped.
+// Drawn as a real border on the element's ::before, masked down to its
+// corners. A border (unlike a background image) is snapped to whole pixels
+// the same way the element's own border is, so the marks land exactly on it
+// even when the element's size or position is fractional. Pass $corners to
+// draw a subset, e.g. (top-left, bottom-right).
+// $offset: 1px puts the marks on a 1px border; 0 (default) puts them just
+// inside it. If the target has `overflow: hidden`, keep $offset at 0, or the
+// marks fall outside the box and get clipped.
 // $z-index lets the marks sit above other absolutely/relatively positioned
 // content in the same element (e.g. a cover image) without extra markup.
 @mixin corner-brackets(
@@ -29,20 +32,11 @@ $_corner-positions: (
 ) {
   position: relative;
 
-  $images: ();
-  $positions: ();
-  $sizes: ();
-
+  // one opaque square per corner: the border shows through only there
+  $mask: ();
   @each $corner in $corners {
     $pos: map.get($_corner-positions, $corner);
-    // vertical line
-    $images: list.append($images, linear-gradient(#{$color}, #{$color}), comma);
-    $positions: list.append($positions, $pos, comma);
-    $sizes: list.append($sizes, #{$thickness} #{$size}, comma);
-    // horizontal line
-    $images: list.append($images, linear-gradient(#{$color}, #{$color}), comma);
-    $positions: list.append($positions, $pos, comma);
-    $sizes: list.append($sizes, #{$size} #{$thickness}, comma);
+    $mask: list.append($mask, linear-gradient(#000 0 0) #{$pos} / #{$size} #{$size} no-repeat, comma);
   }
 
   &::before {
@@ -51,10 +45,10 @@ $_corner-positions: (
     inset: -#{$offset};
     z-index: $z-index;
     pointer-events: none;
-    background-repeat: no-repeat;
-    background-image: $images;
-    background-position: $positions;
-    background-size: $sizes;
+    box-sizing: border-box;
+    border: #{$thickness} solid #{$color};
+    -webkit-mask: $mask;
+    mask: $mask;
 
     @if $hover-only {
       opacity: 0;
@@ -70,24 +64,18 @@ $_corner-positions: (
   }
 }
 
-// For a button with hover-only corner-brackets that opens a menu or panel: while
-// open (aria-expanded), a full gold outline fades in on the brackets' own layer,
-// so the marks join it exactly. Recoloring the border instead can show a doubled
-// edge, since at fractional positions a border and the marks round differently.
+// For a button with hover-only corner-brackets that opens a menu or panel:
+// while open (aria-expanded), the brackets' layer drops its corner mask, so
+// the marks become a full gold outline that meets them exactly. Recoloring
+// the element's own border instead could show a doubled edge.
 @mixin open-outline {
-  &::before {
-    box-shadow: inset 0 0 0 1px transparent;
-    transition:
-      opacity 0.15s ease,
-      box-shadow 0.15s ease;
-  }
-
   &[aria-expanded="true"] {
     color: var(--primary);
 
     &::before {
       opacity: 1;
-      box-shadow: inset 0 0 0 1px var(--primary);
+      -webkit-mask: none;
+      mask: none;
     }
   }
 }
