@@ -112,7 +112,10 @@ export async function submitReport(type: ReportType, formData: FormData): Promis
   const requestHeaders = await headers();
   const ip = requestHeaders.get("x-forwarded-for")?.split(",")[0].trim() || requestHeaders.get("x-real-ip") || undefined;
 
-  if (!(await passesTurnstile(formData.get("turnstileToken"), ip))) {
+  // the domain the form was sent to, without a port (Turnstile reports hostnames without one)
+  const host = (requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host"))?.split(",")[0].trim().replace(/:\d+$/, "").toLowerCase();
+
+  if (!(await passesTurnstile(formData.get("turnstileToken"), ip, host))) {
     return { ok: false, message: "The security check failed. Try again, or refresh the page if it keeps failing." };
   }
 
@@ -144,18 +147,49 @@ export async function submitReport(type: ReportType, formData: FormData): Promis
   }
 }
 
-async function passesTurnstile(token: FormDataEntryValue | null, ip?: string) {
+const TURNSTILE_TIMEOUT_MS = 5000;
+
+/**
+ * Cloudflare's dummy secrets for local testing (1x… passes, 2x… fails, 3x… is
+ * "already spent"). Their responses name a placeholder hostname, not this site.
+ */
+const isTestSecret = (secret: string) => /^[123]x0{30,}A[AB]$/.test(secret);
+
+/**
+ * Asks Cloudflare whether the form's Turnstile token is good. Fails closed: a
+ * missing key or token, a Cloudflare error or a slow reply all count as failed.
+ * `host` is the site the form was sent to; a token solved on any other site
+ * (someone embedding this site's key elsewhere) is refused.
+ */
+async function passesTurnstile(token: FormDataEntryValue | null, ip: string | undefined, host: string | undefined) {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   if (!secret) {
     console.error("TURNSTILE_SECRET_KEY is not set");
     return false;
   }
   if (typeof token !== "string" || !token) return false;
-  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ secret, response: token, remoteip: ip }),
-  });
-  const result = (await response.json()) as { success: boolean };
-  return result.success;
+
+  try {
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ secret, response: token, remoteip: ip }),
+      signal: AbortSignal.timeout(TURNSTILE_TIMEOUT_MS),
+    });
+    if (!response.ok) {
+      console.error(`Turnstile verification returned ${response.status}`);
+      return false;
+    }
+    const result = (await response.json()) as { success?: boolean; hostname?: string };
+    if (result.success !== true) return false;
+    if (isTestSecret(secret)) return true;
+    if (!host || result.hostname?.toLowerCase() !== host) {
+      console.error(`Turnstile token was solved on ${result.hostname}, not ${host}`);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Turnstile verification failed:", err);
+    return false;
+  }
 }
