@@ -124,6 +124,12 @@
   }
 }
 
+// book cards in the wide Card format: fewer, wider columns
+.bookGrid.wideCards {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 1rem;
+}
+
 .authorGrid,
 .seriesGrid {
   display: grid;
@@ -265,6 +271,10 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border: 1px solid var(--border);
+
+  &.segmentedTwo {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .segment {

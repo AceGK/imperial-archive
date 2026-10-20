@@ -40,6 +40,11 @@ export function useBookDisplay() {
   return [display, update] as const;
 }
 
+const LAYOUT_OPTIONS: { value: BookDisplay["layout"]; label: string }[] = [
+  { value: "poster", label: "Poster" },
+  { value: "card", label: "Card" },
+];
+
 const MEDIA_OPTIONS: { value: BookDisplay["media"]; label: string }[] = [
   { value: "both", label: "Cover + Title" },
   { value: "cover", label: "Cover" },
@@ -60,6 +65,7 @@ export function DisplayMenu({ display, onChange }: { display: BookDisplay; onCha
   const wrapRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
+  const layoutName = useId();
   const mediaName = useId();
   const detailsId = useId();
 
@@ -103,6 +109,24 @@ export function DisplayMenu({ display, onChange }: { display: BookDisplay; onCha
 
       {open && (
         <div id={panelId} className={styles.displayPanel} role="dialog" aria-label="Card display">
+          <fieldset className={styles.displayGroup}>
+            <legend className={styles.displayHeading}>Format</legend>
+            <div className={`${styles.segmented} ${styles.segmentedTwo}`}>
+              {LAYOUT_OPTIONS.map(({ value, label }) => (
+                <label key={value} className={styles.segment}>
+                  <input
+                    type="radio"
+                    name={layoutName}
+                    value={value}
+                    checked={display.layout === value}
+                    onChange={() => onChange({ ...display, layout: value })}
+                  />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
           <fieldset className={styles.displayGroup}>
             <legend className={styles.displayHeading}>Show</legend>
             {/* cover and title as one choice, so they can't both be hidden */}

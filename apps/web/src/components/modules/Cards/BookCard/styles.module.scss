@@ -620,3 +620,75 @@
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+/* ---- wide card (Cards menu: Card): cover on the left, details beside it ---- */
+
+.wide {
+  flex-direction: row;
+  align-items: stretch;
+
+  .media {
+    flex: none;
+    // narrow enough that a full row of tags fits beside the Track button
+    width: 6.75rem;
+    padding: 1rem 0 1rem 1rem;
+
+    @include max(sm) {
+      width: 6rem;
+      padding: 0.75rem 0 0.75rem 0.75rem;
+    }
+  }
+
+  // a framed cover rather than a full-bleed one
+  .image {
+    border: 1px solid var(--border);
+  }
+
+  .content {
+    min-width: 0;
+  }
+
+  .title {
+    font-size: 1.0625rem;
+  }
+
+  // details stack from the top; the chips and actions follow them
+  .meta {
+    margin-top: 0.5rem;
+  }
+
+  // one row: a compact Track button first, then the tags, which wrap among
+  // themselves if they must so the button never drops onto its own line
+  .bodyActions {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 0.25rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+
+    .tagsInline {
+      flex: 1 1 auto;
+      min-width: 0;
+      justify-content: flex-start;
+    }
+  }
+
+  // the size of the tags beside it, in their condensed capitals
+  .trackButtonInline {
+    flex: none;
+    order: -1;
+    gap: 0.3rem;
+    height: 1.375rem;
+    padding: 0 0.5rem;
+    font-family: var(--font-condensed);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    .trackIcon {
+      width: 0.5625rem;
+      height: 0.5625rem;
+    }
+  }
+}
