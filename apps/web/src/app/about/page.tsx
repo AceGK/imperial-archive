@@ -332,7 +332,7 @@ export default function AboutPage() {
                   tithe toward hosting and upkeep keeps the cogitators running.
                 </p>
 
-                <Button href="/support" variant="secondary" size="sm">
+                <Button href="/donate" variant="secondary" size="sm">
                   Offer a Tithe
                 </Button>
               </Card>
