@@ -2,7 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConvexAuth } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -12,6 +13,12 @@ import SignOutIcon from "@/components/icons/account/sign-out.svg";
 import Button from "@/components/ui/Button";
 import { mobileItems } from "./nav";
 import styles from "./styles.module.scss";
+
+// loads when the menu first opens; an empty box of the same size holds its place meanwhile
+const NavSearch = dynamic(() => import("@/components/modules/NavSearch"), {
+  ssr: false,
+  loading: () => <div className={styles.mobileSearchPlaceholder} />,
+});
 
 /** The slide-down panel behind the hamburger, with a backdrop that closes it */
 export default function MobileMenu({
@@ -34,10 +41,22 @@ export default function MobileMenu({
     };
   }, [open]);
 
+  const [searchLoaded, setSearchLoaded] = useState(false);
+  // while results show, they take the place of the links
+  const [searching, setSearching] = useState(false);
+
+  useEffect(() => {
+    if (open) setSearchLoaded(true);
+  }, [open]);
+
   return (
     <>
       <div id="mobile-menu" className={`${styles.mobile} ${open ? styles.show : ""}`}>
-        <ul className={styles.mobileLinks}>
+        <div className={styles.mobileSearch}>
+          {searchLoaded && <NavSearch variant="menu" onNavigate={onClose} onSearchingChange={setSearching} />}
+        </div>
+
+        <ul className={styles.mobileLinks} hidden={searching}>
           {mobileItems.map((item) => (
             <li key={item.label} className={styles.mobileGroup}>
               <div className={styles.mobileGroupLabel}>{item.label}</div>
@@ -67,7 +86,7 @@ export default function MobileMenu({
           <AccountGroup isLinkActive={isLinkActive} />
         </ul>
 
-        <div className={styles.mobileActions}>
+        <div className={styles.mobileActions} hidden={searching}>
           <AuthButtons />
           {/* SiteWidthToggle omitted — it's desktop-only (hidden below 1250px) */}
           {showThemeSwitch && (

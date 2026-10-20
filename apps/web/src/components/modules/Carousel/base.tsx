@@ -30,6 +30,8 @@ type CarouselProps = {
   /** Icon on the "View All" last slide, e.g. the nav icon for this content type */
   viewAllIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   showLastSlide?: boolean;
+  /** The "View All" button under the slider; the last slide still links there when this is off */
+  showViewAllButton?: boolean;
   /** Changing this jumps back to the first slide, e.g. when tabs swap the items */
   resetKey?: string;
 };
@@ -50,6 +52,7 @@ export default function Carousel({
   lastSlideTitle = "View All",
   viewAllIcon: ViewAllIcon,
   showLastSlide = true,
+  showViewAllButton = true,
   resetKey,
 }: CarouselProps) {
   const prevRef = useRef<HTMLButtonElement>(null);
@@ -146,7 +149,7 @@ export default function Carousel({
         </Swiper>
       </div>
 
-      {viewAllLink && (
+      {viewAllLink && showViewAllButton && (
         <div className={styles.viewAll}>
           <Button href={viewAllLink} variant="secondary" size="lg">
             {viewAllLabel ? viewAllLabel : "View All"}
