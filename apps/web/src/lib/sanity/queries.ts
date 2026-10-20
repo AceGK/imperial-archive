@@ -110,6 +110,12 @@ export const all40kAuthorsQuery = groq`
 }
 `;
 
+// every published author's id and name, for the missing book form's author suggestions
+export const authorNames40kQuery = groq`
+*[_type == "author40k" && defined(slug.current) && !(_id in path("drafts.**"))]
+| order(name asc){ "id": _id, name }
+`;
+
 export const single40kAuthorQuery = groq`
 *[_type == "author40k" && slug.current == $slug][0]{
   _id,

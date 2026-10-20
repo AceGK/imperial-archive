@@ -61,6 +61,42 @@ const schema = defineSchema({
     .index("by_list_book", ["listId", "bookId"])
     .index("by_user", ["userId"])
     .index("by_user_book", ["userId", "bookId"]),
+
+  // Submissions from the site's report and feedback forms, kept as tickets.
+  // Fields beyond the common ones depend on `type`.
+  reports: defineTable({
+    type: v.union(v.literal("siteIssue"), v.literal("missingBook"), v.literal("feedback")),
+    status: v.union(v.literal("new"), v.literal("inProgress"), v.literal("done"), v.literal("declined")),
+    name: v.optional(v.string()),
+    email: v.optional(v.string()),
+    // set when the sender was signed in
+    userId: v.optional(v.id("users")),
+    message: v.optional(v.string()),
+    // siteIssue
+    pageUrl: v.optional(v.string()),
+    os: v.optional(v.string()),
+    browser: v.optional(v.string()),
+    // missingBook: what's missing; absent on reports from before authors and series
+    missingKind: v.optional(v.union(v.literal("book"), v.literal("author"), v.literal("series"))),
+    bookTitle: v.optional(v.string()),
+    bookAuthor: v.optional(v.string()),
+    // the Sanity author40k _id, when bookAuthor names an author the Archive has
+    authorId: v.optional(v.string()),
+    series: v.optional(v.string()),
+    format: v.optional(v.string()),
+    // "2024", "2024-03" or "2024-03-15"
+    releaseDate: v.optional(v.string()),
+    // from before release dates replaced years; only early test reports have it
+    releaseYear: v.optional(v.string()),
+    isbn: v.optional(v.string()),
+    link: v.optional(v.string()),
+    // salted hash of the sender's IP, only for rate limiting
+    ipHash: v.optional(v.string()),
+    updatedAt: v.number(),
+  })
+    .index("by_status", ["status"])
+    .index("by_ip", ["ipHash"])
+    .index("by_user", ["userId"]),
 });
 
 export default schema;

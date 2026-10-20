@@ -7,7 +7,7 @@ import {
 import { findRedirect } from "@/lib/redirects";
 
 const isSignInPage = createRouteMatcher(["/login", "/signup"]);
-const isProtectedRoute = createRouteMatcher(["/account(.*)"]);
+const isProtectedRoute = createRouteMatcher(["/account(.*)", "/admin(.*)"]);
 
 export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
   const redirect = await findRedirect(request.nextUrl.pathname);

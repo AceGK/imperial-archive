@@ -152,9 +152,57 @@
   gap: 0.75rem 1rem;
 }
 
+// the copyright, then Terms and Privacy; they wrap under it on narrow phones
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  // rows measure cap height only (see below), so wrapped lines need the larger gap
+  gap: 0.875rem 1.25rem;
+}
+
 .copy {
   color: var(--subtle);
   font-size: 0.875rem;
+}
+
+// trim each line to the letters themselves (cap height to baseline), so the
+// bar centers the text rather than its line boxes, whose extra room under the
+// baseline left the words looking off-center beside the theme switch
+.copy,
+.legalLink {
+  display: block;
+
+  @supports (text-box: trim-both cap alphabetic) {
+    text-box: trim-both cap alphabetic;
+  }
+}
+
+.legalLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// dimmer than the copyright beside them (still about 5:1 on the bar)
+.legalLink {
+  color: color-mix(in oklab, var(--subtle), transparent 25%);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color 120ms ease;
+
+  &:hover {
+    color: var(--text);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--border);
+    outline-offset: 2px;
+  }
 }
 .bottomLinks {
   display: inline-flex;
