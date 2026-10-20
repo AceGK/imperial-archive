@@ -1,22 +1,14 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { toPlainText } from "@portabletext/react";
-import InfoHeader from "@/components/modules/InfoHeader";
-import RichText from "@/components/ui/RichText";
-import ArrowLeftIcon from "@/components/icons/arrow-left.svg";
+import Article from "@/components/modules/Article";
 import JsonLd from "@/components/seo/JsonLd";
 import { client } from "@/lib/sanity/sanity.client";
 import { blogPostBySlugQuery, blogPostSlugsQuery } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/sanity.image";
-import TocLayout from "@/components/modules/Toc/TocLayout";
-import { ShareLinks } from "@/components/modules/Share";
-import { formatPostDate, postSections } from "@/lib/blog";
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata, SITE_NAME, truncate } from "@/lib/seo";
 import type { BlogPostDoc } from "@/types/sanity";
 import PostNav from "./PostNav";
-import styles from "./styles.module.scss";
 
 export const revalidate = 60;
 
@@ -57,67 +49,8 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
   if (!post) notFound();
 
   const cover = post.mainImage?.asset ? post.mainImage : null;
-  const dims = cover?.asset?.metadata?.dimensions;
-  const coverWidth = 1520;
   const category = post.categories?.find((c) => c !== "Blog") ?? null;
   const path = `/blog/${post.slug}`;
-  const sections = postSections(post.body);
-  const showToc = sections.items.length >= 2;
-
-  const header = (
-    <div>
-      <Link href="/blog" className={styles.back}>
-        <ArrowLeftIcon aria-hidden="true" />
-        <span>All dispatches</span>
-      </Link>
-
-      <InfoHeader
-        label={category}
-        title={post.title}
-      >
-        <p className={styles.meta}>
-          {post.publishedAt && <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>}
-          {post.author && <span>By {post.author}</span>}
-        </p>
-      </InfoHeader>
-    </div>
-  );
-
-  const postNav = <PostNav prev={post.prev} next={post.next} />;
-
-  // with a contents rail the header and post links span it and the article
-  // (see TocLayout); without one they stay in the article column
-  const article = (
-    <article className={styles.content}>
-      {!showToc && header}
-
-      {cover && dims && (
-        <div className={styles.cover}>
-          <Image
-            src={urlFor(cover).width(coverWidth).auto("format").url()}
-            alt={cover.alt || ""}
-            width={coverWidth}
-            height={Math.round(coverWidth / dims.aspectRatio)}
-            sizes="(max-width: 800px) 100vw, 760px"
-            priority
-            placeholder={cover.asset?.metadata?.lqip ? "blur" : "empty"}
-            blurDataURL={cover.asset?.metadata?.lqip}
-          />
-        </div>
-      )}
-
-      <div className={`${styles.body} rich-text`}>
-        <RichText value={post.body} headingIds={sections.headingIds} />
-      </div>
-
-      <footer className={styles.share}>
-        <h2 className={styles.shareHeading}>Share this dispatch</h2>
-        <ShareLinks url={path} title={post.title} />
-      </footer>
-
-      {!showToc && postNav}
-    </article>
-  );
 
   return (
     <main>
@@ -144,15 +77,14 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
         ]}
       />
 
-      <section className="container row__md">
-        {showToc ? (
-          <TocLayout items={sections.items} header={header} footer={postNav}>
-            {article}
-          </TocLayout>
-        ) : (
-          article
-        )}
-      </section>
+      <Article
+        post={post}
+        label={category}
+        back={{ href: "/blog", label: "All dispatches" }}
+        shareHeading="Share this dispatch"
+        sharePath={path}
+        footer={<PostNav prev={post.prev} next={post.next} />}
+      />
     </main>
   );
 }
