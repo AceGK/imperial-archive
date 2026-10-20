@@ -181,25 +181,35 @@ export default function Nav({
                   </li>
                 );
               })}
+
+              {/* search sits with the links, so it doesn't depend on how wide the account slot is */}
+              <li
+                onMouseEnter={(e) => {
+                  menu.updateHighlight(e);
+                  menu.startCloseDropdown();
+                  preloadSearch();
+                }}
+                onMouseLeave={menu.hideHighlight}
+              >
+                <button
+                  ref={searchButtonRef}
+                  type="button"
+                  className={`${styles.link} ${styles.searchTrigger}`}
+                  aria-label="Search"
+                  title="Search"
+                  aria-expanded={searchOpen}
+                  aria-controls="nav-search"
+                  onClick={() => (searchOpen ? closeSearch() : openSearch())}
+                  onFocus={preloadSearch}
+                >
+                  <MagnifyingGlassIcon aria-hidden="true" />
+                </button>
+              </li>
             </ul>
           </div>
 
           {/* desktop right controls */}
           <div className={styles.secondary}>
-            <button
-              ref={searchButtonRef}
-              type="button"
-              className={styles.searchButton}
-              aria-label="Search"
-              title="Search"
-              aria-expanded={searchOpen}
-              aria-controls="nav-search"
-              onClick={() => (searchOpen ? closeSearch() : openSearch())}
-              onMouseEnter={preloadSearch}
-              onFocus={preloadSearch}
-            >
-              <MagnifyingGlassIcon aria-hidden="true" />
-            </button>
             <AuthSlot showSignup />
             {showLayoutToggle && <SiteWidthToggle />}
             {showThemeToggle && <ThemeToggle />}

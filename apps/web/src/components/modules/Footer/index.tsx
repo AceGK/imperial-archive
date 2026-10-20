@@ -4,49 +4,27 @@ import styles from "./styles.module.scss";
 import Logo from "../../../../public/imperial-archive-logo.svg";
 import ThemeSwitch from "@/components/modules/ThemeSwitch";
 import { isProduction } from "@/lib/env";
-import { accountNav } from "@/components/modules/Account/nav";
-import { supportGroup } from "@/components/modules/Nav/nav";
+import { navGroup } from "@/components/modules/Nav/nav";
 
 type FooterLink = { href: string; label: string; comingSoon?: boolean };
 
 export type FooterProps = {
-  /** Primary site nav */
-  links?: FooterLink[];
-  /** Info links (about, FAQ, etc.) */
-  secondary?: FooterLink[];
   note?: string;
   /** Show a slim bottom bar with © and utility links */
   showBottomBar?: boolean;
 };
 
-const defaultPrimary: FooterLink[] = [
-  { href: "/books", label: "Books" },
-  { href: "/authors", label: "Authors" },
-  { href: "/series", label: "Series" },
-  { href: "/factions", label: "Factions" },
-  { href: "/eras", label: "Eras" },
-  { href: "/characters", label: "Characters", comingSoon: true },
-];
+const linksOf = (label: string): FooterLink[] =>
+  navGroup(label).links.map(({ href, label, comingSoon }) => ({ href, label, comingSoon }));
 
-const defaultSecondary: FooterLink[] = [
-  { href: "/track", label: "Reading Tracker" },
-  { href: "/about", label: "About" },
-  { href: "/resources", label: "Resources" },
-  { href: "/blog", label: "Blog" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/about#attribution", label: "Attribution" },
-];
-
-// the nav's Support menu
-const supportLinks: FooterLink[] = supportGroup.links.map(({ href, label }) => ({ href, label }));
+// the nav's groups, in the same order
+const columns = ["Browse", "Resources", "Info", "Support"].map((heading) => ({ heading, links: linksOf(heading) }));
 
 // beside the copyright in the bottom bar
 const legalLinks: FooterLink[] = [
   { href: "/terms", label: "Terms of Use" },
   { href: "/privacy", label: "Privacy Policy" },
 ];
-
-const accountLinks = accountNav.flatMap((group) => group.items);
 
 function FooterColumn({ heading, label, links }: { heading: string; label: string; links: FooterLink[] }) {
   return (
@@ -67,8 +45,6 @@ function FooterColumn({ heading, label, links }: { heading: string; label: strin
 }
 
 export default function Footer({
-  links = defaultPrimary,
-  secondary = defaultSecondary,
   note = "The Imperial Archive is an unofficial, fan-made resource for the Warhammer 40k universe. This site is not affiliated with Games Workshop. All Warhammer 40,000® logos, names, and images are the property of Games Workshop Limited.",
   showBottomBar = true,
 }: FooterProps) {
@@ -86,10 +62,9 @@ export default function Footer({
             {note && <p className={styles.note}>{note}</p>}
           </div>
 
-          <FooterColumn heading="Browse" label="Footer navigation" links={links} />
-          <FooterColumn heading="Info" label="Info links" links={secondary} />
-          <FooterColumn heading="Account" label="Account links" links={accountLinks} />
-          <FooterColumn heading="Support" label="Support links" links={supportLinks} />
+          {columns.map(({ heading, links }) => (
+            <FooterColumn key={heading} heading={heading} label={`${heading} links`} links={links} />
+          ))}
         </div>
       </div>
 

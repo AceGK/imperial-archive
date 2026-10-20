@@ -6,11 +6,15 @@ import BooksIcon from "@/components/icons/books.svg";
 import ShieldIcon from "@/components/icons/shield.svg";
 import HourglassIcon from "@/components/icons/hourglass.svg";
 import SwordsIcon from "@/components/icons/swords.svg";
+import SignpostIcon from "@/components/icons/signpost.svg";
+import RouteIcon from "@/components/icons/route.svg";
+import HistoryIcon from "@/components/icons/history.svg";
+import VocabularyIcon from "@/components/icons/vocabulary.svg";
+import ShoppingBagIcon from "@/components/icons/shopping-bag.svg";
 import InfoIcon from "@/components/icons/square-info.svg";
-import ScrollIcon from "@/components/icons/scroll.svg";
+import BookBookmarkIcon from "@/components/icons/book-bookmark.svg";
 import NewspaperIcon from "@/components/icons/newspaper.svg";
 import QuestionIcon from "@/components/icons/circle-question.svg";
-import BookBookmarkIcon from "@/components/icons/book-bookmark.svg";
 import CoinsIcon from "@/components/icons/coins.svg";
 import BugIcon from "@/components/icons/bug.svg";
 import BookQuestionIcon from "@/components/icons/book-question.svg";
@@ -28,7 +32,10 @@ export type NavGroup = { label: string; links: NavLink[]; columns?: number };
 export type NavPlain = { href: string; label: string; comingSoon?: boolean };
 export type NavItem = NavGroup | NavPlain;
 
-/** The desktop bar, left to right: groups open a dropdown, plain items are links */
+/**
+ * The desktop bar, left to right: groups open a dropdown, plain items are links.
+ * The phone menu and the footer list the same groups.
+ */
 export const NAV_ITEMS: NavItem[] = [
   {
     label: "Browse",
@@ -48,12 +55,50 @@ export const NAV_ITEMS: NavItem[] = [
       },
     ],
   },
-  { href: "/track", label: "Track" },
+  {
+    label: "Resources",
+    links: [
+      {
+        href: "/where-to-buy",
+        label: "Where to Buy",
+        description: "Print, ebook, and audiobook options",
+        icon: ShoppingBagIcon,
+      },
+      {
+        href: "/where-to-start",
+        label: "Where to Start",
+        description: "First books for new readers",
+        icon: SignpostIcon,
+        comingSoon: true,
+      },
+      {
+        href: "/guides",
+        label: "Reading Guides",
+        description: "Reading orders and paths",
+        icon: RouteIcon,
+        comingSoon: true,
+      },
+      {
+        href: "/timeline",
+        label: "Timeline",
+        description: "Key events of the 41st millennium",
+        icon: HistoryIcon,
+        comingSoon: true,
+      },
+      {
+        href: "/glossary",
+        label: "Glossary",
+        description: "Terms of the 41st millennium",
+        icon: VocabularyIcon,
+        comingSoon: true,
+      },
+    ],
+  },
   {
     label: "Info",
     links: [
       { href: "/about", label: "About", description: "The charter behind this archive", icon: InfoIcon },
-      { href: "/resources", label: "Resources", description: "Reading orders and community guides", icon: ScrollIcon },
+      { href: "/track", label: "Tracking", description: "How to track your reading", icon: BookBookmarkIcon },
       { href: "/blog", label: "Blog", description: "News and dispatches from the Archive", icon: NewspaperIcon },
       { href: "/faq", label: "FAQ", description: "Common questions, answered", icon: QuestionIcon },
     ],
@@ -82,22 +127,11 @@ export const NAV_ITEMS: NavItem[] = [
 /** The groups, in order; a dropdown's index here is its index everywhere in the menu */
 export const dropdownItems = NAV_ITEMS.filter((item): item is NavGroup => !("href" in item));
 
-/** Support's links, also listed on the /support hub page */
-export const supportGroup = dropdownItems.find((g) => g.label === "Support")!;
+/** One of the groups above by its label, e.g. for the footer's columns */
+export const navGroup = (label: string) => dropdownItems.find((g) => g.label === label)!;
 
-// The mobile menu's sections are two-column grids: the single Track link joins
-// Info there, second
-const browseGroup = dropdownItems.find((g) => g.label === "Browse")!;
-const infoGroup = dropdownItems.find((g) => g.label === "Info")!;
-export const mobileItems: NavGroup[] = [
-  browseGroup,
-  {
-    ...infoGroup,
-    links: [
-      infoGroup.links[0],
-      { href: "/track", label: "Track", icon: BookBookmarkIcon },
-      ...infoGroup.links.slice(1),
-    ],
-  },
-  supportGroup,
-];
+/** Support's links, also listed on the /support hub page */
+export const supportGroup = navGroup("Support");
+
+/** The phone menu's sections, each a two-column grid: the same groups as the bar */
+export const mobileItems: NavGroup[] = dropdownItems;
