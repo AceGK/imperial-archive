@@ -1,12 +1,10 @@
-// scripts/algolia-setup-replicas.ts
-// Run: npx tsx scripts/algolia-setup-replicas.ts
+// scripts/algolia/setup-books.ts
+// Sets the index's search settings and creates its sort replicas.
+// Run from the repo root: npx tsx scripts/algolia/setup-books.ts
 
 import { env } from "node:process";
-import path from "node:path";
-import dotenv from "dotenv";
 import { algoliasearch } from "algoliasearch";
-
-dotenv.config({ path: path.resolve(__dirname, "../.env.local") });
+import "./lib"; // loads the repo root's .env.local
 
 const { ALGOLIA_APP_ID = "", ALGOLIA_WRITE_API_KEY = "" } = env;
 const ALGOLIA_INDEX_NAME = "books40k";

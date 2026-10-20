@@ -124,9 +124,12 @@
   }
 }
 
-// book cards in the wide Card format: fewer, wider columns
+// book cards in the wide Card format: fewer, wider columns, but never fewer
+// than two (a column is at most half the grid wide before it reaches 340px)
 .bookGrid.wideCards {
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  // the cards read this width to stack their cover when two to a row is tight
+  container: book-grid / inline-size;
+  grid-template-columns: repeat(auto-fill, minmax(min(calc(50% - 0.5rem), 340px), 1fr));
   gap: 1rem;
 }
 

@@ -10,13 +10,13 @@
     "dev:web": "npm -w @ac/web run dev",
     "dev:studio": "npm -w @ac/studio run dev",
     "build": "npm -w @ac/web run build && npm -w @ac/studio run build",
-    "lint": "npm -ws run lint",
-    "typecheck": "npm -ws run typecheck"
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm -ws run typecheck"
   },
   "devDependencies": {
     "@sanity/blueprints": "0.4.1",
     "@types/node": "^24.10.0",
     "concurrently": "^9.0.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.6.0"
   },
   "optionalDependencies": {

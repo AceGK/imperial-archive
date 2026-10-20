@@ -692,3 +692,58 @@
     }
   }
 }
+
+// Two to a row in a narrow catalog grid (a phone), there's no room beside the
+// cover for the tags and Track button: the cover keeps the left with the
+// title, author and date beside it, and the tags and Track button take a
+// full-width row underneath. The cover narrows to a third of the card so the
+// text keeps a readable column. book-grid is the catalog's Card grid.
+@container book-grid (max-width: 32rem) {
+  .wide:has(> .media):has(> .content) {
+    display: grid;
+    grid-template-columns: 34% minmax(0, 1fr);
+    // the last row takes up the cover's height, so the text stays at the top
+    grid-template-rows: auto auto auto 1fr;
+    column-gap: 0.625rem;
+    padding: 0.625rem;
+
+    .media {
+      grid-column: 1;
+      grid-row: 1 / 5;
+      width: auto;
+      padding: 0;
+    }
+
+    // its children join the card's grid
+    .content {
+      display: contents;
+    }
+
+    .title {
+      grid-column: 2;
+      grid-row: 1;
+      font-size: 0.9375rem;
+    }
+
+    .author {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .year {
+      grid-column: 2;
+      grid-row: 3;
+    }
+
+    .meta,
+    .bodyActions {
+      grid-column: 1 / -1;
+      margin-top: 0;
+      padding-top: 0.625rem;
+    }
+
+    .bodyActions {
+      flex-wrap: wrap;
+    }
+  }
+}
