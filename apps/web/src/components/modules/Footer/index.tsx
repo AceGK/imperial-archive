@@ -5,6 +5,7 @@ import Logo from "../../../../public/imperial-archive-logo.svg";
 import ThemeSwitch from "@/components/modules/ThemeSwitch";
 import { isProduction } from "@/lib/env";
 import { accountNav } from "@/components/modules/Account/nav";
+import { supportGroup } from "@/components/modules/Nav/nav";
 
 type FooterLink = { href: string; label: string; comingSoon?: boolean };
 
@@ -33,11 +34,14 @@ const defaultSecondary: FooterLink[] = [
   { href: "/resources", label: "Resources" },
   { href: "/blog", label: "Blog" },
   { href: "/faq", label: "FAQ" },
-  { href: "/support", label: "Support" },
+  { href: "/about#attribution", label: "Attribution" },
 ];
 
+// the nav's Support menu
+const supportLinks: FooterLink[] = supportGroup.links.map(({ href, label }) => ({ href, label }));
+
+// beside the copyright in the bottom bar
 const legalLinks: FooterLink[] = [
-  { href: "/about#attribution", label: "Attribution" },
   { href: "/terms", label: "Terms of Use" },
   { href: "/privacy", label: "Privacy Policy" },
 ];
@@ -85,7 +89,7 @@ export default function Footer({
           <FooterColumn heading="Browse" label="Footer navigation" links={links} />
           <FooterColumn heading="Info" label="Info links" links={secondary} />
           <FooterColumn heading="Account" label="Account links" links={accountLinks} />
-          <FooterColumn heading="Legal" label="Legal links" links={legalLinks} />
+          <FooterColumn heading="Support" label="Support links" links={supportLinks} />
         </div>
       </div>
 
@@ -93,9 +97,22 @@ export default function Footer({
         <div className={styles.bottomBar} role="contentinfo" aria-label="Site credits">
           <div className="container">
             <div className={styles.bottomInner}>
-              <small className={styles.copy}>
-                © {year} Imperial Archive
-              </small>
+              <div className={styles.legal}>
+                <small className={styles.copy}>
+                  © {year} Imperial Archive
+                </small>
+                <nav aria-label="Legal">
+                  <ul className={styles.legalLinks}>
+                    {legalLinks.map(({ href, label }) => (
+                      <li key={href}>
+                        <Link href={href} className={styles.legalLink}>
+                          {label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
 
               <div className={styles.bottomLinks}>
                 {/* hidden in production until light mode is finished */}

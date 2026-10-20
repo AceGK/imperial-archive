@@ -1,0 +1,82 @@
+@use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
+
+// one 760px column, like the other info pages; the header's own margin spaces
+// it from the form
+.page {
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.eyebrow {
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.intro {
+  margin-bottom: 1.5rem;
+
+  p:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.others {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
+  @include max(sm) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// square, with the site's hover-only corner brackets
+.other {
+  @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+  // the icon beside the title and blurb
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.875rem;
+  row-gap: 0.3rem;
+  align-items: center;
+  // when a neighbouring card is taller, keep the title and blurb together
+  align-content: center;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: inherit;
+  text-decoration: none;
+
+  &:hover .otherTitle {
+    color: var(--primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+.otherIcon {
+  grid-row: span 2;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--primary);
+}
+
+.otherTitle {
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.9375rem;
+  color: var(--text);
+  transition: color 0.15s ease;
+}
+
+.otherBlurb {
+  font-size: 0.875rem;
+  color: var(--subtle);
+}

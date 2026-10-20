@@ -1,5 +1,16 @@
 # TODO
 
+# reports
+- [ ] Generate a new random REPORTS_SECRET for production, and set the same value in both Vercel and your production Convex deployment.
+
+- [ ] In Vercel: add REPORTS_SECRET, and add TURNSTILE_SECRET_KEY set to your real Turnstile secret (the same one already on your production Convex deployment).
+
+- [ ] In production Convex: add ADMIN_EMAILS (the email you sign in to the site with), and optionally REPORTS_NOTIFY_EMAIL (where to email new reports).
+
+- [ ] Deploy the schema to production with npx convex deploy. Your notes say the production Convex deploy was still pending as of October 13, so this may go along with that.
+
+To try the inbox locally, also set ADMIN_EMAILS on your dev deployment. 
+
 # ui 
 - [ ] add searchbar icon to primary nav, and searchbox to mobile nav menu
 - [ ] reconfigure: perhaps change primary nav to "browse", "resources", "about", and "support". With resources having more sub pages, such as "guides", "Where to start", "reading orders", and support having "donate", "contribute", "report issue", etc

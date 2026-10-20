@@ -12,6 +12,9 @@ import NewspaperIcon from "@/components/icons/newspaper.svg";
 import QuestionIcon from "@/components/icons/circle-question.svg";
 import BookBookmarkIcon from "@/components/icons/book-bookmark.svg";
 import CoinsIcon from "@/components/icons/coins.svg";
+import BugIcon from "@/components/icons/bug.svg";
+import BookQuestionIcon from "@/components/icons/book-question.svg";
+import FeedbackIcon from "@/components/icons/feedback.svg";
 
 export type NavIcon = ComponentType<SVGProps<SVGSVGElement>>;
 export type NavLink = {
@@ -55,14 +58,35 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/faq", label: "FAQ", description: "Common questions, answered", icon: QuestionIcon },
     ],
   },
-  { href: "/support", label: "Support" },
+  {
+    label: "Support",
+    links: [
+      { href: "/donate", label: "Donate", description: "Help cover hosting and upkeep", icon: CoinsIcon },
+      { href: "/feedback", label: "Feedback", description: "Ideas, requests, and suggestions", icon: FeedbackIcon },
+      {
+        href: "/report/site-issue",
+        label: "Report Bug",
+        description: "Something broken, confusing, or hard to use",
+        icon: BugIcon,
+      },
+      {
+        href: "/report/missing",
+        label: "Report Missing",
+        description: "A book, author, or series the Archive doesn't have yet",
+        icon: BookQuestionIcon,
+      },
+    ],
+  },
 ];
 
 /** The groups, in order; a dropdown's index here is its index everywhere in the menu */
 export const dropdownItems = NAV_ITEMS.filter((item): item is NavGroup => !("href" in item));
 
-// The mobile menu has just the two sections, each a two-column grid: the
-// single links (Track, Support) join Info there, with the tracker second
+/** Support's links, also listed on the /support hub page */
+export const supportGroup = dropdownItems.find((g) => g.label === "Support")!;
+
+// The mobile menu's sections are two-column grids: the single Track link joins
+// Info there, second
 const browseGroup = dropdownItems.find((g) => g.label === "Browse")!;
 const infoGroup = dropdownItems.find((g) => g.label === "Info")!;
 export const mobileItems: NavGroup[] = [
@@ -73,7 +97,7 @@ export const mobileItems: NavGroup[] = [
       infoGroup.links[0],
       { href: "/track", label: "Track", icon: BookBookmarkIcon },
       ...infoGroup.links.slice(1),
-      { href: "/support", label: "Support", icon: CoinsIcon },
     ],
   },
+  supportGroup,
 ];

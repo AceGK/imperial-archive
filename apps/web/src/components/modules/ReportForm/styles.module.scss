@@ -1,0 +1,358 @@
+@use "@/styles/breakpoints" as *;
+@use "@/styles/mixins" as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+// two fields side by side, stacked on phones
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+
+  @include max(sm) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.7rem 0.875rem;
+    font: inherit;
+    font-size: 1rem; // 16px or more, so phones don't zoom in on focus
+    color: var(--text);
+    background: color-mix(in oklab, var(--bg), black 2%);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    outline: none;
+    transition: border-color 0.15s ease;
+
+    &::placeholder {
+      color: var(--subtle);
+    }
+
+    &:focus {
+      border-color: var(--primary);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 6rem;
+    line-height: 1.5;
+  }
+}
+
+.invalid {
+  input,
+  textarea,
+  .selectTrigger {
+    border-color: var(--destructive);
+  }
+}
+
+// What's missing: three square options; the chosen one keeps a gold border,
+// the others show the corner marks on hover
+.kinds {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  legend {
+    float: left; // keeps the legend in the fieldset's flow, like the field labels
+    width: 100%;
+    margin-bottom: 0.4rem;
+    padding: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+}
+
+.kindOptions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.kind {
+  position: relative;
+  cursor: pointer;
+
+  // hidden but still focusable and announced; the span below is what shows
+  input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  span {
+    @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px, $hover-only: true);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 0.5rem;
+    border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--bg), black 2%);
+    text-align: center;
+    font-family: var(--font-condensed);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.9375rem;
+    color: var(--subtle);
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  // gold like the nav's icons, whichever option is chosen
+  svg {
+    flex-shrink: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--primary);
+  }
+
+  &:hover span {
+    color: var(--text);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  input:checked + span {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  input:focus-visible + span {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+// author field: the Archive's authors listed under the box as the reader types
+.combobox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  .hint:empty {
+    display: none;
+  }
+}
+
+.suggestions {
+  position: absolute;
+  top: calc(0.4rem + 2.75rem); // under the input
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 16rem;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+  &[hidden] {
+    display: none;
+  }
+
+  li {
+    padding: 0.55rem 0.75rem;
+    cursor: pointer;
+    color: var(--text);
+  }
+}
+
+.suggestionActive {
+  background: color-mix(in oklab, var(--accent), transparent 40%);
+  color: var(--primary) !important;
+}
+
+// release date: year, month, day side by side; the month gets the room for "September"
+.dateParts {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 1fr) minmax(0, 1.6fr) minmax(4.5rem, 1fr);
+  gap: 0.5rem;
+}
+
+// FormSelect: the shared Select, stretched and styled like the other fields
+.select {
+  display: block;
+  width: 100%;
+
+  > span {
+    display: block; // the trigger's wrapper
+  }
+}
+
+// month and day wait for the parts before them
+.selectTrigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.selectTrigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.7rem 2.25rem 0.7rem 0.875rem;
+  font: inherit;
+  font-size: 1rem;
+  text-align: left;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+  // chevron drawn in the field's own color
+  background:
+    linear-gradient(45deg, transparent 50%, var(--subtle) 50%) calc(100% - 1.1rem) 50% / 0.3rem 0.3rem no-repeat,
+    linear-gradient(135deg, var(--subtle) 50%, transparent 50%) calc(100% - 0.8rem) 50% / 0.3rem 0.3rem no-repeat,
+    color-mix(in oklab, var(--bg), black 2%);
+
+  &:focus-visible,
+  &[aria-expanded="true"] {
+    border-color: var(--primary);
+  }
+}
+
+.selectList.selectList {
+  right: 0;
+  min-width: 0;
+  max-height: 18rem;
+  padding: 0;
+  border-radius: 0;
+  background: var(--bg);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+  [role="option"] {
+    padding: 0.6rem 0.875rem;
+    border-radius: 0;
+    font-size: 0.9375rem;
+
+    &:hover,
+    &:focus {
+      background: color-mix(in oklab, var(--accent), transparent 40%);
+    }
+
+    &[aria-selected="true"] {
+      color: var(--primary);
+      background: color-mix(in oklab, var(--primary), transparent 88%);
+    }
+  }
+}
+
+.required {
+  color: var(--primary);
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--subtle);
+}
+
+.hint {
+  padding-bottom: 0;
+  font-size: 0.8125rem;
+  color: var(--subtle);
+}
+
+.fieldError {
+  font-size: 0.8125rem;
+  color: var(--destructive);
+}
+
+// the optional contact details, set apart below the report itself
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0.25rem 0 0;
+  padding: 1.25rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+
+  legend {
+    float: left; // keeps the legend inside the fieldset's flow, under the border
+    width: 100%;
+    margin-bottom: 0.25rem;
+    font-family: var(--font-condensed);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--subtle);
+  }
+}
+
+// off-screen rather than display: none, which some bots skip
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.error {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--destructive);
+  background: color-mix(in srgb, var(--destructive) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--destructive) 35%, transparent);
+}
+
+.submit {
+  width: 100%;
+}
+
+.sent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+
+  p {
+    padding-bottom: 0;
+  }
+}
+
+.sentTitle {
+  font-family: var(--font-condensed);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary);
+}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { pageMetadata } from "@/lib/seo";
 import type { ReactNode } from "react";
 import Card from "@/components/ui/Card";
@@ -280,9 +281,10 @@ export default function AboutPage() {
                 ))}
               </dl>
               <p>
-                In a library this vast, gaps and errors are inevitable. Once the
-                vox-channel below is open, reports of missing or incorrect
-                records are welcome.
+                In a library this vast, gaps and errors are inevitable. Reports
+                of <Link href="/report/missing">missing books, authors or series</Link> and
+                anything else that&apos;s wrong are welcome through the{" "}
+                <a href="#vox">vox-channel</a> below.
               </p>
               {/* <div className={styles.upcoming}>
                 <ComingSoon />
@@ -301,12 +303,22 @@ export default function AboutPage() {
                 eyebrow={<Eyebrow id="vox" />}
                 title="Contact"
               >
-                <ComingSoon />
                 <p>
-                  The Archive&apos;s vox-channel is still being consecrated. A
-                  contact form will open soon for corrections, missing records,
-                  suggestions, or simply to hail the Archivist.
+                  The Archive&apos;s vox-channel is open for corrections,
+                  missing records, suggestions, or simply to hail the
+                  Archivist.
                 </p>
+                <ul>
+                  <li>
+                    <Link href="/report/missing">Report something missing</Link>
+                  </li>
+                  <li>
+                    <Link href="/report/site-issue">Report a site issue</Link>
+                  </li>
+                  <li>
+                    <Link href="/feedback">Send feedback</Link>
+                  </li>
+                </ul>
               </Card>
 
               <Card
@@ -320,7 +332,7 @@ export default function AboutPage() {
                   tithe toward hosting and upkeep keeps the cogitators running.
                 </p>
 
-                <Button href="/support" variant="secondary" size="sm">
+                <Button href="/donate" variant="secondary" size="sm">
                   Offer a Tithe
                 </Button>
               </Card>
