@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Button from "@/components/ui/Button";
 import styles from "./styles.module.scss";
+import { EXTERNAL_REL } from "@/lib/links";
 
 type Props = {
   /** Ko-fi page name, e.g. "imperialarchive" */
@@ -61,7 +62,7 @@ export default function KofiButton({ username, label = "Support on Ko-fi", class
 
         <p className={styles.footer}>
           Form not loading?{" "}
-          <a href={kofiUrl} target="_blank" rel="noopener noreferrer">
+          <a href={kofiUrl} target="_blank" rel={EXTERNAL_REL}>
             Open on Ko-fi
           </a>
         </p>

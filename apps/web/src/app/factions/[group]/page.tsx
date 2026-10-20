@@ -11,6 +11,7 @@ import Breadcrumb from "@/components/ui/Breadcrumb";
 import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
 import { absoluteUrl, breadcrumbJsonLd, pageMetadata, truncate } from "@/lib/seo";
+import { EXTERNAL_REL } from "@/lib/links";
 
 export const revalidate = 60;
 
@@ -112,7 +113,7 @@ export default async function GroupPage({
                   <a
                     href={lexicanumLink}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel={EXTERNAL_REL}
                     style={{
                       display: "inline-flex",
                       gap: 6,

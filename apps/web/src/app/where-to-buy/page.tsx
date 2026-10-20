@@ -6,6 +6,7 @@ import TocLayout from "@/components/modules/Toc/TocLayout";
 import type { TocItem } from "@/components/modules/Toc";
 import { pageMetadata } from "@/lib/seo";
 import styles from "./styles.module.scss";
+import { EXTERNAL_REL } from "@/lib/links";
 
 export const metadata = pageMetadata({
   title: "Where to Buy Warhammer 40k Books",
@@ -16,7 +17,7 @@ export const metadata = pageMetadata({
 
 function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer">
+    <a href={href} target="_blank" rel={EXTERNAL_REL}>
       {children}
     </a>
   );

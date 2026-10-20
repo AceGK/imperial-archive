@@ -7,6 +7,7 @@ import ShareIcon from "@/components/icons/share.svg";
 import { absoluteUrl } from "@/lib/seo";
 import { PLATFORMS } from "./platforms";
 import styles from "./styles.module.scss";
+import { EXTERNAL_REL } from "@/lib/links";
 
 export type ShareLinksProps = {
   /** path on this site ("/books/eisenhorn") or a full URL */
@@ -105,7 +106,7 @@ export default function ShareLinks({ url, title, text = title, className }: Shar
           className={styles.iconButton}
           aria-label={`Share on ${label}`}
           title={`Share on ${label}`}
-          {...(id === "email" ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+          {...(id === "email" ? {} : { target: "_blank", rel: EXTERNAL_REL })}
         >
           <Icon className={styles.icon} aria-hidden="true" />
         </a>

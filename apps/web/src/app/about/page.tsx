@@ -7,6 +7,7 @@ import TocLayout from "@/components/modules/Toc/TocLayout";
 import type { TocItem } from "@/components/modules/Toc";
 import styles from "./styles.module.scss";
 import InfoHeader from "@/components/modules/InfoHeader";
+import { EXTERNAL_REL } from "@/lib/links";
 
 export const metadata = pageMetadata({
   title: "About",
@@ -23,7 +24,7 @@ function ExternalLink({
   children: ReactNode;
 }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer">
+    <a href={href} target="_blank" rel={EXTERNAL_REL}>
       {children}
     </a>
   );

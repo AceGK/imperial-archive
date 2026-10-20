@@ -1,4 +1,5 @@
 import styles from "./styles.module.scss";
+import { EXTERNAL_REL } from "@/lib/links";
 
 /** A link from the studio's "Links" field on a book or series */
 export type SourceLink = {
@@ -77,7 +78,7 @@ export function SourceList({ sources, title }: { sources: Source[]; title: strin
             <span className={styles.number}>[{s.number}]</span>{" "}
             <span>
               {s.label}: <em>{title}</em>{" "}
-              <a href={s.url} target="_blank" rel="noopener noreferrer" className={styles.link}>
+              <a href={s.url} target="_blank" rel={EXTERNAL_REL} className={styles.link}>
                 {s.host}
                 <span className={styles.visuallyHidden}> (opens in a new tab)</span>
               </a>

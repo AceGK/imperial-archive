@@ -14,6 +14,7 @@ import {
 } from "@convex/reportFields";
 import Button from "@/components/ui/Button";
 import styles from "./styles.module.scss";
+import { EXTERNAL_REL } from "@/lib/links";
 
 const STATUSES = Object.keys(REPORT_STATUS_LABELS) as ReportStatus[];
 const TYPES = Object.keys(REPORT_TYPE_LABELS) as ReportType[];
@@ -80,7 +81,7 @@ function ReportItem({ report }: { report: Doc<"reports"> }) {
                       {value} <span className={styles.inArchive}>in the Archive</span>
                     </>
                   ) : isUrl(value) ? (
-                    <a href={value} target="_blank" rel="noopener noreferrer">
+                    <a href={value} target="_blank" rel={EXTERNAL_REL}>
                       {value}
                     </a>
                   ) : (

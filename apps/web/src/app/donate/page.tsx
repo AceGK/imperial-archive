@@ -4,6 +4,7 @@ import { ShareLinks } from "@/components/modules/Share";
 import { pageMetadata } from "@/lib/seo";
 import styles from "./styles.module.scss";
 import InfoHeader from "@/components/modules/InfoHeader";
+import { EXTERNAL_REL } from "@/lib/links";
 
 export const metadata = pageMetadata({
   title: "Donate",
@@ -26,7 +27,7 @@ const COSTS = [
 
 function KofiLink() {
   return (
-    <a href={KOFI_URL} target="_blank" rel="noopener noreferrer" className={styles.kofiLink}>
+    <a href={KOFI_URL} target="_blank" rel={EXTERNAL_REL} className={styles.kofiLink}>
       Ko-fi
     </a>
   );
