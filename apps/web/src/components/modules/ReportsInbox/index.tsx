@@ -75,7 +75,11 @@ function ReportItem({ report }: { report: Doc<"reports"> }) {
               <div key={key}>
                 <dt>{label}</dt>
                 <dd>
-                  {isUrl(value) ? (
+                  {key === "bookAuthor" && report.authorId ? (
+                    <>
+                      {value} <span className={styles.inArchive}>in the Archive</span>
+                    </>
+                  ) : isUrl(value) ? (
                     <a href={value} target="_blank" rel="noopener noreferrer">
                       {value}
                     </a>

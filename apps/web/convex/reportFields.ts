@@ -47,6 +47,8 @@ export const MAX_LENGTH = {
   browser: 50,
   bookTitle: 200,
   bookAuthor: 200,
+  // a Sanity author _id, when bookAuthor names an author already in the Archive
+  authorId: 100,
   series: 200,
   format: 50,
   releaseDate: 10,

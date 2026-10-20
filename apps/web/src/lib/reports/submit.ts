@@ -59,6 +59,10 @@ const schemas = {
       missingKind: z.enum(MISSING_KINDS).catch("book"),
       bookTitle: optional(MAX_LENGTH.bookTitle),
       bookAuthor: optional(MAX_LENGTH.bookAuthor),
+      // set by the form when the author is in the Archive; anything that doesn't look like a Sanity id is dropped
+      authorId: optional(MAX_LENGTH.authorId).transform((value) =>
+        value && /^[A-Za-z0-9._-]+$/.test(value) ? value : undefined,
+      ),
       series: optional(MAX_LENGTH.series),
       format: oneOf(FORMAT_OPTIONS),
       // the form puts the year, month and day together; only the year is needed

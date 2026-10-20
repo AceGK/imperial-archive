@@ -23,6 +23,7 @@ import Turnstile, { turnstileBlockedMessage, type TurnstileHandle, type Turnstil
 import BookIcon from "@/components/icons/book-spine.svg";
 import QuillPenIcon from "@/components/icons/quill-pen.svg";
 import BooksIcon from "@/components/icons/books.svg";
+import AuthorInput, { type ArchiveAuthor } from "./AuthorInput";
 import styles from "./styles.module.scss";
 
 // the Browse menu's icons for books, authors and series
@@ -236,7 +237,7 @@ function ReleaseDate({
 }
 
 /** One of the site's report or feedback forms, chosen by `type` */
-export default function ReportForm({ type }: { type: ReportType }) {
+export default function ReportForm({ type, authors = [] }: { type: ReportType; authors?: ArchiveAuthor[] }) {
   const formRef = useRef<HTMLFormElement>(null);
   const turnstileRef = useRef<TurnstileHandle>(null);
   const [turnstile, setTurnstile] = useState<TurnstileState>("pending");
@@ -363,7 +364,17 @@ export default function ReportForm({ type }: { type: ReportType }) {
                   {(id, d) => <input id={id} {...counted("bookTitle")} required aria-describedby={d} aria-invalid={!!err("bookTitle")} />}
                 </Field>
                 <Field name="bookAuthor" label="Author" required error={err("bookAuthor")}>
-                  {(id, d) => <input id={id} {...counted("bookAuthor")} required aria-describedby={d} aria-invalid={!!err("bookAuthor")} />}
+                  {(id, d) => (
+                    <AuthorInput
+                      id={id}
+                      name="bookAuthor"
+                      authors={authors}
+                      maxLength={MAX_LENGTH.bookAuthor}
+                      required
+                      describedBy={d}
+                      invalid={!!err("bookAuthor")}
+                    />
+                  )}
                 </Field>
               </div>
               <div className={styles.row}>
@@ -399,8 +410,10 @@ export default function ReportForm({ type }: { type: ReportType }) {
               <Field name="series" label="Series name" required error={err("series")}>
                 {(id, d) => <input id={id} {...counted("series")} required aria-describedby={d} aria-invalid={!!err("series")} />}
               </Field>
-              <Field name="bookAuthor" label="Author" hint="Or authors, for a shared series" error={err("bookAuthor")}>
-                {(id, d) => <input id={id} {...counted("bookAuthor")} aria-describedby={d} />}
+              <Field name="bookAuthor" label="Author" error={err("bookAuthor")}>
+                {(id, d) => (
+                  <AuthorInput id={id} name="bookAuthor" authors={authors} maxLength={MAX_LENGTH.bookAuthor} describedBy={d} />
+                )}
               </Field>
             </div>
           )}

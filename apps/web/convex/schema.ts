@@ -80,6 +80,8 @@ const schema = defineSchema({
     missingKind: v.optional(v.union(v.literal("book"), v.literal("author"), v.literal("series"))),
     bookTitle: v.optional(v.string()),
     bookAuthor: v.optional(v.string()),
+    // the Sanity author40k _id, when bookAuthor names an author the Archive has
+    authorId: v.optional(v.string()),
     series: v.optional(v.string()),
     format: v.optional(v.string()),
     // "2024", "2024-03" or "2024-03-15"

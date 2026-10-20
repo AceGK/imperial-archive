@@ -42,6 +42,7 @@ const optionalFields = {
   browser: v.optional(v.string()),
   bookTitle: v.optional(v.string()),
   bookAuthor: v.optional(v.string()),
+  authorId: v.optional(v.string()),
   series: v.optional(v.string()),
   format: v.optional(v.string()),
   releaseDate: v.optional(v.string()),
@@ -158,7 +159,12 @@ function firstLine(text?: string) {
 function describe(report: Doc<"reports">) {
   const lines = FIELD_LABELS.flatMap(([key, label]) => {
     if (!report[key]) return [];
-    const value = key === "releaseDate" ? formatReleaseDate(String(report[key])) : report[key];
+    const value =
+      key === "releaseDate"
+        ? formatReleaseDate(String(report[key]))
+        : key === "bookAuthor" && report.authorId
+          ? `${report.bookAuthor} (in the Archive: ${report.authorId})`
+          : report[key];
     return [`${label}: ${value}`];
   });
   if (report.userId) lines.push(`Account: ${report.userId}`);

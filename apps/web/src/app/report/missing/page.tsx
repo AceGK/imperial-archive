@@ -1,4 +1,7 @@
 import ReportPage from "@/components/modules/ReportForm/ReportPage";
+import type { ArchiveAuthor } from "@/components/modules/ReportForm/AuthorInput";
+import { client } from "@/lib/sanity/sanity.client";
+import { authorNames40kQuery } from "@/lib/sanity/queries";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -8,10 +11,14 @@ export const metadata = pageMetadata({
   path: "/report/missing",
 });
 
-export default function MissingPage() {
+export default async function MissingPage() {
+  // suggested in the Author field; small enough to send whole
+  const authors = await client.fetch<ArchiveAuthor[]>(authorNames40kQuery, {}, { next: { revalidate: 60 } });
+
   return (
     <ReportPage
       type="missingBook"
+      authors={authors}
       intro={
         <p>
           The Archive is compiled by hand, so some books, authors and series are still missing. A name is enough;

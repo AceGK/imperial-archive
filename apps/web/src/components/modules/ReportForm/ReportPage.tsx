@@ -4,6 +4,7 @@ import type { ReportType } from "@convex/reportFields";
 import Card from "@/components/ui/Card";
 import InfoHeader from "@/components/modules/InfoHeader";
 import ReportForm from ".";
+import type { ArchiveAuthor } from "./AuthorInput";
 import BugIcon from "@/components/icons/bug.svg";
 import BookQuestionIcon from "@/components/icons/book-question.svg";
 import FeedbackIcon from "@/components/icons/feedback.svg";
@@ -42,7 +43,16 @@ export const REPORT_PAGES: Record<ReportType, ReportPageInfo> = {
 };
 
 /** Page layout shared by the report and feedback forms */
-export default function ReportPage({ type, intro }: { type: ReportType; intro: ReactNode }) {
+export default function ReportPage({
+  type,
+  intro,
+  authors,
+}: {
+  type: ReportType;
+  intro: ReactNode;
+  /** The Archive's authors, suggested in the missing book form */
+  authors?: ArchiveAuthor[];
+}) {
   const page = REPORT_PAGES[type];
   const others = (Object.keys(REPORT_PAGES) as ReportType[]).filter((t) => t !== type);
 
@@ -54,7 +64,7 @@ export default function ReportPage({ type, intro }: { type: ReportType; intro: R
 
           <Card eyebrow={<span className={styles.eyebrow}>{page.code} · Vox-channel</span>}>
             <div className={styles.intro}>{intro}</div>
-            <ReportForm type={type} />
+            <ReportForm type={type} authors={authors} />
           </Card>
 
           <nav className={styles.others} aria-label="Other forms">

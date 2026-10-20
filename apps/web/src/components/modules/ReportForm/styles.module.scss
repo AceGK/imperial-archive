@@ -154,6 +154,49 @@
   }
 }
 
+// author field: the Archive's authors listed under the box as the reader types
+.combobox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  .hint:empty {
+    display: none;
+  }
+}
+
+.suggestions {
+  position: absolute;
+  top: calc(0.4rem + 2.75rem); // under the input
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 16rem;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+  &[hidden] {
+    display: none;
+  }
+
+  li {
+    padding: 0.55rem 0.75rem;
+    cursor: pointer;
+    color: var(--text);
+  }
+}
+
+.suggestionActive {
+  background: color-mix(in oklab, var(--accent), transparent 40%);
+  color: var(--primary) !important;
+}
+
 // release date: year, month, day side by side; the month gets the room for "September"
 .dateParts {
   display: grid;
