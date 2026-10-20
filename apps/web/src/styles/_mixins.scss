@@ -3,19 +3,33 @@
 @use "sass:map";
 @use "breakpoints" as *;
 
-$_corner-positions: (
-  top-left: top left,
-  top-right: top right,
-  bottom-left: bottom left,
-  bottom-right: bottom right,
-);
+// The square kept at each corner by corner-brackets' clip: (x0, y0, x1, y1).
+// Its outer sides sit 2px past the box, so the clip never cuts the border
+// line itself; only the inner ends of each mark are clipped.
+@function _corner-square($corner, $size) {
+  $out: -2px;
+  $far: calc(100% + 2px);
+  $near: calc(100% - #{$size});
+  @return map.get(
+    (
+      top-left: ($out, $out, $size, $size),
+      top-right: ($near, $out, $far, $size),
+      bottom-left: ($out, $near, $size, $far),
+      bottom-right: ($near, $near, $far, $far),
+    ),
+    $corner
+  );
+}
 
 // Small L-shaped accent marks in the corners of an element, HUD/terminal style.
-// Drawn as a real border on the element's ::before, masked down to its
+// Drawn as a real border on the element's ::before, clipped down to its
 // corners. A border (unlike a background image) is snapped to whole pixels
 // the same way the element's own border is, so the marks land exactly on it
-// even when the element's size or position is fractional. Pass $corners to
-// draw a subset, e.g. (top-left, bottom-right).
+// even when the element's size or position is fractional. The clip is a
+// clip-path rather than a mask: a mask paints the layer offscreen and
+// composites it back at the fractional position, which smears the 1px lines
+// (or drops them) at zoom levels like 110% and 125%. Pass $corners to draw a
+// subset, e.g. (top-left, bottom-right).
 // $offset: 1px puts the marks on a 1px border; 0 (default) puts them just
 // inside it. If the target has `overflow: hidden`, keep $offset at 0, or the
 // marks fall outside the box and get clipped.
@@ -32,11 +46,18 @@ $_corner-positions: (
 ) {
   position: relative;
 
-  // one opaque square per corner: the border shows through only there
-  $mask: ();
+  // one polygon tracing a square per corner, each reached from and back to
+  // the same anchor point; the connecting lines retrace themselves, so they
+  // enclose nothing and the border shows through only at the corners
+  $anchor: -2px -2px;
+  $points: ($anchor,);
   @each $corner in $corners {
-    $pos: map.get($_corner-positions, $corner);
-    $mask: list.append($mask, linear-gradient(#000 0 0) #{$pos} / #{$size} #{$size} no-repeat, comma);
+    $sq: _corner-square($corner, $size);
+    $x0: list.nth($sq, 1);
+    $y0: list.nth($sq, 2);
+    $x1: list.nth($sq, 3);
+    $y1: list.nth($sq, 4);
+    $points: list.join($points, ($x0 $y0, $x1 $y0, $x1 $y1, $x0 $y1, $x0 $y0, $anchor), comma);
   }
 
   &::before {
@@ -47,8 +68,7 @@ $_corner-positions: (
     pointer-events: none;
     box-sizing: border-box;
     border: #{$thickness} solid #{$color};
-    -webkit-mask: $mask;
-    mask: $mask;
+    clip-path: polygon($points);
 
     @if $hover-only {
       opacity: 0;
@@ -65,7 +85,7 @@ $_corner-positions: (
 }
 
 // For a button with hover-only corner-brackets that opens a menu or panel:
-// while open (aria-expanded), the brackets' layer drops its corner mask, so
+// while open (aria-expanded), the brackets' layer drops its corner clip, so
 // the marks become a full gold outline that meets them exactly. Recoloring
 // the element's own border instead could show a doubled edge.
 @mixin open-outline {
@@ -74,8 +94,7 @@ $_corner-positions: (
 
     &::before {
       opacity: 1;
-      -webkit-mask: none;
-      mask: none;
+      clip-path: none;
     }
   }
 }
