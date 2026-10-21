@@ -154,6 +154,11 @@
 
   :global(.swiper-slide) {
     flex-shrink: 0;
+    // as tall as the tallest slide: the row stretches slides whose height is
+    // auto. Set here, not only on .slide, because Swiper's own .swiper-slide
+    // { height: 100% } has the same weight as .slide, and a production build
+    // can load Swiper's CSS last
+    height: auto;
     width: calc((100% - (var(--slides) - 1) * var(--gap)) / var(--slides));
     margin-right: var(--gap);
 
