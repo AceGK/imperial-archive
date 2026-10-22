@@ -12,6 +12,9 @@
     "build": "npm -w @ac/web run build && npm -w @ac/studio run build",
     "typecheck": "tsc -p tsconfig.json --noEmit && npm -ws run typecheck"
   },
+  "engines": {
+    "node": "24.x"
+  },
   "devDependencies": {
     "@sanity/blueprints": "0.4.1",
     "@types/node": "^24.10.0",

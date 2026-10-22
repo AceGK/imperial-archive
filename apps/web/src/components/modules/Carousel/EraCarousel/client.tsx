@@ -46,7 +46,6 @@ export default function EraCarouselClient({
       loop={false}
       autoplay={false}
       navigation
-      pagination={false}
       className={className}
       viewAllLink={viewAllLink}
       viewAllIcon={HourglassIcon}

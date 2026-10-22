@@ -1,0 +1,92 @@
+@use "@/styles/breakpoints" as *;
+
+// Phones only (where the carousel's arrows are hidden); wider screens keep
+// the arrows and the centered View All button.
+.footer {
+  display: none;
+
+  @include max(md) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 1rem;
+  }
+}
+
+// Dot geometry. The active dot is a wider pill; every other dot is the same
+// size, so the dynamic window's width and offset can be computed in CSS.
+.dots {
+  --dot: 8px;
+  --dot-active: 20px;
+  --dot-gap: 6px;
+  --visible: 5; // keep in sync with VISIBLE_DOTS
+  min-width: 0;
+  // room for the focus outline, which the dynamic window would otherwise clip
+  padding: 4px;
+  margin: -4px;
+}
+
+.link {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: var(--dot-gap);
+}
+
+// Dynamic: a window showing --visible dots slides along the full row so the
+// active dot stays in view. The active dot is always inside the window, so
+// its extra width is part of the window, not the offset.
+.dynamic {
+  overflow: hidden;
+  width: calc(
+    var(--visible) * var(--dot) + (var(--visible) - 1) * var(--dot-gap) + (var(--dot-active) - var(--dot)) + 8px
+  );
+
+  .track {
+    transform: translateX(calc(var(--start) * -1 * (var(--dot) + var(--dot-gap))));
+    transition: transform 0.25s ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+}
+
+// round dots; the current page stretches into a gold pill
+.dot {
+  flex-shrink: 0;
+  width: var(--dot);
+  height: var(--dot);
+  padding: 0;
+  border: none;
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--foreground), transparent 70%);
+  cursor: pointer;
+  transition:
+    width 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+
+  &.small {
+    transform: scale(0.6);
+  }
+
+  &[aria-current="true"] {
+    width: var(--dot-active);
+    background: var(--primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

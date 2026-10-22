@@ -37,7 +37,6 @@ export default function BlogCarousel({
       loop={false}
       autoplay={false}
       navigation
-      pagination={false}
       className={className}
       viewAllLink={viewAllLink}
       viewAllIcon={RelayIcon}

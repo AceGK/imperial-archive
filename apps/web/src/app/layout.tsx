@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 import "@/styles/reset.scss";
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
 import "@/styles/globals.scss";
 import "@/styles/utils.scss";
 import Nav from "@/components/modules/Nav";

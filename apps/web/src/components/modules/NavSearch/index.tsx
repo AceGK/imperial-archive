@@ -267,7 +267,6 @@ function NavSearchBody({ variant, open, onClose, onNavigate, onSearchingChange }
                     <BookCard key={hit.objectID} book={hit} />
                   ))}
                   layout="books"
-                  pagination={false}
                   viewAllLink={searchHref}
                   lastSlideTitle="View all results"
                   viewAllIcon={BookIcon}

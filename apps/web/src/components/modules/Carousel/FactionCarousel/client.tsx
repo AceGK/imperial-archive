@@ -66,7 +66,6 @@ export default function FactionCarouselClient({
         loop={false}
         autoplay={false}
         navigation
-        pagination={false}
         className={styles.carousel}
         viewAllLink={viewAllLink}
         viewAllIcon={ShieldIcon}

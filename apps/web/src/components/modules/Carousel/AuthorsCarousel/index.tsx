@@ -48,7 +48,6 @@ export default function AuthorCarousel({
         loop={false}
         autoplay={false}
         navigation
-        pagination={false}
         className={className}
         viewAllLink="/authors"
         viewAllIcon={QuillPenIcon}

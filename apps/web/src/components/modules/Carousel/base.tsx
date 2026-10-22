@@ -5,12 +5,13 @@ import React, { useEffect, useRef } from "react";
 import styles from "./styles.module.scss";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, A11y, Keyboard, Autoplay } from "swiper/modules";
+import { Navigation, A11y, Keyboard, Autoplay } from "swiper/modules";
 import type { Swiper as SwiperInstance } from "swiper/types";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import ChevronLeft from "@/components/icons/chevron-left.svg";
 import ChevronRight from "@/components/icons/chevron-right.svg";
+import CarouselFooter from "./Footer";
 
 type CarouselProps = {
   title?: React.ReactNode;
@@ -22,7 +23,6 @@ type CarouselProps = {
   loop?: boolean;
   autoplay?: false | { delay?: number; pauseOnMouseEnter?: boolean; disableOnInteraction?: boolean };
   navigation?: boolean;
-  pagination?: boolean;
   className?: string;
   viewAllLink?: string;
   viewAllLabel?: string;
@@ -30,7 +30,7 @@ type CarouselProps = {
   /** Icon on the "View All" last slide, e.g. the nav icon for this content type */
   viewAllIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   showLastSlide?: boolean;
-  /** The "View All" button under the slider; the last slide still links there when this is off */
+  /** The "View All" button under the slider (on phones, beside the page dots); the last slide still links there when this is off */
   showViewAllButton?: boolean;
   /** Changing this jumps back to the first slide, e.g. when tabs swap the items */
   resetKey?: string;
@@ -45,7 +45,6 @@ export default function Carousel({
   loop = false,
   autoplay = false,
   navigation = true,
-  pagination = true,
   className,
   viewAllLink,
   viewAllLabel,
@@ -110,7 +109,7 @@ export default function Carousel({
         )}
 
         <Swiper
-          modules={[Navigation, Pagination, A11y, Keyboard, Autoplay]}
+          modules={[Navigation, A11y, Keyboard, Autoplay]}
           // slide widths and gaps come from CSS (see styles.module.scss)
           slidesPerView="auto"
           loop={loop}
@@ -125,7 +124,6 @@ export default function Carousel({
               swiper.params.navigation.nextEl = nextRef.current;
             }
           }}
-          pagination={pagination ? { clickable: true } : false}
           onSwiper={(swiper) => {
             swiperRef.current = swiper;
           }}
@@ -146,6 +144,12 @@ export default function Carousel({
               </Link>
             </SwiperSlide>
           )}
+          {/* phones: page dots and View All under the cards, in place of the arrows */}
+          <CarouselFooter
+            slot="container-end"
+            href={viewAllLink && showViewAllButton ? viewAllLink : undefined}
+            label={viewAllLabel || "View All"}
+          />
         </Swiper>
       </div>
 
