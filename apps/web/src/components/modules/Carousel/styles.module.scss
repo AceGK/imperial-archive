@@ -262,16 +262,6 @@
   }
 }
 
-/* Pagination overrides */
-.swiper :global(.swiper-pagination-bullet) {
-  background: color-mix(in oklab, var(--foreground), transparent 40%);
-  opacity: 1;
-}
-
-.swiper :global(.swiper-pagination-bullet-active) {
-  background: var(--foreground);
-}
-
 .slide {
   height: auto;
 }
@@ -282,6 +272,11 @@
   margin-top: 2rem;
   font-weight: 600;
   color: var(--primary);
+
+  // phones: the footer under the cards has View All beside the page dots
+  @include max(md) {
+    display: none;
+  }
 }
 
 .viewAllSlide {

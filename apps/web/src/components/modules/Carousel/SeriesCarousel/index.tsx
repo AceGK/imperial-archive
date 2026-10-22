@@ -47,7 +47,6 @@ export default function SeriesCarousel({
       loop={false}
       autoplay={false}
       navigation
-      pagination={false}
       className={className}
       viewAllLink={viewAllLink}
       viewAllIcon={BooksIcon}

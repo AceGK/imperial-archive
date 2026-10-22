@@ -39,7 +39,6 @@ export default function BooksCarousel({
       loop={false}
       autoplay={false}
       navigation
-      pagination={false}
       className={className}
       viewAllLink={viewAllLink}
       viewAllIcon={BookIcon}
