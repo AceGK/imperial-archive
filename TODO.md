@@ -164,3 +164,8 @@ New sections go in `apps/web/src/components/modules/Account/nav.ts` plus a page 
 ### Danger zone
 - [ ] Delete account (remove the user, auth accounts, sessions, and their library data)
 - [ ] Export my data (download tracked books, favorites, and reviews as JSON/CSV)
+
+
+
+### google keyword planner
+-[ ] keyword planner API?
