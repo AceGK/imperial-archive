@@ -1,3 +1,5 @@
+@use "@/styles/mixins" as *;
+
 $nav-height: 61px; // 60px bar plus its 1px bottom border
 
 .hero {
@@ -19,6 +21,10 @@ $nav-height: 61px; // 60px bar plus its 1px bottom border
   &.align-left  .inner { align-items: flex-start; text-align: left; }
   &.align-center .inner { align-items: center; text-align: center; }
   &.align-right .inner { align-items: flex-end; text-align: right; }
+
+  // the eyebrow plate is fit to its text, so it follows the alignment by margin
+  &.align-center .eyebrow { margin-inline: auto; }
+  &.align-right .eyebrow { margin-left: auto; }
 }
 
 .media {
@@ -92,6 +98,28 @@ $nav-height: 61px; // 60px bar plus its 1px bottom border
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.6),
     0 4px 24px rgba(0, 0, 0, 0.55);
+
+  /* the site name above the headline, so the h1 reads "Imperial Archive
+     Explore the Black Library" while the headline stays the big line. It sits
+     on its own dark plate: bare gold text got lost over the moving covers */
+  .eyebrow {
+    display: block;
+    width: fit-content;
+    margin-bottom: 0.75rem;
+    // the extra 0.3em on the left balances the letter spacing after the last
+    // letter, so the text centers in its plate
+    padding: 0.5em 0.9em 0.5em 1.2em;
+    font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    line-height: 1.2;
+    color: var(--primary);
+    text-shadow: none;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+    // gold marks at the corners only, as on the site's bracket buttons
+    @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary));
+  }
 
   sup {
     font-size: 0.3em;

@@ -14,6 +14,8 @@ type HeroProps = {
   alt?: string;
   /** Main heading */
   title: React.ReactNode;
+  /** Small line above the title, inside the h1 (e.g. the site name) */
+  eyebrow?: React.ReactNode;
   /** One-line subheading/description */
   subtitle?: React.ReactNode;
   /** Optional: improve LCP when above-the-fold */
@@ -34,6 +36,7 @@ export default function Hero({
   background,
   alt = "",
   title,
+  eyebrow,
   subtitle,
   priority = false,
   align = "left",
@@ -80,7 +83,11 @@ export default function Hero({
       </div>
 
       <div className={`${styles.inner} container`}>
-        <h1 id="hero-title" className={styles.title}>{title}</h1>
+        <h1 id="hero-title" className={styles.title}>
+          {/* the trailing space keeps the two lines apart in the heading's text */}
+          {eyebrow ? <><span className={styles.eyebrow}>{eyebrow}</span>{" "}</> : null}
+          {title}
+        </h1>
         {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
         {children}
       </div>

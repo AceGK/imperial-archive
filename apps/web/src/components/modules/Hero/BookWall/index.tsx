@@ -8,8 +8,11 @@ export type BookWallCover = {
   image: unknown;
 };
 
-const lqipOf = (image: BookWallCover["image"]) =>
-  (image as { asset?: { metadata?: { lqip?: string | null } } })?.asset?.metadata?.lqip ?? null;
+const colorOf = (image: BookWallCover["image"]) => {
+  const color = (image as { asset?: { color?: string | null } })?.asset?.color;
+  // only a plain hex color goes into the stylesheet
+  return color && /^#[0-9a-f]{3,8}$/i.test(color) ? color : null;
+};
 
 type Props = {
   /** Sanity covers; or pass `images` for plain image URLs */
@@ -39,14 +42,17 @@ export default function BookWall({ covers = [], images, coverWidth, columns = 14
     );
   if (urls.length === 0) return null;
 
-  // Each cover's blurred preview (Sanity's LQIP, ~0.7KB) shows from the first
-  // paint and the full image draws over it once loaded, so no tile is ever
-  // empty. The wall repeats every cover several times, so each preview is
-  // written once here and tiles point at it by number, rather than inlining it
-  // on every tile.
-  const previews = images ? [] : covers.map((c) => lqipOf(c.image));
-  const previewCss = previews
-    .map((lqip, i) => (lqip ? `.${styles.wall} [data-cover="${i}"]{background-image:url("${lqip}")}` : ""))
+  // The wall repeats each cover several times (twice per column, so the loop
+  // is seamless), so each cover's image and placeholder color are written once
+  // here and the tiles point at them by number. Inline <img> tags repeated the
+  // full image URL on every tile, and base64 blur previews were ~0.7KB each:
+  // together over 150KB of the homepage, sent in the HTML and again in the
+  // React payload. The tiles are empty boxes now; the cover is their background.
+  const css = urls
+    .map((url, i) => {
+      const color = images ? null : colorOf(covers[i]?.image);
+      return `.${styles.wall} [data-cover="${i}"]{background-image:url("${url}")${color ? `;background-color:${color}` : ""}}`;
+    })
     .join("");
 
   const grid = Array.from({ length: columns }, (_, col) =>
@@ -59,25 +65,14 @@ export default function BookWall({ covers = [], images, coverWidth, columns = 14
       style={{ "--cols": columns, "--rows": rows, ...(coverWidth && { "--w": coverWidth }) } as CSSProperties}
       aria-hidden="true"
     >
-      {previewCss && <style dangerouslySetInnerHTML={{ __html: previewCss }} />}
+      <style dangerouslySetInnerHTML={{ __html: css }} />
       <div className={styles.zoom}>
         <div className={styles.plane}>
           <div className={styles.track}>
             {grid.map((column, col) => (
               <div key={col} className={styles.column}>
                 {[...column, ...column].map((cover, i) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    key={i}
-                    src={urls[cover]}
-                    data-cover={cover}
-                    alt=""
-                    width={280}
-                    height={420}
-                    decoding="async"
-                    draggable={false}
-                    className={styles.cover}
-                  />
+                  <span key={i} data-cover={cover} className={styles.cover} />
                 ))}
               </div>
             ))}

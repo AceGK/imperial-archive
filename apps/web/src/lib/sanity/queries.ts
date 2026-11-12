@@ -162,6 +162,14 @@ export const single40kAuthorQuery = groq`
 }
 `;
 
+/** An author's books in brief, for the generated meta description */
+export const authorBookSummary40kQuery = groq`
+*[_type == "book40k" && !(_id in path("drafts.**")) && references($id)]{
+  ${formatProjection},
+  "series": *[_type == "series40k" && !(_id in path("drafts.**")) && references(^._id)][0].title
+}
+`;
+
 export const authors40kForCardsQuery = groq`
 *[_type == "author40k" && !(_id match "drafts.*")]
 {
@@ -486,7 +494,8 @@ export const heroCoversQuery = groq`
   image{
     crop,
     hotspot,
-    asset->{ _id, metadata{ lqip } }
+    // the dominant color fills each wall tile until its cover loads
+    asset->{ _id, "color": metadata.palette.dominant.background }
   }
 }
 `;

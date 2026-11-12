@@ -27,6 +27,8 @@ export type NavLink = {
   description?: string;
   icon?: NavIcon;
   comingSoon?: boolean;
+  /** Longer label for the footer, where there's room to say what it is */
+  footerLabel?: string;
 };
 export type NavGroup = { label: string; links: NavLink[]; columns?: number };
 export type NavPlain = { href: string; label: string; comingSoon?: boolean };
@@ -96,7 +98,13 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Info",
     links: [
       { href: "/about", label: "About", description: "The charter behind this archive", icon: InfoIcon },
-      { href: "/track", label: "Tracking", description: "How to track your reading", icon: BookBookmarkIcon },
+      {
+        href: "/track",
+        label: "Reading Tracker",
+        footerLabel: "Warhammer Reading Tracker",
+        description: "Track the Black Library books you read",
+        icon: BookBookmarkIcon,
+      },
       { href: "/blog", label: "Blog", description: "News and dispatches from the Archive", icon: NewspaperIcon },
       { href: "/faq", label: "FAQ", description: "Common questions, answered", icon: QuestionIcon },
     ],

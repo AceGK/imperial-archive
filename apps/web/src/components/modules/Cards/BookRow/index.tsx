@@ -13,6 +13,7 @@ import {
   type BookDisplay,
 } from "@/components/modules/Cards/BookCard/display";
 import styles from "@/components/modules/Cards/ListRow/styles.module.scss";
+import { coverAlt } from "@/lib/covers";
 
 type Props = {
   book: BookCardData & { description?: string | null };
@@ -50,7 +51,7 @@ export default function BookRow({
           {imgUrl ? (
             <Image
               src={imgUrl}
-              alt={book.image?.alt?.trim() || `${book.title} cover`}
+              alt={coverAlt(book.title, book.authors, book.image?.alt)}
               fill
               sizes="72px"
               unoptimized

@@ -1,0 +1,6 @@
+.logo {
+  display: block;
+  background-color: currentColor;
+  -webkit-mask: url("/imperial-archive-logo.svg") center / contain no-repeat;
+  mask: url("/imperial-archive-logo.svg") center / contain no-repeat;
+}

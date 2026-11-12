@@ -15,7 +15,7 @@ export default function TrackerPromo() {
     <section className={styles.promo} aria-labelledby="reading-tracker">
       <div className={styles.text}>
         <span className={styles.kicker}>Free with an account</span>
-        <h2 id="reading-tracker">Warhammer 40k Reading Tracker</h2>
+        <h2 id="reading-tracker">Warhammer Reading Tracker</h2>
         <p>
           Log every Black Library book you want to read, are reading, have finished and own, from any book card
           or book page. Make your own lists too, like a wishlist, a reading order or a to-buy pile. Your reading
@@ -25,8 +25,8 @@ export default function TrackerPromo() {
           <Button href="/track" variant="primary">
             How the reading tracker works
           </Button>
-          <Button href="/books" variant="tertiary">
-            Browse books
+          <Button href="/signup" variant="tertiary">
+            Sign up
           </Button>
         </div>
       </div>

@@ -19,6 +19,16 @@ export const decodeArray = (encodedString?: string): string[] | undefined => {
   return encodedString.split(",").map(decodeValue);
 };
 
+/**
+ * The catalog page a `?page=` value asks for, 1 when it's missing or not a
+ * whole number above 1. Pages are 1-based, as in the URL.
+ */
+export function parseCatalogPage(value?: string | string[] | null): number {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (!raw || !/^\d{1,4}$/.test(raw)) return 1;
+  return Math.max(1, Number(raw));
+}
+
 // Bidirectional mapping between URL keys and Algolia attributes
 const ATTRIBUTE_TO_URL_KEY: Record<string, string> = {
   "format": "format",
@@ -78,16 +88,26 @@ export function createAlgoliaRouting(baseIndex: string, indexName: string = base
     return fromRoute[route];
   };
 
+  // The page the catalog is on, as last written. The URL never carries it
+  // (see stateToRoute), so when the router rewrites a landing URL like
+  // ?page=3 to the bare path and reads it back, this keeps the reader on page 3
+  // instead of jumping back to page 1 (which also left a gap in the list:
+  // pages 1 and 3 with no page 2)
+  let currentPage: number | undefined;
+
   return {
     stateMapping: {
       stateToRoute(uiState: UiState) {
         const indexUiState = uiState[indexName] || {};
+        currentPage = indexUiState.page;
         const refinements = indexUiState.refinementList || {};
 
         const routeState: Record<string, string | undefined> = {
           q: indexUiState.query || undefined,
           sort: sortToRoute(indexUiState.sortBy),
         };
+        // the page is left out on purpose: "Load more" appends results in
+        // place, so the URL stays on the list the reader started from
 
         // Convert attributes to URL keys using the mapping
         Object.entries(refinements).forEach(([attr, values]) => {
@@ -101,7 +121,10 @@ export function createAlgoliaRouting(baseIndex: string, indexName: string = base
       },
 
       routeToState(routeState: Record<string, string | undefined>): UiState {
-        const { q, sort, ...refinementParams } = routeState;
+        // `page` is read but never written back (see stateToRoute): it's only
+        // there so crawlable "Load more" links (?page=2) render that page
+        const { q, sort, page, ...refinementParams } = routeState;
+        const pageNumber = page ? parseCatalogPage(page) : (currentPage ?? 1);
 
         const refinementList: Record<string, string[]> = {};
 
@@ -120,6 +143,7 @@ export function createAlgoliaRouting(baseIndex: string, indexName: string = base
             query: q || "",
             refinementList,
             ...(sort && { sortBy: routeToSort(sort) }),
+            ...(pageNumber > 1 && { page: pageNumber }),
           },
         };
       },

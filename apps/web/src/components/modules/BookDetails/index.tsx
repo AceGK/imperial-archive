@@ -12,6 +12,7 @@ import Authors from "./Authors";
 import styles from "./styles.module.scss";
 import FavoriteButton from "@/components/modules/FavoriteButton";
 import TrackButtons from "@/components/modules/TrackButtons";
+import TrackerHint from "@/components/modules/TrackButtons/TrackerHint";
 import AddToListButton from "@/components/modules/ReadingLists/AddToListButton";
 import { ShareButton } from "@/components/modules/Share";
 import type { BookDetailData } from "@/types/books";
@@ -19,6 +20,7 @@ import Series from "./Series";
 import Factions from "./Factions";
 import { buildSources, Cite, SourceList } from "@/components/modules/Sources";
 import Paragraphs from "./Paragraphs";
+import { coverAlt } from "@/lib/covers";
 
 interface Book {
   _id: string;
@@ -65,9 +67,7 @@ export default function BookDetails({ book }: BookDetailProps) {
   const { sources, citations } = buildSources(book.links, ["description", "story"]);
 
   const hasImage = Boolean(book?.image?.asset?.url);
-  const imgAlt =
-    (book?.image?.alt && String(book.image.alt).trim()) ||
-    (book?.title ? `${book.title} cover` : "Book cover");
+  const imgAlt = coverAlt(book?.title, book?.authors, book?.image?.alt);
 
   // cover's width/height ratio (falls back to a typical 5:8 book)
   const dims = book?.image?.asset?.metadata?.dimensions;
@@ -123,6 +123,7 @@ export default function BookDetails({ book }: BookDetailProps) {
             </div>
           </div>
           <AddToListButton bookId={book._id} bookTitle={book.title} />
+          <TrackerHint />
 
           {(book.description ||
             book.story ||

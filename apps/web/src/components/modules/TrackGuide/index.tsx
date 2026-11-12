@@ -184,8 +184,11 @@ const ACHIEVEMENTS = [
 export function TrackHeaderActions() {
   return (
     <div className={styles.headerActions}>
-      <Button href="/books" variant="primary">
-        Browse books to track
+      <Button href="/signup" variant="primary">
+        Create a free account
+      </Button>
+      <Button href="/account/track" variant="tertiary">
+        Open your tracker
       </Button>
     </div>
   );
@@ -200,7 +203,7 @@ export default function TrackGuide({ faqCategory }: { faqCategory: FaqCategory |
         <span className={styles.kicker}>How tracking works</span>
         <h2 id="free-tracker">A free reading tracker for the Black Library</h2>
         <p className={styles.lead}>
-          Imperial Archive is a free Warhammer 40k reading tracker for Black Library books. Mark what you want to
+          Imperial Archive is a free Warhammer reading tracker for Black Library books. Mark what you want to
           read, what you&apos;re reading now, what you&apos;ve finished and what&apos;s on your shelf, straight
           from any book card or book page. Your tracker is saved to your account, so it follows you to any device.
         </p>
@@ -278,11 +281,11 @@ export default function TrackGuide({ faqCategory }: { faqCategory: FaqCategory |
           Read and Owned, with the most recently changed first.
         </p>
         <div className={styles.actions}>
-          <Button href="/account/track" variant="secondary">
-            Open your tracker
-          </Button>
-          <Button href="/signup" variant="tertiary">
+          <Button href="/signup" variant="primary">
             Create a free account
+          </Button>
+          <Button href="/account/track" variant="tertiary">
+            Open your tracker
           </Button>
         </div>
       </section>
@@ -347,11 +350,11 @@ export default function TrackGuide({ faqCategory }: { faqCategory: FaqCategory |
         <h2 id="start-tracking">Start your reading log</h2>
         <p>Find the books you&apos;ve read, are reading or want to read next, and track each one in a click.</p>
         <div className={styles.actions}>
-          <Button href="/books" variant="primary">
-            Browse books
+          <Button href="/signup" variant="primary">
+            Create a free account
           </Button>
-          <Button href="/series" variant="tertiary">
-            Browse by series
+          <Button href="/account/track" variant="tertiary">
+            Open your tracker
           </Button>
         </div>
       </section>

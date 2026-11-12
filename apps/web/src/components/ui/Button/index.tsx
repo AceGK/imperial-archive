@@ -10,7 +10,8 @@ type ButtonProps = {
   size?: "sm" | "md" | "lg" | "icon";
   className?: string;
   href?: string; // <— if present, renders a Link
-  onClick?: () => void;
+  /** Also runs on links; call event.preventDefault() to stop the navigation */
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   title?: string;
@@ -52,7 +53,7 @@ export default function Button({
 
   if (href) {
     return (
-      <Link href={href} className={classes} target={target} rel={rel} title={title} replace={replace} prefetch={prefetch}>
+      <Link href={href} className={classes} target={target} rel={rel} title={title} replace={replace} prefetch={prefetch} onClick={onClick}>
         {children}
       </Link>
     );

@@ -15,7 +15,7 @@ import DesktopDropdown from "./DesktopDropdown";
 import MobileMenu from "./MobileMenu";
 import { NAV_ITEMS, dropdownItems, type NavItem } from "./nav";
 import { useDropdownMenu } from "./useDropdownMenu";
-import Logo from "../../../../public/imperial-archive-logo.svg";
+import SiteLogo from "@/components/ui/SiteLogo";
 import styles from "./styles.module.scss";
 
 // InstantSearch and the slider load when a reader first goes to search, not with every page
@@ -114,7 +114,7 @@ export default function Nav({
 
           <div className={styles.logo}>
             <Link href="/" aria-label="Imperial Archive Home">
-              <Logo className={styles.logoImage} />
+              <SiteLogo className={styles.logoImage} />
             </Link>
           </div>
 

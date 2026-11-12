@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { InstantSearchNext } from "react-instantsearch-nextjs";
 import { useInfiniteHits, useInstantSearch, Configure } from "react-instantsearch";
 import { useInfiniteHitsCache } from "@/hooks/useInfiniteHitsCache";
@@ -88,6 +89,76 @@ const gridClasses: Record<GridVariant, string> = {
 };
 
 // ============================================
+// Full rows
+// ============================================
+
+/**
+ * How many columns a grid lays out right now (1 for anything that isn't a
+ * grid, like the list view). The book grid uses auto-fill, so this changes
+ * with the window and the width toggle; it's measured, not hardcoded.
+ * Starts at 1 so the server render and first client render show every hit.
+ */
+function useGridColumns() {
+  const [columns, setColumns] = React.useState(1);
+  // a callback ref, so it measures again whenever the grid mounts (it isn't
+  // there while the first results load)
+  const [el, setEl] = React.useState<HTMLDivElement | null>(null);
+
+  React.useLayoutEffect(() => {
+    if (!el) return;
+    const measure = () => {
+      const style = getComputedStyle(el);
+      const count =
+        style.display === "grid"
+          ? style.gridTemplateColumns.split(" ").filter(Boolean).length
+          : 1;
+      setColumns(Math.max(1, count));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [el]);
+
+  return [columns, setEl] as const;
+}
+
+// ============================================
+// Crawlable paging links
+// ============================================
+
+/**
+ * Builds the href for a catalog page: the current URL with `page` set (left
+ * off for page 1). With no search or filters that's a plain `?page=2`, which
+ * robots.txt lets crawlers follow; filtered views stay blocked.
+ */
+function useCatalogPageHref() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  return (page: number) => {
+    const params = new URLSearchParams(searchParams?.toString());
+    params.delete("page");
+    if (page > 1) params.set("page", String(page));
+    const query = params.toString();
+    return query ? `${pathname}?${query}` : pathname;
+  };
+}
+
+/**
+ * Click handler for a paging link: a plain click loads the results in place;
+ * modified clicks (new tab, new window) follow the link as usual
+ */
+function inPlace(load: () => void) {
+  return (event: React.MouseEvent<HTMLElement>) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return;
+    }
+    event.preventDefault();
+    load();
+  };
+}
+
+// ============================================
 // Results Component
 // ============================================
 
@@ -111,9 +182,10 @@ function Results<THit extends BaseHit>({
   skeletonCount,
 }: ResultsProps<THit>) {
   const cache = useInfiniteHitsCache<THit>(cacheKey);
-  const { items, showMore, isLastPage } = useInfiniteHits<THit>({
-    cache,
-  });
+  const { items, results, showMore, showPrevious, isFirstPage, isLastPage } =
+    useInfiniteHits<THit>({ cache });
+  const pageHref = useCatalogPageHref();
+  const [columns, gridRef] = useGridColumns();
   const { status } = useInstantSearch();
 
   // a search still in flight isn't "no results"
@@ -146,16 +218,52 @@ function Results<THit extends BaseHit>({
     );
   }
 
+  // 1-based pages of the first and last loaded hits, from their absolute
+  // positions, so the links stay right after loading more or previous pages
+  const perPage = results?.hitsPerPage || items.length || 1;
+  const pageOf = (hit?: THit) => {
+    const position = (hit as { __position?: number } | undefined)?.__position;
+    return position ? Math.floor((position - 1) / perPage) + 1 : 1;
+  };
+  const firstPage = pageOf(items[0]);
+  const lastPage = pageOf(items[items.length - 1]);
+
+  // Hold back a part-filled last row until more results load, so the grid
+  // always ends on a full row (36 per page leaves 1 over on a 5-column row).
+  // The held-back hits lead the next row after "Load more"; on the last page
+  // everything shows. The server render has every hit, so crawlers see all.
+  const leftover = items.length % columns;
+  const shown =
+    !isLastPage && columns > 1 && items.length > columns && leftover > 0
+      ? items.slice(0, items.length - leftover)
+      : items;
+
   return (
     <div ref={ref} style={{ minHeight: minHeight || undefined }}>
+      {!isFirstPage && (
+        <div className={`${styles.loadMoreContainer} ${styles.loadPreviousContainer}`}>
+          <Button
+            href={pageHref(firstPage - 1)}
+            onClick={inPlace(showPrevious)}
+            prefetch={false}
+            className={styles.loadMoreButton}
+            variant="secondary"
+            size="lg"
+          >
+            Load Previous
+          </Button>
+        </div>
+      )}
+
       <div
+        ref={gridRef}
         className={
           view === "list"
             ? styles.list
             : `${gridClasses[gridVariant]} ${gridVariant === "book" && display.layout === "card" ? styles.wideCards : ""}`
         }
       >
-        {items.map((hit) => (
+        {shown.map((hit) => (
           <React.Fragment key={hit.objectID}>
             {renderHit(hit, view, display)}
           </React.Fragment>
@@ -164,7 +272,16 @@ function Results<THit extends BaseHit>({
 
       {!isLastPage && (
         <div className={styles.loadMoreContainer}>
-          <Button onClick={showMore} className={styles.loadMoreButton} variant="secondary" size="lg">
+          {/* a real link, so crawlers can reach every page of the catalog;
+              readers get the results appended in place */}
+          <Button
+            href={pageHref(lastPage + 1)}
+            onClick={inPlace(showMore)}
+            prefetch={false}
+            className={styles.loadMoreButton}
+            variant="secondary"
+            size="lg"
+          >
             Load More
           </Button>
         </div>

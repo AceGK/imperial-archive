@@ -35,9 +35,13 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
-        // query-string URLs are filtered views of the same pages; /api/ is the
-        // search proxy, which crawlers have no use for
+        // a bare ?page=N is a catalog page that "Load more" links to, the only
+        // way crawlers reach books, authors and series past the first page;
+        // the longer rule wins over "/*?", and filtered pages (?format=…&page=2)
+        // don't match it, so they stay blocked
+        allow: ["/", "/*?page="],
+        // other query-string URLs are filtered views of the same pages; /api/
+        // is the search proxy, which crawlers have no use for
         disallow: ["/*?", "/api/"],
       },
       {

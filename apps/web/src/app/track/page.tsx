@@ -13,7 +13,7 @@ const DESCRIPTION =
   "Track your Warhammer reading for free: mark Black Library books as want to read, reading, read, or owned, straight from any book card or book page.";
 
 export const metadata = pageMetadata({
-  title: "Warhammer 40k Reading Tracker",
+  title: "Warhammer Reading Tracker for Black Library Books",
   description: DESCRIPTION,
   path: "/track",
 });
@@ -35,7 +35,7 @@ export default async function TrackPage() {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             name: `${SITE_NAME} Reading Tracker`,
-            alternateName: "Warhammer 40k Reading Tracker",
+            alternateName: "Warhammer Reading Tracker",
             url: absoluteUrl("/track"),
             description: DESCRIPTION,
             applicationCategory: "LifestyleApplication",
@@ -62,7 +62,7 @@ export default async function TrackPage() {
         ]}
       />
       <PageHeader
-        title="Warhammer 40k Reading Tracker"
+        title="Warhammer Reading Tracker"
         subtitle="Track every Black Library book you want to read, are reading, have finished, and own."
         align="center"
         strongOverlay

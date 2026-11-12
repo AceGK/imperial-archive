@@ -4,7 +4,7 @@ import AuthForm from "@/components/modules/AuthForm";
 export const metadata: Metadata = {
   title: "Sign Up",
   description:
-    "Create a free Imperial Archive account to track your Warhammer 40k reading, owned books, and favorites.",
+    "Create a free Imperial Archive account for the Warhammer reading tracker: log the Black Library books you've read, are reading, want to read, and own.",
   alternates: { canonical: "/signup" },
 };
 

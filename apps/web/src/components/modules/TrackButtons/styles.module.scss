@@ -42,3 +42,20 @@
 .stepDone {
   background: currentColor;
 }
+
+// signed-out line under a book's track buttons (TrackerHint)
+.hint {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  color: var(--subtle);
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+}

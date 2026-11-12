@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { BookDetailData } from "@/types/books";
 import styles from "./styles.module.scss";
+import { coverAlt } from "@/lib/covers";
 
 interface Book {
   _id: string;
@@ -120,7 +121,7 @@ export default function SeriesSection({
                   {navData.previousBook.image?.asset?.url ? (
                     <Image
                       src={navData.previousBook.image.asset.url}
-                      alt={navData.previousBook.image.alt || navData.previousBook.title}
+                      alt={coverAlt(navData.previousBook.title, null, navData.previousBook.image.alt)}
                       fill
                       sizes="48px"
                       unoptimized
@@ -148,7 +149,7 @@ export default function SeriesSection({
                   {navData.nextBook.image?.asset?.url ? (
                     <Image
                       src={navData.nextBook.image.asset.url}
-                      alt={navData.nextBook.image.alt || navData.nextBook.title}
+                      alt={coverAlt(navData.nextBook.title, null, navData.nextBook.image.alt)}
                       fill
                       sizes="48px"
                       unoptimized

@@ -20,7 +20,6 @@ import {
 import type { BlogPost } from "@/types/sanity";
 
 import Search from "@/components/modules/Search";
-import { getSearchShortcuts } from "@/lib/searchShortcuts";
 import JsonLd from "@/components/seo/JsonLd";
 import TrackerPromo from "@/components/modules/TrackerPromo";
 import FaqSection from "@/components/modules/FaqSection";
@@ -165,8 +164,6 @@ export default async function Home() {
     )
   );
 
-  const searchShortcuts = await getSearchShortcuts();
-
   const faqCategories = await client.fetch<FaqCategory[]>(
     faqCategoriesBySlugsQuery,
     { slugs: ["getting-started", "the-archive"] },
@@ -179,6 +176,7 @@ export default async function Home() {
       <Hero
         image="/images/book-wall.jpg"
         background={heroCovers.length > 0 ? <BookWall covers={heroCovers} /> : undefined}
+        eyebrow="Imperial Archive"
         title={<>Explore the Black Library<sup>™</sup></>}
         subtitle="Browse & track Warhammer 40,000 publications by author, faction, era, and series."
         priority
@@ -186,7 +184,7 @@ export default async function Home() {
         height="md"
         scrollCue
       >
-        <Search shortcuts={searchShortcuts} />
+        <Search />
       </Hero>
 
       <section className="container row__lg">
