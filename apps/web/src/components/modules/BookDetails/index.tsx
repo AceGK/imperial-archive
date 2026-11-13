@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import Badge from "@/components/ui/Badge";
 import {
@@ -98,7 +98,7 @@ export default function BookDetails({ book }: BookDetailProps) {
                 sizes="(max-width: 768px) 80vw, 500px"
                 className={styles.image}
                 priority
-                unoptimized
+                fetchPriority="high"
               />
             ) : (
               <div className={styles.placeholderImage} aria-hidden="true">
@@ -272,7 +272,6 @@ export default function BookDetails({ book }: BookDetailProps) {
                                       alt=""
                                       width={64}
                                       height={64}
-                                      unoptimized
                                       {...(author.image.lqip && {
                                         placeholder: "blur" as const,
                                         blurDataURL: author.image.lqip,

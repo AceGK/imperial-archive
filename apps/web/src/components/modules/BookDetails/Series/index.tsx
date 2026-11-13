@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import type { BookDetailData } from "@/types/books";
 import styles from "./styles.module.scss";
 import { coverAlt } from "@/lib/covers";
@@ -124,7 +124,6 @@ export default function SeriesSection({
                       alt={coverAlt(navData.previousBook.title, null, navData.previousBook.image.alt)}
                       fill
                       sizes="48px"
-                      unoptimized
                     />
                   ) : (
                     <div className={styles.navThumbPlaceholder} />
@@ -152,7 +151,6 @@ export default function SeriesSection({
                       alt={coverAlt(navData.nextBook.title, null, navData.nextBook.image.alt)}
                       fill
                       sizes="48px"
-                      unoptimized
                     />
                   ) : (
                     <div className={styles.navThumbPlaceholder} />

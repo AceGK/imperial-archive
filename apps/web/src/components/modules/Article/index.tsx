@@ -79,6 +79,7 @@ export default function Article({
             height={Math.round(coverWidth / dims.aspectRatio)}
             sizes="(max-width: 800px) 100vw, 760px"
             priority
+            fetchPriority="high"
             placeholder={cover.asset?.metadata?.lqip ? "blur" : "empty"}
             blurDataURL={cover.asset?.metadata?.lqip}
           />

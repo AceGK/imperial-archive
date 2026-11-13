@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import styles from "./styles.module.scss";
 import CardActions from "./CardActions";
 import CardTags from "./CardTags";
@@ -116,7 +116,6 @@ export default function BookCard({ book, href, compact, className, display = DEF
                 fill
                 sizes={wide ? "128px" : "(max-width: 600px) 50vw, 200px"}
                 priority={false}
-                unoptimized
               />
             ) : (
               <div className={styles.placeholderImage} aria-hidden="true">

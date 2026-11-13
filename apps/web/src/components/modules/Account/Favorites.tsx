@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery } from "convex/react";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "@convex/_generated/api";
@@ -260,7 +260,6 @@ function FavoriteRow({ item, onRemove }: { item: Exclude<FavoriteItem, { _type: 
                 alt=""
                 fill
                 sizes="128px"
-                unoptimized
               />
             </span>
           ) : (
@@ -281,7 +280,6 @@ function FavoriteRow({ item, onRemove }: { item: Exclude<FavoriteItem, { _type: 
                   alt=""
                   fill
                   sizes="64px"
-                  unoptimized
                 />
               ) : (
                 initialsOf(name)
@@ -308,7 +306,7 @@ function FavoriteRow({ item, onRemove }: { item: Exclude<FavoriteItem, { _type: 
           thumb: (
             <span className={`${rowStyles.thumb} ${rowStyles.thumbSeries}`}>
               {item.image?.url ? (
-                <Image src={`${item.image.url}?w=256&h=144&fit=crop&auto=format`} alt="" fill sizes="128px" unoptimized />
+                <Image src={`${item.image.url}?w=256&h=144&fit=crop&auto=format`} alt="" fill sizes="128px" />
               ) : (
                 <span className={rowStyles.placeholder}>{name}</span>
               )}

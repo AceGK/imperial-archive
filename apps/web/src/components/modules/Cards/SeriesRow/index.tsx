@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import FavoriteButton from "@/components/modules/FavoriteButton";
 import type { SeriesHit } from "@/types/algolia";
@@ -20,7 +20,7 @@ export default function SeriesRow({ series }: { series: SeriesHit }) {
     <article className={styles.row}>
       <Link href={link} className={`${styles.thumb} ${styles.thumbSeries}`} aria-hidden="true" tabIndex={-1}>
         {hasImage && image ? (
-          <Image src={urlFor(image).width(256).height(144).fit("crop").auto("format").url()} alt="" fill sizes="128px" unoptimized />
+          <Image src={urlFor(image).width(256).height(144).fit("crop").auto("format").url()} alt="" fill sizes="128px" />
         ) : (
           <span className={styles.placeholder}>{series.title}</span>
         )}

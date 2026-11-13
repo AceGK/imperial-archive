@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import FavoriteButton from "@/components/modules/FavoriteButton";
 import type { AuthorHit } from "@/types/algolia";
@@ -28,7 +28,7 @@ export default function AuthorRow({ author }: { author: AuthorHit }) {
     <article className={styles.row}>
       <Link href={link} className={`${styles.thumb} ${styles.thumbAuthor}`} aria-hidden="true" tabIndex={-1}>
         {hasImage && image ? (
-          <Image src={urlFor(image).width(128).height(128).fit("crop").url()} alt="" fill sizes="64px" unoptimized />
+          <Image src={urlFor(image).width(128).height(128).fit("crop").url()} alt="" fill sizes="64px" />
         ) : (
           initials(author.name)
         )}

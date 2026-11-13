@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import RichText from "@/components/ui/RichText";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import FavoriteButton from "@/components/modules/FavoriteButton";
@@ -32,7 +32,7 @@ export default function AuthorDetailCard({ author }: { author: Author40k }) {
         width={200}
         height={200}
         priority
-        unoptimized
+        fetchPriority="high"
         placeholder="blur"
         blurDataURL={author.image?.lqip || undefined}
       />

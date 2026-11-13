@@ -3,8 +3,6 @@ import { Barlow, Geist_Mono, Barlow_Condensed, Archivo_Black } from "next/font/g
 import { ThemeProvider } from "next-themes";
 import { cookies } from "next/headers";
 import "@/styles/reset.scss";
-import "swiper/css";
-import "swiper/css/navigation";
 import "@/styles/globals.scss";
 import "@/styles/utils.scss";
 import Nav from "@/components/modules/Nav";

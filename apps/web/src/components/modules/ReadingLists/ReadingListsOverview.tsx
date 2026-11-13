@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import Link from "next/link";
 import { useEffect, useId, useState } from "react";
 import { MAX_LISTS, MAX_NAME_LENGTH } from "@convex/readingListLimits";
@@ -89,7 +89,7 @@ export default function ReadingListsOverview() {
                           const url = book ? thumbUrl(book, 120) : null;
                           return (
                             <span key={i} className={styles.coverSlot}>
-                              {url && <Image src={url} alt="" fill sizes="64px" unoptimized />}
+                              {url && <Image src={url} alt="" fill sizes="64px" />}
                             </span>
                           );
                         })}
