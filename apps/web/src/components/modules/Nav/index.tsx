@@ -210,14 +210,14 @@ export default function Nav({
 
           {/* desktop right controls */}
           <div className={styles.secondary}>
-            <AuthSlot showSignup />
+            <AuthSlot />
             {showLayoutToggle && <SiteWidthToggle />}
             {showThemeToggle && <ThemeToggle />}
           </div>
 
-          {/* mobile: account avatar (or Login when signed out) beside the hamburger */}
+          {/* mobile: account avatar (or a Login icon when signed out) beside the hamburger */}
           <div className={styles.mobileAccount}>
-            <AuthSlot />
+            <AuthSlot compact />
           </div>
 
         </div>
