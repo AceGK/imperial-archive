@@ -1,54 +1,22 @@
 // app/authors/page.tsx
-"use client";
+import type { Metadata } from "next";
+import { catalogPageParam, pageMetadata } from "@/lib/seo";
+import AuthorsIndex from "./AuthorsIndex";
 
-import PageHeader from "@/components/modules/PageHeader";
-import Catalog from "@/components/modules/Catalog";
-import AuthorCard from "@/components/modules/Cards/AuthorCard";
-import AuthorRow from "@/components/modules/Cards/AuthorRow";
-import type { AuthorHit } from "@/types/algolia";
+type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
-export default function AuthorsPage() {
-  return (
-    <main>
-      <PageHeader
-        title="Authors"
-        subtitle="Discover the writers who bring the grim darkness of the far future to life across the Black Library."
-        align="center"
-        strongOverlay
-        height="sm"
-        priority
-        image="/images/imperial-library-erik-nykvist.jpg"
-        credit="Imperial Library by Erik Nykvist"
-      />
+// the catalog is a client component, so the metadata lives in this wrapper;
+// later pages (?page=2, linked from "Load more") get their own title and canonical
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  return pageMetadata({
+    title: "Black Library Authors",
+    description:
+      "Browse Warhammer 40,000 authors from Black Library, from Dan Abnett and Aaron Dembski-Bowden to Graham McNeill, and see every 40k book each has written.",
+    path: "/authors",
+    page: catalogPageParam(await searchParams),
+  });
+}
 
-      <Catalog<AuthorHit>
-        indexName="authors40k"
-        renderHit={(hit, view) => view === "list" ? <AuthorRow author={hit} /> : (
-          //TODO make AuthorCard accept hit directly
-          <AuthorCard
-            name={hit.name}
-            slug={hit.slug}
-            count={hit.bookCount ?? 0}
-            image={hit.image}
-          />
-        )}
-        gridVariant="author"
-        placeholder="Search authors..."
-        noResultsText="No authors match your search."
-        stats={{ singular: "Author", plural: "Authors" }}
-        hitsPerPage={36}
-        sortOptions={[
-          { label: "Name A-Z", value: "authors40k" },
-          { label: "Name Z-A", value: "authors40k_name_desc" },
-          { label: "Most Publications", value: "authors40k_bookcount_desc" },
-        ]}
-        filters={[
-          { attribute: "format", label: "Format" },
-          { attribute: "series.title", label: "Series", searchable: true },
-          { attribute: "factions.name", label: "Faction", searchable: true },
-          { attribute: "era.name", label: "Era" },
-        ]}
-      />
-    </main>
-  );
+export default function Page() {
+  return <AuthorsIndex />;
 }

@@ -197,6 +197,15 @@ export default function AuthForm({ mode, onSuccess, inModal = false }: AuthFormP
             ? "Don't have an account? Sign up"
             : "Already have an account? Sign in"}
         </Button>
+
+        {/* signed-out Track clicks land here, so say what the account is for */}
+        {!inModal && (
+          <p className={styles.trackerNote}>
+            <Link href="/track" className={styles.textLink}>
+              How the free reading tracker works
+            </Link>
+          </p>
+        )}
       </form>
     </div>
   );

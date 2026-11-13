@@ -11,6 +11,7 @@ import styles from "./styles.module.scss";
 import XmarkIcon from "@/components/icons/xmark.svg";
 import MagnifyingGlassIcon from "@/components/icons/magnifying-glass.svg";
 import { buildRows } from "./rows";
+import { useShortcuts } from "@/components/modules/NavSearch/shortcuts";
 import {
   SUGGESTED_SEARCHES,
   clearRecentSearches as forgetRecentSearches,
@@ -41,8 +42,13 @@ function SuggestedSearches() {
 // wait for a pause in typing before searching
 const DEBOUNCE_MS = 250;
 
-function CustomSearchBox({ shortcuts }: { shortcuts: SearchShortcut[] }) {
+function CustomSearchBox() {
   const router = useRouter();
+  // Authors, series, factions and eras load the first time a reader points at
+  // or focuses the box (shared with the nav search), not with the page: the
+  // full list was ~40KB of every homepage load
+  const [engaged, setEngaged] = useState(false);
+  const shortcuts: SearchShortcut[] = useShortcuts(engaged);
   const { query, refine } = useSearchBox();
   const { items: hits } = useHits() as unknown as { items: BookHit[] };
 
@@ -183,7 +189,7 @@ function CustomSearchBox({ shortcuts }: { shortcuts: SearchShortcut[] }) {
   }
 
   return (
-    <div className={styles.searchBox} ref={boxRef}>
+    <div className={styles.searchBox} ref={boxRef} onPointerEnter={() => setEngaged(true)}>
       <MagnifyingGlassIcon className={styles.searchIcon} aria-hidden="true" />
       <input
         id="hero-search"
@@ -196,7 +202,10 @@ function CustomSearchBox({ shortcuts }: { shortcuts: SearchShortcut[] }) {
           setValue(e.target.value);
           setOpen(true);
         }}
-        onFocus={() => setOpen(true)}
+        onFocus={() => {
+          setEngaged(true);
+          setOpen(true);
+        }}
         onKeyDown={onKeyDown}
         ref={inputRef}
       />
@@ -262,12 +271,7 @@ function CustomSearchBox({ shortcuts }: { shortcuts: SearchShortcut[] }) {
   );
 }
 
-type SearchProps = {
-  /** Authors, series, factions and eras, matched in the browser */
-  shortcuts?: SearchShortcut[];
-};
-
-export default function Search({ shortcuts = [] }: SearchProps) {
+export default function Search() {
   // runs after InstantSearch (a child) has hydrated from this page's results
   useEffect(() => {
     forgetServerResults();
@@ -280,7 +284,7 @@ export default function Search({ shortcuts = [] }: SearchProps) {
       future={{ preserveSharedStateOnUnmount: true }}
     >
       <Configure hitsPerPage={5} />
-      <CustomSearchBox shortcuts={shortcuts} />
+      <CustomSearchBox />
       <SuggestedSearches />
     </InstantSearchNext>
   );

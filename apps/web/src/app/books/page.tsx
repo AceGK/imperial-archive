@@ -1,48 +1,22 @@
 // app/books/page.tsx
-"use client";
+import type { Metadata } from "next";
+import { catalogPageParam, pageMetadata } from "@/lib/seo";
+import BooksIndex from "./BooksIndex";
 
-import PageHeader from "@/components/modules/PageHeader";
-import Catalog from "@/components/modules/Catalog";
-import BookCard from "@/components/modules/Cards/BookCard";
-import BookRow from "@/components/modules/Cards/BookRow";
-import { BOOK_DEFAULT_SORT, BOOK_SORT_OPTIONS } from "@/components/modules/Catalog/Books";
-import type { BookHit } from "@/types/algolia";
+type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
-export default function BooksPage() {
-  return (
-    <main>
-      <PageHeader
-        title="All Books"
-        subtitle="Browse the full catalog of Warhammer 40,000 stories across every age of the Imperium."
-        align="center"
-        strongOverlay
-        height="sm"
-        priority
-        image="/images/book-wall.jpg"
-        credit="Cover art © Games Workshop"
-      />
+// the catalog is a client component, so the metadata lives in this wrapper;
+// later pages (?page=2, linked from "Load more") get their own title and canonical
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  return pageMetadata({
+    title: "Warhammer 40k Books",
+    description:
+      "Browse every Warhammer 40,000 book from Black Library: novels, novellas, short stories, anthologies, and audio dramas. Search and filter by author, series, faction, era, and format.",
+    path: "/books",
+    page: catalogPageParam(await searchParams),
+  });
+}
 
-      <Catalog<BookHit>
-        indexName="books40k"
-        renderHit={(hit, view, display) =>
-        view === "list" ? <BookRow book={hit} display={display} /> : <BookCard book={hit} display={display} />
-      }
-      bookDisplay
-        gridVariant="book"
-        placeholder="Search books..."
-        noResultsText="No books match your search."
-        stats={{ singular: "Publication", plural: "Publications" }}
-        hitsPerPage={36}
-        sortOptions={BOOK_SORT_OPTIONS}
-        defaultSort={BOOK_DEFAULT_SORT}
-        filters={[
-          { attribute: "format", label: "Format" },
-          { attribute: "authors.name", label: "Author", searchable: true },
-          { attribute: "series.title", label: "Series", searchable: true },
-          { attribute: "factions.name", label: "Faction", searchable: true },
-          { attribute: "era.name", label: "Era" },
-        ]}
-      />
-    </main>
-  );
+export default function Page() {
+  return <BooksIndex />;
 }

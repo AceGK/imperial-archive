@@ -1,7 +1,7 @@
 // /components/modules/Footer/index.tsx
 import Link from "next/link";
 import styles from "./styles.module.scss";
-import Logo from "../../../../public/imperial-archive-logo.svg";
+import SiteLogo from "@/components/ui/SiteLogo";
 import ThemeSwitch from "@/components/modules/ThemeSwitch";
 import { isProduction } from "@/lib/env";
 import { navGroup } from "@/components/modules/Nav/nav";
@@ -15,7 +15,11 @@ export type FooterProps = {
 };
 
 const linksOf = (label: string): FooterLink[] =>
-  navGroup(label).links.map(({ href, label, comingSoon }) => ({ href, label, comingSoon }));
+  navGroup(label).links.map(({ href, label, footerLabel, comingSoon }) => ({
+    href,
+    label: footerLabel ?? label,
+    comingSoon,
+  }));
 
 // the nav's groups, in the same order
 const columns = ["Browse", "Resources", "Info", "Support"].map((heading) => ({ heading, links: linksOf(heading) }));
@@ -57,7 +61,7 @@ export default function Footer({
           {/* Brand / blurb */}
           <div className={styles.brand}>
             <Link href="/" aria-label="Imperial Archive Home" className={styles.logoLink}>
-              <Logo className={styles.logo} />
+              <SiteLogo className={styles.logo} />
             </Link>
             {note && <p className={styles.note}>{note}</p>}
           </div>

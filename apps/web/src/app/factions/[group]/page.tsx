@@ -10,7 +10,7 @@ import type { FactionGroupWithItems } from "@/types/sanity";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
-import { absoluteUrl, breadcrumbJsonLd, pageMetadata, truncate } from "@/lib/seo";
+import { absoluteUrl, breadcrumbJsonLd, catalogPageParam, pageMetadata, truncate } from "@/lib/seo";
 import { EXTERNAL_REL } from "@/lib/links";
 
 export const revalidate = 60;
@@ -25,8 +25,10 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ group: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
   const { group } = await params;
   const groups = await client.fetch<FactionGroupWithItems[]>(groupedFactions40kQuery);
@@ -43,6 +45,8 @@ export async function generateMetadata({
         }.`
     ),
     path: `/factions/${group}`,
+    // later pages of the book catalog below (?page=2, from "Load more")
+    page: catalogPageParam(await searchParams),
   });
 }
 

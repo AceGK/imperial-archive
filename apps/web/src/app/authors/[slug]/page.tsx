@@ -1,7 +1,8 @@
 // app/authors/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import { client } from "@/lib/sanity/sanity.client";
-import { single40kAuthorQuery } from "@/lib/sanity/queries";
+import { authorBookSummary40kQuery, single40kAuthorQuery } from "@/lib/sanity/queries";
+import { authorDescription } from "@/lib/descriptions";
 import type { Author40k } from "@/types/sanity";
 import AuthorDetails from "@/components/modules/Details/Author";
 import BooksCatalog from "@/components/modules/Catalog/Books";
@@ -10,7 +11,7 @@ import type { Metadata } from "next";
 import { toPlainText } from "@portabletext/react";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import JsonLd from "@/components/seo/JsonLd";
-import { absoluteUrl, breadcrumbJsonLd, pageMetadata, truncate } from "@/lib/seo";
+import { absoluteUrl, breadcrumbJsonLd, catalogPageParam, pageMetadata, truncate } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -37,21 +38,33 @@ function authorImageUrl(profile: Author40k) {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
   const { slug } = await params;
   const profile = await getAuthor(slug);
   if (!profile) return { title: "Author Not Found" };
 
   const bio = profile.bio ? toPlainText(profile.bio) : "";
+  const books = await client.fetch<{ format?: string | null; series?: string | null }[]>(
+    authorBookSummary40kQuery,
+    { id: profile._id },
+    { perspective: "published" }
+  );
   return pageMetadata({
     title: `${profile.name}: Warhammer 40k Books`,
+    // generated from the author's books (the bio is often a copied
+    // encyclopedia line, so it only follows when there's room)
     description: truncate(
-      bio ||
+      authorDescription(profile.name, books ?? [], bio) ||
+        bio ||
         `Every Warhammer 40,000 book by ${profile.name} from Black Library: novels, novellas, short stories, and audio dramas, with series and reading order.`
     ),
     path: `/authors/${profile.slug}`,
+    // later pages of the book catalog below (?page=2, from "Load more")
+    page: catalogPageParam(await searchParams),
     image: authorImageUrl(profile),
     imageAlt: profile.name,
     type: "profile",

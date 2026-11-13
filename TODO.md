@@ -169,3 +169,15 @@ New sections go in `apps/web/src/components/modules/Account/nav.ts` plus a page 
 
 ### google keyword planner
 -[ ] keyword planner API?
+
+
+<!-- vaults of terra order -->
+<!-- Argent (short story) - background on how Interrogator Luce Spinoza ended up with the crozius Argent.
+
+Sanguine (short story) - background on how Inquisitor Erasmus Crowl got his sidearm Sanguine
+
+The Carrion Throne (novel) - really you can start here if you want as the other two aren't required reading to know what's going on. Follow Spinoza, newly assigned to Crowl, as they investigate terrible slaying in Terra's Underhive.
+
+The Interrogation of Salvor Lermentov (Audio Drama) - Epilogue to Carrion Throne that was cut.
+
+The Hollow Mountain - Crowl and Spinoza continue their investigation into those behind the plot they discovered in Carrion Throne. -->

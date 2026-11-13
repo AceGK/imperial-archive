@@ -8,7 +8,7 @@ import BooksCatalog from "@/components/modules/Catalog/Books";
 import FactionDetails from "@/components/modules/Details/Faction";
 import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
-import { absoluteUrl, breadcrumbJsonLd, pageMetadata, truncate } from "@/lib/seo";
+import { absoluteUrl, breadcrumbJsonLd, catalogPageParam, pageMetadata, truncate } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -27,8 +27,10 @@ async function getFaction(group: string, slug: string) {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ group: string; slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
   const { group, slug } = await params;
   const faction = await getFaction(group, slug);
@@ -41,6 +43,8 @@ export async function generateMetadata({
         `Every Warhammer 40,000 book featuring the ${faction.title} from Black Library, with authors, series, and reading order.`
     ),
     path: `/factions/${group}/${slug}`,
+    // later pages of the book catalog below (?page=2, from "Load more")
+    page: catalogPageParam(await searchParams),
   });
 }
 

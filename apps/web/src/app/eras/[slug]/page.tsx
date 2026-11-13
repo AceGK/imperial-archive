@@ -9,7 +9,7 @@ import { ShareButton } from "@/components/modules/Share";
 import BooksCatalog from "@/components/modules/Catalog/Books";
 import type { Metadata } from "next";
 import JsonLd from "@/components/seo/JsonLd";
-import { absoluteUrl, breadcrumbJsonLd, pageMetadata, truncate } from "@/lib/seo";
+import { absoluteUrl, breadcrumbJsonLd, catalogPageParam, pageMetadata, truncate } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -26,7 +26,13 @@ async function getEra(slug: string) {
   return client.fetch<Era40k | null>(single40kEraQuery, { slug });
 }
 
-export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<Params>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const era = await getEra(slug);
   if (!era) return { title: "Era Not Found" };
@@ -38,6 +44,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
         `Warhammer 40,000 books set in ${era.title}${era.period ? ` (${era.period})` : ""}, from Black Library.`
     ),
     path: `/eras/${era.slug}`,
+    // later pages of the book catalog below (?page=2, from "Load more")
+    page: catalogPageParam(await searchParams),
     image: era.image?.url,
     imageAlt: era.image?.alt || era.title,
   });
@@ -72,7 +80,7 @@ export default async function EraPage({ params }: { params: Promise<Params> }) {
         subtitle={era.description}
         image={era.image}
         credit={era.image?.credit}
-        alt={era.image?.alt}
+        alt={era.image?.alt || `${era.title} era artwork`}
         align="center"
         strongOverlay
         height="sm"

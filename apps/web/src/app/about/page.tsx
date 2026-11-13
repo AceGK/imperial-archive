@@ -209,6 +209,12 @@ export default function AboutPage() {
                 a series in, and what to pick up next.
               </p>
               <p>
+                The Archive is also a free{" "}
+                <Link href="/track">Warhammer reading tracker</Link>: sign in to
+                mark books as want to read, reading, read, or owned, and follow
+                your progress through every series, era, and faction.
+              </p>
+              <p>
                 This is an unofficial, fan-made resource and is not affiliated
                 with <GamesWorkshop />. All Warhammer 40,000® logos, names, and
                 images are the property of <GamesWorkshop /> Limited.

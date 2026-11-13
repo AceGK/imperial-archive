@@ -10,6 +10,8 @@ import SeriesBooksCarousel from "@/components/modules/Carousel/SeriesBooksCarous
 import RecentlyViewedCarousel from "@/components/modules/Carousel/RecentlyViewedCarousel";
 import JsonLd from "@/components/seo/JsonLd";
 import { bookJsonLd, breadcrumbJsonLd, pageMetadata, truncate } from "@/lib/seo";
+import { bookDescription } from "@/lib/descriptions";
+import { coverAlt } from "@/lib/covers";
 
 export const revalidate = 60;
 
@@ -18,6 +20,24 @@ type Params = { slug: string };
 export async function generateStaticParams(): Promise<Params[]> {
   const slugs: { slug: string }[] = await client.fetch(bookSlugs40kQuery);
   return slugs.map((s) => ({ slug: s.slug }));
+}
+
+/**
+ * The book's place in its first series: its number in the first ordered
+ * reading list that includes it, or just the series name when it's only in
+ * unordered lists
+ */
+function seriesPosition(book: any): { name: string; position: number | null } | null {
+  const navs: any[] = Array.isArray(book.seriesNavigation) ? book.seriesNavigation : [];
+  for (const nav of navs) {
+    for (const list of nav?.lists ?? []) {
+      if (!list?.ordered) continue;
+      const index = (list.allBooks ?? []).findIndex((b: any) => b?._id === book._id);
+      if (index >= 0 && nav.seriesName) return { name: nav.seriesName, position: index + 1 };
+    }
+  }
+  const name = navs.find((n) => n?.seriesName)?.seriesName;
+  return name ? { name, position: null } : null;
 }
 
 export async function generateMetadata({
@@ -40,10 +60,16 @@ export async function generateMetadata({
       .filter(Boolean)
       .join(", ") || "Unknown Author";
 
-  const description =
-    book.description ||
-    book.story ||
-    `${book.title} by ${authorsText}${book.format ? `, a Warhammer 40,000 ${book.format.toLowerCase()} from Black Library` : ""}.`;
+  // generated from the book's own data (author, series order, format, year),
+  // with the publisher blurb after it where there's room
+  const description = bookDescription({
+    title: book.title,
+    authors: (book.authors ?? []).map((a: any) => a?.name).filter(Boolean),
+    format: book.format,
+    year: book.publication_date ? String(book.publication_date).slice(0, 4) : null,
+    series: seriesPosition(book),
+    blurb: book.description || book.story,
+  });
 
   const imageUrl = book?.image?.asset?.url
     ? urlFor(book.image)
@@ -54,9 +80,7 @@ export async function generateMetadata({
         .url()
     : undefined;
 
-  const imgAlt =
-    (book?.image?.alt && String(book.image.alt).trim()) ||
-    `${book.title} cover`;
+  const imgAlt = coverAlt(book.title, book.authors, book.image?.alt);
 
   return pageMetadata({
     title: `${book.title} by ${authorsText}`,

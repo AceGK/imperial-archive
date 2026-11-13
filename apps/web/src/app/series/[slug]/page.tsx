@@ -13,6 +13,7 @@ import type { BookCardData } from "@/components/modules/Cards/BookCard";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import { buildSources, Cite, SourceList } from "@/components/modules/Sources";
 import type { Metadata } from "next";
+import { readingOrderName, seriesDescription } from "@/lib/descriptions";
 import { toPlainText } from "@portabletext/react";
 import JsonLd from "@/components/seo/JsonLd";
 import {
@@ -50,9 +51,12 @@ export async function generateMetadata({
   const intro = data.description ? toPlainText(data.description) : data.subtitle;
   return pageMetadata({
     title: `${data.title} Reading Order`,
+    // generated from the series' own books; series without books yet fall
+    // back to the studio intro
     description: truncate(
-      intro ||
-        `The ${data.title} reading order: every book in the Warhammer 40,000 series from Black Library, in order.`
+      seriesDescription(data.title, data.lists, intro) ||
+        intro ||
+        `${readingOrderName(data.title)}: every book in the Warhammer 40,000 series from Black Library, in order.`
     ),
     path: `/series/${data.slug}`,
     image: data.image?.asset
@@ -132,7 +136,7 @@ const hero = data.image?.asset
         height="sm"
         priority
         image={hero}
-        alt={hero?.alt}
+        alt={hero?.alt || `${data.title} series artwork`}
         credit={hero?.credit}
       >
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "0.5rem" }}>

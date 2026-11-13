@@ -103,9 +103,14 @@ export default function Track() {
           <p className={styles.cardDescription}>
             Use the Track buttons on any book page to mark it as want to read, reading, read, or owned.
           </p>
-          <Button href="/books" variant="tertiary">
-            Browse Books
-          </Button>
+          <div className={styles.emptyActions}>
+            <Button href="/books" variant="tertiary">
+              Browse Books
+            </Button>
+            <Button href="/track" variant="tertiary">
+              How the Reading Tracker Works
+            </Button>
+          </div>
         </section>
       ) : (
         <>

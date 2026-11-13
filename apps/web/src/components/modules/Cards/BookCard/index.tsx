@@ -5,6 +5,7 @@ import CardActions from "./CardActions";
 import CardTags from "./CardTags";
 import TrackMenu from "./TrackMenu";
 import { DEFAULT_BOOK_DISPLAY, type BookDisplay } from "./display";
+import { coverAlt } from "@/lib/covers";
 
 type CardAuthor = { name: string; slug?: string };
 type CardSeries = { name?: string; title?: string; slug?: string; number?: number | null };
@@ -69,7 +70,7 @@ export default function BookCard({ book, href, compact, className, display = DEF
   const year = yearFromDate(book.publication_date ?? book.publicationDate);
 
   const imgUrl = getImageUrl(book.image);
-  const imgAlt = book.image?.alt?.trim() || `${book.title} cover`;
+  const imgAlt = coverAlt(book.title, book.authors, book.image?.alt);
 
   const authors = book.authors ?? [];
   const seriesList = normalizeSeriesArray(book.series);

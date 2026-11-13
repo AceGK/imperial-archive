@@ -347,3 +347,7 @@
 .loadMoreButton {
   margin: 6rem auto 2rem;
 }
+/* above the grid, when a reader lands on a later page (?page=3) */
+.loadPreviousContainer .loadMoreButton {
+  margin: 0 auto 2rem;
+}

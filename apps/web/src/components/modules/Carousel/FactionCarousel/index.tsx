@@ -21,17 +21,17 @@ export default async function FactionCarousel({
 }: Props) {
   const groups = await client.fetch<FactionGroupWithItems[]>(groupedFactions40kQuery, {}, { perspective: "published" });
 
-  // adapt to client shape: { key, meta, items[] }
+  // adapt to client shape: { key, meta, items[] }. Only what the tabs and
+  // cards show: every faction's lore description and links went into the page
+  // payload unused (~25KB on the homepage)
   const adapted = groups.map(g => ({
     key: g.slug,
-    meta: { title: g.title, iconId: g.iconId, description: g.description },
+    meta: { title: g.title, iconId: g.iconId },
     items: g.items.map(it => ({
       _id: it._id,
       title: it.title,
       slug: it.slug,
       iconId: it.iconId,
-      description: it.description,
-      links: it.links,
     })),
   }));
 

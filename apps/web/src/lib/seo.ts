@@ -1,6 +1,7 @@
 // Shared SEO constants and helpers: page metadata defaults and schema.org
 // structured data (JSON-LD) builders.
 import type { Metadata } from "next";
+import { parseCatalogPage } from "@/lib/algolia/routing";
 
 export const SITE_URL = "https://imperialarchive.com";
 export const SITE_NAME = "Imperial Archive";
@@ -16,13 +17,17 @@ export const SITE_KEYWORDS = [
   "Warhammer 40,000",
   "Warhammer 40k books",
   "Warhammer 40k reading order",
-  "Warhammer 40k reading tracker",
   "Warhammer reading tracker",
   "Horus Heresy reading order",
   "40k novels",
 ];
 
-export const DEFAULT_TITLE = `${SITE_NAME} | Warhammer 40k Book Catalog & Reading Tracker`;
+// leads with the reading tracker phrase people search for, and keeps 40k on
+// the catalog, which is all 40k for now
+export const DEFAULT_TITLE = `${SITE_NAME} | Warhammer Reading Tracker & 40k Book Catalog`;
+
+/** The Archive's profiles on other sites (schema.org sameAs) */
+export const SITE_PROFILES = ["https://ko-fi.com/imperialarchive"];
 
 export const DEFAULT_OG_IMAGE = {
   url: "/images/og-default.jpg",
@@ -62,8 +67,11 @@ export function pageMetadata({
   imageAlt,
   type = "website",
   noindex = false,
+  page = 1,
 }: {
   title: string;
+  /** Catalog page (from `catalogPageParam`); pages after the first get their own title and canonical URL */
+  page?: number;
   /** Keep out of search results (e.g. placeholder pages); links are still followed */
   noindex?: boolean;
   absoluteTitle?: boolean;
@@ -73,6 +81,12 @@ export function pageMetadata({
   imageAlt?: string;
   type?: "website" | "book" | "profile";
 }): Metadata {
+  // later catalog pages are their own pages to search engines, not
+  // duplicates of page 1, so each names its page and canonicalizes to itself
+  if (page > 1) {
+    title = `${title} (Page ${page})`;
+    path = `${path}?page=${page}`;
+  }
   const fullTitle = absoluteTitle ? title : `${title} | ${SITE_NAME}`;
   const ogImage = image ? { url: image, alt: imageAlt ?? title } : DEFAULT_OG_IMAGE;
   return {
@@ -99,6 +113,17 @@ export function pageMetadata({
       images: [ogImage.url],
     },
   };
+}
+
+/**
+ * The catalog page for a page's metadata. Only a bare `?page=N` counts: with a
+ * search or filters in the URL it's a filtered view, which keeps the page's
+ * normal canonical URL (and robots.txt keeps crawlers off it anyway).
+ */
+export function catalogPageParam(searchParams: Record<string, string | string[] | undefined>) {
+  const keys = Object.keys(searchParams);
+  if (keys.length !== 1 || keys[0] !== "page") return 1;
+  return parseCatalogPage(searchParams.page);
 }
 
 /* ------------------------------------------------------------------
@@ -220,6 +245,9 @@ export function siteJsonLd() {
       name: SITE_NAME,
       url: SITE_URL,
       logo: absoluteUrl("/imperial-archive-logo.svg"),
+      // the Archive's own profiles elsewhere, so search engines tie them to
+      // this site; add social accounts here as they're made
+      sameAs: SITE_PROFILES,
     },
   ];
 }
