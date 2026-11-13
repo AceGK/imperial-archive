@@ -87,7 +87,7 @@ export default function BookCard({ book, href, compact, className, display = DEF
         <span>{authors[0].name}</span>
       )
     ) : (
-      "Various Authors"
+      <span>Various Authors</span>
     );
 
   const showCover = display.media !== "title";

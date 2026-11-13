@@ -117,8 +117,9 @@ $nav-height: 61px; // 60px bar plus its 1px bottom border
     text-shadow: none;
     background: rgba(0, 0, 0, 0.65);
     backdrop-filter: blur(6px);
-    // gold marks at the corners only, as on the site's bracket buttons
-    @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary));
+    // a grey border with gold marks over its corners, like the tracker promo
+    border: 1px solid var(--border);
+    @include corner-brackets($size: 8px, $thickness: 1px, $color: var(--primary), $offset: 1px);
   }
 
   sup {

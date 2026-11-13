@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useConvexAuth } from "convex/react";
 import Button from "@/components/ui/Button";
+import LoginIcon from "@/components/icons/log-in.svg";
 import AccountMenu from "./AccountMenu";
 import { AUTH_HINT_KEY } from "./authHint";
 import styles from "./AuthSlot.module.scss";
@@ -15,10 +16,10 @@ import styles from "./AuthSlot.module.scss";
  * resolves. `data-auth` on <html> decides which is visible.
  */
 export default function AuthSlot({
-  showSignup = false,
+  compact = false,
 }: {
-  /** Leave off to show Login only (mobile top bar) */
-  showSignup?: boolean;
+  /** Mobile top bar: Login as an icon and no Signup (the menu has both in full) */
+  compact?: boolean;
 }) {
   const { isAuthenticated, isLoading } = useConvexAuth();
 
@@ -37,14 +38,21 @@ export default function AuthSlot({
       <span className={styles.out}>
         {/* prefetch: the site's layout is dynamic, so Next only fully prefetches these
             when asked, and the login/signup modal would otherwise wait on the server */}
-        {showSignup && (
-          <Button href="/signup" variant="tertiary" size="sm" className={styles.signup} prefetch>
-            Signup
+        {compact ? (
+          <Button href="/login" variant="ghost" size="icon" className={styles.loginIcon} title="Login" prefetch>
+            <LoginIcon aria-hidden="true" />
+            <span className="visually-hidden">Login</span>
           </Button>
+        ) : (
+          <>
+            <Button href="/signup" variant="tertiary" size="sm" className={styles.signup} prefetch>
+              Signup
+            </Button>
+            <Button href="/login" variant="primary" size="sm" className={styles.login} prefetch>
+              Login
+            </Button>
+          </>
         )}
-        <Button href="/login" variant="primary" size="sm" className={styles.login} prefetch>
-          Login
-        </Button>
       </span>
       <span className={styles.in}>
         {!isLoading && isAuthenticated ? (

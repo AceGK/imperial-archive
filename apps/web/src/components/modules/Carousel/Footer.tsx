@@ -70,12 +70,6 @@ export default function CarouselFooter({ href, label = "View All" }: CarouselFoo
     };
   }, [swiper]);
 
-  const goTo = (page: number) => {
-    if (!swiper) return;
-    const group = Number(swiper.params.slidesPerGroup) || 1;
-    swiper.slideTo(Math.min(page * group, swiper.slides.length - 1));
-  };
-
   if (pages <= 1 && !href) return null;
 
   // the window of visible dots keeps the active one centered where possible
@@ -86,22 +80,19 @@ export default function CarouselFooter({ href, label = "View All" }: CarouselFoo
   return (
     <div ref={footerRef} className={styles.footer}>
       {pages > 1 ? (
-        <div className={`${styles.dots} ${dynamic ? styles.dynamic : ""}`} role="group" aria-label="Carousel pages">
+        // Indicators only: on phones the carousel pages by swiping, and 8px
+        // dots are too small to tap reliably (or to pass the 24px touch target
+        // check). Screen readers move through the slides themselves, so the
+        // dots are hidden from them.
+        <div className={`${styles.dots} ${dynamic ? styles.dynamic : ""}`} aria-hidden="true">
           <div className={styles.track} style={{ "--start": start } as CSSProperties}>
             {Array.from({ length: pages }, (_, i) => {
-              const inWindow = i >= start && i <= end;
               // edge dots shrink when more pages lie beyond them
               const small = dynamic && ((i === start && start > 0) || (i === end && end < pages - 1));
               return (
-                <button
+                <span
                   key={i}
-                  type="button"
-                  className={`${styles.dot} ${small ? styles.small : ""}`}
-                  aria-label={`Go to page ${i + 1} of ${pages}`}
-                  aria-current={i === active ? "true" : undefined}
-                  aria-hidden={inWindow ? undefined : true}
-                  tabIndex={inWindow ? undefined : -1}
-                  onClick={() => goTo(i)}
+                  className={`${styles.dot} ${small ? styles.small : ""} ${i === active ? styles.active : ""}`}
                 />
               );
             })}

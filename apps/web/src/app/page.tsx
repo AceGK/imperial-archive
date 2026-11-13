@@ -39,22 +39,79 @@ export const metadata = pageMetadata({
 // Well-known books for the hero's book wall, favouring dark covers so the
 // title stays readable over them. Must match titles exactly; titles without a
 // cover are skipped.
+// Every cover here downloads with the homepage (~5KB each, all before the hero
+// counts as loaded), so the wall uses 36; the rest are kept commented out to
+// swap in.
 const heroCoverTitles = [
-  "Horus Rising", "False Gods", "Galaxy in Flames", "The Flight of the Eisenstein",
-  "Fulgrim", "Descent of Angels", "Legion", "Mechanicum", "A Thousand Sons",
-  "Know No Fear", "The First Heretic", "Prospero Burns", "Betrayer",
-  "The Outcast Dead", "Angel Exterminatus", "Vulkan Lives", "The Solar War",
-  "The Lost and the Damned", "The First Wall", "Warhawk", "Xenos", "Malleus",
-  "Hereticus", "Ravenor", "Pariah", "First and Only", "Necropolis",
-  "Only in Death", "Ghostmaker", "For the Emperor", "Caves of Ice",
-  "Soul Hunter", "Blood Reaver", "Void Stalker", "Ahriman: Exile", "Night Lords: The Omnibus",
-  "Dark Imperium", "Leviathan", "Ravenor: The Omnibus", "Double Eagle",
-  "Titanicus", "Priests of Mars", "Storm of Iron", "Vengeful Spirit",
-  "Avenging Son", "Indomitus", "Farsight: Crisis of Faith",
-  "Yarrick: Imperial Creed", "Dead Men Walking", "Shroud of Night",
-  "Brothers of the Snake", "The Talon of Horus", "Black Legion",
-  "Lucius: The Faultless Blade", "Belisarius Cawl: The Great Work", "Krieg",
-  "Valdor: Birth of the Imperium", "The Lords of Silence", "Dante", "Kingsblade",
+  // Horus Heresy
+  "Horus Rising",
+  "False Gods",
+  "Galaxy in Flames",
+  // "The Flight of the Eisenstein",
+  "Fulgrim",
+  // "Descent of Angels",
+  "Legion",
+  // "Mechanicum",
+  "A Thousand Sons",
+  "Know No Fear",
+  "The First Heretic",
+  "Prospero Burns",
+  "Betrayer",
+  // "The Outcast Dead",
+  "Angel Exterminatus",
+  // "Vulkan Lives",
+  "The Solar War",
+  // "The Lost and the Damned",
+  // "The First Wall",
+  // "Warhawk",
+  "Vengeful Spirit",
+  "Valdor: Birth of the Imperium",
+
+  // Inquisition
+  "Xenos",
+  "Malleus",
+  // "Hereticus",
+  "Ravenor",
+  // "Ravenor: The Omnibus",
+  "Pariah",
+
+  // Guard and Mechanicus
+  "First and Only",
+  "Necropolis",
+  // "Only in Death",
+  // "Ghostmaker",
+  "For the Emperor",
+  "Caves of Ice",
+  "Double Eagle",
+  "Titanicus",
+  // "Priests of Mars",
+  "Yarrick: Imperial Creed",
+  // "Dead Men Walking",
+  // "Shroud of Night",
+  "Krieg",
+  "Belisarius Cawl: The Great Work",
+
+  // Astartes and Chaos
+  "Soul Hunter",
+  // "Blood Reaver",
+  "Void Stalker",
+  // "Ahriman: Exile",
+  // "Night Lords: The Omnibus",
+  "Storm of Iron",
+  // "Brothers of the Snake",
+  "The Talon of Horus",
+  "Black Legion",
+  // "Lucius: The Faultless Blade",
+  // "The Lords of Silence",
+  "Dante",
+  // "Kingsblade",
+
+  // Dark Imperium era and xenos
+  "Dark Imperium",
+  // "Leviathan",
+  // "Avenging Son",
+  "Indomitus",
+  "Farsight: Crisis of Faith",
 ];
 
 /** One cover per title, in random order so the wall changes between builds */
