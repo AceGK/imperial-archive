@@ -77,6 +77,9 @@ export default function DesktopDropdown({
                       <Link
                         href={link.href}
                         className={`${styles.listItemLink} ${isLinkActive(link.href) ? styles.active : ""}`}
+                        // the closed panel still counts as on screen, so Next
+                        // would prefetch every page in it as the page loads
+                        prefetch={isOpen ? null : false}
                         onClick={menu.closeDropdown}
                       >
                         {Icon && (

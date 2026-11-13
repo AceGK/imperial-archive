@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "@convex/_generated/api";
 import { getFavoriteItems } from "@/app/account/favorites/actions";
-import { resolveIcon } from "@/components/icons/factions/resolve";
+import FactionIcon from "@/components/icons/factions/FactionIcon";
 import XmarkIcon from "@/components/icons/xmark.svg";
 import BookGrid from "@/components/modules/BookGrid";
 import type { BookCardData } from "@/components/modules/Cards/BookCard";
@@ -288,13 +288,12 @@ function FavoriteRow({ item, onRemove }: { item: Exclude<FavoriteItem, { _type: 
           ),
         };
       case "faction40k": {
-        const Icon = resolveIcon(item.iconId || item.slug);
         return {
           href: item.groupKey ? `/factions/${item.groupKey}/${item.slug}` : `/factions/${item.slug}`,
           detail: "Faction",
           thumb: (
             <span className={`${rowStyles.thumb} ${libraryStyles.thumbIcon}`}>
-              {Icon && <Icon width={32} height={32} aria-hidden />}
+              <FactionIcon id={item.iconId || item.slug} width={32} />
             </span>
           ),
         };

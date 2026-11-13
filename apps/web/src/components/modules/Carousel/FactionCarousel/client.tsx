@@ -3,10 +3,8 @@
 
 import React, { useMemo, useState } from "react";
 import Carousel from "@/components/modules/Carousel/base";
-// the card without its icon lookup, and icons fetched one by one as they show:
-// the full icon registry would put every faction icon in this bundle
-import FactionCardView from "@/components/modules/Cards/FactionCard/Card";
-import LazyFactionIcon from "@/components/icons/factions/LazyFactionIcon";
+import FactionCard from "@/components/modules/Cards/FactionCard";
+import FactionIcon from "@/components/icons/factions/FactionIcon";
 import styles from "./styles.module.scss";
 import ShieldIcon from "@/components/icons/shield.svg";
 
@@ -45,12 +43,11 @@ export default function FactionCarouselClient({
   const items = useMemo(() => {
     if (!activeGroup) return [];
     return activeGroup.items.map(f => (
-      <FactionCardView
+      <FactionCard
         key={f._id}
         title={f.title}
         slug={f.slug}
-        themeKey={f.iconId || f.slug}
-        icon={<LazyFactionIcon id={f.iconId || f.slug} width={80} height={80} aria-hidden />}
+        iconId={f.iconId}
         group={activeGroup.key}
       />
     ));
@@ -87,7 +84,7 @@ export default function FactionCarouselClient({
                   className={`${styles.tab} ${isActive ? styles.active : ""}`}
                   onClick={() => setActiveKey(g.key)}
                 >
-                  <LazyFactionIcon id={g.meta.iconId} width={18} height={18} className={styles.tabIcon} />
+                  <FactionIcon id={g.meta.iconId} className={styles.tabIcon} />
                   <span className={styles.tabLabel}>{g.meta.title}</span>
                 </button>
               );

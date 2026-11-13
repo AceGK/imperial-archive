@@ -16,8 +16,7 @@
     "incremental": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@convex/*": ["./convex/*"],
-      "@convex-dev/auth/nextjs/client": ["../../node_modules/@convex-dev/auth/dist/nextjs/client.d.ts"]
+      "@convex/*": ["./convex/*"]
     },
     "plugins": [{ "name": "next" }]
   },

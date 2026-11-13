@@ -64,6 +64,10 @@ export default function MobileMenu({
                       <Link
                         href={link.href}
                         className={`${styles.mobileLink} ${isLinkActive(link.href) ? styles.active : ""}`}
+                        // the closed panel is only invisible, so it counts as on
+                        // screen and Next would prefetch every page in it (~350KB)
+                        // as the page loads; opening the menu prefetches them
+                        prefetch={open ? null : false}
                       >
                         {Icon && (
                           <span className={styles.mobileLinkIcon}>

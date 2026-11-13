@@ -1,6 +1,7 @@
 import Link from "next/link";
 import FactionTheme from "@/components/modules/FactionTheme";
-import { resolveGroupIcon, resolveIcon } from "@/components/icons/factions/resolve";
+import FactionIcon from "@/components/icons/factions/FactionIcon";
+import { FACTION_ICON_IDS } from "@/components/icons/factions/ids";
 import FavoriteButton from "@/components/modules/FavoriteButton";
 import { ShareButton } from "@/components/modules/Share";
 import DetailCard from "../base";
@@ -10,20 +11,19 @@ import type { Faction40kDoc } from "@/types/sanity";
 import styles from "../styles.module.scss"
 
 export default function FactionDetailCard({ faction }: { faction: Faction40kDoc }) {
-  const GroupIcon = resolveGroupIcon(faction.group?.iconId || "");
-  const FactionIcon = resolveIcon(faction.iconId || faction.slug);
+  const iconId = faction.iconId || faction.slug;
 
   const overline = faction.group ? (
     <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-      {GroupIcon && <GroupIcon width={24} height={24} />}
+      <FactionIcon id={faction.group.iconId} width={24} />
       <Link href={`/factions/${faction.group.slug}`}>{faction.group.title}</Link>
     </div>
   ) : null;
 
-  const media = FactionIcon ? (
-    <FactionTheme slugOrIconId={faction.iconId || faction.slug}>
+  const media = FACTION_ICON_IDS.has(iconId) ? (
+    <FactionTheme slugOrIconId={iconId}>
       <div className={styles.factionImage} aria-hidden="true">
-        <FactionIcon width={120} height={100} role="img" aria-label={`${faction.title} icon`} />
+        <FactionIcon id={iconId} width={120} height={100} />
       </div>
     </FactionTheme>
   ) : null;

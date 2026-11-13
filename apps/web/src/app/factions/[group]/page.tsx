@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { client } from "@/lib/sanity/sanity.client";
 import { groupedFactions40kQuery } from "@/lib/sanity/queries";
-import { resolveGroupIcon } from "@/components/icons/factions/resolve";
+import FactionIcon from "@/components/icons/factions/FactionIcon";
 import FactionCard from "@/components/modules/Cards/FactionCard";
 import BooksCatalog from "@/components/modules/Catalog/Books";
 import { ShareButton } from "@/components/modules/Share";
@@ -66,7 +66,6 @@ export default async function GroupPage({
   if (!bucket) notFound();
 
   const { title, description, iconId, links, items } = bucket;
-  const Icon = resolveGroupIcon(iconId);
 
   // Extract all faction names from this group for filtering
   const factionNames = items?.map((f) => f.title).filter(Boolean) || [];
@@ -108,7 +107,7 @@ export default async function GroupPage({
               marginBottom: 24,
             }}
           >
-            {Icon && <Icon width={100} height={100} />}
+            <FactionIcon id={iconId} width={100} />
             <div>
               <h1 style={{ margin: 0 }}>{title}</h1>
 
