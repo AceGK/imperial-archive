@@ -4,7 +4,7 @@
 import React, { useMemo, useState } from "react";
 import Carousel from "@/components/modules/Carousel/base";
 import FactionCard from "@/components/modules/Cards/FactionCard";
-import { resolveGroupIcon } from "@/components/icons/factions/resolve";
+import FactionIcon from "@/components/icons/factions/FactionIcon";
 import styles from "./styles.module.scss";
 import ShieldIcon from "@/components/icons/shield.svg";
 
@@ -74,7 +74,6 @@ export default function FactionCarouselClient({
         headerSlot={
           <div className={styles.tabs} role="tablist" aria-label="Faction groups">
             {groups.map(g => {
-              const GroupIcon = resolveGroupIcon(g.meta.iconId);
               const isActive = g.key === activeKey;
               return (
                 <button
@@ -85,7 +84,7 @@ export default function FactionCarouselClient({
                   className={`${styles.tab} ${isActive ? styles.active : ""}`}
                   onClick={() => setActiveKey(g.key)}
                 >
-                  {GroupIcon && <GroupIcon width={18} height={18} className={styles.tabIcon} />}
+                  <FactionIcon id={g.meta.iconId} className={styles.tabIcon} />
                   <span className={styles.tabLabel}>{g.meta.title}</span>
                 </button>
               );

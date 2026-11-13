@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import {
   getImageUrl,
   normalizeSeriesArray,
@@ -54,7 +54,6 @@ export default function BookRow({
               alt={coverAlt(book.title, book.authors, book.image?.alt)}
               fill
               sizes="72px"
-              unoptimized
             />
           ) : (
             <span className={styles.placeholder} aria-hidden="true">

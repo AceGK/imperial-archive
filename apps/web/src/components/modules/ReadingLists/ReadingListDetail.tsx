@@ -18,7 +18,7 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useState } from "react";
@@ -351,7 +351,7 @@ function SortableRow({ book, position, onRemove }: { book: ListBook; position: n
 
       <Link href={link} className={styles.rowCover} tabIndex={-1} aria-hidden="true">
         {cover ? (
-          <Image src={cover} alt="" fill sizes="56px" unoptimized />
+          <Image src={cover} alt="" fill sizes="56px" />
         ) : (
           <span className={styles.coverPlaceholder}>{book.title}</span>
         )}

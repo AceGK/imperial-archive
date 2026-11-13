@@ -33,13 +33,18 @@ type Props = {
  * runs on the compositor with no client JS. Each column holds its covers
  * twice and the wall slides up by exactly one set before looping.
  */
+// small and soft is fine: the wall sits under a dark, blurred overlay
+const coverUrl = (image: unknown, width: number) =>
+  urlFor(image).width(width).height(width * 1.5).fit("crop").quality(50).auto("format").url();
+
+// Up to this width the tiles are at their 130px minimum (--w in the styles:
+// 14vw is under 130px below ~929px), so a 200px cover is enough; the full
+// 280px cover is ~40% heavier. Change both together.
+const SMALL_TILES = "(max-width: 928px)";
+
 export default function BookWall({ covers = [], images, coverWidth, columns = 14, rows = 8 }: Props) {
-  const urls =
-    images ??
-    covers.map((c) =>
-      // small and soft is fine: the wall sits under a dark, blurred overlay
-      urlFor(c.image).width(280).height(420).fit("crop").quality(50).auto("format").url()
-    );
+  const urls = images ?? covers.map((c) => coverUrl(c.image, 280));
+  const smallUrls = images || coverWidth ? null : covers.map((c) => coverUrl(c.image, 200));
   if (urls.length === 0) return null;
 
   // The wall repeats each cover several times (twice per column, so the loop
@@ -48,12 +53,12 @@ export default function BookWall({ covers = [], images, coverWidth, columns = 14
   // full image URL on every tile, and base64 blur previews were ~0.7KB each:
   // together over 150KB of the homepage, sent in the HTML and again in the
   // React payload. The tiles are empty boxes now; the cover is their background.
-  const css = urls
-    .map((url, i) => {
-      const color = images ? null : colorOf(covers[i]?.image);
-      return `.${styles.wall} [data-cover="${i}"]{background-image:url("${url}")${color ? `;background-color:${color}` : ""}}`;
-    })
-    .join("");
+  const rule = (url: string, i: number, color?: string | null) =>
+    `.${styles.wall} [data-cover="${i}"]{background-image:url("${url}")${color ? `;background-color:${color}` : ""}}`;
+  const css =
+    urls.map((url, i) => rule(url, i, images ? null : colorOf(covers[i]?.image))).join("") +
+    // only the cover a tile ends up showing is downloaded, so phones skip the large ones
+    (smallUrls ? `@media ${SMALL_TILES}{${smallUrls.map((url, i) => rule(url, i)).join("")}}` : "");
 
   const grid = Array.from({ length: columns }, (_, col) =>
     Array.from({ length: rows }, (_, row) => (col * rows + row) % urls.length)

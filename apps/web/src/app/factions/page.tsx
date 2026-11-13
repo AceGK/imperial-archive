@@ -3,7 +3,7 @@ import { client } from '@/lib/sanity/sanity.client'
 import { groupedFactions40kQuery } from '@/lib/sanity/queries'
 import type { FactionGroupWithItems } from '@/types/sanity'
 import FactionCard from '@/components/modules/Cards/FactionCard'
-import { resolveGroupIcon } from '@/components/icons/factions/resolve'
+import FactionIcon from '@/components/icons/factions/FactionIcon'
 import PageHeader from '@/components/modules/PageHeader'
 import { pageMetadata } from '@/lib/seo'
 
@@ -39,11 +39,10 @@ export default async function FactionsPage() {
       <div className="container">
 
         {groups.map((g) => {
-          const Icon = resolveGroupIcon(g.iconId || '')
           return (
             <section key={g._id} style={{ marginBottom: '2rem' }}>
               <header style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
-                {Icon ? <Icon width={100} height={100} role="img" aria-label={`${g.slug} icon`} /> : null}
+                <FactionIcon id={g.iconId} width={100} label={`${g.title} icon`} />
                 <div>
                   <h2>{g.title}</h2>
                   {g.description ? <p style={{ margin: '0.25rem 0 0', opacity: 0.8 }}>{g.description}</p> : null}

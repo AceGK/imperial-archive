@@ -2,6 +2,11 @@
 'use client';
 
 import React, { useEffect, useRef } from "react";
+// Swiper's own CSS loads with the carousel instead of on every page; before the
+// module styles, so those still win. The navigation sheet hides the custom
+// buttons when every slide fits (.swiper-button-lock)
+import "swiper/css";
+import "swiper/css/navigation";
 import styles from "./styles.module.scss";
 
 import { Swiper, SwiperSlide } from "swiper/react";

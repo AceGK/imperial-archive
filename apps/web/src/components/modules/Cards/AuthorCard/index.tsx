@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import styles from "./styles.module.scss";
 import { urlFor } from "@/lib/sanity/sanity.image";
 
@@ -65,7 +65,6 @@ export default function AuthorCard({
               placeholder: "blur" as const,
               blurDataURL: image.lqip,
             })}
-            unoptimized
           />
         ) : (
           initials

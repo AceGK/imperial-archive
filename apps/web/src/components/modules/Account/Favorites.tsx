@@ -1,12 +1,12 @@
 'use client';
 
 import { useMutation, useQuery } from "convex/react";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "@convex/_generated/api";
 import { getFavoriteItems } from "@/app/account/favorites/actions";
-import { resolveIcon } from "@/components/icons/factions/resolve";
+import FactionIcon from "@/components/icons/factions/FactionIcon";
 import XmarkIcon from "@/components/icons/xmark.svg";
 import BookGrid from "@/components/modules/BookGrid";
 import type { BookCardData } from "@/components/modules/Cards/BookCard";
@@ -260,7 +260,6 @@ function FavoriteRow({ item, onRemove }: { item: Exclude<FavoriteItem, { _type: 
                 alt=""
                 fill
                 sizes="128px"
-                unoptimized
               />
             </span>
           ) : (
@@ -281,7 +280,6 @@ function FavoriteRow({ item, onRemove }: { item: Exclude<FavoriteItem, { _type: 
                   alt=""
                   fill
                   sizes="64px"
-                  unoptimized
                 />
               ) : (
                 initialsOf(name)
@@ -290,13 +288,12 @@ function FavoriteRow({ item, onRemove }: { item: Exclude<FavoriteItem, { _type: 
           ),
         };
       case "faction40k": {
-        const Icon = resolveIcon(item.iconId || item.slug);
         return {
           href: item.groupKey ? `/factions/${item.groupKey}/${item.slug}` : `/factions/${item.slug}`,
           detail: "Faction",
           thumb: (
             <span className={`${rowStyles.thumb} ${libraryStyles.thumbIcon}`}>
-              {Icon && <Icon width={32} height={32} aria-hidden />}
+              <FactionIcon id={item.iconId || item.slug} width={32} />
             </span>
           ),
         };
@@ -308,7 +305,7 @@ function FavoriteRow({ item, onRemove }: { item: Exclude<FavoriteItem, { _type: 
           thumb: (
             <span className={`${rowStyles.thumb} ${rowStyles.thumbSeries}`}>
               {item.image?.url ? (
-                <Image src={`${item.image.url}?w=256&h=144&fit=crop&auto=format`} alt="" fill sizes="128px" unoptimized />
+                <Image src={`${item.image.url}?w=256&h=144&fit=crop&auto=format`} alt="" fill sizes="128px" />
               ) : (
                 <span className={rowStyles.placeholder}>{name}</span>
               )}

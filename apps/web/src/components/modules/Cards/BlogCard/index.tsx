@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import Link from "next/link";
 import type { BlogPost } from "@/types/sanity";
 import { urlFor } from "@/lib/sanity/sanity.image";

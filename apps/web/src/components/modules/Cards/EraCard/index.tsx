@@ -1,6 +1,6 @@
 // components/modules/Cards/EraCard/index.tsx
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import styles from "./styles.module.scss";
 
 type EraCardProps = {
@@ -42,11 +42,12 @@ export default function EraCard({
             src={image.url}
             alt={title}
             fill
-            // sizes="(max-width: 768px) 60vw, 320px"
+            // generous, since the card fills a grid cell or a carousel slide;
+            // without sizes the browser would pick a full-screen-width image
+            sizes="(max-width: 768px) 90vw, 600px"
             style={{ objectFit: "cover" }}
             placeholder={image.lqip ? "blur" : "empty"}
             blurDataURL={image.lqip || undefined}
-            unoptimized
           />
         ) : (
           <div className={styles.placeholder} aria-hidden="true">

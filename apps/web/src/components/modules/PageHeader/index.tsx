@@ -83,6 +83,8 @@ export default function PageHeader({
             fill
             sizes="100vw"
             priority={priority}
+            // next/image leaves fetchpriority off its preload; this adds it there too
+            fetchPriority={priority ? "high" : undefined}
             placeholder={blur ? "blur" : undefined}
             blurDataURL={blur}
             style={{

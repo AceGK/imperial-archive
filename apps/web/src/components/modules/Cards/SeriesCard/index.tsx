@@ -1,6 +1,6 @@
 // /components/cards/SeriesCard/index.tsx
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/ui/SanityImage";
 import styles from "./styles.module.scss";
 import { urlFor } from "@/lib/sanity/sanity.image";
 import type { SanityImageField } from "@/types/sanity";
@@ -55,7 +55,6 @@ export default function SeriesCard({
             placeholder={blur ? "blur" : "empty"}
             blurDataURL={blur}
             style={{ objectFit: "cover" }}
-            unoptimized
           />
         ) : (
           <div className={styles.placeholder} aria-hidden="true">

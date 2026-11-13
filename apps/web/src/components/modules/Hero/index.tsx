@@ -75,6 +75,8 @@ export default function Hero({
               alt={alt}
               fill
               priority={priority}
+              // next/image leaves fetchpriority off its preload; this adds it there too
+              fetchPriority={priority ? "high" : undefined}
               sizes="100vw"
               className={styles.image}
             />
