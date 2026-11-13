@@ -43,12 +43,18 @@
 
 .author {
   color: var(--subtle);
-  padding-bottom: 0.325rem;
   line-height: normal;
   font-size: 0.875rem;
   width: fit-content;
   &:hover {
     cursor: default;
+  }
+  // the author link is a 24px-tall tap target (the title link sits right
+  // above); plain-text authors get the same padding so every row matches
+  > a,
+  > span {
+    display: inline-block;
+    padding-block: 0.25rem;
   }
   a {
     text-decoration: none;

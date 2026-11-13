@@ -22,9 +22,6 @@
   --dot-gap: 6px;
   --visible: 5; // keep in sync with VISIBLE_DOTS
   min-width: 0;
-  // room for the focus outline, which the dynamic window would otherwise clip
-  padding: 4px;
-  margin: -4px;
 }
 
 .link {
@@ -44,7 +41,7 @@
 .dynamic {
   overflow: hidden;
   width: calc(
-    var(--visible) * var(--dot) + (var(--visible) - 1) * var(--dot-gap) + (var(--dot-active) - var(--dot)) + 8px
+    var(--visible) * var(--dot) + (var(--visible) - 1) * var(--dot-gap) + (var(--dot-active) - var(--dot))
   );
 
   .track {
@@ -62,11 +59,8 @@
   flex-shrink: 0;
   width: var(--dot);
   height: var(--dot);
-  padding: 0;
-  border: none;
   border-radius: 99px;
   background: color-mix(in oklab, var(--foreground), transparent 70%);
-  cursor: pointer;
   transition:
     width 0.2s ease,
     background-color 0.2s ease,
@@ -76,14 +70,9 @@
     transform: scale(0.6);
   }
 
-  &[aria-current="true"] {
+  &.active {
     width: var(--dot-active);
     background: var(--primary);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
   }
 
   @media (prefers-reduced-motion: reduce) {
