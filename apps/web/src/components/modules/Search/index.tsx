@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useSearchBox, useHits, Configure } from "react-instantsearch";
-import { forgetServerResults, typedOnlySearchClient } from "@/lib/algolia/search";
-import { InstantSearchNext } from "react-instantsearch-nextjs";
+import { useSearchBox, useHits, Configure, InstantSearch } from "react-instantsearch";
+import { typedOnlySearchClient } from "@/lib/algolia/search";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { SearchResults } from "./SearchResults";
@@ -272,13 +271,12 @@ function CustomSearchBox() {
 }
 
 export default function Search() {
-  // runs after InstantSearch (a child) has hydrated from this page's results
-  useEffect(() => {
-    forgetServerResults();
-  }, []);
-
+  // Plain InstantSearch, as in the nav search: nothing is searched until the
+  // visitor types, so there are no server results to carry over.
+  // InstantSearchNext reads the request headers on every server render, which
+  // made the homepage render per request instead of being served from cache.
   return (
-    <InstantSearchNext
+    <InstantSearch
       indexName="books40k"
       searchClient={typedOnlySearchClient}
       future={{ preserveSharedStateOnUnmount: true }}
@@ -286,6 +284,6 @@ export default function Search() {
       <Configure hitsPerPage={5} />
       <CustomSearchBox />
       <SuggestedSearches />
-    </InstantSearchNext>
+    </InstantSearch>
   );
 }

@@ -4,6 +4,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "@convex/_generated/api";
+import { AUTH_SYNC_KEY } from "@/context/AuthSessionSync";
 import { providerMeta } from "./providers";
 import styles from "./styles.module.scss";
 
@@ -20,6 +21,11 @@ export default function OAuthButtons({ disabled = false }: { disabled?: boolean 
     setError(null);
     setPending(id);
     try {
+      // on return the session is only in the auth cookies; this tells
+      // AuthSessionSync to fetch it
+      try {
+        localStorage.setItem(AUTH_SYNC_KEY, "1");
+      } catch {}
       // Redirects to the provider, then back to /account
       await signIn(id, { redirectTo: "/account" });
     } catch {

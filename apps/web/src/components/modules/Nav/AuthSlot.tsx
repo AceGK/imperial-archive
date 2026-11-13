@@ -35,8 +35,8 @@ export default function AuthSlot({
   return (
     <div className={styles.slot}>
       <span className={styles.out}>
-        {/* prefetch: the site's layout is dynamic, so Next only fully prefetches these
-            when asked, and the login/signup modal would otherwise wait on the server */}
+        {/* prefetch: fully prefetched, so the login/signup modal opens without
+            waiting on the server */}
         {showSignup && (
           <Button href="/signup" variant="tertiary" size="sm" className={styles.signup} prefetch>
             Signup

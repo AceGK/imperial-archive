@@ -3,8 +3,10 @@
 
 import React, { useMemo, useState } from "react";
 import Carousel from "@/components/modules/Carousel/base";
-import FactionCard from "@/components/modules/Cards/FactionCard";
-import { resolveGroupIcon } from "@/components/icons/factions/resolve";
+// the card without its icon lookup, and icons fetched one by one as they show:
+// the full icon registry would put every faction icon in this bundle
+import FactionCardView from "@/components/modules/Cards/FactionCard/Card";
+import LazyFactionIcon from "@/components/icons/factions/LazyFactionIcon";
 import styles from "./styles.module.scss";
 import ShieldIcon from "@/components/icons/shield.svg";
 
@@ -43,11 +45,12 @@ export default function FactionCarouselClient({
   const items = useMemo(() => {
     if (!activeGroup) return [];
     return activeGroup.items.map(f => (
-      <FactionCard
+      <FactionCardView
         key={f._id}
         title={f.title}
         slug={f.slug}
-        iconId={f.iconId}
+        themeKey={f.iconId || f.slug}
+        icon={<LazyFactionIcon id={f.iconId || f.slug} width={80} height={80} aria-hidden />}
         group={activeGroup.key}
       />
     ));
@@ -74,7 +77,6 @@ export default function FactionCarouselClient({
         headerSlot={
           <div className={styles.tabs} role="tablist" aria-label="Faction groups">
             {groups.map(g => {
-              const GroupIcon = resolveGroupIcon(g.meta.iconId);
               const isActive = g.key === activeKey;
               return (
                 <button
@@ -85,7 +87,7 @@ export default function FactionCarouselClient({
                   className={`${styles.tab} ${isActive ? styles.active : ""}`}
                   onClick={() => setActiveKey(g.key)}
                 >
-                  {GroupIcon && <GroupIcon width={18} height={18} className={styles.tabIcon} />}
+                  <LazyFactionIcon id={g.meta.iconId} width={18} height={18} className={styles.tabIcon} />
                   <span className={styles.tabLabel}>{g.meta.title}</span>
                 </button>
               );

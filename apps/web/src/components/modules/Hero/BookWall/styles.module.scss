@@ -1,6 +1,8 @@
 .wall {
   // cover size scales with the viewport; --set is one full column of covers,
   // the distance the wall travels before it loops
+  // the 130px minimum holds up to ~928px wide, where BookWall switches to
+  // smaller cover images (SMALL_TILES); keep the two in step
   --w: clamp(130px, 14vw, 250px);
   --h: calc(var(--w) * 1.5);
   --gap: calc(var(--w) * 0.09);

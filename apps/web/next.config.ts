@@ -1,3 +1,4 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -21,6 +22,16 @@ const nextConfig: NextConfig = {
     ];
   },
   webpack(config) {
+    // Convex Auth's client provider, which the package only exposes through
+    // ConvexAuthNextjsServerProvider. That wrapper reads the auth cookies, so
+    // in the root layout it made every page render per request (no edge cache).
+    // ConvexClientProvider renders the client half itself; see AuthSessionSync.
+    // A package update that moves this file fails the build here.
+    config.resolve.alias["@convex-dev/auth/nextjs/client$"] = path.join(
+      path.dirname(require.resolve("@convex-dev/auth/nextjs")),
+      "client.js"
+    );
+
     config.module.rules.push({
       test: /\.svg$/,
       // leave app/icon.svg to Next's metadata loader, which needs the raw file

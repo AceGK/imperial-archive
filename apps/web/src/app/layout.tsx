@@ -7,7 +7,6 @@ import "@/styles/globals.scss";
 import "@/styles/utils.scss";
 import Nav from "@/components/modules/Nav";
 import Footer from "@/components/modules/Footer";
-import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/context/ConvexClientProvider";
 import { isProduction } from "@/lib/env";
 import { Analytics } from "@vercel/analytics/next";
@@ -83,48 +82,45 @@ export default async function RootLayout({
   /** The @modal slot: the login/signup modal, when opened from a link */
   modal: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const layoutCookie = cookieStore.get("site-layout")?.value;
-  // full width isn't finished, so production stays boxed whatever the cookie says
-  const initialLayout =
-    !isProduction && (layoutCookie === "full" || layoutCookie === "boxed")
-      ? layoutCookie
-      : "boxed";
+  // Full width isn't finished, so production stays boxed whatever the cookie
+  // says, and doesn't read it: reading cookies here (or rendering Convex Auth's
+  // server provider, which does) makes every page render per request instead
+  // of being served from the cache. Auth is client-side; see ConvexClientProvider.
+  const layoutCookie = isProduction ? undefined : (await cookies()).get("site-layout")?.value;
+  const initialLayout = layoutCookie === "full" || layoutCookie === "boxed" ? layoutCookie : "boxed";
 
   return (
-    <ConvexAuthNextjsServerProvider>
-      <html lang="en" data-layout={initialLayout} data-scroll-behavior="smooth" suppressHydrationWarning>
-        <head>
-          {/* sets data-auth before first paint so the nav's auth controls don't shift */}
-          <script dangerouslySetInnerHTML={{ __html: authHintScript }} />
-        </head>
-        <body
-          className={`${barlow.variable} ${geistMono.variable} ${barlowCondensed.variable} ${archivoBlack.variable} antialiased`}
+    <html lang="en" data-layout={initialLayout} data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        {/* sets data-auth before first paint so the nav's auth controls don't shift */}
+        <script dangerouslySetInnerHTML={{ __html: authHintScript }} />
+      </head>
+      <body
+        className={`${barlow.variable} ${geistMono.variable} ${barlowCondensed.variable} ${archivoBlack.variable} antialiased`}
+      >
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="dark"
+          enableSystem
+          // light mode isn't finished, so production stays dark and hides the theme controls
+          forcedTheme={isProduction ? "dark" : undefined}
+          disableTransitionOnChange
         >
-          <ThemeProvider
-            attribute="data-theme"
-            defaultTheme="dark"
-            enableSystem
-            // light mode isn't finished, so production stays dark and hides the theme controls
-            forcedTheme={isProduction ? "dark" : undefined}
-            disableTransitionOnChange
-          >
-            <ConvexClientProvider>
-              <Nav showThemeToggle={!isProduction} showLayoutToggle={!isProduction} />
-              {children}
-              <Footer />
-              {modal}
-            </ConvexClientProvider>
-          </ThemeProvider>
-          {/* production only, so previews and local testing aren't counted */}
-          {isProduction && (
-            <>
-              <Analytics />
-              <SpeedInsights />
-            </>
-          )}
-        </body>
-      </html>
-    </ConvexAuthNextjsServerProvider>
+          <ConvexClientProvider>
+            <Nav showThemeToggle={!isProduction} showLayoutToggle={!isProduction} />
+            {children}
+            <Footer />
+            {modal}
+          </ConvexClientProvider>
+        </ThemeProvider>
+        {/* production only, so previews and local testing aren't counted */}
+        {isProduction && (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        )}
+      </body>
+    </html>
   );
 }
