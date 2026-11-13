@@ -15,12 +15,6 @@ import styles from "./styles.module.scss";
 
 export const revalidate = 60;
 
-// None prebuilt: each page is rendered on its first visit, then served from
-// the cache and refreshed like the rest (without this, every visit rendered it)
-export function generateStaticParams() {
-  return [];
-}
-
 type SanityPage = {
   _id: string;
   title: string;
