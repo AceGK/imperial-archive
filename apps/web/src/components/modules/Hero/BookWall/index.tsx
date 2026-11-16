@@ -37,9 +37,9 @@ type Props = {
 const coverUrl = (image: unknown, width: number) =>
   urlFor(image).width(width).height(width * 1.5).fit("crop").quality(50).auto("format").url();
 
-// Up to this width the tiles are at their 130px minimum (--w in the styles:
-// 14vw is under 130px below ~929px), so a 200px cover is enough; the full
-// 280px cover is ~40% heavier. Change both together.
+// Up to this width the tiles are 130px or smaller (--w in the styles: 14vw is
+// under 130px below ~929px), so a 200px cover is enough; the full 280px cover
+// is ~40% heavier. Change both together.
 const SMALL_TILES = "(max-width: 928px)";
 
 export default function BookWall({ covers = [], images, coverWidth, columns = 14, rows = 8 }: Props) {
