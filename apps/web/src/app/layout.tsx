@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Barlow, Geist_Mono, Barlow_Condensed, Archivo_Black } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { cookies } from "next/headers";
@@ -53,6 +53,12 @@ const archivoBlack = Archivo_Black({
   weight: ["400"],
   display: "block",
 });
+
+// Browser toolbar colour on iOS 15-18 (iOS 26 ignores it and reads the page
+// background). The dark theme's --bg, since production is always dark.
+export const viewport: Viewport = {
+  themeColor: "#07080a",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
