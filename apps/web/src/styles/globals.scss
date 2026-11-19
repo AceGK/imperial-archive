@@ -83,25 +83,6 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
 
-  // iOS 26 Safari tints its top bar from the topmost fixed element at the
-  // top edge. The grain layer below is fixed and transparent, so once the
-  // nav hides on scroll the bar went see-through; this thin strip, above the
-  // grain, gives Safari the page colour to sample. iOS only (the touch-callout
-  // check), so desktop never sees a band when the nav hides.
-  @supports (-webkit-touch-callout: none) {
-    &::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 6px;
-      z-index: 10000;
-      pointer-events: none;
-      background: var(--bg);
-    }
-  }
-
   // Full-page grain texture. Self-contained SVG fractal-noise data URI (no
   // image asset). No background-size set on purpose — the SVG has only a
   // viewBox (no width/height), so it stretches to fill this fixed, full-

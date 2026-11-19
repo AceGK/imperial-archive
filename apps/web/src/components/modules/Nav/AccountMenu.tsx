@@ -9,7 +9,6 @@ import SignOutIcon from "@/components/icons/account/sign-out.svg";
 import { accountNav } from "@/components/modules/Account/nav";
 import Avatar from "@/components/ui/Avatar";
 import { Dropdown } from "@/components/ui/Dropdown";
-import { useNavPin } from "@/hooks/useScrollVisibility";
 import styles from "./AccountMenu.module.scss";
 
 /** Avatar button that opens the account menu. Renders nothing when signed out. */
@@ -20,7 +19,6 @@ export default function AccountMenu() {
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  useNavPin(open);
 
   // same rule as the account sidebar: the dashboard only on its own page
   const isActive = (href: string) =>

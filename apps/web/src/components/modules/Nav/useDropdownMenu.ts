@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent } from "react";
 import { usePathname } from "next/navigation";
-import { useNavPin } from "@/hooks/useScrollVisibility";
 
 type IndicatorStyle = { opacity: number; width?: number; transform?: string };
 type HighlightStyle = {
@@ -44,7 +43,6 @@ export function useDropdownMenu() {
   const panelRef = useRef<HTMLDivElement | null>(null);
 
   const isOpen = activeIndex !== null;
-  useNavPin(isOpen);
 
   // slide direction for the content swap animation
   const getMotion = useCallback(

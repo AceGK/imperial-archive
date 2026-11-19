@@ -5,7 +5,6 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useNavPin, useScrollVisibility } from "@/hooks/useScrollVisibility";
 import ThemeToggle from "@/components/modules/ThemeToggle";
 import SiteWidthToggle from "@/components/modules/SiteWidthToggle";
 import ChevronDown from "@/components/icons/chevron-down.svg";
@@ -40,7 +39,6 @@ export default function Nav({
   showLayoutToggle?: boolean;
 }) {
   const pathname = usePathname();
-  const isVisible = useScrollVisibility();
   const menu = useDropdownMenu();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -48,9 +46,6 @@ export default function Nav({
   const [searchLoaded, setSearchLoaded] = useState(false);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
   const searchPanelRef = useRef<HTMLDivElement>(null);
-
-  // the nav stays in view while the search panel hangs from it
-  useNavPin(searchOpen);
 
   const isLinkActive = (href: string) => pathname === href;
   const isGroupActive = (item: NavItem) => "links" in item && item.links.some((l) => pathname === l.href);
@@ -91,7 +86,7 @@ export default function Nav({
 
   return (
     <nav
-      className={`${styles.navWrapper} ${!isVisible ? styles.hidden : ""}`}
+      className={styles.navWrapper}
       aria-label="Primary"
       ref={menu.rootRef}
       onMouseLeave={menu.startCloseDropdown}

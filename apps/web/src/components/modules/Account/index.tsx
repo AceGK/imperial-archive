@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { api } from "@convex/_generated/api";
-import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import Avatar from "@/components/ui/Avatar";
 import SignOutIcon from "@/components/icons/account/sign-out.svg";
 import SidebarCollapseIcon from "@/components/icons/sidebar-left-collapse.svg";
@@ -27,7 +26,6 @@ export default function AccountShell({
   const router = useRouter();
   const viewer = useQuery(api.users.viewer);
   const { signOut } = useAuthActions();
-  const isNavVisible = useScrollVisibility();
   // desktop only: the sidebar shrinks to its icons (phones show it as a tab row)
   const [collapsed, setCollapsed] = useState(initialCollapsed);
 
@@ -47,7 +45,7 @@ export default function AccountShell({
 
   return (
     <div className={`${styles.shell} ${collapsed ? styles.collapsed : ""}`}>
-      <aside className={`${styles.sidebar} ${isNavVisible ? styles.navVisible : ""}`}>
+      <aside className={styles.sidebar}>
         <button
           type="button"
           className={styles.collapseToggle}
