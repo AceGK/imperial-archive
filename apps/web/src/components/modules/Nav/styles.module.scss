@@ -25,14 +25,12 @@
 .navWrapper {
   background: var(--bg);
   border-bottom: 1px solid var(--border);
+  // always shown (not hidden on scroll): iOS 26 Safari tints its top bar from
+  // the solid fixed/sticky element at the top edge, and goes see-through
+  // without one
   position: sticky;
   top: 0;
   z-index: 100;
-  transition: transform 200ms ease; // Changed from 200ms ease to match
-
-  &.hidden {
-    transform: translateY(-100%);
-  }
 }
 
 .nav {

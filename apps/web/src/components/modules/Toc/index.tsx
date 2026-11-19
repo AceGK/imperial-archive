@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useScrollVisibility } from "@/hooks/useScrollVisibility";
 import styles from "./styles.module.scss";
 
 export type TocItem = { id: string; index: string; label: string };
@@ -13,7 +12,6 @@ const CLICK_LOCK_MS = 1000;
 
 export default function Toc({ items }: { items: TocItem[] }) {
   const [activeId, setActiveId] = useState(items[0]?.id);
-  const isNavVisible = useScrollVisibility();
   const clickLock = useRef(false);
   const lockTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -88,7 +86,7 @@ export default function Toc({ items }: { items: TocItem[] }) {
 
   return (
     <nav
-      className={`${styles.toc} ${isNavVisible ? styles.navVisible : ""}`}
+      className={styles.toc}
       aria-label="On this page"
     >
       <div className={styles.tocHeading}>Contents</div>

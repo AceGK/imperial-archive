@@ -40,17 +40,12 @@
 }
 
 /* contents rail */
-// Sticky offset follows the nav: below it when shown, near the top when it hides on scroll
+// sticks below the nav, which is always shown
 $nav-height: 60px;
 $toc-gap: 1.5rem;
 
 .toc {
   position: sticky;
-  top: $toc-gap;
-  transition: top 200ms ease; // matches the nav's slide timing
-}
-
-.toc.navVisible {
   top: calc(#{$nav-height} + #{$toc-gap});
 }
 
