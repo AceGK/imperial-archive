@@ -25,6 +25,9 @@
 }
 
 html {
+  // Safari (iOS) tints its toolbar and the overscroll area from the page
+  // background, which the body alone doesn't reliably give it
+  background-color: var(--bg);
   // scrollbar-gutter only reserves space while overflow is non-'visible',
   // so we need an explicit overflow-y here — otherwise the gutter isn't
   // actually reserved in the default (unlocked) state, and toggling
