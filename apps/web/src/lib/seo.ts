@@ -7,7 +7,7 @@ export const SITE_URL = "https://imperialarchive.com";
 export const SITE_NAME = "Imperial Archive";
 
 export const SITE_DESCRIPTION =
-  "Imperial Archive is a fan-made catalog and reading tracker for Warhammer 40,000 fiction from Black Library. Browse 40k books, authors, series, factions, and eras, find reading orders, and track what you've read.";
+  "Free Warhammer 40k reading tracker and Black Library catalog. Browse every 40k book by author, series, faction and era, and track what you've read.";
 
 export const SITE_KEYWORDS = [
   "Imperial Archive",
@@ -24,7 +24,7 @@ export const SITE_KEYWORDS = [
 
 // leads with the reading tracker phrase people search for, and keeps 40k on
 // the catalog, which is all 40k for now
-export const DEFAULT_TITLE = `${SITE_NAME} | Warhammer Reading Tracker & 40k Book Catalog`;
+export const DEFAULT_TITLE = `${SITE_NAME} | Warhammer 40k Books & Reading Tracker`;
 
 /** The Archive's profiles on other sites (schema.org sameAs) */
 export const SITE_PROFILES = ["https://ko-fi.com/imperialarchive"];
