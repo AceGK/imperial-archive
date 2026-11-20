@@ -24,7 +24,7 @@ export const SITE_KEYWORDS = [
 
 // leads with the reading tracker phrase people search for, and keeps 40k on
 // the catalog, which is all 40k for now
-export const DEFAULT_TITLE = `${SITE_NAME} | Warhammer Reading Tracker & 40k Book Catalog`;
+export const DEFAULT_TITLE = `${SITE_NAME} | Warhammer 40k Books & Reading Tracker`;
 
 /** The Archive's profiles on other sites (schema.org sameAs) */
 export const SITE_PROFILES = ["https://ko-fi.com/imperialarchive"];
