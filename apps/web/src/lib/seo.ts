@@ -7,7 +7,7 @@ export const SITE_URL = "https://imperialarchive.com";
 export const SITE_NAME = "Imperial Archive";
 
 export const SITE_DESCRIPTION =
-  "Free Warhammer 40k reading tracker and Black Library catalog. Browse every 40k book by author, series, faction and era, and track what you've read and own.";
+  "Free Warhammer 40k reading tracker and Black Library catalog. Browse every 40k book by author, series, faction and era, and track what you've read.";
 
 export const SITE_KEYWORDS = [
   "Imperial Archive",
